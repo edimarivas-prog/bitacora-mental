@@ -3,89 +3,1156 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bitácora Mental</title>
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <meta name="description" content="Bitácora Mental - Plataforma de bienestar emocional con herramientas, recursos y especialistas para cuidar tu salud mental a tu ritmo.">
+  <title>Bitácora Mental - Bienestar emocional sin complicaciones</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary: #4F6F52;
+      --secondary: #A7C4B5;
+      --background: #F9FBFA;
+      --dark: #1F2933;
+      --muted: #E6EFE8;
+      --radius: 14px;
+      --shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", sans-serif;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 8%;
+      background: rgba(249, 251, 250, 0.95);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+
+    .navbar .logo {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .navbar .logo i {
+      font-size: 1.4rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .nav-cta {
+      background: var(--primary);
+      color: white !important;
+      padding: 10px 20px;
+      border-radius: var(--radius);
+      font-weight: 600;
+    }
+
+    .nav-cta::after {
+      display: none;
+    }
+
+    .nav-cta:hover {
+      background: #3e5a41;
+      color: white !important;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--dark);
+      cursor: pointer;
+    }
+
+    /* Hero Startup */
+    .hero-startup {
+      position: relative;
+      padding: 100px 8% 80px;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(60% 40% at 10% 10%, #eaf4ee 0%, transparent 60%),
+                  radial-gradient(50% 40% at 90% 20%, #f3f7f5 0%, transparent 60%);
+      z-index: 0;
+    }
+
+    .hero-wrapper {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 60px;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .hero-tag {
+      background: #e8f3ec;
+      color: #3a6b52;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .hero-left h1 {
+      font-size: 3.5rem;
+      line-height: 1.15;
+      margin: 20px 0 24px;
+      color: #1f2a24;
+    }
+
+    .hero-left p {
+      font-size: 1.15rem;
+      color: #4b5b52;
+      max-width: 540px;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      margin-top: 30px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-main {
+      background: var(--primary);
+      color: white;
+      padding: 15px 28px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(79, 111, 82, 0.3);
+    }
+
+    .btn-main:hover {
+      background: #3e5a41;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(79, 111, 82, 0.4);
+    }
+
+    .btn-outline {
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      padding: 14px 28px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+    }
+
+    .btn-outline:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .hero-right {
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero-card {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.04);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .hero-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.1);
+    }
+
+    .hero-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      color: var(--dark);
+    }
+
+    .hero-card p {
+      color: #6b7280;
+      font-size: 0.95rem;
+    }
+
+    /* Sections */
+    .section {
+      padding: 80px 8%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .section-header h2 {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+      color: var(--dark);
+    }
+
+    .section-header p {
+      font-size: 1.1rem;
+      color: #6b7280;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .grid {
+      display: grid;
+      gap: 25px;
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .grid-4 {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    /* Cards */
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: all 0.3s;
+      border: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+    }
+
+    .card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+      color: var(--dark);
+    }
+
+    .card p {
+      color: #6b7280;
+      line-height: 1.6;
+    }
+
+    /* Feature Card */
+    .feature-card {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      background: white;
+      padding: 28px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+    }
+
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      background: var(--muted);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+      color: var(--primary);
+    }
+
+    .feature-content h3 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      color: var(--dark);
+    }
+
+    .feature-content p {
+      color: #6b7280;
+      font-size: 0.95rem;
+    }
+
+    /* Niveles/Pricing */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+
+    .pricing-card {
+      background: white;
+      padding: 35px;
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      border: 2px solid transparent;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pricing-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-10px);
+      border-color: var(--primary);
+      box-shadow: 0 25px 60px rgba(79, 111, 82, 0.15);
+    }
+
+    .pricing-card.featured {
+      border-color: var(--primary);
+      box-shadow: 0 20px 60px rgba(79, 111, 82, 0.2);
+    }
+
+    .pricing-badge {
+      background: var(--primary);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+
+    .pricing-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+
+    .pricing-price {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 20px 0;
+    }
+
+    .pricing-price span {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #6b7280;
+    }
+
+    .pricing-features {
+      list-style: none;
+      margin: 25px 0;
+    }
+
+    .pricing-features li {
+      padding: 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #4b5563;
+    }
+
+    .pricing-features li i {
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    /* Testimonios */
+    .testimonial-card {
+      background: white;
+      padding: 30px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .testimonial-card::before {
+      content: '"';
+      font-size: 5rem;
+      color: var(--muted);
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      font-family: Georgia, serif;
+    }
+
+    .testimonial-text {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 20px;
+      color: #4b5563;
+      line-height: 1.7;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .testimonial-avatar {
+      width: 50px;
+      height: 50px;
+      background: var(--muted);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .testimonial-info h4 {
+      font-size: 1rem;
+      margin-bottom: 2px;
+    }
+
+    .testimonial-info p {
+      font-size: 0.85rem;
+      color: #9ca3af;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: linear-gradient(135deg, var(--primary) 0%, #3e5a41 100%);
+      color: white;
+      text-align: center;
+      padding: 80px 8%;
+      border-radius: 20px;
+      margin: 80px 8%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: rotate 30s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .cta-section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-section p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      opacity: 0.95;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-section .btn-main {
+      background: white;
+      color: var(--primary);
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-section .btn-main:hover {
+      background: var(--muted);
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--dark);
+      color: white;
+      padding: 60px 8% 30px;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-brand h3 {
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .footer-brand p {
+      color: #9ca3af;
+      line-height: 1.7;
+    }
+
+    .footer-links h4 {
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+    }
+
+    .footer-links ul {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 10px;
+    }
+
+    .footer-links a {
+      color: #9ca3af;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .footer-social a:hover {
+      background: var(--primary);
+      transform: translateY(-3px);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 30px;
+      text-align: center;
+      color: #9ca3af;
+    }
+
+    /* WhatsApp Float */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #25D366;
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+      z-index: 999;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 25px rgba(37, 211, 102, 0.6);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .hero-wrapper {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .hero-left h1 {
+        font-size: 2.5rem;
+      }
+
+      .section-header h2 {
+        font-size: 2rem;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .grid-3, .grid-4 {
+        grid-template-columns: 1fr;
+      }
+
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .whatsapp-float {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+        bottom: 20px;
+        right: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
-
   <!-- Navbar -->
-  <div class="navbar">
-    <div class="logo">Bitácora Mental</div>
-    <div>
-      <a href="recursos.html">Recursos</a>
-      <a href="especialistas.html">Especialistas</a>
-      <a href="blog.html">Blog</a>
-      <a href="contacto.html">Contacto</a>
+  <nav class="navbar">
+    <div class="logo">
+      <i class="fas fa-brain"></i>
+      Bitácora Mental
     </div>
-  </div>
+    <div class="nav-links">
+      <a href="#recursos">Recursos</a>
+      <a href="#especialistas">Especialistas</a>
+      <a href="#niveles">Niveles</a>
+      <a href="#testimonios">Testimonios</a>
+      <a href="#contacto" class="nav-cta">Comenzar ahora</a>
+    </div>
+    <button class="mobile-menu-btn">
+      <i class="fas fa-bars"></i>
+    </button>
+  </nav>
 
+  <!-- WhatsApp Float Button -->
+  <!-- IMPORTANTE: Cambia 51TUNUMERO por tu número real -->
+  <a href="https://wa.me/51TUNUMERO?text=Hola!%20Me%20interesa%20Bitácora%20Mental" 
+     class="whatsapp-float" 
+     target="_blank"
+     title="Chatea con nosotros">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <!-- Hero -->
   <section class="hero-startup">
-  <div class="hero-bg"></div>
-
-  <div class="hero-wrapper">
-    <div class="hero-left">
-      <span class="hero-tag">Bienestar mental, sin complicaciones</span>
-
-      <h1>
-        Entiende tu mente.<br>
-        Acompaña tus emociones.
-      </h1>
-
-      <p>
-        Bitácora Mental es una plataforma donde encuentras herramientas, recursos y profesionales para cuidar tu salud emocional, a tu ritmo.
-      </p>
-
-      <div class="hero-actions">
-        <a href="#recursos" class="btn-main">Explorar recursos</a>
-        <a href="#especialistas" class="btn-outline">Hablar con un especialista</a>
+    <div class="hero-bg"></div>
+    <div class="hero-wrapper">
+      <div class="hero-left">
+        <span class="hero-tag">
+          <i class="fas fa-heart"></i> Bienestar mental, sin complicaciones
+        </span>
+        <h1>
+          Entiende tu mente.<br>
+          Acompaña tus emociones.
+        </h1>
+        <p>
+          Bitácora Mental es una plataforma donde encuentras herramientas, recursos y profesionales para cuidar tu salud emocional, a tu ritmo.
+        </p>
+        <div class="hero-actions">
+          <a href="#test" class="btn-main">
+            <i class="fas fa-clipboard-check"></i>
+            Hacer test gratuito
+          </a>
+          <a href="#especialistas" class="btn-outline">
+            <i class="fas fa-user-md"></i>
+            Hablar con un especialista
+          </a>
+        </div>
       </div>
-    </div>
-
-    <div class="hero-right">
-      <div class="hero-card">
-        <h3>🧠 Diagnóstico emocional</h3>
-        <p>Descubre cómo estás hoy, en minutos.</p>
+      <div class="hero-right">
+        <div class="hero-card">
+          <h3><i class="fas fa-brain"></i> Diagnóstico emocional</h3>
+          <p>Descubre cómo estás hoy, en minutos.</p>
+        </div>
+        <div class="hero-card">
+          <h3><i class="fas fa-headphones"></i> Audios guiados</h3>
+          <p>Relajación, ansiedad, enfoque y sueño.</p>
+        </div>
+        <div class="hero-card">
+          <h3><i class="fas fa-user-md"></i> Especialistas</h3>
+          <p>Psicólogos según tu necesidad real.</p>
+        </div>
       </div>
-      <div class="hero-card">
-        <h3>🎧 Audios guiados</h3>
-        <p>Relajación, ansiedad, enfoque y sueño.</p>
-      </div>
-      <div class="hero-card">
-        <h3>👩‍⚕️ Especialistas</h3>
-        <p>Psicólogos según tu necesidad real.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-  <!-- Ecosistema -->
-  <section class="section">
-    <h2>Explora Bitácora Mental</h2>
-    <div class="grid grid-4">
-      <div class="card">🧠 Diagnóstico emocional</div>
-      <div class="card">📚 Recursos guiados</div>
-      <div class="card">👥 Profesionales especializados</div>
-      <div class="card">💎 Programas de acompañamiento</div>
     </div>
   </section>
 
-  <!-- Recursos -->
-  <section class="section">
-    <h2>Recursos destacados</h2>
-    <div class="grid grid-4">
-      <div class="card">Guía para manejar la ansiedad</div>
-      <div class="card">Diario emocional</div>
-      <div class="card">Audio de calma</div>
-      <div class="card">Kit emocional</div>
+  <!-- Ecosistema -->
+  <section class="section" id="recursos">
+    <div class="section-header">
+      <h2>Explora el ecosistema de Bitácora Mental</h2>
+      <p>Todo lo que necesitas para cuidar tu bienestar emocional en un solo lugar</p>
     </div>
+    <div class="grid grid-4">
+      <div class="card">
+        <span class="card-icon"><i class="fas fa-clipboard-list"></i></span>
+        <h3>Diagnóstico emocional</h3>
+        <p>Evalúa tu estado actual con nuestro test validado y recibe recomendaciones personalizadas.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon"><i class="fas fa-book-open"></i></span>
+        <h3>Recursos guiados</h3>
+        <p>Guías, audios, workbooks y herramientas prácticas para tu día a día.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon"><i class="fas fa-users"></i></span>
+        <h3>Red de profesionales</h3>
+        <p>Psicólogos especializados verificados para cada necesidad específica.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon"><i class="fas fa-gem"></i></span>
+        <h3>Programas de acompañamiento</h3>
+        <p>Planes mensuales con seguimiento personalizado y herramientas incluidas.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recursos Destacados -->
+  <section class="section">
+    <div class="section-header">
+      <h2>Recursos destacados</h2>
+      <p>Herramientas inmediatas para mejorar tu bienestar hoy</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-file-pdf"></i>
+        </div>
+        <div class="feature-content">
+          <h3>Guía para manejar la ansiedad</h3>
+          <p>Técnicas probadas para reducir la ansiedad en situaciones cotidianas como el tráfico o el trabajo.</p>
+          <a href="#" style="color: var(--primary); font-weight: 600; margin-top: 8px; display: inline-block;">
+            Descargar gratis <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-book"></i>
+        </div>
+        <div class="feature-content">
+          <h3>Diario emocional digital</h3>
+          <p>Registra tus emociones diarias y descubre patrones que afectan tu bienestar.</p>
+          <a href="#" style="color: var(--primary); font-weight: 600; margin-top: 8px; display: inline-block;">
+            Comenzar ahora <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-headphones"></i>
+        </div>
+        <div class="feature-content">
+          <h3>Audios de relajación</h3>
+          <p>5 audios guiados para calmar la ansiedad, mejorar el sueño y encontrar paz mental.</p>
+          <a href="#" style="color: var(--primary); font-weight: 600; margin-top: 8px; display: inline-block;">
+            Escuchar <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Niveles/Pricing -->
+  <section class="section" id="niveles">
+    <div class="section-header">
+      <h2>Encuentra tu nivel de apoyo</h2>
+      <p>Desde recursos gratuitos hasta acompañamiento personalizado</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- Nivel Gratuito -->
+      <div class="pricing-card">
+        <h3><i class="fas fa-seedling"></i> Nivel Gratuito</h3>
+        <div class="pricing-price">S/ 0</div>
+        <p>Comienza tu camino hacia el bienestar</p>
+        <ul class="pricing-features">
+          <li><i class="fas fa-check-circle"></i> Test de bienestar emocional</li>
+          <li><i class="fas fa-check-circle"></i> Contenido educativo semanal</li>
+          <li><i class="fas fa-check-circle"></i> Guías básicas en PDF</li>
+          <li><i class="fas fa-check-circle"></i> Comunidad de apoyo</li>
+        </ul>
+        <a href="#test" class="btn-main" style="width: 100%; justify-content: center; margin-top: 10px;">
+          Comenzar gratis
+        </a>
+      </div>
+
+      <!-- Nivel Básico -->
+      <div class="pricing-card featured">
+        <span class="pricing-badge">Más popular</span>
+        <h3><i class="fas fa-leaf"></i> Nivel Básico</h3>
+        <div class="pricing-price">S/ 19 <span>/única vez</span></div>
+        <p>Kit de herramientas esenciales</p>
+        <ul class="pricing-features">
+          <li><i class="fas fa-check-circle"></i> Todo del nivel gratuito</li>
+          <li><i class="fas fa-check-circle"></i> Kit de Primeros Auxilios Emocionales</li>
+          <li><i class="fas fa-check-circle"></i> 3 audios de relajación guiada</li>
+          <li><i class="fas fa-check-circle"></i> Workbooks interactivos</li>
+          <li><i class="fas fa-check-circle"></i> Tracker de emociones</li>
+        </ul>
+        <a href="#contacto" class="btn-main" style="width: 100%; justify-content: center; margin-top: 10px;">
+          Obtener kit
+        </a>
+      </div>
+
+      <!-- Nivel Intermedio -->
+      <div class="pricing-card">
+        <h3><i class="fas fa-tree"></i> Nivel Intermedio</h3>
+        <div class="pricing-price">S/ 165 <span>/mes</span></div>
+        <p>Acompañamiento personalizado</p>
+        <ul class="pricing-features">
+          <li><i class="fas fa-check-circle"></i> Todo del nivel básico</li>
+          <li><i class="fas fa-check-circle"></i> 2 sesiones individuales/mes</li>
+          <li><i class="fas fa-check-circle"></i> Seguimiento personalizado</li>
+          <li><i class="fas fa-check-circle"></i> Soporte por WhatsApp</li>
+          <li><i class="fas fa-check-circle"></i> Plan de trabajo individual</li>
+        </ul>
+        <a href="#contacto" class="btn-outline" style="width: 100%; justify-content: center; margin-top: 10px;">
+          Más información
+        </a>
+      </div>
+
+      <!-- Nivel Premium -->
+      <div class="pricing-card">
+        <h3><i class="fas fa-crown"></i> Nivel Premium</h3>
+        <div class="pricing-price">S/ 300 <span>/sesión</span></div>
+        <p>Atención especializada prioritaria</p>
+        <ul class="pricing-features">
+          <li><i class="fas fa-check-circle"></i> Especialistas senior</li>
+          <li><i class="fas fa-check-circle"></i> Atención prioritaria</li>
+          <li><i class="fas fa-check-circle"></i> Horarios flexibles</li>
+          <li><i class="fas fa-check-circle"></i> Seguimiento continuo</li>
+          <li><i class="fas fa-check-circle"></i> Derivación especializada</li>
+        </ul>
+        <a href="#contacto" class="btn-outline" style="width: 100%; justify-content: center; margin-top: 10px;">
+          Agendar consulta
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Especialistas -->
+  <section class="section" id="especialistas">
+    <div class="section-header">
+      <h2>Nuestra red de especialistas</h2>
+      <p>Psicólogos verificados y especializados para cada necesidad</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="card">
+        <span class="card-icon"><i class="fas fa-heart-broken"></i></span>
+        <h3>Ansiedad y estrés</h3>
+        <p>Especialistas en manejo de ansiedad, ataques de pánico y estrés laboral o académico.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon"><i class="fas fa-users"></i></span>
+        <h3>Relaciones y familia</h3>
+        <p>Terapia de pareja, conflictos familiares y habilidades de comunicación.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon"><i class="fas fa-child"></i></span>
+        <h3>Psicología infantil</h3>
+        <p>Apoyo para niños y adolescentes en desarrollo emocional y conducta.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon"><i class="fas fa-smile"></i></span>
+        <h3>Depresión y duelo</h3>
+        <p>Acompañamiento en procesos de duelo, pérdidas y estados depresivos.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon"><i class="fas fa-briefcase"></i></span>
+        <h3>Burnout laboral</h3>
+        <p>Especialistas en agotamiento profesional y equilibrio vida-trabajo.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon"><i class="fas fa-user"></i></span>
+        <h3>Desarrollo personal</h3>
+        <p>Coaching y acompañamiento en autoestima, propósito y crecimiento.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonios -->
+  <section class="section" id="testimonios">
+    <div class="section-header">
+      <h2>Lo que dicen nuestros usuarios</h2>
+      <p>Historias reales de personas que transformaron su bienestar</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="testimonial-card">
+        <p class="testimonial-text">
+          "El test me ayudó a entender que necesitaba ayuda profesional. Ahora estoy en terapia y mi vida cambió completamente. Gracias por hacer esto accesible."
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">MC</div>
+          <div class="testimonial-info">
+            <h4>María C.</h4>
+            <p>Nivel Intermedio</p>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-text">
+          "Los audios de relajación son increíbles. Los uso todos los días antes de dormir y finalmente puedo descansar bien. Súper recomendado."
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">JP</div>
+          <div class="testimonial-info">
+            <h4>Jorge P.</h4>
+            <p>Nivel Básico</p>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-text">
+          "Me conectaron con una psicóloga especializada en ansiedad y ha sido el mejor acompañamiento. El proceso de triaje es muy eficiente."
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">AR</div>
+          <div class="testimonial-info">
+            <h4>Ana R.</h4>
+            <p>Nivel Premium</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section" id="test">
+    <h2><i class="fas fa-clipboard-list"></i> Comienza con tu test gratuito</h2>
+    <p>Descubre tu nivel de bienestar actual en 5 minutos y recibe recomendaciones personalizadas</p>
+    <!-- IMPORTANTE: Cambia este enlace por tu Google Forms real -->
+    <a href="https://forms.gle/TU-FORMULARIO-AQUI" class="btn-main" target="_blank">
+      <i class="fas fa-play-circle"></i>
+      Hacer el test ahora
+    </a>
   </section>
 
   <!-- Footer -->
-  <footer class="footer">
-    <p>© 2026 Bitácora Mental — Bienestar psicológico digital.</p>
+  <footer class="footer" id="contacto">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3><i class="fas fa-brain"></i> Bitácora Mental</h3>
+        <p>
+          Plataforma de bienestar emocional que conecta personas con herramientas y profesionales para cuidar su salud mental, a su ritmo y según sus necesidades.
+        </p>
+        <div class="footer-social">
+          <!-- IMPORTANTE: Cambia estos enlaces por tus redes reales -->
+          <a href="https://wa.me/51TUNUMERO" target="_blank" title="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+          <a href="https://instagram.com/TU_USUARIO" target="_blank" title="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://tiktok.com/@TU_USUARIO" target="_blank" title="TikTok">
+            <i class="fab fa-tiktok"></i>
+          </a>
+          <a href="https://facebook.com/TU_PAGINA" target="_blank" title="Facebook">
+            <i class="fab fa-facebook"></i>
+          </a>
+        </div>
+      </div>
+      
+      <div class="footer-links">
+        <h4>Recursos</h4>
+        <ul>
+          <li><a href="#test">Test gratuito</a></li>
+          <li><a href="#recursos">Guías y audios</a></li>
+          <li><a href="#recursos">Diario emocional</a></li>
+          <li><a href="#recursos">Blog</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-links">
+        <h4>Servicios</h4>
+        <ul>
+          <li><a href="#niveles">Niveles de apoyo</a></li>
+          <li><a href="#especialistas">Especialistas</a></li>
+          <li><a href="#niveles">Programas</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-links">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Términos y condiciones</a></li>
+          <li><a href="#">Política de privacidad</a></li>
+          <li><a href="#">Aviso legal</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>
+        <strong>Nota importante:</strong> Los servicios de asesoría y coaching en bienestar emocional son proporcionados por profesionales en formación. Para servicios de psicoterapia clínica, trabajamos con psicólogos colegiados especializados.
+      </p>
+      <p style="margin-top: 20px;">
+        © 2026 Bitácora Mental — Bienestar psicológico digital. Todos los derechos reservados.
+      </p>
+    </div>
   </footer>
 
+  <script>
+    // Mobile menu toggle
+    document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+      const navLinks = document.querySelector('.nav-links');
+      if (navLinks.style.display === 'flex') {
+        navLinks.style.display = 'none';
+      } else {
+        navLinks.style.display = 'flex';
+        navLinks.style.flexDirection = 'column';
+        navLinks.style.position = 'absolute';
+        navLinks.style.top = '100%';
+        navLinks.style.left = '0';
+        navLinks.style.right = '0';
+        navLinks.style.background = 'white';
+        navLinks.style.padding = '20px';
+        navLinks.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+        navLinks.style.gap = '15px';
+      }
+    });
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.card, .feature-card, .pricing-card, .testimonial-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'all 0.6s ease-out';
+      observer.observe(el);
+    });
+  </script>
 </body>
 </html>
