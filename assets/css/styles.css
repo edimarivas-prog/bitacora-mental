@@ -130,3 +130,46 @@ body {
   margin-top: 80px;
 }
 
+.hero-pro {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 50px;
+  padding: 90px 8%;
+  align-items: center;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  line-height: 1.2;
+}
+
+.badge {
+  background: var(--muted);
+  color: var(--primary);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 14px;
+}
+
+.hero-visual {
+  display: grid;
+  gap: 18px;
+}
+
+.glass-card {
+  background: rgba(255,255,255,0.7);
+  border: 1px solid rgba(0,0,0,0.05);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+  transition: 0.3s;
+}
+
+.glass-card:hover {
+  transform: translateY(-6px);
+}
+
