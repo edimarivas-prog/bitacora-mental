@@ -3,990 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Bitácora Mental - Tu gimnasio mental. Herramientas psicológicas accesibles para el día a día. No esperes a estar enfermo, fortalece tu bienestar emocional ahora.">
-    <meta name="keywords" content="psicología, bienestar mental, salud emocional, coaching, ansiedad, estrés, Lima, Perú">
-    <meta name="author" content="Bitácora Mental">
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Bitácora Mental - Tu Gimnasio Mental">
-    <meta property="og:description" content="Herramientas psicológicas accesibles para fortalecer tu bienestar emocional">
-    
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="Bitácora Mental">
-    
-    <title>Bitácora Mental - Tu Gimnasio Mental | Herramientas de Bienestar Emocional</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-    
+    <title>Bitácora Mental | Bienestar Psicológico</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --sage: #8B9D83;
-            --sage-dark: #6B7D63;
-            --terracotta: #C87855;
-            --cream: #F5F1E8;
-            --navy: #2C3E50;
-            --soft-white: #FEFDFB;
-            --shadow: rgba(44, 62, 80, 0.1);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--soft-white);
-            color: var(--navy);
-            line-height: 1.7;
-            overflow-x: hidden;
-        }
-        
-        h1, h2, h3, h4 {
-            font-family: 'Crimson Pro', serif;
-            font-weight: 700;
-            line-height: 1.2;
-        }
-        
-        /* Header & Navigation */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(254, 253, 251, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            border-bottom: 1px solid rgba(139, 157, 131, 0.2);
-            animation: slideDown 0.5s ease-out;
-        }
-        
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100%);
-            }
-            to {
-                transform: translateY(0);
-            }
-        }
-        
-        nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1.5rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            font-family: 'Crimson Pro', serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--sage-dark);
-            text-decoration: none;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2.5rem;
-            list-style: none;
-        }
-        
-        .nav-links a {
-            color: var(--navy);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-            position: relative;
-        }
-        
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--terracotta);
-            transition: width 0.3s;
-        }
-        
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-        
-        .nav-links a:hover {
-            color: var(--sage-dark);
-        }
-        
-        .cta-button {
-            background: var(--terracotta);
-            color: white;
-            padding: 0.8rem 1.8rem;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(200, 120, 85, 0.3);
-        }
-        
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(200, 120, 85, 0.4);
-        }
-        
-        /* Hero Section */
-        .hero {
-            margin-top: 80px;
-            min-height: 90vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(135deg, var(--cream) 0%, var(--soft-white) 100%);
-        }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 800px;
-            height: 800px;
-            background: radial-gradient(circle, rgba(139, 157, 131, 0.15) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: float 20s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(-50px, 50px) scale(1.1); }
-        }
-        
-        .hero-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 4rem;
-            align-items: center;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .hero h1 {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-            color: var(--sage-dark);
-            animation: fadeInUp 0.8s ease-out 0.2s both;
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .hero p {
-            font-size: 1.3rem;
-            color: var(--navy);
-            margin-bottom: 2rem;
-            opacity: 0.9;
-            animation: fadeInUp 0.8s ease-out 0.4s both;
-        }
-        
-        .hero-buttons {
-            display: flex;
-            gap: 1.5rem;
-            animation: fadeInUp 0.8s ease-out 0.6s both;
-        }
-        
-        .btn-primary {
-            background: var(--terracotta);
-            color: white;
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-            box-shadow: 0 8px 25px rgba(200, 120, 85, 0.3);
-            display: inline-block;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(200, 120, 85, 0.4);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: var(--sage-dark);
-            padding: 1rem 2.5rem;
-            border: 2px solid var(--sage-dark);
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-            display: inline-block;
-        }
-        
-        .btn-secondary:hover {
-            background: var(--sage-dark);
-            color: white;
-        }
-        
-        .hero-visual {
-            position: relative;
-            animation: fadeInUp 0.8s ease-out 0.8s both;
-        }
-        
-        .hero-card {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 25px;
-            box-shadow: 0 20px 60px var(--shadow);
-            border: 1px solid rgba(139, 157, 131, 0.2);
-        }
-        
-        .hero-card h3 {
-            color: var(--sage-dark);
-            font-size: 1.6rem;
-            margin-bottom: 1rem;
-        }
-        
-        .hero-card ul {
-            list-style: none;
-        }
-        
-        .hero-card li {
-            padding: 0.8rem 0;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            border-bottom: 1px solid rgba(139, 157, 131, 0.1);
-        }
-        
-        .hero-card li:last-child {
-            border-bottom: none;
-        }
-        
-        .check-icon {
-            width: 24px;
-            height: 24px;
-            background: var(--terracotta);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-        
-        /* Section Styling */
-        section {
-            padding: 5rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-        
-        .section-header h2 {
-            font-size: 3rem;
-            color: var(--sage-dark);
-            margin-bottom: 1rem;
-        }
-        
-        .section-header p {
-            font-size: 1.2rem;
-            color: var(--navy);
-            opacity: 0.8;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-        
-        /* Niveles Section */
-        .niveles-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        
-        .nivel-card {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px var(--shadow);
-            transition: all 0.3s;
-            border: 2px solid transparent;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .nivel-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--sage), var(--terracotta));
-        }
-        
-        .nivel-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 60px rgba(44, 62, 80, 0.15);
-            border-color: var(--sage);
-        }
-        
-        .nivel-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--sage), var(--sage-dark));
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .nivel-card h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            color: var(--navy);
-        }
-        
-        .nivel-precio {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--terracotta);
-            margin-bottom: 1rem;
-        }
-        
-        .nivel-card p {
-            margin-bottom: 1.5rem;
-            line-height: 1.8;
-        }
-        
-        .nivel-features {
-            list-style: none;
-            margin-bottom: 2rem;
-        }
-        
-        .nivel-features li {
-            padding: 0.5rem 0;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-        
-        .nivel-features li::before {
-            content: '✓';
-            color: var(--sage);
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-        
-        /* Diferenciadores Section */
-        .diferenciadores {
-            background: var(--cream);
-            border-radius: 30px;
-            padding: 4rem 3rem;
-            margin: 3rem 0;
-        }
-        
-        .diferenciadores-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-            margin-top: 3rem;
-        }
-        
-        .diferenciador {
-            text-align: center;
-        }
-        
-        .diferenciador-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--soft-white);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            margin: 0 auto 1.5rem;
-            box-shadow: 0 10px 30px var(--shadow);
-        }
-        
-        .diferenciador h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--navy);
-        }
-        
-        /* Test Section */
-        .test-section {
-            background: linear-gradient(135deg, var(--sage) 0%, var(--sage-dark) 100%);
-            color: white;
-            text-align: center;
-            border-radius: 30px;
-            padding: 5rem 3rem;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .test-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-            animation: rotate 30s linear infinite;
-        }
-        
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        .test-section h2 {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .test-section p {
-            font-size: 1.3rem;
-            margin-bottom: 2.5rem;
-            opacity: 0.95;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .test-section .btn-primary {
-            background: var(--terracotta);
-            position: relative;
-            z-index: 1;
-        }
-        
-        /* Contact Form */
-        .contact-form {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            padding: 3rem;
-            border-radius: 25px;
-            box-shadow: 0 15px 50px var(--shadow);
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--navy);
-        }
-        
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid rgba(139, 157, 131, 0.3);
-            border-radius: 12px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-        
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--sage);
-            box-shadow: 0 0 0 3px rgba(139, 157, 131, 0.1);
-        }
-        
-        .form-group textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-        
-        .submit-btn {
-            width: 100%;
-            background: var(--terracotta);
-            color: white;
-            padding: 1.2rem;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'DM Sans', sans-serif;
-        }
-        
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(200, 120, 85, 0.4);
-        }
-        
-        /* Footer */
-        footer {
-            background: var(--navy);
-            color: white;
-            padding: 3rem 2rem 1.5rem;
-            text-align: center;
-        }
-        
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .footer-social {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-        
-        .footer-social a {
-            color: white;
-            font-size: 1.5rem;
-            transition: all 0.3s;
-            text-decoration: none;
-        }
-        
-        .footer-social a:hover {
-            color: var(--terracotta);
-            transform: translateY(-3px);
-        }
-        
-        .footer-note {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        /* Mobile Menu */
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.8rem;
-            color: var(--navy);
-            cursor: pointer;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .mobile-menu-btn {
-                display: block;
-            }
-            
-            .hero-content {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .hero p {
-                font-size: 1.1rem;
-            }
-            
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .section-header h2 {
-                font-size: 2rem;
-            }
-            
-            .niveles-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .diferenciadores-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .test-section h2 {
-                font-size: 2rem;
-            }
-        }
-        
-        /* Smooth Scroll */
-        html {
-            scroll-behavior: smooth;
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .bg-sage { background-color: #F8F9F8; }
+        .text-sage-dark { color: #3A4D3F; }
+        .btn-primary { background-color: #4F6F52; transition: all 0.3s ease; }
+        .btn-primary:hover { background-color: #739072; transform: translateY(-2px); }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); }
     </style>
 </head>
-<body>
-    <!-- Header -->
-    <header>
-        <nav>
-            <a href="#" class="logo">Bitácora Mental</a>
-            <ul class="nav-links">
-                <li><a href="#inicio">Inicio</a></li>
-                <li><a href="#niveles">Niveles</a></li>
-                <li><a href="#diferenciadores">¿Por qué nosotros?</a></li>
-                <li><a href="#test">Test Gratuito</a></li>
-                <li><a href="#contacto">Contacto</a></li>
-            </ul>
-            <a href="#test" class="cta-button">Prueba Gratis</a>
-            <button class="mobile-menu-btn">☰</button>
-        </nav>
-    </header>
+<body class="bg-sage text-gray-800">
 
-    <!-- Hero Section -->
-    <section class="hero" id="inicio">
-        <div class="hero-content">
-            <div>
-                <h1>Tu Gimnasio Mental</h1>
-                <p>No esperes a estar enfermo para cuidar tu mente. Fortalece tu bienestar emocional con herramientas psicológicas accesibles y prácticas para el día a día.</p>
-                <div class="hero-buttons">
-                    <a href="#test" class="btn-primary">Haz el Test Gratuito</a>
-                    <a href="#niveles" class="btn-secondary">Conoce los Niveles</a>
-                </div>
-            </div>
-            <div class="hero-visual">
-                <div class="hero-card">
-                    <h3>✨ Comienza hoy mismo</h3>
-                    <ul>
-                        <li>
-                            <span class="check-icon">✓</span>
-                            <span>Test de bienestar gratuito</span>
-                        </li>
-                        <li>
-                            <span class="check-icon">✓</span>
-                            <span>Herramientas digitales inmediatas</span>
-                        </li>
-                        <li>
-                            <span class="check-icon">✓</span>
-                            <span>Atención personalizada</span>
-                        </li>
-                        <li>
-                            <span class="check-icon">✓</span>
-                            <span>Accesible para todos</span>
-                        </li>
-                    </ul>
-                </div>
+    <nav class="fixed w-full z-50 glass border-b border-gray-100">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-lg font-600 tracking-tighter text-sage-dark uppercase">Bitácora Mental</h1>
+            <div class="hidden md:flex space-x-8 text-xs uppercase tracking-widest font-semibold">
+                <a href="#soluciones" class="hover:text-green-700">Soluciones</a>
+                <a href="#beneficios" class="hover:text-green-700">Nosotros</a>
+                <a href="https://wa.me/51999999999" class="text-green-700">Contacto</a>
             </div>
         </div>
-    </section>
+    </nav>
 
-    <!-- Niveles Section -->
-    <section id="niveles">
-        <div class="section-header">
-            <h2>Encuentra tu nivel de apoyo</h2>
-            <p>Cada persona tiene necesidades diferentes. Elige el nivel que mejor se adapte a donde estás ahora.</p>
-        </div>
-        
-        <div class="niveles-grid">
-            <!-- Nivel Gratuito -->
-            <div class="nivel-card">
-                <div class="nivel-icon">🌱</div>
-                <h3>Nivel Gratuito</h3>
-                <div class="nivel-precio">S/ 0</div>
-                <p>Perfecto para comenzar tu camino hacia el bienestar emocional.</p>
-                <ul class="nivel-features">
-                    <li>Test de bienestar gratuito</li>
-                    <li>Contenido educativo semanal</li>
-                    <li>Guías rápidas en PDF</li>
-                    <li>Botón de pánico emocional</li>
-                    <li>Comunidad de apoyo</li>
-                </ul>
-                <a href="#test" class="btn-primary">Comenzar Gratis</a>
-            </div>
-            
-            <!-- Nivel Básico -->
-            <div class="nivel-card">
-                <div class="nivel-icon">🌿</div>
-                <h3>Nivel Básico</h3>
-                <div class="nivel-precio">S/ 19 - 30</div>
-                <p>Herramientas prácticas para manejar el día a día.</p>
-                <ul class="nivel-features">
-                    <li>Todo lo del Nivel Gratuito</li>
-                    <li>Kit de Primeros Auxilios Emocionales</li>
-                    <li>3 audios de relajación guiada</li>
-                    <li>Workbooks interactivos</li>
-                    <li>Tracker de emociones</li>
-                    <li>Talleres grupales mensuales</li>
-                </ul>
-                <a href="#contacto" class="btn-primary">Obtener Kit</a>
-            </div>
-            
-            <!-- Nivel Intermedio -->
-            <div class="nivel-card">
-                <div class="nivel-icon">🌳</div>
-                <h3>Nivel Intermedio</h3>
-                <div class="nivel-precio">S/ 150 - 180/mes</div>
-                <p>Acompañamiento personalizado y herramientas avanzadas.</p>
-                <ul class="nivel-features">
-                    <li>Todo lo del Nivel Básico</li>
-                    <li>2 sesiones individuales al mes</li>
-                    <li>Seguimiento personalizado</li>
-                    <li>Acceso prioritario a talleres</li>
-                    <li>Plan de trabajo personalizado</li>
-                    <li>Soporte por WhatsApp</li>
-                </ul>
-                <a href="#contacto" class="btn-primary">Comenzar Ahora</a>
-            </div>
-            
-            <!-- Nivel Premium -->
-            <div class="nivel-card">
-                <div class="nivel-icon">🏔️</div>
-                <h3>Nivel Premium</h3>
-                <div class="nivel-precio">S/ 250 - 350/sesión</div>
-                <p>Atención especializada con los mejores profesionales.</p>
-                <ul class="nivel-features">
-                    <li>Todo lo del Nivel Intermedio</li>
-                    <li>Sesiones con especialistas senior</li>
-                    <li>Atención prioritaria</li>
-                    <li>Horarios flexibles</li>
-                    <li>Seguimiento continuo</li>
-                    <li>Sesiones por videollamada</li>
-                    <li>Derivación especializada</li>
-                </ul>
-                <a href="#contacto" class="btn-primary">Agendar Consulta</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Diferenciadores Section -->
-    <section id="diferenciadores">
-        <div class="diferenciadores">
-            <div class="section-header">
-                <h2>¿Por qué Bitácora Mental?</h2>
-                <p>No somos un consultorio tradicional. Somos tu gimnasio mental.</p>
-            </div>
-            
-            <div class="diferenciadores-grid">
-                <div class="diferenciador">
-                    <div class="diferenciador-icon">🎯</div>
-                    <h3>Triaje Inteligente</h3>
-                    <p>Te ayudamos a identificar exactamente qué tipo de apoyo necesitas, sin perder tiempo ni dinero.</p>
-                </div>
-                
-                <div class="diferenciador">
-                    <div class="diferenciador-icon">🚀</div>
-                    <h3>Prevención Activa</h3>
-                    <p>No esperas a estar mal. Fortaleces tu mente constantemente, como en un gimnasio.</p>
-                </div>
-                
-                <div class="diferenciador">
-                    <div class="diferenciador-icon">💡</div>
-                    <h3>Lenguaje Simple</h3>
-                    <p>Hablamos de situaciones reales: el estrés del tráfico en Lima, la ansiedad financiera, las relaciones familiares.</p>
-                </div>
-                
-                <div class="diferenciador">
-                    <div class="diferenciador-icon">🤝</div>
-                    <h3>Red de Especialistas</h3>
-                    <p>Trabajamos con una red de profesionales especializados para conectarte con quien mejor te puede ayudar.</p>
-                </div>
-                
-                <div class="diferenciador">
-                    <div class="diferenciador-icon">📱</div>
-                    <h3>Psicología de Bolsillo</h3>
-                    <p>Herramientas disponibles cuando las necesites, desde tu WhatsApp o teléfono.</p>
-                </div>
-                
-                <div class="diferenciador">
-                    <div class="diferenciador-icon">💰</div>
-                    <h3>Accesible para Todos</h3>
-                    <p>Desde opciones gratuitas hasta atención especializada. Hay un nivel para cada necesidad y presupuesto.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Test Section -->
-    <section id="test">
-        <div class="test-section">
-            <h2>Test de Bienestar Gratuito</h2>
-            <p>Descubre tu nivel de bienestar actual y recibe recomendaciones personalizadas en 5 minutos.</p>
-            <a href="https://forms.gle/tu-formulario-aqui" class="btn-primary" target="_blank">Hacer el Test Ahora</a>
-            <p style="margin-top: 1.5rem; font-size: 0.95rem; opacity: 0.9;">
-                ✨ Al finalizar recibirás un reporte personalizado y herramientas gratuitas
-            </p>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contacto">
-        <div class="section-header">
-            <h2>Contáctanos</h2>
-            <p>¿Tienes preguntas? Estamos aquí para ayudarte a encontrar el apoyo que necesitas.</p>
-        </div>
-        
-        <div class="contact-form">
-            <form id="contactForm">
-                <div class="form-group">
-                    <label for="nombre">Nombre completo</label>
-                    <input type="text" id="nombre" name="nombre" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">Correo electrónico</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="telefono">Teléfono / WhatsApp</label>
-                    <input type="tel" id="telefono" name="telefono" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="mensaje">¿En qué podemos ayudarte?</label>
-                    <textarea id="mensaje" name="mensaje" required></textarea>
-                </div>
-                
-                <button type="submit" class="submit-btn">Enviar Mensaje</button>
-            </form>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-social">
-                <a href="https://wa.me/51999999999" target="_blank" title="WhatsApp">📱</a>
-                <a href="https://instagram.com/bitacorametal" target="_blank" title="Instagram">📷</a>
-                <a href="https://tiktok.com/@bitacorametal" target="_blank" title="TikTok">🎵</a>
-            </div>
-            
-            <p style="margin-bottom: 1rem;">
-                <strong>Bitácora Mental</strong> - Tu gimnasio mental
-            </p>
-            
-            <p style="font-size: 0.9rem; opacity: 0.8;">
-                Herramientas psicológicas para el día a día
-            </p>
-            
-            <div class="footer-note">
-                <p>
-                    <strong>Nota importante:</strong> Los servicios de asesoría y coaching en bienestar emocional son proporcionados por profesionales en formación y expertos en desarrollo personal. 
-                    Para servicios de psicoterapia clínica, trabajamos con una red de psicólogos colegiados especializados.
+    <section class="pt-32 pb-16 px-6">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <div class="text-left">
+                <span class="text-green-700 font-semibold tracking-widest text-xs uppercase">Salud Mental Real</span>
+                <h2 class="text-5xl md:text-7xl font-light leading-tight mt-4 mb-6 text-sage-dark">
+                    Tu paz no depende del <span class="italic font-normal">caos exterior.</span>
+                </h2>
+                <p class="text-lg text-gray-600 mb-10 leading-relaxed">
+                    Herramientas psicológicas diseñadas para el ritmo de vida actual. Sin estigmas, solo soluciones prácticas en tu bolsillo.
                 </p>
-                <p style="margin-top: 1rem;">
-                    © 2025 Bitácora Mental. Todos los derechos reservados.
-                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#" class="btn-primary text-white px-10 py-4 rounded-full text-sm font-semibold text-center shadow-lg">
+                        TOMAR TEST GRATUITO
+                    </a>
+                </div>
+            </div>
+            <div class="relative">
+                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1000&auto=format&fit=crop" 
+                     alt="Bienestar" class="rounded-3xl shadow-2xl object-cover h-[400px] w-full">
+                <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl hidden md:block">
+                    <p class="text-sage-dark font-bold text-xl">100%</p>
+                    <p class="text-gray-500 text-xs">Privado y Seguro</p>
+                </div>
             </div>
         </div>
+    </section>
+
+    <section id="beneficios" class="py-24 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-16">
+                <div class="group">
+                    <img src="https://images.unsplash.com/photo-1512314889357-e157c22f938d?q=80&w=400&auto=format&fit=crop" 
+                         class="w-full h-48 object-cover rounded-2xl mb-6 grayscale group-hover:grayscale-0 transition duration-500">
+                    <h3 class="font-semibold text-xl mb-3 text-sage-dark">Accesibilidad Total</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Herramientas listas para usar en el bus, la oficina o antes de dormir.</p>
+                </div>
+                <div class="group">
+                    <img src="https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?q=80&w=400&auto=format&fit=crop" 
+                         class="w-full h-48 object-cover rounded-2xl mb-6 grayscale group-hover:grayscale-0 transition duration-500">
+                    <h3 class="font-semibold text-xl mb-3 text-sage-dark">Impacto Inmediato</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Audios diseñados para regular tu sistema nervioso en minutos.</p>
+                </div>
+                <div class="group">
+                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=400&auto=format&fit=crop" 
+                         class="w-full h-48 object-cover rounded-2xl mb-6 grayscale group-hover:grayscale-0 transition duration-500">
+                    <h3 class="font-semibold text-xl mb-3 text-sage-dark">Respaldo Profesional</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Contenido validado por especialistas en psicología clínica.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="soluciones" class="py-24 px-6 max-w-6xl mx-auto text-center">
+        <h3 class="text-3xl font-light mb-16 uppercase tracking-widest text-sage-dark">Nuestras Soluciones</h3>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-sage p-4 rounded-3xl border border-gray-100 hover:shadow-2xl transition duration-500">
+                <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?q=80&w=400&auto=format&fit=crop" 
+                     class="rounded-2xl mb-6 h-40 w-full object-cover">
+                <span class="text-xs font-bold text-green-700 uppercase">Sin Costo</span>
+                <h4 class="text-xl font-semibold my-2">Test de Bienestar</h4>
+                <a href="#" class="inline-block mt-4 text-sm font-bold border-b-2 border-sage-dark pb-1">EMPEZAR AHORA</a>
+            </div>
+            <div class="bg-sage p-4 rounded-3xl border border-gray-100 hover:shadow-2xl transition duration-500">
+                <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=400&auto=format&fit=crop" 
+                     class="rounded-2xl mb-6 h-40 w-full object-cover">
+                <span class="text-xs font-bold text-green-700 uppercase">Popular</span>
+                <h4 class="text-xl font-semibold my-2">Kit de Auxilio</h4>
+                <a href="#" class="inline-block mt-4 text-sm font-bold border-b-2 border-sage-dark pb-1">OBTENER (S/ 19.90)</a>
+            </div>
+            <div class="bg-sage p-4 rounded-3xl border border-gray-100 hover:shadow-2xl transition duration-500">
+                <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=400&auto=format&fit=crop" 
+                     class="rounded-2xl mb-6 h-40 w-full object-cover">
+                <span class="text-xs font-bold text-green-700 uppercase">Sesiones</span>
+                <h4 class="text-xl font-semibold my-2">Especialistas</h4>
+                <a href="#" class="inline-block mt-4 text-sm font-bold border-b-2 border-sage-dark pb-1">CONOCER RED</a>
+            </div>
+        </div>
+    </section>
+
+    <a href="https://wa.me/51999999999" class="fixed bottom-8 right-8 bg-[#25D366] text-white p-5 rounded-full shadow-2xl hover:scale-110 transition z-50">
+        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </a>
+
+    <footer class="py-12 text-center text-xs text-gray-400 uppercase tracking-widest border-t border-gray-100">
+        &copy; 2026 Bitácora Mental • Cuidado emocional con sentido.
     </footer>
 
-    <script>
-        // Form submission handler
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const nombre = document.getElementById('nombre').value;
-            const email = document.getElementById('email').value;
-            const telefono = document.getElementById('telefono').value;
-            const mensaje = document.getElementById('mensaje').value;
-            
-            // WhatsApp message
-            const whatsappMessage = `Hola! Mi nombre es ${nombre}. ${mensaje}. Mi correo es ${email} y mi teléfono es ${telefono}.`;
-            const whatsappURL = `https://wa.me/51999999999?text=${encodeURIComponent(whatsappMessage)}`;
-            
-            // Open WhatsApp
-            window.open(whatsappURL, '_blank');
-            
-            // Reset form
-            this.reset();
-            alert('¡Gracias por contactarnos! Te redirigiremos a WhatsApp.');
-        });
-        
-        // Smooth scroll for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-        
-        // Mobile menu toggle
-        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
-            const navLinks = document.querySelector('.nav-links');
-            if (navLinks.style.display === 'flex') {
-                navLinks.style.display = 'none';
-            } else {
-                navLinks.style.display = 'flex';
-                navLinks.style.flexDirection = 'column';
-                navLinks.style.position = 'absolute';
-                navLinks.style.top = '100%';
-                navLinks.style.left = '0';
-                navLinks.style.right = '0';
-                navLinks.style.background = 'white';
-                navLinks.style.padding = '1rem';
-                navLinks.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
-            }
-        });
-        
-        // Add scroll animation to elements
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-        
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-        
-        document.querySelectorAll('.nivel-card, .diferenciador').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'all 0.6s ease-out';
-            observer.observe(el);
-        });
-    </script>
 </body>
 </html>
