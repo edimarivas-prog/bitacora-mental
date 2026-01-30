@@ -735,6 +735,36 @@
     rgba(0,0,0,0.45)
   );
 }
+/* === HERO FIX UX === */
+
+/* Desktop: que la imagen no opaque el mensaje */
+.hero-visual {
+  max-width: 520px;
+  justify-self: center;
+}
+
+/* Mobile: cambiar orden visual */
+@media (max-width: 768px) {
+  .hero-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-left {
+    order: 1;
+  }
+
+  .hero-visual {
+    order: 2;
+    margin-top: 30px;
+  }
+
+  .hero-visual img {
+    height: 380px;
+  }
+}
+.hero-visual img {
+  filter: saturate(0.95) contrast(0.95);
+}
 
   </style>
 </head>
