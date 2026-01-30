@@ -2,15 +2,135 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <title>Bitácora Mental | Bienestar psicológico</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Bitácora Mental - Plataforma de bienestar emocional con herramientas, recursos y especialistas para cuidar tu salud mental a tu ritmo.">
-  <title>Bitácora Mental - Bienestar emocional sin complicaciones</title>
-  
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      background-color: #f6f7f5;
+      color: #1f2933;
+      line-height: 1.6;
+    }
+
+    /* ---------- HERO ---------- */
+
+    .hero {
+      max-width: 1200px;
+      margin: 80px auto;
+      padding: 0 24px;
+    }
+
+    .hero-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .hero-left h1 {
+      font-size: 3rem;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 24px;
+    }
+
+    .hero-left p {
+      font-size: 1.1rem;
+      color: #4b5563;
+      margin-bottom: 32px;
+      max-width: 520px;
+    }
+
+    .hero-left a {
+      display: inline-block;
+      background-color: #1f2933;
+      color: #ffffff;
+      text-decoration: none;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+
+    .hero-left a:hover {
+      background-color: #111827;
+      transform: translateY(-1px);
+    }
+
+    /* ---------- HERO IMAGE ---------- */
+
+    .hero-visual {
+      position: relative;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+    }
+
+    .hero-visual img {
+      width: 100%;
+      height: 520px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-visual::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(0,0,0,0.15),
+        rgba(0,0,0,0.45)
+      );
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+
+    @media (max-width: 900px) {
+      .hero-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-left h1 {
+        font-size: 2.2rem;
+      }
+
+      .hero-visual img {
+        height: 420px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <section class="hero">
+    <div class="hero-wrapper">
+
+      <div class="hero-left">
+        <h1>Un espacio para comprenderte, acompañarte y sanar</h1>
+        <p>
+          Bitácora Mental conecta personas con profesionales de la psicología
+          en un entorno humano, seguro y emocionalmente consciente.
+        </p>
+        <a href="#">Comenzar mi proceso</a>
+      </div>
+
+      <div class="hero-visual">
+        <img src="images/hero.jpg" alt="Bienestar emocional">
+      </div>
+
+    </div>
+  </section>
+
+</body>
   
   <style>
     :root {
