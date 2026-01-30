@@ -716,57 +716,8 @@
         overflow: hidden;
       box-shadow: 0 30px 60px rgba(0,0,0,0.15);
   }
-
-/*IMAGEN CABECERA*/
-    .hero-visual img {
-  width: 100%;
-  height: 520px;
-  object-fit: cover;
-  display: block;
-}
-
-.hero-visual::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(0,0,0,0.15),
-    rgba(0,0,0,0.45)
-  );
-}
-/* === HERO FIX UX === */
-
-/* Desktop: que la imagen no opaque el mensaje */
-.hero-visual {
-  max-width: 520px;
-  justify-self: center;
-}
-
-/* Mobile: cambiar orden visual */
-@media (max-width: 768px) {
-  .hero-wrapper {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-left {
-    order: 1;
-  }
-
-  .hero-visual {
-    order: 2;
-    margin-top: 30px;
-  }
-
-  .hero-visual img {
-    height: 380px;
-  }
-}
-.hero-visual img {
-  filter: saturate(0.95) contrast(0.95);
-}
-
   </style>
+  
 </head>
 <body>
   <!-- Navbar -->
@@ -840,10 +791,6 @@
       </div>
     </div>
     
- <!-- IMAGEN PRINCIPAL -->
-      <div class="hero-visual">
-  <img src="images/hero.jpg" alt="Bienestar emocional">
-  </div>
 
     
   </section>
