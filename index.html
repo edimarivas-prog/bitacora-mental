@@ -2,312 +2,65 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>Bitácora Mental | Herramientas psicológicas prácticas en Perú</title>
-  <meta name="description" content="Test emocional gratuito y herramientas psicológicas prácticas para reducir estrés y ansiedad. Bienestar emocional simple y accesible en Perú.">
-  <meta name="keywords" content="ansiedad, estrés, bienestar emocional, psicología, test emocional, Lima, Perú">
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="Bitácora Mental | Bienestar psicológico práctico">
-  <meta property="og:description" content="Test gratuito y herramientas emocionales para tu día a día.">
-  <meta property="og:type" content="website">
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <style>
-    :root {
-      --sage-dark:#2D3A30;
-      --sage-green:#4F6F52;
-      --sage-light:#F8F9F8;
-    }
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      scroll-behavior: smooth;
-      background: var(--sage-light);
-    }
-    .glass {
-      background: rgba(255,255,255,.85);
-      backdrop-filter: blur(12px);
-    }
-    .card-hover {
-      transition: transform .3s ease, box-shadow .3s ease;
-    }
-    .card-hover:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 30px rgba(0,0,0,.08);
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bitácora Mental</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
+<body>
 
-<body class="text-gray-800">
-
-<!-- NAVBAR -->
-<nav class="fixed w-full z-50 glass border-b border-gray-100">
-  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-    <span class="text-xl font-bold tracking-tighter text-[var(--sage-dark)] uppercase">
-      Bitácora Mental
-    </span>
-
-    <div class="hidden md:flex space-x-8 text-xs uppercase tracking-widest font-bold">
-      <a href="#test" class="hover:text-green-700 transition">Test Gratis</a>
-      <a href="#kit" class="hover:text-green-700 transition">Kit Emocional</a>
-      <a href="#especialistas" class="hover:text-green-700 transition">Especialistas</a>
-    </div>
-
-    <a href="https://wa.me/51999999999" class="bg-[var(--sage-green)] text-white px-5 py-2 rounded-full text-xs font-bold">
-      CONTACTO
-    </a>
-  </div>
-</nav>
-
-<!-- HERO -->
-<section class="pt-32 pb-20 px-6">
-  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-14 items-center">
-
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo">Bitácora Mental</div>
     <div>
-      <h1 class="text-5xl md:text-6xl font-bold text-[var(--sage-dark)] leading-tight mb-6">
-        Reduce tu ansiedad en minutos, no en meses.
-      </h1>
-
-      <p class="text-xl text-gray-600 mb-10">
-        Test emocional gratuito + herramientas psicológicas diseñadas para el ritmo de vida en Perú.
-      </p>
-
-      <div class="flex flex-col sm:flex-row gap-4">
-        <a href="#test" class="bg-[var(--sage-green)] text-white px-8 py-4 rounded-2xl font-bold text-center hover:opacity-90 transition">
-          Haz tu test gratis
-        </a>
-        <a href="#kit" class="border border-gray-300 px-8 py-4 rounded-2xl font-bold text-center hover:bg-white transition">
-          Ver kit emocional
-        </a>
-      </div>
-
-      <p class="mt-6 text-sm text-gray-500">
-        +1,200 personas ya usaron Bitácora Mental
-      </p>
-    </div>
-
-    <div class="relative">
-      <img 
-        src="https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?q=80&w=1000&auto=format&fit=crop" 
-        alt="Bienestar emocional"
-        loading="lazy"
-        decoding="async"
-        class="rounded-[2rem] shadow-2xl h-[500px] w-full object-cover"
-      >
-    </div>
-
-  </div>
-</section>
-
-<!-- TEST -->
-<section id="test" class="py-24 bg-white px-6">
-  <div class="max-w-7xl mx-auto">
-
-    <div class="text-center mb-16">
-      <span class="text-[var(--sage-green)] font-bold text-sm uppercase tracking-widest">
-        Paso 1: Diagnóstico
-      </span>
-      <h2 class="text-4xl font-bold text-[var(--sage-dark)] mt-2 italic">
-        Test Emocional Gratuito
-      </h2>
-    </div>
-
-    <div class="grid md:grid-cols-2 gap-12 items-center">
-
-      <img 
-        src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?q=80&w=600&auto=format&fit=crop" 
-        class="rounded-3xl shadow-lg"
-        alt="Test emocional"
-        loading="lazy"
-      >
-
-      <div class="space-y-6">
-        <p class="text-lg text-gray-600">
-          No es un diagnóstico clínico, es tu brújula emocional actual.
-        </p>
-
-        <ul class="space-y-4">
-          <li class="flex items-start gap-3">
-            <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">✓</span>
-            <span><strong>Indicador emocional:</strong> mide estrés y ansiedad.</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">✓</span>
-            <span><strong>Reporte automático:</strong> resultados claros.</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">✓</span>
-            <span><strong>Recomendaciones:</strong> acciones inmediatas.</span>
-          </li>
-        </ul>
-
-        <a href="#" class="inline-block bg-gray-900 text-white px-8 py-4 rounded-2xl font-bold hover:opacity-90 transition">
-          REALIZAR TEST GRATIS
-        </a>
-      </div>
-
+      <a href="recursos.html">Recursos</a>
+      <a href="especialistas.html">Especialistas</a>
+      <a href="blog.html">Blog</a>
+      <a href="contacto.html">Contacto</a>
     </div>
   </div>
-</section>
 
-<!-- KIT -->
-<section id="kit" class="py-24 px-6">
-  <div class="max-w-7xl mx-auto">
-
-    <div class="text-center mb-16">
-      <span class="text-[var(--sage-green)] font-bold text-sm uppercase tracking-widest">
-        Paso 2: Herramientas
-      </span>
-      <h2 class="text-4xl font-bold text-[var(--sage-dark)] mt-2 italic">
-        Kit de Auxilio Emocional
-      </h2>
-      <p class="text-gray-500 mt-4">
-        Todo lo que necesitas por solo <strong>S/ 19.90</strong>
-      </p>
-    </div>
-
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-      <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100 card-hover">
-        <div class="text-3xl mb-4">🎧</div>
-        <h3 class="text-xl font-bold mb-4">Audios Guiados</h3>
-        <ul class="text-sm text-gray-600 space-y-3">
-          <li>• S.O.S ansiedad</li>
-          <li>• Reset mental</li>
-          <li>• Sueño profundo</li>
-        </ul>
-      </div>
-
-      <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100 card-hover">
-        <div class="text-3xl mb-4">📄</div>
-        <h3 class="text-xl font-bold mb-4">Guías Prácticas</h3>
-        <ul class="text-sm text-gray-600 space-y-3">
-          <li>• Termómetro de estrés</li>
-          <li>• Límites emocionales</li>
-          <li>• Diario emocional</li>
-        </ul>
-      </div>
-
-      <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100 card-hover">
-        <div class="text-3xl mb-4">💬</div>
-        <h3 class="text-xl font-bold mb-4">Comunidad Privada</h3>
-        <ul class="text-sm text-gray-600 space-y-3">
-          <li>• Tips semanales</li>
-          <li>• Descuentos exclusivos</li>
-        </ul>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONIOS -->
-<section class="py-20 bg-white px-6">
-  <div class="max-w-6xl mx-auto text-center">
-
-    <h2 class="text-3xl font-bold mb-12">
-      Lo que dicen quienes ya lo probaron
-    </h2>
-
-    <div class="grid md:grid-cols-3 gap-8">
-
-      <div class="bg-[var(--sage-light)] p-6 rounded-2xl">
-        <p class="text-gray-600">“Me ayudó a entender mi ansiedad en minutos.”</p>
-        <span class="block mt-4 font-bold">— Andrea, Lima</span>
-      </div>
-
-      <div class="bg-[var(--sage-light)] p-6 rounded-2xl">
-        <p class="text-gray-600">“Simple, claro y útil.”</p>
-        <span class="block mt-4 font-bold">— Carlos, Arequipa</span>
-      </div>
-
-      <div class="bg-[var(--sage-light)] p-6 rounded-2xl">
-        <p class="text-gray-600">“Un buen primer paso antes de terapia.”</p>
-        <span class="block mt-4 font-bold">— Mariana, Lima</span>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ESPECIALISTAS -->
-<section id="especialistas" class="py-24 px-6">
-  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-
+  <!-- Hero -->
+  <section class="hero">
     <div>
-      <span class="text-[var(--sage-green)] font-bold text-sm uppercase tracking-widest">
-        Paso 3: Acompañamiento
-      </span>
-      <h2 class="text-4xl font-bold text-[var(--sage-dark)] mt-2 mb-8 italic">
-        Red de Especialistas
-      </h2>
-
-      <p class="text-lg text-gray-600 mb-8">
-        Si necesitas ayuda profesional, te conectamos con el especialista adecuado.
-      </p>
-
-      <div class="space-y-6">
-
-        <div class="flex gap-4">
-          <div class="bg-[var(--sage-light)] px-3 py-2 rounded-xl font-bold text-[var(--sage-green)]">
-            01
-          </div>
-          <div>
-            <h3 class="font-bold">Triaje clínico</h3>
-            <p class="text-sm text-gray-500">
-              Analizamos tu caso para asignarte al profesional ideal.
-            </p>
-          </div>
-        </div>
-
-        <div class="flex gap-4">
-          <div class="bg-[var(--sage-light)] px-3 py-2 rounded-xl font-bold text-[var(--sage-green)]">
-            02
-          </div>
-          <div>
-            <h3 class="font-bold">Ingreso optimizado</h3>
-            <p class="text-sm text-gray-500">
-              El especialista recibe tu contexto antes de la consulta.
-            </p>
-          </div>
-        </div>
-
+      <h1>Un espacio para tu bienestar mental.</h1>
+      <p>Herramientas digitales, recursos guiados y profesionales especializados para acompañarte en tu proceso emocional.</p>
+      <div class="buttons">
+        <a href="recursos.html" class="btn-primary">Explorar recursos</a>
+        <a href="especialistas.html" class="btn-secondary">Conocer especialistas</a>
       </div>
     </div>
+    <div>
+      <img src="assets/img/hero.png" alt="Bienestar mental" style="width:100%; border-radius:20px;">
+    </div>
+  </section>
 
-    <img 
-      src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=600&auto=format&fit=crop" 
-      class="rounded-[3rem] shadow-2xl"
-      alt="Psicólogos"
-      loading="lazy"
-    >
+  <!-- Ecosistema -->
+  <section class="section">
+    <h2>Explora Bitácora Mental</h2>
+    <div class="grid grid-4">
+      <div class="card">🧠 Diagnóstico emocional</div>
+      <div class="card">📚 Recursos guiados</div>
+      <div class="card">👥 Profesionales especializados</div>
+      <div class="card">💎 Programas de acompañamiento</div>
+    </div>
+  </section>
 
-  </div>
-</section>
+  <!-- Recursos -->
+  <section class="section">
+    <h2>Recursos destacados</h2>
+    <div class="grid grid-4">
+      <div class="card">Guía para manejar la ansiedad</div>
+      <div class="card">Diario emocional</div>
+      <div class="card">Audio de calma</div>
+      <div class="card">Kit emocional</div>
+    </div>
+  </section>
 
-<!-- BOTÓN WHATSAPP -->
-<a href="https://wa.me/51999999999" 
-   class="fixed bottom-8 right-8 bg-[#25D366] text-white p-5 rounded-full shadow-2xl hover:scale-110 transition z-50">
-  💬
-</a>
-
-<!-- FOOTER -->
-<footer class="py-16 text-center border-t border-gray-200">
-  <div class="max-w-7xl mx-auto px-6 italic text-gray-500">
-    "No necesitas ver toda la escalera, solo dar el primer paso."
-  </div>
-  <div class="mt-8 text-xs text-gray-400 uppercase tracking-[0.3em]">
-    &copy; 2026 Bitácora Mental • Lima, Perú.
-  </div>
-</footer>
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2026 Bitácora Mental — Bienestar psicológico digital.</p>
+  </footer>
 
 </body>
 </html>
