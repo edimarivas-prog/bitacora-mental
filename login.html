@@ -644,25 +644,7 @@
       loginBtn.classList.add('loading');
       loginBtn.textContent = '';
 
-      try {
-        // AQUÍ VA LA INTEGRACIÓN CON SUPABASE
-        // Por ahora simulamos login exitoso
-        await simulateLogin(email, password);
-
-        showSuccess('¡Inicio de sesión exitoso! Redirigiendo...');
-        
-        setTimeout(() => {
-          window.location.href = 'app/dashboard.html';
-        }, 1500);
-
-      } catch (error) {
-        loginBtn.classList.remove('loading');
-        loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Iniciar sesión';
-        showError(error.message || 'Error al iniciar sesión. Por favor intenta de nuevo.');
-      }
-    });
-
-    // Reemplazar simulateLogin con:
+      // Reemplazar simulateLogin con:
 
 loginForm.addEventListener('submit', async (e) => {
   e.preventDefault()
@@ -697,6 +679,8 @@ googleSignInBtn.addEventListener('click', async () => {
     }
   })
 })
+
+    
 
     // Check if coming from registration
     const urlParams = new URLSearchParams(window.location.search);
