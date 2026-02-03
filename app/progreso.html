@@ -675,154 +675,146 @@
   </div>
 
   <script>
-    // Configuración global de Chart.js
-    Chart.defaults.font.family = "'DM Sans', sans-serif";
-    Chart.defaults.color = '#6B7280';
+    // --- CONFIGURACIÓN GLOBAL ---
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+Chart.defaults.color = '#6B7280';
 
-    // Chart 1: Evolución Emocional
-    const emotionCtx = document.getElementById('emotionChart').getContext('2d');
-    const emotionChart = new Chart(emotionCtx, {
-      type: 'line',
-      data: {
-        labels: ['1 Ene', '5 Ene', '10 Ene', '15 Ene', '20 Ene', '25 Ene', '30 Ene', '2 Feb'],
-        datasets: [{
-          label: 'Estado de ánimo',
-          data: [5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5],
-          borderColor: '#4F6F52',
-          backgroundColor: 'rgba(79, 111, 82, 0.1)',
-          tension: 0.4,
-          fill: true,
-          pointRadius: 4,
-          pointHoverRadius: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            max: 10,
-            grid: {
-              color: '#E6EFE8'
-            }
-          },
-          x: {
-            grid: {
-              display: false
-            }
-          }
-        }
-      }
-    });
+let emotionChart, testsChart, diaryChart;
 
-    // Chart 2: Tests Evolution
-    const testsCtx = document.getElementById('testsChart').getContext('2d');
-    const testsChart = new Chart(testsCtx, {
-      type: 'line',
-      data: {
-        labels: ['Test 1', 'Test 2', 'Test 3'],
-        datasets: [
-          {
-            label: 'Ansiedad',
-            data: [7, 5, 3],
-            borderColor: '#EF4444',
-            backgroundColor: 'rgba(239, 68, 68, 0.1)',
-            tension: 0.4
-          },
-          {
-            label: 'Estrés',
-            data: [8, 6, 5],
-            borderColor: '#F59E0B',
-            backgroundColor: 'rgba(245, 158, 11, 0.1)',
-            tension: 0.4
-          },
-          {
-            label: 'Ánimo',
-            data: [5, 6, 8],
-            borderColor: '#10B981',
-            backgroundColor: 'rgba(16, 185, 129, 0.1)',
-            tension: 0.4
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'bottom'
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            max: 10,
-            grid: {
-              color: '#E6EFE8'
-            }
-          },
-          x: {
-            grid: {
-              display: false
-            }
-          }
-        }
-      }
-    });
+// --- FUNCIONES DE CARGA (SUPABASE) ---
 
-    // Chart 3: Diary Activity
-    const diaryCtx = document.getElementById('diaryActivityChart').getContext('2d');
-    const diaryChart = new Chart(diaryCtx, {
-      type: 'bar',
-      data: {
-        labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
-        datasets: [{
-          label: 'Entradas por día',
-          data: [3, 4, 2, 5, 3, 6, 5],
-          backgroundColor: '#4F6F52',
-          borderRadius: 8
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            grid: {
-              color: '#E6EFE8'
-            }
-          },
-          x: {
-            grid: {
-              display: false
-            }
-          }
-        }
-      }
-    });
+async function getCurrentUser() {
+    const { data: { user } } = await supabase.auth.getUser();
+    return user;
+}
 
-    function changeTimeRange(range) {
-      // Update active button
-      document.querySelectorAll('.time-option').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      event.target.classList.add('active');
+function thirtyDaysAgo() {
+    const date = new Date();
+    date.setDate(date.getDate() - 30);
+    return date.toISOString().split('T')[0];
+}
 
-      // En producción, aquí cargarías datos de Supabase según el rango
-      console.log('Changing time range to:', range);
+async function loadProgressData() {
+    const user = await getCurrentUser();
+    if (!user) {
+        window.location.href = 'registro.html';
+        return;
     }
+
+    // 1. Cargar Historial de Tests
+    const { data: testData, error: testError } = await supabase
+        .from('test_results')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('fecha_realizado', { ascending: false });
+
+    if (testData) {
+        renderTestHistory(testData);
+        updateTestCharts(testData);
+    }
+
+    // 2. Cargar Actividad del Diario
+    const { data: diaryData, error: diaryError } = await supabase
+        .from('diario_entries')
+        .select('fecha, emocion')
+        .eq('user_id', user.id)
+        .gte('fecha', thirtyDaysAgo());
+
+    if (diaryData) {
+        updateDiaryCharts(diaryData);
+    }
+}
+
+// --- FUNCIONES DE RENDERIZADO ---
+
+function renderTestHistory(tests) {
+    const container = document.querySelector('.test-history');
+    // Mantener el título y limpiar el resto
+    container.innerHTML = '<h2 style="margin-bottom: 24px;">Historial de evaluaciones</h2>';
+    
+    if (tests.length === 0) {
+        container.innerHTML += '<p class="empty-text">Aún no has realizado ningún test.</p>';
+        return;
+    }
+
+    tests.forEach(test => {
+        const fecha = new Date(test.fecha_realizado);
+        const dia = fecha.getDate().toString().padStart(2, '0');
+        const mes = fecha.toLocaleString('es-ES', { month: 'short' }).replace('.', '');
+
+        const item = `
+            <div class="test-item">
+                <div class="test-date-badge">
+                    <div class="test-day">${dia}</div>
+                    <div class="test-month">${mes}</div>
+                </div>
+                <div class="test-content">
+                    <div class="test-title">${test.categoria_recomendada || 'Evaluación de Bienestar'}</div>
+                    <div class="test-scores">
+                        <span class="score-badge ${test.nivel_ansiedad > 6 ? 'high' : 'low'}">Ansiedad: ${test.nivel_ansiedad}/10</span>
+                        <span class="score-badge ${test.nivel_estres > 6 ? 'high' : 'low'}">Estrés: ${test.nivel_estres}/10</span>
+                        <span class="score-badge ${test.nivel_animo < 4 ? 'high' : 'low'}">Ánimo: ${test.nivel_animo}/10</span>
+                    </div>
+                </div>
+            </div>`;
+        container.innerHTML += item;
+    });
+}
+
+function updateTestCharts(tests) {
+    // Invertimos para que el gráfico vaya de antiguo a nuevo
+    const dataReverse = [...tests].reverse();
+    const labels = dataReverse.map((_, i) => `Test ${i + 1}`);
+    
+    testsChart.data.labels = labels;
+    testsChart.data.datasets[0].data = dataReverse.map(t => t.nivel_ansiedad);
+    testsChart.data.datasets[1].data = dataReverse.map(t => t.nivel_estres);
+    testsChart.data.datasets[2].data = dataReverse.map(t => t.nivel_animo);
+    testsChart.update();
+}
+
+function updateDiaryCharts(entries) {
+    // Contar entradas por día de la semana para el gráfico de barras
+    const dayCounts = [0, 0, 0, 0, 0, 0, 0]; // Lun-Dom
+    entries.forEach(entry => {
+        const day = new Date(entry.fecha).getDay();
+        const adjustedDay = day === 0 ? 6 : day - 1; // Ajustar para que lunes sea 0
+        dayCounts[adjustedDay]++;
+    });
+
+    diaryChart.data.datasets[0].data = dayCounts;
+    diaryChart.update();
+}
+
+// --- INICIALIZACIÓN DE GRÁFICOS (Vacíos al inicio) ---
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Gráfico de Tests
+    const testsCtx = document.getElementById('testsChart').getContext('2d');
+    testsChart = new Chart(testsCtx, {
+        type: 'line',
+        data: { labels: [], datasets: [
+            { label: 'Ansiedad', borderColor: '#EF4444', data: [], tension: 0.4 },
+            { label: 'Estrés', borderColor: '#F59E0B', data: [], tension: 0.4 },
+            { label: 'Ánimo', borderColor: '#10B981', data: [], tension: 0.4 }
+        ]},
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // Gráfico de Actividad Diario
+    const diaryCtx = document.getElementById('diaryActivityChart').getContext('2d');
+    diaryChart = new Chart(diaryCtx, {
+        type: 'bar',
+        data: { 
+            labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+            datasets: [{ label: 'Entradas', backgroundColor: '#4F6F52', data: [] }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // Cargar datos reales
+    loadProgressData();
+});
   </script>
 
     <!-- Supabase SDK -->
