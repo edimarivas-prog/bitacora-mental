@@ -644,69 +644,52 @@
       loginBtn.classList.add('loading');
       loginBtn.textContent = '';
 
-      try {
-        // AQUÍ VA LA INTEGRACIÓN CON SUPABASE
-        // Por ahora simulamos login exitoso
-        await simulateLogin(email, password);
+      // Inicio de sesión con Email/Password
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  // ... (tus validaciones previas de UI)
 
-        showSuccess('¡Inicio de sesión exitoso! Redirigiendo...');
-        
-        setTimeout(() => {
-          window.location.href = 'app/dashboard.html';
-        }, 1500);
-
-      } catch (error) {
-        loginBtn.classList.remove('loading');
-        loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Iniciar sesión';
-        showError(error.message || 'Error al iniciar sesión. Por favor intenta de nuevo.');
-      }
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password
     });
 
-    // Simular login (esto se reemplazará con Supabase)
-    async function simulateLogin(email, password) {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          // Simulamos validación exitosa
-          if (email && password) {
-            resolve({ user: { email } });
-          } else {
-            reject(new Error('Credenciales inválidas'));
-          }
-        }, 1500);
-      });
-    }
+    if (error) throw error; // Si Supabase devuelve error, salta al catch
 
-    // Google Sign In (se conectará con Supabase)
-    const googleSignInBtn = document.getElementById('googleSignIn');
+    showSuccess('¡Inicio de sesión exitoso! Redirigiendo...');
     
-    googleSignInBtn.addEventListener('click', async function() {
-      this.classList.add('loading');
-      this.textContent = '';
+    setTimeout(() => {
+      window.location.href = 'app/dashboard.html';
+    }, 1500);
 
-      try {
-        // AQUÍ VA LA INTEGRACIÓN CON SUPABASE GOOGLE OAUTH
-        await simulateGoogleLogin();
-        
-        showSuccess('¡Autenticación con Google exitosa! Redirigiendo...');
-        
-        setTimeout(() => {
-          window.location.href = 'app/dashboard.html';
-        }, 1500);
+  } catch (error) {
+    loginBtn.classList.remove('loading');
+    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Iniciar sesión';
+    showError(error.message || 'Error al iniciar sesión.');
+  }
+});
 
-      } catch (error) {
-        this.classList.remove('loading');
-        this.innerHTML = '<svg>...</svg> Continuar con Google';
-        showError('Error al autenticar con Google. Por favor intenta de nuevo.');
+// Inicio de sesión con Google
+googleSignInBtn.addEventListener('click', async function() {
+  this.classList.add('loading');
+  
+  try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin + '/app/dashboard.html'
       }
     });
 
-    async function simulateGoogleLogin() {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({ user: { email: 'usuario@gmail.com' } });
-        }, 1500);
-      });
-    }
+    if (error) throw error;
+    // Nota: OAuth redirige la página automáticamente, no necesitas el setTimeout aquí
+  } catch (error) {
+    this.classList.remove('loading');
+    this.innerHTML = '<i class="fab fa-google"></i> Continuar con Google';
+    showError('Error al conectar con Google.');
+  }
+});
 
     // Check if coming from registration
     const urlParams = new URLSearchParams(window.location.search);
