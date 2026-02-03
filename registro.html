@@ -3,93 +3,287 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro - Bitácora Mental</title>
+  <title>Crear Cuenta - Bitácora Mental</title>
+  
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
-    :root { --primary: #4F6F52; --background: #F9FBFA; --dark: #1F2933; --border: #E6EFE8; --danger: #EF4444; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--background); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-    .auth-container { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
-    .form-input { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px; margin-bottom: 15px; font-family: inherit; }
-    .btn { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
-    .btn:hover { opacity: 0.9; }
-    .alert { color: var(--danger); margin-bottom: 15px; display: none; text-align: center; }
+    /* Estilos visuales completos (Mismos del Login) */
+    :root {
+      --primary: #4F6F52;
+      --primary-light: #6B8A6E;
+      --secondary: #A7C4B5;
+      --background: #F9FBFA;
+      --dark: #1F2933;
+      --text-secondary: #6B7280;
+      --border: #E6EFE8;
+      --danger: #EF4444;
+      --success: #10B981;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--background);
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    h1, h2, h3 { font-family: 'Outfit', sans-serif; }
+
+    .auth-container {
+      width: 100%;
+      max-width: 1000px;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .auth-form-side { padding: 50px; overflow-y: auto; max-height: 100vh; }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--primary);
+      text-decoration: none;
+      margin-bottom: 30px;
+    }
+
+    .auth-header { margin-bottom: 24px; }
+    .auth-header h1 { font-size: 2rem; margin-bottom: 8px; color: var(--dark); }
+    .auth-header p { color: var(--text-secondary); font-size: 1rem; }
+    .auth-header p a { color: var(--primary); text-decoration: none; font-weight: 600; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; margin-bottom: 6px; font-weight: 600; color: var(--dark); font-size: 0.95rem; }
+
+    .form-input {
+      width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 12px;
+      font-size: 1rem; font-family: 'DM Sans', sans-serif; transition: all 0.3s; background: white;
+    }
+    .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 111, 82, 0.1); }
+
+    .btn {
+      width: 100%; padding: 14px; border-radius: 12px; font-weight: 600; font-size: 1rem; cursor: pointer;
+      transition: all 0.3s; border: none; font-family: 'DM Sans', sans-serif; display: flex;
+      align-items: center; justify-content: center; gap: 10px; margin-top: 10px;
+    }
+    .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(79, 111, 82, 0.3); }
+    .btn-primary:hover { background: var(--primary-light); transform: translateY(-2px); }
+    .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+
+    .btn-google { background: white; color: var(--dark); border: 2px solid var(--border); margin-top: 16px; }
+    .btn-google:hover { background: var(--background); border-color: var(--primary); }
+
+    .divider { display: flex; align-items: center; gap: 16px; margin: 24px 0; color: var(--text-secondary); font-size: 0.9rem; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .auth-visual-side {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      padding: 60px 40px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center; color: white; position: relative; overflow: hidden;
+    }
+    
+    .visual-content { position: relative; z-index: 1; }
+    .visual-icon { font-size: 4rem; margin-bottom: 20px; opacity: 0.9; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 30px; }
+    .stat { padding: 15px; background: rgba(255,255,255,0.1); border-radius: 12px; backdrop-filter: blur(10px); }
+    .stat-value { font-size: 1.5rem; font-weight: 700; display: block; }
+    .stat-label { font-size: 0.8rem; opacity: 0.9; }
+
+    .alert { padding: 12px; border-radius: 10px; margin-bottom: 20px; display: none; align-items: center; gap: 10px; font-size: 0.9rem; }
+    .alert.error { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+    
+    @media (max-width: 768px) {
+      .auth-container { grid-template-columns: 1fr; max-width: 500px; }
+      .auth-visual-side { display: none; }
+      .form-row { grid-template-columns: 1fr; gap: 0; }
+    }
   </style>
 </head>
 <body>
   <div class="auth-container">
-    <h1 style="text-align: center; color: var(--dark); font-family: 'Outfit'; margin-bottom: 20px;">Crear Cuenta</h1>
-    
-    <div id="errorAlert" class="alert"></div>
-
-    <form id="registerForm">
-      <input type="text" id="nombre" class="form-input" placeholder="Nombre" required>
-      <input type="text" id="apellido" class="form-input" placeholder="Apellido" required>
-      <input type="email" id="email" class="form-input" placeholder="Correo electrónico" required>
-      <input type="password" id="password" class="form-input" placeholder="Contraseña (mínimo 6 caracteres)" required>
+    <div class="auth-form-side">
+      <a href="/" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
       
-      <div style="margin-bottom: 20px; font-size: 0.9rem; color: #666;">
-        <input type="checkbox" id="terms" required> Acepto términos y condiciones
+      <div class="auth-header">
+        <h1>Crea tu cuenta</h1>
+        <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
       </div>
 
-      <button type="submit" class="btn" id="registerBtn">Registrarse</button>
-    </form>
+      <div class="alert error" id="errorAlert">
+        <i class="fas fa-exclamation-circle"></i> <span id="errorMessage"></span>
+      </div>
 
-    <p style="text-align: center; margin-top: 20px; color: #666;">
-      ¿Ya tienes cuenta? <a href="login.html" style="color: var(--primary); font-weight: 600;">Inicia sesión</a>
-    </p>
+      <form id="registerForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-input" id="nombre" required placeholder="Tu nombre">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Apellido</label>
+            <input type="text" class="form-input" id="apellido" required placeholder="Tu apellido">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Correo electrónico</label>
+          <input type="email" class="form-input" id="email" required placeholder="tu@email.com">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Contraseña</label>
+          <input type="password" class="form-input" id="password" required placeholder="Mínimo 6 caracteres">
+        </div>
+
+        <div style="margin-bottom: 20px; font-size: 0.9rem; color: var(--text-secondary);">
+          <input type="checkbox" id="terms" required style="cursor: pointer;">
+          <label for="terms" style="cursor: pointer;">Acepto los términos y condiciones</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="registerBtn">
+          <i class="fas fa-user-plus"></i> Crear cuenta
+        </button>
+
+        <div class="divider">o regístrate con</div>
+
+        <button type="button" class="btn btn-google" id="googleSignUp">
+          <img src="https://www.google.com/favicon.ico" width="18" alt="G"> Continuar con Google
+        </button>
+      </form>
+    </div>
+
+    <div class="auth-visual-side">
+      <div class="visual-content">
+        <div class="visual-icon"><i class="fas fa-heart-pulse"></i></div>
+        <h2 style="font-size: 1.8rem; margin-bottom: 15px;">Tu bienestar importa</h2>
+        <p style="opacity: 0.9; line-height: 1.6;">Únete a nuestra comunidad y accede a herramientas profesionales para tu salud mental.</p>
+        
+        <div class="stats">
+          <div class="stat">
+            <span class="stat-value">100%</span>
+            <span class="stat-label">Privado</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">24/7</span>
+            <span class="stat-label">Acceso</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">15+</span>
+            <span class="stat-label">Expertos</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
+  
   <script>
-    document.getElementById('registerForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = document.getElementById('registerBtn');
-      const errorDiv = document.getElementById('errorAlert');
-      
-      btn.textContent = 'Creando cuenta...';
-      btn.disabled = true;
-      errorDiv.style.display = 'none';
+    const registerForm = document.getElementById('registerForm');
+    const registerBtn = document.getElementById('registerBtn');
+    const errorAlert = document.getElementById('errorAlert');
+    const errorMessage = document.getElementById('errorMessage');
 
+    // Función para mostrar errores
+    function showError(msg) {
+      errorMessage.textContent = msg;
+      errorAlert.style.display = 'flex';
+      setTimeout(() => errorAlert.style.display = 'none', 5000);
+    }
+
+    // REGISTRO CON CORREO Y CONTRASEÑA
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
       const nombre = document.getElementById('nombre').value.trim();
       const apellido = document.getElementById('apellido').value.trim();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
+      registerBtn.disabled = true;
+      registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando...';
+
       try {
-        // 1. Crear usuario Auth
-        const { data, error } = await supabase.auth.signUp({
-          email, 
+        // 1. Crear usuario en Auth
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email,
           password,
           options: {
-            data: { nombre, apellido } // Metadatos para recuperación rápida
+            data: { nombre, apellido } // Metadatos para uso futuro
           }
         });
 
-        if (error) throw error;
+        if (authError) throw authError;
 
-        // 2. Insertar en tabla de perfiles (Si el usuario se creó)
-        if (data.user) {
+        // 2. Crear perfil en la tabla users_profile
+        if (authData.user) {
           const { error: profileError } = await supabase
             .from('users_profile')
             .insert({
-              id: data.user.id,
+              id: authData.user.id,
               nombre: nombre,
               apellido: apellido
             });
             
-          if (profileError) console.error("Error perfil:", profileError);
+          if (profileError) {
+            console.error("Error al crear perfil:", profileError);
+            // No bloqueamos el flujo, el usuario se creó
+          }
         }
 
-        alert('¡Cuenta creada con éxito! Ahora inicia sesión.');
-        window.location.href = 'login.html'; // O redirigir al test-inicial.html
+        alert('¡Cuenta creada con éxito!');
+        // Redirigir al test inicial para nuevos usuarios
+        window.location.href = 'test-inicial.html';
 
       } catch (error) {
-        btn.textContent = 'Registrarse';
-        btn.disabled = false;
-        errorDiv.textContent = error.message;
-        errorDiv.style.display = 'block';
+        registerBtn.disabled = false;
+        registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Crear cuenta';
+        showError(error.message);
+      }
+    });
+
+    // REGISTRO CON GOOGLE (REAL)
+    document.getElementById('googleSignUp').addEventListener('click', async () => {
+      const terms = document.getElementById('terms');
+      if (!terms.checked) {
+        showError('Debes aceptar los términos y condiciones');
+        return;
+      }
+
+      try {
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            // USAR LA RUTA CORRECTA PARA GITHUB PAGES (Dashboard)
+            redirectTo: 'https://edimarivas-prog.github.io/bitacora-mental/app/dashboard.html'
+          }
+        });
+        if (error) throw error;
+      } catch (error) {
+        showError('Error al conectar con Google: ' + error.message);
       }
     });
   </script>
