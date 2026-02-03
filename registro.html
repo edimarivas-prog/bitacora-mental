@@ -839,72 +839,59 @@
       registerBtn.classList.add('loading');
       registerBtn.textContent = '';
 
-      try {
-        // AQUÍ VA LA INTEGRACIÓN CON SUPABASE
-        await simulateRegistration(formData);
+      // Registro con Email/Password
+registerForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
 
-        showSuccess('¡Cuenta creada exitosamente! Redirigiendo al test inicial...');
-        
-        setTimeout(() => {
-          window.location.href = 'test-inicial.html';
-        }, 2000);
-
-      } catch (error) {
-        registerBtn.classList.remove('loading');
-        registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Crear cuenta';
-        showError(error.message || 'Error al crear la cuenta. Por favor intenta de nuevo.');
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+      options: {
+        data: {
+          nombre: formData.nombre,
+          apellido: formData.apellido
+        }
       }
     });
 
-    async function simulateRegistration(data) {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          // Simulamos registro exitoso
-          if (data.email && data.password) {
-            resolve({ user: { email: data.email, id: '123' } });
-          } else {
-            reject(new Error('Datos inválidos'));
-          }
-        }, 1500);
-      });
-    }
+    if (error) throw error;
 
-    // Google Sign Up
-    const googleSignUpBtn = document.getElementById('googleSignUp');
+    showSuccess('¡Cuenta creada! Revisa tu email para confirmar.');
     
-    googleSignUpBtn.addEventListener('click', async function() {
-      if (!termsCheckbox.checked) {
-        showError('Debes aceptar los términos y condiciones para continuar');
-        return;
-      }
+    setTimeout(() => {
+      window.location.href = 'test-inicial.html';
+    }, 2000);
 
-      this.classList.add('loading');
-      this.textContent = '';
+  } catch (error) {
+    registerBtn.classList.remove('loading');
+    registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Crear cuenta';
+    showError(error.message);
+  }
+});
 
-      try {
-        // AQUÍ VA LA INTEGRACIÓN CON SUPABASE GOOGLE OAUTH
-        await simulateGoogleSignUp();
-        
-        showSuccess('¡Registro con Google exitoso! Redirigiendo al test inicial...');
-        
-        setTimeout(() => {
-          window.location.href = 'test-inicial.html';
-        }, 1500);
+// Registro con Google (OAuth)
+googleSignUpBtn.addEventListener('click', async function() {
+  if (!termsCheckbox.checked) {
+    showError('Debes aceptar los términos y condiciones');
+    return;
+  }
+  this.classList.add('loading');
 
-      } catch (error) {
-        this.classList.remove('loading');
-        this.innerHTML = '<svg>...</svg> Continuar con Google';
-        showError('Error al registrarse con Google. Por favor intenta de nuevo.');
+  try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin + '/test-inicial.html'
       }
     });
-
-    async function simulateGoogleSignUp() {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({ user: { email: 'usuario@gmail.com', id: '456' } });
-        }, 1500);
-      });
-    }
+    if (error) throw error;
+  } catch (error) {
+    this.classList.remove('loading');
+    this.innerHTML = '<i class="fab fa-google"></i> Continuar con Google';
+    showError('Error al registrarse con Google.');
+  }
+});
   </script>
 </body>
 </html>
