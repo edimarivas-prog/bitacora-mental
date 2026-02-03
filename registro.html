@@ -277,6 +277,44 @@
         alert(error.message);
       }
     });
+          // 1. Función para que el botón de "Crear cuenta" funcione
+          document.getElementById('registerForm').addEventListener('submit', async (e) => {
+              e.preventDefault(); // Evita que la página se recargue
+              
+              const email = document.getElementById('email').value;
+              const password = document.getElementById('password').value;
+              const nombre = document.getElementById('nombre').value;
+              const apellido = document.getElementById('apellido').value;
+          
+              // Intentar crear el usuario en Supabase
+              const { data, error } = await supabase.auth.signUp({
+                  email: email,
+                  password: password,
+                  options: {
+                      data: { first_name: nombre, last_name: apellido }
+                  }
+              });
+          
+              if (error) {
+                  alert("Error al crear cuenta: " + error.message);
+              } else {
+                  alert("¡Cuenta creada! Revisa tu correo o intenta iniciar sesión.");
+                  window.location.href = 'login.html';
+              }
+          });
+          
+          // 2. Función para que el botón de Google funcione
+          document.getElementById('googleSignUp').onclick = async () => {
+              const { error } = await supabase.auth.signInWithOAuth({
+                  provider: 'google',
+                  options: {
+                      redirectTo: window.location.origin + '/bitacora-mental/dashboard.html'
+                  }
+              });
+          };
+
+
+    
   </script>
 </body>
 </html>
