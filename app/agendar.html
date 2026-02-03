@@ -803,44 +803,59 @@
   .eq('estado', 'activo');
 
     
+    let specialists = []; 
     let selectedSpecialist = null;
     let selectedDate = null;
     let selectedTime = null;
     let currentMonth = new Date().getMonth();
     let currentYear = new Date().getFullYear();
 
+    // 1. Cargar especialistas desde Supabase
+    async function loadSpecialists() {
+      const { data, error } = await supabase
+        .from('psicologos')
+        .select('*')
+        .eq('estado', 'activo')
+        .order('nombre_completo');
+
+      if (data) {
+        specialists = data; // Guardamos los datos en la variable global
+        renderSpecialists(); // Llamamos a la función de dibujo
+      } else {
+        console.error("Error cargando especialistas:", error);
+      }
+    }
+
+    // Ejecutar carga inicial
+    loadSpecialists();
+    
     // Initialize
     renderSpecialists();
 
-    function renderSpecialists() {
+   function renderSpecialists() {
       const container = document.getElementById('specialistsList');
+      if (!specialists.length) {
+        container.innerHTML = '<p class="empty-text">Cargando especialistas...</p>';
+        return;
+      }
+
       container.innerHTML = specialists.map(specialist => `
-        <div class="specialist-card" onclick="selectSpecialist(${specialist.id})">
+        <div class="specialist-card" onclick="selectSpecialist('${specialist.id}')">
           <div class="specialist-header">
-            <div class="specialist-avatar">${specialist.name.split(' ')[1][0]}</div>
+            <div class="specialist-avatar">${specialist.nombre_completo[0]}</div>
             <div class="specialist-info">
-              <div class="specialist-name">${specialist.name}</div>
-              <div class="specialist-specialty">${specialist.specialty}</div>
+              <div class="specialist-name">${specialist.nombre_completo}</div>
+              <div class="specialist-specialty">${specialist.especialidades ? specialist.especialidades.join(', ') : 'Psicólogo'}</div>
               <div class="specialist-rating">
                 <i class="fas fa-star"></i>
-                <span>${specialist.rating}</span>
+                <span>${specialist.rating || '5.0'}</span>
               </div>
             </div>
           </div>
-          <div class="specialist-details">
-            <div class="detail-badge">
-              <i class="fas fa-briefcase"></i>
-              <span>${specialist.experience} años exp.</span>
-            </div>
-            <div class="detail-badge">
-              <i class="fas fa-video"></i>
-              <span>Videollamada</span>
-            </div>
-          </div>
-          <p class="specialist-bio">${specialist.bio}</p>
+          <p class="specialist-bio">${specialist.biografia || 'Sin biografía disponible.'}</p>
           <div class="specialist-price">
-            S/ ${specialist.price}
-            <span>por sesión (50 min)</span>
+            S/ ${specialist.tarifa_sesion}
+            <span>por sesión</span>
           </div>
         </div>
       `).join('');
