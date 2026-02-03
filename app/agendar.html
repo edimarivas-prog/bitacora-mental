@@ -796,50 +796,13 @@
   </div>
 
   <script>
-    // Sample specialists data (esto vendría de Supabase)
-    const specialists = [
-      {
-        id: 1,
-        name: "Dra. Patricia Gómez",
-        specialty: "Ansiedad y manejo del estrés",
-        experience: 8,
-        rating: 4.9,
-        price: 180,
-        bio: "Especialista en terapia cognitivo-conductual con enfoque en trastornos de ansiedad y manejo del estrés.",
-        availability: ["09:00", "10:00", "14:00", "15:00", "16:00"]
-      },
-      {
-        id: 2,
-        name: "Psic. Carlos Ramírez",
-        specialty: "Burnout laboral",
-        experience: 5,
-        rating: 4.8,
-        price: 150,
-        bio: "Psicólogo organizacional especializado en burnout, estrés laboral y equilibrio vida-trabajo.",
-        availability: ["11:00", "12:00", "17:00", "18:00"]
-      },
-      {
-        id: 3,
-        name: "Dra. Ana Martínez",
-        specialty: "Depresión y duelo",
-        experience: 10,
-        rating: 5.0,
-        price: 200,
-        bio: "Psicoterapeuta con amplia experiencia en procesos de duelo, depresión y desarrollo de resiliencia emocional.",
-        availability: ["08:00", "09:00", "10:00", "15:00", "16:00"]
-      },
-      {
-        id: 4,
-        name: "Psic. Roberto Silva",
-        specialty: "Relaciones y familia",
-        experience: 6,
-        rating: 4.7,
-        price: 165,
-        bio: "Terapeuta familiar y de parejas enfocado en mejorar la comunicación y resolver conflictos.",
-        availability: ["14:00", "15:00", "16:00", "17:00", "18:00"]
-      }
-    ];
+    // Supabase 
+    const { data: specialists } = await supabase
+  .from('psicologos')
+  .select('*')
+  .eq('estado', 'activo');
 
+    
     let selectedSpecialist = null;
     let selectedDate = null;
     let selectedTime = null;
@@ -1068,26 +1031,16 @@
       `;
     }
 
-    async function confirmAppointment() {
-      // AQUÍ VA LA INTEGRACIÓN CON SUPABASE para guardar la cita
-      
-      const appointment = {
-        specialist_id: selectedSpecialist.id,
-        date: selectedDate.toISOString().split('T')[0],
-        time: selectedTime,
-        duration: 50,
-        price: selectedSpecialist.price,
-        status: 'agendada'
-      };
+    const { data, error } = await supabase
+  .from('citas')
+  .insert({
+    paciente_id: user.id,
+    psicologo_id: selectedSpecialist.id,
+    fecha_hora: `${selectedDate} ${selectedTime}`,
+    estado: 'agendada',
+    costo: selectedSpecialist.price
+  });
 
-      console.log('Guardando cita:', appointment);
-
-      // Simular guardado
-      setTimeout(() => {
-        alert('¡Cita agendada exitosamente!');
-        window.location.href = 'dashboard.html';
-      }, 1000);
-    }
   </script>
 </body>
 </html>
