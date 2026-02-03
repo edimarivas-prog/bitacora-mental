@@ -1,0 +1,32 @@
+// Cargar citas del usuario
+async function loadAppointments() {
+  const user = await getCurrentUser()
+
+  const { data, error } = await supabase
+    .from('citas')
+    .select(`
+      *,
+      psicologos (nombre_completo, especialidades)
+    `)
+    .eq('paciente_id', user.id)
+    .order('fecha_hora', { ascending: true })
+
+  // Separar por estado
+  const upcoming = data.filter(c => c.estado === 'agendada')
+  const completed = data.filter(c => c.estado === 'completada')
+  const cancelled = data.filter(c => c.estado === 'cancelada')
+
+  renderAppointments(upcoming, completed, cancelled)
+}
+
+// Cancelar cita
+async function cancelAppointment(id) {
+  const { error } = await supabase
+    .from('citas')
+    .update({ estado: 'cancelada' })
+    .eq('id', id)
+
+  if (!error) {
+    loadAppointments() // Recargar
+  }
+}
