@@ -962,6 +962,7 @@ Tiempo que dedicaré a mí mismo/a hoy:
     };
 
     let currentEmotion = null;
+    let selectedDate = new Date(); 
     let currentMonth = new Date().getMonth();
     let currentYear = new Date().getFullYear();
     let autosaveTimeout = null;
@@ -1125,6 +1126,7 @@ Tiempo que dedicaré a mí mismo/a hoy:
     function selectDate(day) {
       const monthNames = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 
                           'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+      selectedDate = new Date(currentYear, currentMonth, day);
       
       document.getElementById('entryDateDisplay').textContent = 
         `${day} de ${monthNames[currentMonth]} de ${currentYear}`;
@@ -1188,15 +1190,56 @@ Tiempo que dedicaré a mí mismo/a hoy:
         .order('fecha', { ascending: false });
 
 
-      // AQUÍ VA LA INTEGRACIÓN CON SUPABASE
+      
       localStorage.setItem('currentEntry', JSON.stringify(entry));
       console.log('Entrada guardada:', entry);
     }
 
-    function saveEntry() {
-      saveEntryToStorage();
-      alert('¡Entrada guardada exitosamente!');
+    // Función para obtener el usuario
+    async function getCurrentUser() {
+      const { data: { user } } = await supabase.auth.getUser();
+      return user;
     }
+
+    // Nueva función de guardado real
+    async function saveEntry() {
+      const user = await getCurrentUser();
+      if (!user) {
+        alert('Debes iniciar sesión para guardar tu diario');
+        return;
+      }
+
+      const indicator = document.getElementById('autosaveIndicator');
+      indicator.className = 'autosave-indicator saving';
+      indicator.innerHTML = '<i class="fas fa-spinner"></i><span>Guardando...</span>';
+
+      const { data, error } = await supabase
+        .from('diario_entries')
+        .upsert({
+          user_id: user.id,
+          // Formateamos la fecha a YYYY-MM-DD para la base de datos
+          fecha: selectedDate.toISOString().split('T')[0],
+          emocion: currentEmotion,
+          contenido: document.getElementById('diaryEditor').value,
+          necesidad_usuario: userNeed
+        }, {
+          onConflict: 'user_id,fecha'
+        });
+
+      if (error) {
+        console.error('Error:', error.message);
+        indicator.className = 'autosave-indicator';
+        indicator.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>Error al guardar</span>';
+        alert('Error al guardar: ' + error.message);
+      } else {
+        indicator.className = 'autosave-indicator saved';
+        indicator.innerHTML = '<i class="fas fa-check-circle"></i><span>Guardado</span>';
+        // Opcional: Refrescar calendario para mostrar el punto de "entrada existente"
+        renderMiniCalendar();
+      }
+    }
+
+    
   </script>
 
   <!-- Supabase SDK -->
