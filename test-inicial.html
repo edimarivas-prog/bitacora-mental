@@ -968,6 +968,8 @@
         recommendation: recommendation,
         date: new Date().toISOString()
       }));
+            // Llamar en showResults:
+      await saveTestResults(scores, recommendation)
     }
 
     function goToDashboard() {
@@ -977,6 +979,45 @@
     function scheduleAppointment() {
       window.location.href = 'app/agendar.html';
     }
+ 
+        // --- PEGAR AQUÍ ---
+      async function saveTestResults(scores, recommendation) {
+        // Nota: Asegúrate de que 'supabase' esté definido en tu archivo de configuración
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) return
+      
+        const need = determineNeed(scores)
+      
+        const { error } = await supabase
+          .from('test_results')
+          .insert({
+            user_id: user.id,
+            nivel_ansiedad: scores.ansiedad,
+            nivel_estres: scores.estres,
+            nivel_animo: scores.animo,
+            categoria_recomendada: recommendation.title,
+            especialidad_sugerida: recommendation.specialty,
+            necesidad_identificada: need
+          })
+      
+        if (!error) {
+          localStorage.setItem('userNeed', need)
+        }
+      }
+      
+      function determineNeed(scores) {
+        if (scores.ansiedad >= 7) return 'ansiedad'
+        if (scores.estres >= 7) return 'estres'
+        if (scores.animo >= 7) return 'depresion'
+        return 'general'
+      }
+  
+  
+  
+  
+  
+  
+  
   </script>
 
   <!-- Supabase SDK -->
