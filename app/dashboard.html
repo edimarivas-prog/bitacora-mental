@@ -1004,40 +1004,106 @@
     <i class="fas fa-bars"></i>
   </button>
 
-  <script>
-    // Simular datos dinámicos
-    document.addEventListener('DOMContentLoaded', function() {
-      // Obtener nombre de usuario (en producción vendría de la base de datos)
-      const userName = "María";
-      
-      // Animar las barras de progreso
-      setTimeout(() => {
-        document.querySelectorAll('.progress-fill').forEach(bar => {
-          const width = bar.style.width;
-          bar.style.width = '0';
-          setTimeout(() => {
-            bar.style.width = width;
-          }, 100);
+      <script>
+       // Función auxiliar para obtener el usuario actual
+    async function getCurrentUser() {
+        const { data: { user } } = await supabase.auth.getUser();
+        return user;
+    }
+    
+    async function loadDashboard() {
+        const user = await getCurrentUser();
+        
+        // 1. Verificar si hay usuario, si no, redirigir al login
+        if (!user) {
+            window.location.href = '/login.html';
+            return;
+        }
+    
+        // 2. Cargar perfil desde la tabla users_profile
+        const { data: profile, error: profileError } = await supabase
+            .from('users_profile')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+    
+        if (profile) {
+            // Actualizar nombres en la UI
+            const fullName = `${profile.nombre} ${profile.apellido}`;
+            document.getElementById('welcomeName').textContent = `Bienvenida de nuevo, ${profile.nombre} 👋`;
+            document.getElementById('sidebarUserName').textContent = fullName;
+            document.getElementById('sidebarUserEmail').textContent = user.email;
+            // Cambiar iniciales en el avatar
+            document.querySelector('.user-avatar').textContent = 
+                `${profile.nombre[0]}${profile.apellido[0]}`.toUpperCase();
+        }
+    
+        // 3. Cargar próxima cita
+        const { data: citas } = await supabase
+            .from('citas')
+            .select(`
+                *,
+                psicologos (nombre_completo, especialidades)
+            `)
+            .eq('paciente_id', user.id)
+            .eq('estado', 'agendada')
+            .gte('fecha_hora', new Date().toISOString())
+            .order('fecha_hora')
+            .limit(1);
+    
+        if (citas?.[0]) {
+            const cita = citas[0];
+            const fecha = new Date(cita.fecha_hora);
+            
+            // Actualizar la tarjeta de cita (ajusta los selectores según tu HTML)
+            document.querySelector('.appointment-datetime').textContent = 
+                fecha.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+            document.querySelector('.appointment-detail span').textContent = cita.psicologos.nombre_completo;
+        }
+    
+        // 4. Cargar último test
+        const { data: tests } = await supabase
+            .from('test_results')
+            .select('*')
+            .eq('user_id', user.id)
+            .order('fecha_realizado', { ascending: false })
+            .limit(1);
+    
+        if (tests?.[0]) {
+            const test = tests[0];
+            // Aquí puedes usar una función para actualizar las barras de progreso
+            updateTestUI(test);
+        }
+    }
+    
+    // Función para mover las barras de progreso del test
+    function updateTestUI(test) {
+        // Ansiedad
+        const ansBar = document.querySelector('.test-result:nth-child(2) .progress-fill');
+        const ansScore = document.querySelector('.test-result:nth-child(2) .test-score');
+        ansBar.style.width = `${test.nivel_ansiedad * 10}%`;
+        ansScore.textContent = `${test.nivel_ansiedad}/10`;
+    
+        // Estrés
+        const estBar = document.querySelector('.test-result:nth-child(3) .progress-fill');
+        const estScore = document.querySelector('.test-result:nth-child(3) .test-score');
+        estBar.style.width = `${test.nivel_estres * 10}%`;
+        estScore.textContent = `${test.nivel_estres}/10`;
+    }
+    
+    // Iniciar carga al abrir la página
+    document.addEventListener('DOMContentLoaded', loadDashboard);
+    
+    // Lógica del menú móvil (mantener la que ya tenías)
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', () => {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.style.display = sidebar.style.display === 'flex' ? 'none' : 'flex';
+            sidebar.style.position = 'fixed';
+            sidebar.style.zIndex = '1001';
         });
-      }, 300);
-
-      // Mobile menu (aquí irá la lógica para mostrar/ocultar sidebar en móvil)
-      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-      const sidebar = document.querySelector('.sidebar');
-
-      if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', function() {
-          sidebar.style.display = sidebar.style.display === 'flex' ? 'none' : 'flex';
-          sidebar.style.position = 'fixed';
-          sidebar.style.top = '0';
-          sidebar.style.left = '0';
-          sidebar.style.zIndex = '1001';
-          sidebar.style.boxShadow = '2px 0 20px rgba(0,0,0,0.2)';
-        });
-      }
-
-      console.log('Dashboard cargado correctamente');
-    });
+    }
   </script>
 
   <!-- Supabase SDK -->
