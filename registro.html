@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    /* ... (Mantenemos todo tu CSS intacto como está arriba) ... */
     :root {
       --primary: #4F6F52;
       --primary-light: #6B8A6E;
@@ -75,7 +74,7 @@
 
   <div class="auth-container">
     <div class="auth-form-side">
-      <a href="/" class="logo">
+      <a href="index.html" class="logo">
         <i class="fas fa-brain"></i>
         Bitácora Mental
       </a>
@@ -112,8 +111,6 @@
         <div class="form-group">
           <label class="form-label" for="email">Correo electrónico</label>
           <input type="email" class="form-input" id="email" name="email" placeholder="tu@email.com" required>
-          <div class="form-error" id="emailError">Ingresa un email válido</div>
-          <div class="form-success" id="emailSuccess"><i class="fas fa-check-circle"></i> Email listo</div>
         </div>
 
         <div class="form-group">
@@ -134,7 +131,6 @@
             <input type="password" class="form-input" id="confirmPassword" name="confirmPassword" placeholder="Repite tu contraseña" required>
             <button type="button" class="toggle-password" id="toggleConfirmPassword"><i class="fas fa-eye"></i></button>
           </div>
-          <div class="form-error" id="confirmPasswordError">Las contraseñas no coinciden</div>
         </div>
 
         <div class="terms-wrapper">
@@ -174,7 +170,7 @@
   </div>
 
   <script>
-    // --- LÓGICA DE INTERFAZ (Password toggles, validaciones visuales) ---
+    // --- LÓGICA DE INTERFAZ ---
     function setupPasswordToggle(toggleId, inputId) {
       const toggle = document.getElementById(toggleId);
       const input = document.getElementById(inputId);
@@ -188,20 +184,17 @@
     setupPasswordToggle('togglePassword', 'password');
     setupPasswordToggle('toggleConfirmPassword', 'confirmPassword');
 
-    const registerForm = document.getElementById('registerForm');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirmPassword');
     const termsCheckbox = document.getElementById('terms');
     const registerBtn = document.getElementById('registerBtn');
 
-    // Validación de fuerza de contraseña
     passwordInput.addEventListener('input', function() {
       const val = this.value;
       const fill = document.getElementById('strengthFill');
       const text = document.getElementById('strengthText');
       document.getElementById('passwordStrength').classList.add('show');
-      
       if(val.length < 6) { fill.className = 'strength-fill weak'; text.textContent = 'Débil'; }
       else if(val.length < 10) { fill.className = 'strength-fill medium'; text.textContent = 'Media'; }
       else { fill.className = 'strength-fill strong'; text.textContent = 'Fuerte'; }
@@ -219,7 +212,8 @@
     [emailInput, confirmPasswordInput, termsCheckbox].forEach(el => el.addEventListener('input', checkFormValidity));
 
     // --- INTEGRACIÓN REAL CON SUPABASE ---
-
+    const registerForm = document.getElementById('registerForm');
+    
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       registerBtn.classList.add('loading');
@@ -229,36 +223,42 @@
       const nombre = document.getElementById('nombre').value;
       const apellido = document.getElementById('apellido').value;
 
-      // 1. Registro en Supabase Auth
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: { first_name: nombre, last_name: apellido }
-        }
-      });
+      try {
+        // 1. Registro en Supabase Auth usando window.supabase de tu config
+        const { data, error } = await window.supabase.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: { first_name: nombre, last_name: apellido }
+          }
+        });
 
-      if (error) {
+        if (error) throw error;
+
+        if (data.user) {
+          // 2. Crear perfil en tabla 'users_profile'
+          const { error: profileError } = await window.supabase
+            .from('users_profile')
+            .insert({
+              id: data.user.id,
+              nombre: nombre,
+              apellido: apellido
+            });
+
+          if (profileError) console.error("Error al crear perfil:", profileError);
+
+          document.getElementById('successMessage').textContent = "¡Cuenta creada! Redirigiendo...";
+          document.getElementById('successAlert').classList.add('show');
+          setTimeout(() => window.location.href = 'test-inicial.html', 2000);
+        }
+      } catch (error) {
         registerBtn.classList.remove('loading');
         document.getElementById('errorMessage').textContent = error.message;
         document.getElementById('errorAlert').classList.add('show');
-      } else {
-        // 2. Crear perfil en tabla 'users_profile'
-        const { error: profileError } = await supabase
-          .from('users_profile')
-          .insert({
-            id: data.user.id,
-            nombre: nombre,
-            apellido: apellido
-          });
-
-        document.getElementById('successMessage').textContent = "¡Cuenta creada! Redirigiendo...";
-        document.getElementById('successAlert').classList.add('show');
-        setTimeout(() => window.location.href = 'test-inicial.html', 2000);
+        setTimeout(() => document.getElementById('errorAlert').classList.remove('show'), 5000);
       }
     });
 
-    // Google Sign Up REAL
     document.getElementById('googleSignUp').addEventListener('click', async function() {
       if (!termsCheckbox.checked) {
         alert("Debes aceptar los términos y condiciones");
@@ -266,55 +266,20 @@
       }
       
       this.classList.add('loading');
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: window.location.origin + '/bitacora-mental/dashboard.html'
-        }
-      });
-      if (error) {
+      try {
+        const { error } = await window.supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: window.location.origin + '/bitacora-mental/dashboard.html'
+          }
+        });
+        if (error) throw error;
+      } catch (error) {
         this.classList.remove('loading');
+        this.innerHTML = `<i class="fab fa-google"></i> Continuar con Google`;
         alert(error.message);
       }
     });
-          // 1. Función para que el botón de "Crear cuenta" funcione
-          document.getElementById('registerForm').addEventListener('submit', async (e) => {
-              e.preventDefault(); // Evita que la página se recargue
-              
-              const email = document.getElementById('email').value;
-              const password = document.getElementById('password').value;
-              const nombre = document.getElementById('nombre').value;
-              const apellido = document.getElementById('apellido').value;
-          
-              // Intentar crear el usuario en Supabase
-              const { data, error } = await supabase.auth.signUp({
-                  email: email,
-                  password: password,
-                  options: {
-                      data: { first_name: nombre, last_name: apellido }
-                  }
-              });
-          
-              if (error) {
-                  alert("Error al crear cuenta: " + error.message);
-              } else {
-                  alert("¡Cuenta creada! Revisa tu correo o intenta iniciar sesión.");
-                  window.location.href = 'login.html';
-              }
-          });
-          
-          // 2. Función para que el botón de Google funcione
-          document.getElementById('googleSignUp').onclick = async () => {
-              const { error } = await supabase.auth.signInWithOAuth({
-                  provider: 'google',
-                  options: {
-                      redirectTo: window.location.origin + '/bitacora-mental/dashboard.html'
-                  }
-              });
-          };
-
-
-    
   </script>
 </body>
 </html>
