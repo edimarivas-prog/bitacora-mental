@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    /* TUS ESTILOS ORIGINALES COMPLETOS */
     :root {
       --primary: #4F6F52;
       --primary-light: #6B8A6E;
@@ -27,7 +26,11 @@
       --shadow-lg: 0 10px 40px rgba(0,0,0,0.1);
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
       font-family: 'DM Sans', sans-serif;
@@ -36,206 +39,938 @@
       line-height: 1.6;
     }
 
-    h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; font-weight: 600; }
+    h1, h2, h3, h4 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+    }
 
-    .dashboard-container { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
-    .sidebar { background: white; border-right: 1px solid var(--border); padding: 24px 0; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
-    .sidebar-header { padding: 0 24px 24px; border-bottom: 1px solid var(--border); }
-    .logo { display: flex; align-items: center; gap: 12px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--primary); text-decoration: none; }
-    .sidebar-nav { flex: 1; padding: 24px 0; overflow-y: auto; }
-    .nav-section { margin-bottom: 24px; }
-    .nav-section-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); padding: 0 24px 8px; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 24px; color: var(--dark); text-decoration: none; transition: all 0.2s; border-left: 3px solid transparent; position: relative; }
-    .nav-item:hover { background: var(--background); color: var(--primary); }
-    .nav-item.active { background: rgba(79, 111, 82, 0.08); color: var(--primary); border-left-color: var(--primary); font-weight: 600; }
-    .nav-item i { font-size: 1.2rem; width: 20px; }
-    .nav-badge { margin-left: auto; background: var(--danger); color: white; font-size: 0.7rem; padding: 2px 8px; border-radius: 999px; font-weight: 600; }
-    .sidebar-footer { padding: 0 24px; border-top: 1px solid var(--border); padding-top: 20px; }
-    .user-profile { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--background); border-radius: 12px; cursor: pointer; transition: all 0.2s; }
-    .user-profile:hover { background: var(--border); }
-    .user-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1rem; }
-    .user-info { flex: 1; min-width: 0; }
-    .user-name { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .user-email { font-size: 0.75rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    
-    .main-content { padding: 32px 40px; max-width: 1400px; }
-    .page-header { margin-bottom: 32px; }
-    .page-header h1 { font-size: 2rem; margin-bottom: 8px; color: var(--dark); }
-    .page-subtitle { color: var(--text-secondary); font-size: 1rem; }
-    
-    .card { background: var(--card-bg); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); border: 1px solid var(--border); transition: all 0.3s; }
-    .card:hover { box-shadow: var(--shadow-lg); }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .card-title { font-size: 1.2rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
-    .card-action { color: var(--primary); text-decoration: none; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; transition: gap 0.2s; }
-    .card-action:hover { gap: 10px; }
-    
-    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-    
-    .stat-card { background: var(--card-bg); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); display: flex; align-items: center; gap: 16px; transition: all 0.3s; }
-    .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-    .stat-icon { width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
-    .stat-icon.green { background: rgba(16, 185, 129, 0.1); color: var(--success); }
-    .stat-icon.blue { background: rgba(79, 111, 82, 0.1); color: var(--primary); }
-    .stat-icon.orange { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
-    .stat-icon.purple { background: rgba(167, 196, 181, 0.2); color: var(--primary-light); }
-    .stat-info { flex: 1; }
-    .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--dark); line-height: 1; margin-bottom: 4px; }
-    .stat-label { color: var(--text-secondary); font-size: 0.85rem; }
-    
-    .appointment-card { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; border: none; }
-    .appointment-card:hover { transform: translateY(-4px); }
-    .appointment-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-    .appointment-icon { width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
-    .appointment-title { font-size: 1rem; opacity: 0.9; }
-    .appointment-datetime { font-size: 1.5rem; font-weight: 600; margin-bottom: 16px; }
-    .appointment-info { display: flex; flex-direction: column; gap: 12px; }
-    .appointment-detail { display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
-    .appointment-actions { display: flex; gap: 12px; margin-top: 20px; }
-    
-    .btn { padding: 10px 20px; border-radius: 10px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; border: none; cursor: pointer; font-size: 0.9rem; }
-    .btn-white { background: white; color: var(--primary); }
-    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-    .btn-outline-white { background: transparent; border: 2px solid white; color: white; }
-    .btn-outline-white:hover { background: rgba(255,255,255,0.1); }
-    
-    .quick-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-    .quick-action { background: var(--background); padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.2s; text-decoration: none; color: var(--dark); border: 2px solid transparent; }
-    .quick-action:hover { background: white; border-color: var(--primary); transform: translateY(-4px); }
-    .quick-action i { font-size: 2rem; color: var(--primary); margin-bottom: 12px; display: block; }
-    .quick-action-label { font-weight: 600; font-size: 0.95rem; }
-    
-    .mobile-menu-btn { display: none; position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: var(--primary); color: white; border: none; border-radius: 50%; font-size: 1.5rem; box-shadow: 0 4px 20px rgba(79, 111, 82, 0.3); cursor: pointer; z-index: 1000; }
-    
+    /* Layout */
+    .dashboard-container {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: white;
+      border-right: 1px solid var(--border);
+      padding: 24px 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-header {
+      padding: 0 24px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .logo i {
+      font-size: 1.5rem;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 24px 0;
+      overflow-y: auto;
+    }
+
+    .nav-section {
+      margin-bottom: 24px;
+    }
+
+    .nav-section-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      padding: 0 24px 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      color: var(--dark);
+      text-decoration: none;
+      transition: all 0.2s;
+      border-left: 3px solid transparent;
+      position: relative;
+    }
+
+    .nav-item:hover {
+      background: var(--background);
+      color: var(--primary);
+    }
+
+    .nav-item.active {
+      background: rgba(79, 111, 82, 0.08);
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 600;
+    }
+
+    .nav-item i {
+      font-size: 1.2rem;
+      width: 20px;
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--danger);
+      color: white;
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .sidebar-footer {
+      padding: 0 24px;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: var(--background);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .user-profile:hover {
+      background: var(--border);
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .user-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .user-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-email {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Main Content */
+    .main-content {
+      padding: 32px 40px;
+      max-width: 1400px;
+    }
+
+    /* Header */
+    .page-header {
+      margin-bottom: 32px;
+    }
+
+    .page-header h1 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+      color: var(--dark);
+    }
+
+    .page-subtitle {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: all 0.3s;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-action {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: gap 0.2s;
+    }
+
+    .card-action:hover {
+      gap: 10px;
+    }
+
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    /* Stats Cards */
+    .stat-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.3s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .stat-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .stat-icon.green {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+    }
+
+    .stat-icon.blue {
+      background: rgba(79, 111, 82, 0.1);
+      color: var(--primary);
+    }
+
+    .stat-icon.orange {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--warning);
+    }
+
+    .stat-icon.purple {
+      background: rgba(167, 196, 181, 0.2);
+      color: var(--primary-light);
+    }
+
+    .stat-info {
+      flex: 1;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--dark);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    /* Next Appointment Card */
+    .appointment-card {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      border: none;
+    }
+
+    .appointment-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .appointment-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .appointment-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .appointment-title {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    .appointment-datetime {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .appointment-info {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .appointment-detail {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+    }
+
+    .appointment-detail i {
+      width: 20px;
+    }
+
+    .appointment-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn-white {
+      background: white;
+      color: var(--primary);
+    }
+
+    .btn-white:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-outline-white {
+      background: transparent;
+      border: 2px solid white;
+      color: white;
+    }
+
+    .btn-outline-white:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+    }
+
+    /* Test Results */
+    .test-result {
+      background: var(--background);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+
+    .test-result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .test-label {
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .test-score {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .test-score.low { color: var(--success); }
+    .test-score.medium { color: var(--warning); }
+    .test-score.high { color: var(--danger); }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.5s ease;
+    }
+
+    .progress-fill.low { background: var(--success); }
+    .progress-fill.medium { background: var(--warning); }
+    .progress-fill.high { background: var(--danger); }
+
+    /* Resources */
+    .resource-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .resource-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: var(--background);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--dark);
+      transition: all 0.2s;
+    }
+
+    .resource-item:hover {
+      background: var(--border);
+      transform: translateX(4px);
+    }
+
+    .resource-icon {
+      width: 48px;
+      height: 48px;
+      background: white;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .resource-info {
+      flex: 1;
+    }
+
+    .resource-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .resource-meta {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .quick-action {
+      background: var(--background);
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      color: var(--dark);
+      border: 2px solid transparent;
+    }
+
+    .quick-action:hover {
+      background: white;
+      border-color: var(--primary);
+      transform: translateY(-4px);
+    }
+
+    .quick-action i {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .quick-action-label {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      color: var(--border);
+      margin-bottom: 16px;
+    }
+
+    .empty-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--dark);
+    }
+
+    .empty-text {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    /* Badge */
+    .badge {
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .badge.success {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--warning);
+    }
+
+    .badge.info {
+      background: rgba(79, 111, 82, 0.1);
+      color: var(--primary);
+    }
+
+    /* Mobile Responsive */
     @media (max-width: 968px) {
-      .dashboard-container { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
-      .main-content { padding: 20px; }
-      .grid-2, .grid-4 { grid-template-columns: 1fr; }
-      .mobile-menu-btn { display: block; }
+      .dashboard-container {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .main-content {
+        padding: 20px;
+      }
+
+      .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card, .stat-card {
+      animation: fadeInUp 0.5s ease-out;
+    }
+
+    .card:nth-child(1) { animation-delay: 0.1s; }
+    .card:nth-child(2) { animation-delay: 0.2s; }
+    .card:nth-child(3) { animation-delay: 0.3s; }
+    .card:nth-child(4) { animation-delay: 0.4s; }
+
+    /* Mobile Menu Button (Hidden on desktop) */
+    .mobile-menu-btn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 20px rgba(79, 111, 82, 0.3);
+      cursor: pointer;
+      z-index: 1000;
+    }
+
+    @media (max-width: 968px) {
+      .mobile-menu-btn {
+        display: block;
+      }
     }
   </style>
 </head>
 <body>
   <div class="dashboard-container">
+    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-header">
-        <a href="dashboard.html" class="logo">
-          <i class="fas fa-brain"></i> Bitácora Mental
+        <a href="/" class="logo">
+          <i class="fas fa-brain"></i>
+          Bitácora Mental
         </a>
       </div>
 
       <nav class="sidebar-nav">
         <div class="nav-section">
           <div class="nav-section-title">Principal</div>
-          <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i> <span>Dashboard</span></a>
-          <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> <span>Mis Citas</span></a>
-          <a href="agendar.html" class="nav-item"><i class="fas fa-calendar-plus"></i> <span>Agendar</span></a>
+          <a href="dashboard.html" class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="citas.html" class="nav-item">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Mis Citas</span>
+            <span class="nav-badge">1</span>
+          </a>
+          <a href="especialistas.html" class="nav-item">
+            <i class="fas fa-user-md"></i>
+            <span>Especialistas</span>
+          </a>
         </div>
 
         <div class="nav-section">
           <div class="nav-section-title">Mi Espacio</div>
-          <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> <span>Mi Diario</span></a>
-          <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> <span>Mi Progreso</span></a>
+          <a href="diario.html" class="nav-item">
+            <i class="fas fa-book"></i>
+            <span>Mi Diario</span>
+          </a>
+          <a href="progreso.html" class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Mi Progreso</span>
+          </a>
+          <a href="recursos.html" class="nav-item">
+            <i class="fas fa-folder-open"></i>
+            <span>Recursos</span>
+          </a>
         </div>
-        
+
         <div class="nav-section">
           <div class="nav-section-title">Cuenta</div>
-          <a href="#" onclick="logout()" class="nav-item" style="color: var(--danger);">
-            <i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span>
+          <a href="plan.html" class="nav-item">
+            <i class="fas fa-crown"></i>
+            <span>Mi Plan</span>
+          </a>
+          <a href="perfil.html" class="nav-item">
+            <i class="fas fa-user-circle"></i>
+            <span>Perfil</span>
+          </a>
+          <a href="configuracion.html" class="nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Configuración</span>
           </a>
         </div>
       </nav>
 
       <div class="sidebar-footer">
         <div class="user-profile">
-          <div class="user-avatar" id="sidebarAvatar">U</div>
+          <div class="user-avatar">MC</div>
           <div class="user-info">
-            <div class="user-name" id="sidebarName">Cargando...</div>
-            <div class="user-email" id="sidebarEmail">...</div>
+            <div class="user-name">María Campos</div>
+            <div class="user-email">maria@email.com</div>
           </div>
+          <i class="fas fa-ellipsis-v" style="color: var(--text-secondary);"></i>
         </div>
       </div>
     </aside>
 
+    <!-- Main Content -->
     <main class="main-content">
       <div class="page-header">
-        <h1>Bienvenido de nuevo, <span id="welcomeName">...</span> 👋</h1>
+        <h1>Bienvenida de nuevo, María 👋</h1>
         <p class="page-subtitle">Aquí está tu resumen de bienestar y próximas actividades</p>
       </div>
 
+      <!-- Stats Overview -->
       <div class="grid-4" style="margin-bottom: 32px;">
         <div class="stat-card">
-          <div class="stat-icon green"><i class="fas fa-heart"></i></div>
+          <div class="stat-icon green">
+            <i class="fas fa-heart"></i>
+          </div>
           <div class="stat-info">
-            <div class="stat-value">Bien</div>
-            <div class="stat-label">Estado actual</div>
+            <div class="stat-value">87%</div>
+            <div class="stat-label">Bienestar general</div>
           </div>
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon blue"><i class="fas fa-calendar-check"></i></div>
+          <div class="stat-icon blue">
+            <i class="fas fa-calendar-check"></i>
+          </div>
           <div class="stat-info">
-            <div class="stat-value" id="citasCount">0</div>
-            <div class="stat-label">Próximas citas</div>
+            <div class="stat-value">8</div>
+            <div class="stat-label">Sesiones completadas</div>
           </div>
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon orange"><i class="fas fa-fire"></i></div>
+          <div class="stat-icon orange">
+            <i class="fas fa-fire"></i>
+          </div>
           <div class="stat-info">
-            <div class="stat-value">1</div>
+            <div class="stat-value">12</div>
             <div class="stat-label">Días de racha</div>
           </div>
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon purple"><i class="fas fa-book-open"></i></div>
+          <div class="stat-icon purple">
+            <i class="fas fa-book-open"></i>
+          </div>
           <div class="stat-info">
-            <div class="stat-value" id="diarioCount">-</div>
+            <div class="stat-value">24</div>
             <div class="stat-label">Entradas de diario</div>
           </div>
         </div>
       </div>
 
+      <!-- Main Grid -->
       <div class="grid-2" style="margin-bottom: 32px;">
-        
-        <div id="nextAppointmentCard" class="card appointment-card" style="display:none;">
+        <!-- Next Appointment -->
+        <div class="card appointment-card">
           <div class="appointment-header">
-            <div class="appointment-icon"><i class="fas fa-video"></i></div>
+            <div class="appointment-icon">
+              <i class="fas fa-video"></i>
+            </div>
             <div class="appointment-title">Próxima sesión</div>
           </div>
           
-          <div class="appointment-datetime" id="aptDate">--</div>
+          <div class="appointment-datetime">
+            Mañana, 15 de Feb · 4:00 PM
+          </div>
 
           <div class="appointment-info">
             <div class="appointment-detail">
               <i class="fas fa-user-md"></i>
-              <span id="aptSpecialist">--</span>
+              <span>Dra. Patricia Gómez</span>
             </div>
             <div class="appointment-detail">
               <i class="fas fa-tag"></i>
-              <span>Videollamada</span>
+              <span>Manejo de ansiedad</span>
+            </div>
+            <div class="appointment-detail">
+              <i class="fas fa-clock"></i>
+              <span>50 minutos</span>
             </div>
           </div>
 
           <div class="appointment-actions">
-            <a href="#" class="btn btn-white"><i class="fas fa-video"></i> Unirse</a>
-            <a href="agendar.html" class="btn btn-outline-white"><i class="fas fa-calendar"></i> Ver todas</a>
+            <a href="#" class="btn btn-white">
+              <i class="fas fa-video"></i>
+              Unirse a la sesión
+            </a>
+            <a href="#" class="btn btn-outline-white">
+              <i class="fas fa-calendar"></i>
+              Reprogramar
+            </a>
           </div>
         </div>
 
-        <div id="emptyAppointmentCard" class="card" style="display:none; text-align:center; justify-content:center; flex-direction:column;">
-            <div style="font-size:3rem; color:#ccc; margin-bottom:10px;"><i class="fas fa-calendar-plus"></i></div>
-            <h3 style="margin-bottom:10px; color:var(--dark);">Sin citas próximas</h3>
-            <p style="color:var(--text-secondary); margin-bottom:20px;">Comienza tu proceso agendando con un especialista.</p>
-            <a href="agendar.html" class="btn btn-primary" style="align-self:center;">Agendar Cita</a>
-        </div>
-
+        <!-- Test Results -->
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title"><i class="fas fa-bolt"></i> Acciones rápidas</h3>
+            <h3 class="card-title">
+              <i class="fas fa-clipboard-check"></i>
+              Último test de bienestar
+            </h3>
+            <span class="badge info">Hace 3 días</span>
+          </div>
+
+          <div class="test-result">
+            <div class="test-result-header">
+              <span class="test-label">Ansiedad</span>
+              <span class="test-score low">Bajo - 3/10</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill low" style="width: 30%"></div>
+            </div>
+          </div>
+
+          <div class="test-result">
+            <div class="test-result-header">
+              <span class="test-label">Estrés</span>
+              <span class="test-score medium">Moderado - 6/10</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill medium" style="width: 60%"></div>
+            </div>
+          </div>
+
+          <div class="test-result" style="margin-bottom: 0;">
+            <div class="test-result-header">
+              <span class="test-label">Ánimo</span>
+              <span class="test-score low">Positivo - 8/10</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill low" style="width: 80%"></div>
+            </div>
+          </div>
+
+          <a href="test.html" class="card-action" style="margin-top: 20px; display: inline-flex;">
+            Repetir test <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Second Row -->
+      <div class="grid-2">
+        <!-- Recommended Resources -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fas fa-star"></i>
+              Recursos recomendados
+            </h3>
+            <a href="recursos.html" class="card-action">
+              Ver todos <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+
+          <div class="resource-list">
+            <a href="#" class="resource-item">
+              <div class="resource-icon">
+                <i class="fas fa-headphones"></i>
+              </div>
+              <div class="resource-info">
+                <div class="resource-title">Audio: Respiración guiada</div>
+                <div class="resource-meta">5 min · Relajación</div>
+              </div>
+            </a>
+
+            <a href="#" class="resource-item">
+              <div class="resource-icon">
+                <i class="fas fa-file-pdf"></i>
+              </div>
+              <div class="resource-info">
+                <div class="resource-title">Guía: Manejo del estrés laboral</div>
+                <div class="resource-meta">PDF · 12 páginas</div>
+              </div>
+            </a>
+
+            <a href="#" class="resource-item">
+              <div class="resource-icon">
+                <i class="fas fa-video"></i>
+              </div>
+              <div class="resource-info">
+                <div class="resource-title">Video: Técnicas de grounding</div>
+                <div class="resource-meta">8 min · Ansiedad</div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fas fa-bolt"></i>
+              Acciones rápidas
+            </h3>
           </div>
 
           <div class="quick-actions">
@@ -254,7 +989,7 @@
               <div class="quick-action-label">Hacer test</div>
             </a>
 
-            <a href="#" class="quick-action">
+            <a href="chat.html" class="quick-action">
               <i class="fas fa-comments"></i>
               <div class="quick-action-label">Contactar soporte</div>
             </a>
@@ -264,102 +999,50 @@
     </main>
   </div>
 
+  <!-- Mobile Menu Button -->
   <button class="mobile-menu-btn">
     <i class="fas fa-bars"></i>
   </button>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../js/supabase-config.js"></script>
-
   <script>
-    // 1. Mobile Menu Logic
-    document.querySelector('.mobile-menu-btn').addEventListener('click', () => {
+    // Simular datos dinámicos
+    document.addEventListener('DOMContentLoaded', function() {
+      // Obtener nombre de usuario (en producción vendría de la base de datos)
+      const userName = "María";
+      
+      // Animar las barras de progreso
+      setTimeout(() => {
+        document.querySelectorAll('.progress-fill').forEach(bar => {
+          const width = bar.style.width;
+          bar.style.width = '0';
+          setTimeout(() => {
+            bar.style.width = width;
+          }, 100);
+        });
+      }, 300);
+
+      // Mobile menu (aquí irá la lógica para mostrar/ocultar sidebar en móvil)
+      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
       const sidebar = document.querySelector('.sidebar');
-      sidebar.style.display = sidebar.style.display === 'flex' ? 'none' : 'flex';
-      sidebar.style.position = 'fixed';
-      sidebar.style.top = '0'; sidebar.style.left = '0'; sidebar.style.zIndex = '1001';
-      sidebar.style.height = '100vh';
-      sidebar.style.boxShadow = '2px 0 20px rgba(0,0,0,0.2)';
+
+      if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', function() {
+          sidebar.style.display = sidebar.style.display === 'flex' ? 'none' : 'flex';
+          sidebar.style.position = 'fixed';
+          sidebar.style.top = '0';
+          sidebar.style.left = '0';
+          sidebar.style.zIndex = '1001';
+          sidebar.style.boxShadow = '2px 0 20px rgba(0,0,0,0.2)';
+        });
+      }
+
+      console.log('Dashboard cargado correctamente');
     });
-
-    // 2. Supabase Logic
-    async function loadDashboard() {
-      // Verificar usuario
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        window.location.href = '../login.html'; // Redirigir si no hay sesión
-        return;
-      }
-
-      // Cargar Datos del Perfil
-      let displayName = "Usuario";
-      const { data: profile } = await supabase
-        .from('users_profile')
-        .select('nombre, apellido')
-        .eq('id', user.id)
-        .single();
-
-      if (profile) {
-        displayName = profile.nombre;
-        document.getElementById('sidebarName').textContent = `${profile.nombre} ${profile.apellido}`;
-      } else if (user.user_metadata?.full_name) {
-        // Fallback para Google Login si no se creó perfil
-        displayName = user.user_metadata.full_name.split(' ')[0];
-        document.getElementById('sidebarName').textContent = user.user_metadata.full_name;
-      }
-      
-      document.getElementById('welcomeName').textContent = displayName;
-      document.getElementById('sidebarEmail').textContent = user.email;
-      document.getElementById('sidebarAvatar').textContent = displayName.charAt(0).toUpperCase();
-
-      // Cargar Próxima Cita
-      const now = new Date().toISOString();
-      const { data: citas } = await supabase
-        .from('citas')
-        .select(`*, psicologos(nombre)`) // Join con tabla psicologos
-        .eq('paciente_id', user.id)
-        .gte('fecha_hora', now)
-        .order('fecha_hora', { ascending: true })
-        .limit(1);
-
-      const nextCard = document.getElementById('nextAppointmentCard');
-      const emptyCard = document.getElementById('emptyAppointmentCard');
-
-      if (citas && citas.length > 0) {
-        const cita = citas[0];
-        const dateObj = new Date(cita.fecha_hora);
-        
-        // Formato bonito: 15 de Feb · 4:00 PM
-        const dateStr = dateObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-        const timeStr = dateObj.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-        
-        document.getElementById('aptDate').textContent = `${dateStr} · ${timeStr}`;
-        document.getElementById('aptSpecialist').textContent = cita.psicologos ? cita.psicologos.nombre : 'Especialista';
-        document.getElementById('citasCount').textContent = "1";
-        
-        nextCard.style.display = 'block';
-        emptyCard.style.display = 'none';
-      } else {
-        nextCard.style.display = 'none';
-        emptyCard.style.display = 'flex';
-      }
-      
-      // Contar entradas de diario
-      const { count } = await supabase
-        .from('diario_entries')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', user.id);
-      
-      document.getElementById('diarioCount').textContent = count || 0;
-    }
-
-    async function logout() {
-      await supabase.auth.signOut();
-      window.location.href = '../login.html';
-    }
-
-    document.addEventListener('DOMContentLoaded', loadDashboard);
   </script>
+
+  <!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/supabase-config.js"></script>
+  
 </body>
 </html>
