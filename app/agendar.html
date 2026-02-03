@@ -26,11 +26,7 @@
       --shadow-lg: 0 10px 40px rgba(0,0,0,0.1);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'DM Sans', sans-serif;
@@ -39,19 +35,14 @@
       line-height: 1.6;
     }
 
-    h1, h2, h3, h4 {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 600;
-    }
+    h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; font-weight: 600; }
 
-    /* Layout */
     .dashboard-container {
       display: grid;
       grid-template-columns: 260px 1fr;
       min-height: 100vh;
     }
 
-    /* Sidebar - reutilizado del dashboard */
     .sidebar {
       background: white;
       border-right: 1px solid var(--border);
@@ -79,27 +70,14 @@
       text-decoration: none;
     }
 
-    .logo i {
-      font-size: 1.5rem;
-    }
-
-    .sidebar-nav {
-      flex: 1;
-      padding: 24px 0;
-      overflow-y: auto;
-    }
-
-    .nav-section {
-      margin-bottom: 24px;
-    }
-
+    .sidebar-nav { flex: 1; padding: 24px 0; overflow-y: auto; }
+    .nav-section { margin-bottom: 24px; }
     .nav-section-title {
       font-size: 0.75rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-secondary);
       padding: 0 24px 8px;
+      color: var(--text-secondary);
     }
 
     .nav-item {
@@ -110,48 +88,19 @@
       color: var(--dark);
       text-decoration: none;
       transition: all 0.2s;
-      border-left: 3px solid transparent;
-    }
-
-    .nav-item:hover {
-      background: var(--background);
-      color: var(--primary);
     }
 
     .nav-item.active {
       background: rgba(79, 111, 82, 0.08);
       color: var(--primary);
-      border-left-color: var(--primary);
+      border-left: 3px solid var(--primary);
       font-weight: 600;
     }
 
-    .nav-item i {
-      font-size: 1.2rem;
-      width: 20px;
-    }
+    .main-content { padding: 32px 40px; max-width: 1400px; }
+    .page-header { margin-bottom: 32px; }
+    .page-subtitle { color: var(--text-secondary); }
 
-    /* Main Content */
-    .main-content {
-      padding: 32px 40px;
-      max-width: 1400px;
-    }
-
-    .page-header {
-      margin-bottom: 32px;
-    }
-
-    .page-header h1 {
-      font-size: 2rem;
-      margin-bottom: 8px;
-      color: var(--dark);
-    }
-
-    .page-subtitle {
-      color: var(--text-secondary);
-      font-size: 1rem;
-    }
-
-    /* Steps */
     .steps-container {
       display: flex;
       gap: 16px;
@@ -170,81 +119,24 @@
       padding: 16px;
       border-radius: 12px;
       background: var(--background);
-      position: relative;
     }
 
-    .step.active {
-      background: rgba(79, 111, 82, 0.1);
-      border: 2px solid var(--primary);
-    }
-
-    .step.completed {
-      background: var(--primary);
-      color: white;
-    }
+    .step.active { background: rgba(79, 111, 82, 0.1); border: 2px solid var(--primary); }
+    .step.completed { background: var(--primary); color: white; }
 
     .step-number {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: var(--border);
-      color: var(--dark);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      flex-shrink: 0;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--border); display: flex; align-items: center; justify-content: center; font-weight: 700;
     }
 
-    .step.active .step-number {
-      background: var(--primary);
-      color: white;
-    }
+    .step.active .step-number { background: var(--primary); color: white; }
+    .step.completed .step-number { background: white; color: var(--primary); }
 
-    .step.completed .step-number {
-      background: white;
-      color: var(--primary);
-    }
+    .content-section { display: none; animation: fadeIn 0.4s ease-out; }
+    .content-section.active { display: block; }
 
-    .step-info {
-      flex: 1;
-      min-width: 0;
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-    .step-title {
-      font-weight: 600;
-      font-size: 0.95rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .step.completed .step-title {
-      color: white;
-    }
-
-    /* Content Sections */
-    .content-section {
-      display: none;
-      animation: fadeIn 0.4s ease-out;
-    }
-
-    .content-section.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Specialists Grid */
     .specialists-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -258,842 +150,281 @@
       padding: 24px;
       box-shadow: var(--shadow);
       border: 2px solid transparent;
-      transition: all 0.3s;
       cursor: pointer;
+      transition: all 0.3s;
     }
 
-    .specialist-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .specialist-card.selected {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(79, 111, 82, 0.1);
-    }
-
-    .specialist-header {
-      display: flex;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
+    .specialist-card.selected { border-color: var(--primary); background: rgba(79, 111, 82, 0.02); }
 
     .specialist-avatar {
-      width: 64px;
-      height: 64px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-      font-weight: 700;
-      flex-shrink: 0;
+      width: 64px; height: 64px; border-radius: 12px;
+      background: var(--primary); color: white;
+      display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
     }
 
-    .specialist-info {
-      flex: 1;
-      min-width: 0;
+    .calendar-container, .time-slots-container, .confirmation-card {
+      background: white; border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow); margin-bottom: 32px;
     }
 
-    .specialist-name {
-      font-weight: 700;
-      font-size: 1.2rem;
-      margin-bottom: 4px;
-    }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .calendar-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 8px; }
+    .calendar-day.disabled { color: var(--border); cursor: not-allowed; }
+    .calendar-day.selected { background: var(--primary); color: white; }
 
-    .specialist-specialty {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      margin-bottom: 8px;
-    }
+    .time-slots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+    .time-slot { padding: 12px; border: 2px solid var(--border); border-radius: 10px; text-align: center; cursor: pointer; }
+    .time-slot.selected { background: var(--primary); color: white; border-color: var(--primary); }
 
-    .specialist-rating {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.9rem;
-    }
+    .appointment-summary { background: var(--background); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+    .summary-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
 
-    .specialist-rating i {
-      color: #F59E0B;
-    }
+    .btn { padding: 14px 28px; border-radius: 12px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: transparent; border: 2px solid var(--border); }
+    
+    .loading-overlay { text-align: center; padding: 50px; font-size: 1.2rem; color: var(--text-secondary); }
 
-    .specialist-details {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .detail-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      background: var(--background);
-      border-radius: 8px;
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-    }
-
-    .detail-badge i {
-      color: var(--primary);
-      font-size: 0.95rem;
-    }
-
-    .specialist-bio {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      line-height: 1.6;
-      margin-bottom: 16px;
-    }
-
-    .specialist-price {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--primary);
-    }
-
-    .specialist-price span {
-      font-size: 0.9rem;
-      font-weight: 400;
-      color: var(--text-secondary);
-    }
-
-    /* Calendar */
-    .calendar-container {
-      background: white;
-      border-radius: var(--radius);
-      padding: 32px;
-      box-shadow: var(--shadow);
-      margin-bottom: 32px;
-    }
-
-    .calendar-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-    }
-
-    .calendar-header h3 {
-      font-size: 1.4rem;
-    }
-
-    .calendar-nav {
-      display: flex;
-      gap: 12px;
-    }
-
-    .calendar-nav button {
-      width: 40px;
-      height: 40px;
-      border: none;
-      background: var(--background);
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-      color: var(--dark);
-    }
-
-    .calendar-nav button:hover {
-      background: var(--primary);
-      color: white;
-    }
-
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 8px;
-    }
-
-    .calendar-day-header {
-      text-align: center;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      padding: 12px 0;
-    }
-
-    .calendar-day {
-      aspect-ratio: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-weight: 500;
-    }
-
-    .calendar-day.disabled {
-      color: var(--border);
-      cursor: not-allowed;
-    }
-
-    .calendar-day:not(.disabled):hover {
-      background: var(--background);
-    }
-
-    .calendar-day.selected {
-      background: var(--primary);
-      color: white;
-      font-weight: 700;
-    }
-
-    .calendar-day.today {
-      border: 2px solid var(--primary);
-    }
-
-    /* Time Slots */
-    .time-slots-container {
-      background: white;
-      border-radius: var(--radius);
-      padding: 32px;
-      box-shadow: var(--shadow);
-      margin-bottom: 32px;
-    }
-
-    .time-slots-container h3 {
-      font-size: 1.3rem;
-      margin-bottom: 20px;
-    }
-
-    .time-slots-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 12px;
-    }
-
-    .time-slot {
-      padding: 14px 20px;
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-weight: 600;
-    }
-
-    .time-slot:hover:not(.disabled) {
-      border-color: var(--primary);
-      background: rgba(79, 111, 82, 0.05);
-    }
-
-    .time-slot.selected {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: white;
-    }
-
-    .time-slot.disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-
-    /* Confirmation */
-    .confirmation-card {
-      background: white;
-      border-radius: var(--radius);
-      padding: 40px;
-      box-shadow: var(--shadow);
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .confirmation-icon {
-      text-align: center;
-      font-size: 5rem;
-      color: var(--primary);
-      margin-bottom: 24px;
-    }
-
-    .confirmation-title {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 32px;
-    }
-
-    .appointment-summary {
-      background: var(--background);
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 24px;
-    }
-
-    .summary-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .summary-item:last-child {
-      border-bottom: none;
-    }
-
-    .summary-label {
-      color: var(--text-secondary);
-      font-weight: 500;
-    }
-
-    .summary-value {
-      font-weight: 600;
-      text-align: right;
-    }
-
-    /* Buttons */
-    .btn {
-      padding: 14px 28px;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.3s;
-      border: none;
-      font-family: 'DM Sans', sans-serif;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-      box-shadow: 0 4px 15px rgba(79, 111, 82, 0.3);
-    }
-
-    .btn-primary:hover:not(:disabled) {
-      background: var(--primary-light);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(79, 111, 82, 0.4);
-    }
-
-    .btn-primary:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .btn-secondary {
-      background: transparent;
-      border: 2px solid var(--border);
-      color: var(--dark);
-    }
-
-    .btn-secondary:hover {
-      border-color: var(--primary);
-      background: rgba(79, 111, 82, 0.05);
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 12px;
-      justify-content: flex-end;
-      margin-top: 32px;
-    }
-
-    /* Empty State */
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-    }
-
-    .empty-icon {
-      font-size: 4rem;
-      color: var(--border);
-      margin-bottom: 20px;
-    }
-
-    .empty-title {
-      font-size: 1.3rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .empty-text {
-      color: var(--text-secondary);
-    }
-
-    /* Mobile */
-    @media (max-width: 968px) {
-      .dashboard-container {
-        grid-template-columns: 1fr;
-      }
-
-      .sidebar {
-        display: none;
-      }
-
-      .main-content {
-        padding: 20px;
-      }
-
-      .steps-container {
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .specialists-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .calendar-grid {
-        gap: 4px;
-      }
-
-      .time-slots-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .action-buttons {
-        flex-direction: column;
-      }
-
-      .btn {
-        width: 100%;
-      }
+    @media (max-width: 768px) {
+      .dashboard-container { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .time-slots-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
   <div class="dashboard-container">
-    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-header">
-        <a href="/" class="logo">
-          <i class="fas fa-brain"></i>
-          Bitácora Mental
-        </a>
+        <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
       </div>
-
       <nav class="sidebar-nav">
         <div class="nav-section">
           <div class="nav-section-title">Principal</div>
-          <a href="dashboard.html" class="nav-item">
-            <i class="fas fa-home"></i>
-            <span>Dashboard</span>
-          </a>
-          <a href="citas.html" class="nav-item">
-            <i class="fas fa-calendar-alt"></i>
-            <span>Mis Citas</span>
-          </a>
-          <a href="agendar.html" class="nav-item active">
-            <i class="fas fa-calendar-plus"></i>
-            <span>Agendar Cita</span>
-          </a>
-        </div>
-
-        <div class="nav-section">
-          <div class="nav-section-title">Mi Espacio</div>
-          <a href="diario.html" class="nav-item">
-            <i class="fas fa-book"></i>
-            <span>Mi Diario</span>
-          </a>
-          <a href="progreso.html" class="nav-item">
-            <i class="fas fa-chart-line"></i>
-            <span>Mi Progreso</span>
-          </a>
+          <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+          <a href="agendar.html" class="nav-item active"><i class="fas fa-calendar-plus"></i> Agendar Cita</a>
         </div>
       </nav>
     </aside>
 
-    <!-- Main Content -->
     <main class="main-content">
       <div class="page-header">
         <h1>Agendar nueva sesión</h1>
-        <p class="page-subtitle">Selecciona el especialista, fecha y hora que mejor se ajusten a ti</p>
+        <p class="page-subtitle">Selecciona especialista, fecha y hora</p>
       </div>
 
-      <!-- Steps -->
       <div class="steps-container">
-        <div class="step active" id="step1">
-          <div class="step-number">1</div>
-          <div class="step-info">
-            <div class="step-title">Especialista</div>
-          </div>
-        </div>
-        <div class="step" id="step2">
-          <div class="step-number">2</div>
-          <div class="step-info">
-            <div class="step-title">Fecha y hora</div>
-          </div>
-        </div>
-        <div class="step" id="step3">
-          <div class="step-number">3</div>
-          <div class="step-info">
-            <div class="step-title">Confirmar</div>
-          </div>
-        </div>
+        <div class="step active" id="step1"><div class="step-number">1</div><div class="step-title">Especialista</div></div>
+        <div class="step" id="step2"><div class="step-number">2</div><div class="step-title">Fecha y hora</div></div>
+        <div class="step" id="step3"><div class="step-number">3</div><div class="step-title">Confirmar</div></div>
       </div>
 
-      <!-- Step 1: Select Specialist -->
       <div class="content-section active" id="section1">
+        <div id="loadingSpecialists" class="loading-overlay">Cargando especialistas...</div>
         <div class="specialists-grid" id="specialistsList"></div>
-        
-        <div class="action-buttons">
-          <button class="btn btn-primary" id="continueToDate" disabled>
-            Continuar <i class="fas fa-arrow-right"></i>
-          </button>
+        <div class="action-buttons" style="text-align: right;">
+          <button class="btn btn-primary" id="continueToDate" disabled>Continuar <i class="fas fa-arrow-right"></i></button>
         </div>
       </div>
 
-      <!-- Step 2: Select Date & Time -->
       <div class="content-section" id="section2">
         <div class="calendar-container">
-          <div class="calendar-header">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
             <h3 id="currentMonthYear"></h3>
-            <div class="calendar-nav">
-              <button onclick="previousMonth()">
-                <i class="fas fa-chevron-left"></i>
-              </button>
-              <button onclick="nextMonth()">
-                <i class="fas fa-chevron-right"></i>
-              </button>
+            <div>
+              <button class="btn btn-secondary" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+              <button class="btn btn-secondary" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
             </div>
           </div>
           <div class="calendar-grid" id="calendarGrid"></div>
         </div>
 
-        <div class="time-slots-container" id="timeSlotsContainer" style="display: none;">
+        <div class="time-slots-container" id="timeSlotsSection" style="display: none;">
           <h3>Horarios disponibles</h3>
           <div class="time-slots-grid" id="timeSlotsList"></div>
         </div>
 
-        <div class="action-buttons">
-          <button class="btn btn-secondary" onclick="goToStep(1)">
-            <i class="fas fa-arrow-left"></i> Anterior
-          </button>
-          <button class="btn btn-primary" id="continueToConfirm" disabled>
-            Continuar <i class="fas fa-arrow-right"></i>
-          </button>
+        <div class="action-buttons" style="display: flex; justify-content: space-between;">
+          <button class="btn btn-secondary" onclick="goToStep(1)">Anterior</button>
+          <button class="btn btn-primary" id="continueToConfirm" disabled>Continuar</button>
         </div>
       </div>
 
-      <!-- Step 3: Confirmation -->
       <div class="content-section" id="section3">
         <div class="confirmation-card">
-          <div class="confirmation-icon">
-            <i class="fas fa-calendar-check"></i>
-          </div>
-          <h2 class="confirmation-title">Resumen de tu cita</h2>
-          
+          <h2 style="text-align: center; margin-bottom: 20px;">Resumen de tu cita</h2>
           <div class="appointment-summary" id="appointmentSummary"></div>
-
-          <div class="action-buttons" style="justify-content: center;">
-            <button class="btn btn-secondary" onclick="goToStep(2)">
-              <i class="fas fa-arrow-left"></i> Modificar
-            </button>
-            <button class="btn btn-primary" onclick="confirmAppointment()">
-              <i class="fas fa-check"></i> Confirmar cita
-            </button>
+          <div style="text-align: center; display: flex; gap: 15px; justify-content: center;">
+            <button class="btn btn-secondary" onclick="goToStep(2)">Modificar</button>
+            <button class="btn btn-primary" id="confirmBtn" onclick="confirmAppointment()">Confirmar Cita</button>
           </div>
         </div>
       </div>
     </main>
   </div>
 
-  <script>
-    // Sample specialists data (esto vendría de Supabase)
-    const specialists = [
-      {
-        id: 1,
-        name: "Dra. Patricia Gómez",
-        specialty: "Ansiedad y manejo del estrés",
-        experience: 8,
-        rating: 4.9,
-        price: 180,
-        bio: "Especialista en terapia cognitivo-conductual con enfoque en trastornos de ansiedad y manejo del estrés.",
-        availability: ["09:00", "10:00", "14:00", "15:00", "16:00"]
-      },
-      {
-        id: 2,
-        name: "Psic. Carlos Ramírez",
-        specialty: "Burnout laboral",
-        experience: 5,
-        rating: 4.8,
-        price: 150,
-        bio: "Psicólogo organizacional especializado en burnout, estrés laboral y equilibrio vida-trabajo.",
-        availability: ["11:00", "12:00", "17:00", "18:00"]
-      },
-      {
-        id: 3,
-        name: "Dra. Ana Martínez",
-        specialty: "Depresión y duelo",
-        experience: 10,
-        rating: 5.0,
-        price: 200,
-        bio: "Psicoterapeuta con amplia experiencia en procesos de duelo, depresión y desarrollo de resiliencia emocional.",
-        availability: ["08:00", "09:00", "10:00", "15:00", "16:00"]
-      },
-      {
-        id: 4,
-        name: "Psic. Roberto Silva",
-        specialty: "Relaciones y familia",
-        experience: 6,
-        rating: 4.7,
-        price: 165,
-        bio: "Terapeuta familiar y de parejas enfocado en mejorar la comunicación y resolver conflictos.",
-        availability: ["14:00", "15:00", "16:00", "17:00", "18:00"]
-      }
-    ];
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
 
+  <script>
+    let specialists = [];
     let selectedSpecialist = null;
     let selectedDate = null;
     let selectedTime = null;
     let currentMonth = new Date().getMonth();
     let currentYear = new Date().getFullYear();
 
-    // Initialize
-    renderSpecialists();
+    // Cargar especialistas de Supabase al iniciar
+    document.addEventListener('DOMContentLoaded', loadSpecialists);
+
+    async function loadSpecialists() {
+      try {
+        const { data, error } = await supabase
+          .from('psicologos')
+          .select('*')
+          .eq('estado', 'activo');
+
+        if (error) throw error;
+        specialists = data;
+        renderSpecialists();
+        document.getElementById('loadingSpecialists').style.display = 'none';
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('loadingSpecialists').textContent = 'Error al cargar especialistas.';
+      }
+    }
 
     function renderSpecialists() {
-      const container = document.getElementById('specialistsList');
-      container.innerHTML = specialists.map(specialist => `
-        <div class="specialist-card" onclick="selectSpecialist(${specialist.id})">
-          <div class="specialist-header">
-            <div class="specialist-avatar">${specialist.name.split(' ')[1][0]}</div>
-            <div class="specialist-info">
-              <div class="specialist-name">${specialist.name}</div>
-              <div class="specialist-specialty">${specialist.specialty}</div>
-              <div class="specialist-rating">
-                <i class="fas fa-star"></i>
-                <span>${specialist.rating}</span>
-              </div>
+      const list = document.getElementById('specialistsList');
+      list.innerHTML = specialists.map(s => `
+        <div class="specialist-card" onclick="selectSpecialist(${s.id})">
+          <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+            <div class="specialist-avatar">${s.nombre[0]}</div>
+            <div>
+              <div style="font-weight: 700;">${s.nombre}</div>
+              <div style="font-size: 0.85rem; color: var(--text-secondary);">${s.especialidad}</div>
             </div>
           </div>
-          <div class="specialist-details">
-            <div class="detail-badge">
-              <i class="fas fa-briefcase"></i>
-              <span>${specialist.experience} años exp.</span>
-            </div>
-            <div class="detail-badge">
-              <i class="fas fa-video"></i>
-              <span>Videollamada</span>
-            </div>
-          </div>
-          <p class="specialist-bio">${specialist.bio}</p>
-          <div class="specialist-price">
-            S/ ${specialist.price}
-            <span>por sesión (50 min)</span>
-          </div>
+          <div style="font-size: 1.2rem; font-weight: 700; color: var(--primary);">S/ ${s.precio || 150}</div>
         </div>
       `).join('');
     }
 
     function selectSpecialist(id) {
       selectedSpecialist = specialists.find(s => s.id === id);
-      
-      // Update UI
-      document.querySelectorAll('.specialist-card').forEach((card, index) => {
-        if (specialists[index].id === id) {
-          card.classList.add('selected');
-        } else {
-          card.classList.remove('selected');
-        }
+      document.querySelectorAll('.specialist-card').forEach((c, i) => {
+        c.classList.toggle('selected', specialists[i].id === id);
       });
-
-      // Enable continue button
       document.getElementById('continueToDate').disabled = false;
     }
 
-    document.getElementById('continueToDate').addEventListener('click', () => {
-      goToStep(2);
-      renderCalendar();
-    });
-
     function goToStep(step) {
-      // Update steps UI
-      for (let i = 1; i <= 3; i++) {
-        const stepEl = document.getElementById(`step${i}`);
-        const sectionEl = document.getElementById(`section${i}`);
-        
-        if (i < step) {
-          stepEl.classList.add('completed');
-          stepEl.classList.remove('active');
-        } else if (i === step) {
-          stepEl.classList.add('active');
-          stepEl.classList.remove('completed');
-        } else {
-          stepEl.classList.remove('active', 'completed');
-        }
-
-        sectionEl.classList.toggle('active', i === step);
-      }
-
-      // Update summary if going to step 3
-      if (step === 3) {
-        updateSummary();
-      }
+      document.querySelectorAll('.content-section').forEach((s, i) => s.classList.toggle('active', i === step - 1));
+      document.querySelectorAll('.step').forEach((s, i) => {
+        s.classList.toggle('active', i === step - 1);
+        s.classList.toggle('completed', i < step - 1);
+      });
+      if(step === 2) renderCalendar();
+      if(step === 3) renderSummary();
     }
 
-    // Calendar functions
+    document.getElementById('continueToDate').onclick = () => goToStep(2);
+    document.getElementById('continueToConfirm').onclick = () => goToStep(3);
+
+    // Lógica del Calendario
     function renderCalendar() {
       const grid = document.getElementById('calendarGrid');
-      const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
-                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+      const monthLabel = document.getElementById('currentMonthYear');
+      const names = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
       
-      document.getElementById('currentMonthYear').textContent = 
-        `${monthNames[currentMonth]} ${currentYear}`;
+      monthLabel.textContent = `${names[currentMonth]} ${currentYear}`;
+      grid.innerHTML = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'].map(d => `<div style="font-weight:600; text-align:center;">${d}</div>`).join('');
 
-      // Day headers
-      const dayHeaders = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-      let html = dayHeaders.map(day => 
-        `<div class="calendar-day-header">${day}</div>`
-      ).join('');
-
-      // Get first day of month and number of days
       const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-      const today = new Date();
+      const days = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-      // Empty cells before month starts
-      for (let i = 0; i < firstDay; i++) {
-        html += '<div class="calendar-day disabled"></div>';
-      }
-
-      // Days of month
-      for (let day = 1; day <= daysInMonth; day++) {
-        const date = new Date(currentYear, currentMonth, day);
-        const isPast = date < new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        const isToday = date.getTime() === new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+      for (let i = 0; i < firstDay; i++) grid.innerHTML += '<div></div>';
+      
+      for (let d = 1; d <= days; d++) {
+        const date = new Date(currentYear, currentMonth, d);
+        const isPast = date < new Date().setHours(0,0,0,0);
+        const isSelected = selectedDate && date.getTime() === selectedDate.getTime();
         
-        const classes = ['calendar-day'];
-        if (isPast) classes.push('disabled');
-        if (isToday) classes.push('today');
-        if (selectedDate && selectedDate.getTime() === date.getTime()) classes.push('selected');
-
-        html += `
-          <div class="${classes.join(' ')}" 
-               onclick="${isPast ? '' : `selectDate(${currentYear}, ${currentMonth}, ${day})`}">
-            ${day}
-          </div>
-        `;
+        grid.innerHTML += `<div class="calendar-day ${isPast ? 'disabled' : ''} ${isSelected ? 'selected' : ''}" 
+          onclick="${isPast ? '' : `selectDate(${d})`}">${d}</div>`;
       }
-
-      grid.innerHTML = html;
     }
 
-    function selectDate(year, month, day) {
-      selectedDate = new Date(year, month, day);
+    function selectDate(day) {
+      selectedDate = new Date(currentYear, currentMonth, day);
       renderCalendar();
+      document.getElementById('timeSlotsSection').style.display = 'block';
       renderTimeSlots();
-      document.getElementById('timeSlotsContainer').style.display = 'block';
     }
 
     function renderTimeSlots() {
-      const container = document.getElementById('timeSlotsList');
-      
-      if (!selectedSpecialist) return;
-
-      container.innerHTML = selectedSpecialist.availability.map(time => `
-        <div class="time-slot" onclick="selectTime('${time}')">
-          ${time}
-        </div>
+      const slots = ['09:00', '10:00', '11:00', '15:00', '16:00', '17:00'];
+      document.getElementById('timeSlotsList').innerHTML = slots.map(t => `
+        <div class="time-slot ${selectedTime === t ? 'selected' : ''}" onclick="selectTime('${t}')">${t}</div>
       `).join('');
     }
 
-    function selectTime(time) {
-      selectedTime = time;
-      
-      document.querySelectorAll('.time-slot').forEach(slot => {
-        if (slot.textContent.trim() === time) {
-          slot.classList.add('selected');
-        } else {
-          slot.classList.remove('selected');
-        }
-      });
-
+    function selectTime(t) {
+      selectedTime = t;
+      renderTimeSlots();
       document.getElementById('continueToConfirm').disabled = false;
     }
 
-    document.getElementById('continueToConfirm').addEventListener('click', () => {
-      goToStep(3);
-    });
-
-    function previousMonth() {
-      currentMonth--;
-      if (currentMonth < 0) {
-        currentMonth = 11;
-        currentYear--;
-      }
+    function changeMonth(offset) {
+      currentMonth += offset;
+      if(currentMonth > 11) { currentMonth = 0; currentYear++; }
+      if(currentMonth < 0) { currentMonth = 11; currentYear--; }
       renderCalendar();
     }
 
-    function nextMonth() {
-      currentMonth++;
-      if (currentMonth > 11) {
-        currentMonth = 0;
-        currentYear++;
-      }
-      renderCalendar();
-    }
-
-    function updateSummary() {
-      const monthNames = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 
-                          'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-      
-      const summary = document.getElementById('appointmentSummary');
-      summary.innerHTML = `
-        <div class="summary-item">
-          <span class="summary-label">Especialista</span>
-          <span class="summary-value">${selectedSpecialist.name}</span>
-        </div>
-        <div class="summary-item">
-          <span class="summary-label">Especialidad</span>
-          <span class="summary-value">${selectedSpecialist.specialty}</span>
-        </div>
-        <div class="summary-item">
-          <span class="summary-label">Fecha</span>
-          <span class="summary-value">${selectedDate.getDate()} de ${monthNames[selectedDate.getMonth()]} de ${selectedDate.getFullYear()}</span>
-        </div>
-        <div class="summary-item">
-          <span class="summary-label">Hora</span>
-          <span class="summary-value">${selectedTime}</span>
-        </div>
-        <div class="summary-item">
-          <span class="summary-label">Duración</span>
-          <span class="summary-value">50 minutos</span>
-        </div>
-        <div class="summary-item">
-          <span class="summary-label">Modalidad</span>
-          <span class="summary-value">Videollamada</span>
-        </div>
-        <div class="summary-item" style="border-top: 2px solid var(--border); padding-top: 16px; margin-top: 16px;">
-          <span class="summary-label" style="font-size: 1.1rem; font-weight: 600;">Total</span>
-          <span class="summary-value" style="font-size: 1.5rem; color: var(--primary);">S/ ${selectedSpecialist.price}</span>
-        </div>
+    function renderSummary() {
+      const dateStr = selectedDate.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+      document.getElementById('appointmentSummary').innerHTML = `
+        <div class="summary-item"><span>Especialista</span><strong>${selectedSpecialist.nombre}</strong></div>
+        <div class="summary-item"><span>Fecha</span><strong>${dateStr}</strong></div>
+        <div class="summary-item"><span>Hora</span><strong>${selectedTime}</strong></div>
+        <div class="summary-item"><span>Costo</span><strong>S/ ${selectedSpecialist.precio || 150}</strong></div>
       `;
     }
 
+    // CONFIRMACIÓN FINAL CON SUPABASE
     async function confirmAppointment() {
-      // AQUÍ VA LA INTEGRACIÓN CON SUPABASE para guardar la cita
-      
-      const appointment = {
-        specialist_id: selectedSpecialist.id,
-        date: selectedDate.toISOString().split('T')[0],
-        time: selectedTime,
-        duration: 50,
-        price: selectedSpecialist.price,
-        status: 'agendada'
-      };
+      const btn = document.getElementById('confirmBtn');
+      btn.disabled = true;
+      btn.textContent = 'Guardando...';
 
-      console.log('Guardando cita:', appointment);
+      try {
+        // Obtener usuario logueado
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error('Debes iniciar sesión para agendar.');
 
-      // Simular guardado
-      setTimeout(() => {
-        alert('¡Cita agendada exitosamente!');
+        const fechaHoraStr = `${selectedDate.toISOString().split('T')[0]} ${selectedTime}:00`;
+
+        const { error } = await supabase
+          .from('citas')
+          .insert({
+            paciente_id: user.id,
+            psicologo_id: selectedSpecialist.id,
+            fecha_hora: fechaHoraStr,
+            estado: 'agendada',
+            costo: selectedSpecialist.price || 150
+          });
+
+        if (error) throw error;
+
+        alert('¡Cita agendada con éxito!');
         window.location.href = 'dashboard.html';
-      }, 1000);
+
+      } catch (error) {
+        alert('Error: ' + error.message);
+        btn.disabled = false;
+        btn.textContent = 'Confirmar Cita';
+      }
     }
   </script>
-
-  <!-- Supabase SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/js/supabase-config.js"></script>
-
-  
 </body>
 </html>
