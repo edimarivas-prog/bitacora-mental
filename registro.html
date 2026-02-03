@@ -3,32 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro - Bitácora Mental</title>
+  <title>Crear Cuenta</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root { --primary: #4F6F52; --primary-light: #6B8A6E; --background: #F9FBFA; --dark: #1F2933; --border: #E6EFE8; --danger: #EF4444; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--background); min-height: 100vh; display: flex; justify-content: center; padding: 20px; align-items: center; }
-    .auth-container { width: 100%; max-width: 500px; background: white; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); padding: 40px; }
-    .form-input { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px; margin-bottom: 15px; }
+    :root { --primary: #4F6F52; --background: #F9FBFA; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--background); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .auth-container { width: 100%; max-width: 500px; background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+    .form-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #E6EFE8; border-radius: 8px; }
     .btn { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
-    .btn:hover { background: var(--primary-light); }
-    h1 { font-family: 'Outfit', sans-serif; color: var(--dark); text-align: center; margin-bottom: 20px; }
-    .alert { color: var(--danger); text-align: center; margin-bottom: 10px; display: none; }
   </style>
 </head>
 <body>
   <div class="auth-container">
-    <h1>Crear Cuenta</h1>
-    <div class="alert" id="errorAlert"></div>
+    <h1 style="text-align: center; color: #1F2933; margin-bottom: 20px;">Crear Cuenta</h1>
+    <div id="errorAlert" style="color: red; text-align: center; display: none; margin-bottom: 10px;"></div>
+    
     <form id="registerForm">
       <input type="text" id="nombre" class="form-input" placeholder="Nombre" required>
       <input type="text" id="apellido" class="form-input" placeholder="Apellido" required>
-      <input type="email" id="email" class="form-input" placeholder="Correo electrónico" required>
-      <input type="password" id="password" class="form-input" placeholder="Contraseña (min 6 caracteres)" required>
+      <input type="email" id="email" class="form-input" placeholder="Correo" required>
+      <input type="password" id="password" class="form-input" placeholder="Contraseña" required>
+      
+      <div style="margin-bottom: 20px;">
+        <input type="checkbox" id="terms" required> <label for="terms">Acepto términos y condiciones</label>
+      </div>
+
       <button type="submit" class="btn" id="registerBtn">Registrarse</button>
     </form>
+    
     <p style="text-align: center; margin-top: 20px;">
       ¿Ya tienes cuenta? <a href="login.html" style="color: var(--primary);">Inicia sesión</a>
     </p>
@@ -37,52 +40,42 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
   <script>
-    const registerForm = document.getElementById('registerForm');
-    const registerBtn = document.getElementById('registerBtn');
-
-    registerForm.addEventListener('submit', async (e) => {
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const nombre = document.getElementById('nombre').value.trim();
-      const apellido = document.getElementById('apellido').value.trim();
-      const email = document.getElementById('email').value.trim();
+      const btn = document.getElementById('registerBtn');
+      btn.textContent = 'Creando...';
+      btn.disabled = true;
+
+      const nombre = document.getElementById('nombre').value;
+      const apellido = document.getElementById('apellido').value;
+      const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
-      registerBtn.textContent = 'Creando cuenta...';
-      registerBtn.disabled = true;
-
       try {
-        // 1. Crear usuario en Auth
-        const { data: authData, error: authError } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: { nombre, apellido } // Metadatos
-          }
+        // 1. Crear usuario auth
+        const { data, error } = await supabase.auth.signUp({
+          email, password,
+          options: { data: { nombre, apellido } }
         });
+        if (error) throw error;
 
-        if (authError) throw authError;
-
-        // 2. Crear perfil en tabla users_profile
-        if (authData.user) {
-          const { error: profileError } = await supabase
-            .from('users_profile')
-            .insert({
-              id: authData.user.id,
-              nombre: nombre,
-              apellido: apellido
-            });
-          
-          if (profileError) console.error("Error perfil:", profileError); // No bloqueante
+        // 2. Guardar perfil en base de datos
+        if (data.user) {
+          await supabase.from('users_profile').insert({
+            id: data.user.id,
+            nombre: nombre,
+            apellido: apellido
+          });
         }
 
-        alert('¡Cuenta creada! Redirigiendo al test...');
+        alert('Cuenta creada con éxito. Redirigiendo...');
         window.location.href = 'test-inicial.html';
 
       } catch (error) {
-        registerBtn.textContent = 'Registrarse';
-        registerBtn.disabled = false;
         document.getElementById('errorAlert').textContent = error.message;
         document.getElementById('errorAlert').style.display = 'block';
+        btn.textContent = 'Registrarse';
+        btn.disabled = false;
       }
     });
   </script>
