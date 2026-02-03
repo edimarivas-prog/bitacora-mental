@@ -963,10 +963,10 @@
 
     function renderTimeSlots() {
       const container = document.getElementById('timeSlotsList');
+      // Generamos horarios de ejemplo (9:00 a 17:00)
+      const hours = ['09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00'];
       
-      if (!selectedSpecialist) return;
-
-      container.innerHTML = selectedSpecialist.availability.map(time => `
+      container.innerHTML = hours.map(time => `
         <div class="time-slot" onclick="selectTime('${time}')">
           ${time}
         </div>
