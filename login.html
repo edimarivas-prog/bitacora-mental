@@ -4,22 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Iniciar Sesión - Bitácora Mental</title>
+  
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
-    :root { --primary: #4F6F52; --background: #F9FBFA; --dark: #1F2933; --border: #E6EFE8; --danger: #EF4444; }
+    /* Estilos originales del Login conservados */
+    :root { --primary: #4F6F52; --primary-light: #6B8A6E; --secondary: #A7C4B5; --background: #F9FBFA; --dark: #1F2933; --text-secondary: #6B7280; --border: #E6EFE8; --danger: #EF4444; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--background); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--background); color: var(--dark); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
     .auth-container { width: 100%; max-width: 1000px; background: white; border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); overflow: hidden; display: grid; grid-template-columns: 1fr 1fr; }
     .auth-form-side { padding: 60px 50px; }
-    .logo { display: flex; gap: 10px; color: var(--primary); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.4rem; text-decoration: none; margin-bottom: 30px; }
-    .form-group { margin-bottom: 20px; }
-    .form-input { width: 100%; padding: 14px; border: 2px solid var(--border); border-radius: 12px; margin-top: 5px; }
-    .btn { width: 100%; padding: 15px; border-radius: 12px; font-weight: 600; cursor: pointer; border: none; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+    .auth-visual-side { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); padding: 60px 50px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; }
+    .form-group { margin-bottom: 24px; }
+    .form-label { display: block; margin-bottom: 8px; font-weight: 600; }
+    .form-input { width: 100%; padding: 14px 16px; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; }
+    .btn { width: 100%; padding: 15px; border-radius: 12px; font-weight: 600; cursor: pointer; border: none; display: flex; justify-content: center; align-items: center; gap: 10px; }
     .btn-primary { background: var(--primary); color: white; }
-    .btn-google { background: white; border: 2px solid var(--border); color: var(--dark); }
-    .auth-visual-side { background: linear-gradient(135deg, var(--primary), #6B8A6E); display: flex; align-items: center; justify-content: center; color: white; padding: 40px; }
-    .alert { padding: 10px; margin-bottom: 20px; border-radius: 8px; display: none; background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+    .btn-google { background: white; border: 2px solid var(--border); margin-top: 16px; }
+    .alert { padding: 12px; border-radius: 10px; margin-bottom: 20px; display: none; background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
     .alert.show { display: block; }
     @media (max-width: 768px) { .auth-container { grid-template-columns: 1fr; } .auth-visual-side { display: none; } }
   </style>
@@ -27,36 +30,40 @@
 <body>
   <div class="auth-container">
     <div class="auth-form-side">
-      <a href="/" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
-      <h1 style="margin-bottom: 10px; font-family: 'Outfit', sans-serif;">Bienvenido de nuevo</h1>
-      <p style="margin-bottom: 30px; color: #666;">¿No tienes cuenta? <a href="registro.html" style="color: var(--primary);">Regístrate gratis</a></p>
-      
+      <h2 style="color: var(--primary); margin-bottom: 30px;"><i class="fas fa-brain"></i> Bitácora Mental</h2>
+      <h1 style="font-size: 2rem; margin-bottom: 10px;">Bienvenido de nuevo</h1>
+      <p style="color: var(--text-secondary); margin-bottom: 30px;">¿No tienes cuenta? <a href="registro.html" style="color: var(--primary); font-weight: 600;">Regístrate gratis</a></p>
+
       <div class="alert" id="errorAlert"></div>
 
       <form id="loginForm">
         <div class="form-group">
-          <label>Correo electrónico</label>
+          <label class="form-label">Correo electrónico</label>
           <input type="email" class="form-input" id="email" required placeholder="tu@email.com">
         </div>
         <div class="form-group">
-          <label>Contraseña</label>
+          <label class="form-label">Contraseña</label>
           <input type="password" class="form-input" id="password" required placeholder="••••••••">
         </div>
+        
         <button type="submit" class="btn btn-primary" id="loginBtn">Iniciar sesión</button>
-      </form>
 
-      <div style="text-align: center; margin: 20px 0; color: #999;">o continúa con</div>
-      
-      <button type="button" class="btn btn-google" id="googleSignIn">
-        <img src="https://www.google.com/favicon.ico" width="18"> Continuar con Google
-      </button>
+        <div style="display: flex; align-items: center; margin: 24px 0; color: var(--text-secondary);">
+          <div style="flex: 1; height: 1px; background: var(--border);"></div>
+          <span style="padding: 0 10px; font-size: 0.9rem;">o continúa con</span>
+          <div style="flex: 1; height: 1px; background: var(--border);"></div>
+        </div>
+
+        <button type="button" class="btn btn-google" id="googleSignIn">
+          <img src="https://www.google.com/favicon.ico" width="18" alt="G"> Continuar con Google
+        </button>
+      </form>
     </div>
+    
     <div class="auth-visual-side">
-      <div style="text-align: center;">
-        <i class="fas fa-spa" style="font-size: 4rem; margin-bottom: 20px;"></i>
-        <h2>Tu espacio seguro</h2>
-        <p>Gestiona tu bienestar emocional.</p>
-      </div>
+      <i class="fas fa-spa" style="font-size: 4rem; margin-bottom: 20px;"></i>
+      <h2>Tu espacio seguro</h2>
+      <p>Accede a herramientas profesionales y lleva el control de tu salud mental.</p>
     </div>
   </div>
 
@@ -65,11 +72,13 @@
   <script>
     const loginForm = document.getElementById('loginForm');
     const loginBtn = document.getElementById('loginBtn');
-    
+    const googleSignInBtn = document.getElementById('googleSignIn');
+    const errorAlert = document.getElementById('errorAlert');
+
     function showError(msg) {
-      const alert = document.getElementById('errorAlert');
-      alert.textContent = msg;
-      alert.classList.add('show');
+      errorAlert.textContent = msg;
+      errorAlert.classList.add('show');
+      setTimeout(() => errorAlert.classList.remove('show'), 5000);
     }
 
     loginForm.addEventListener('submit', async (e) => {
@@ -82,25 +91,27 @@
           password: document.getElementById('password').value
         });
         if (error) throw error;
-        // Redirección directa al dashboard
+        
+        // Redirección exitosa a la carpeta /app/
         window.location.href = 'https://edimarivas-prog.github.io/bitacora-mental/app/dashboard.html';
       } catch (error) {
         loginBtn.textContent = 'Iniciar sesión';
-        showError('Credenciales incorrectas');
+        showError(error.message === 'Invalid login credentials' ? 'Correo o contraseña incorrectos' : error.message);
       }
     });
 
-    document.getElementById('googleSignIn').addEventListener('click', async () => {
+    googleSignInBtn.addEventListener('click', async () => {
       try {
-        await supabase.auth.signInWithOAuth({
+        const { error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
           options: {
-            // URL EXACTA para GitHub Pages
+            // IMPORTANTE: URL completa para GitHub Pages
             redirectTo: 'https://edimarivas-prog.github.io/bitacora-mental/app/dashboard.html'
           }
         });
+        if (error) throw error;
       } catch (error) {
-        showError('Error de conexión');
+        showError('Error al conectar con Google: ' + error.message);
       }
     });
   </script>
