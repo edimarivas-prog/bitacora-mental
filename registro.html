@@ -683,6 +683,11 @@
         icon.classList.toggle('fa-eye-slash');
       });
     }
+    function mostrarClave(idInput) {
+      const input = document.getElementById(idInput);
+      // Si es tipo password lo cambia a texto para que se vea, y viceversa
+      input.type = input.type === "password" ? "text" : "password";
+    }
 
     setupPasswordToggle('togglePassword', 'password');
     setupPasswordToggle('toggleConfirmPassword', 'confirmPassword');
