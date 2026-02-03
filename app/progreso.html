@@ -1,0 +1,26 @@
+// Cargar historial de tests
+async function loadTestHistory() {
+  const user = await getCurrentUser()
+
+  const { data, error } = await supabase
+    .from('test_results')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('fecha_realizado', { ascending: false })
+
+  renderTestHistory(data)
+  updateCharts(data)
+}
+
+// Cargar actividad del diario
+async function loadDiaryActivity() {
+  const user = await getCurrentUser()
+
+  const { data, error } = await supabase
+    .from('diario_entries')
+    .select('fecha')
+    .eq('user_id', user.id)
+    .gte('fecha', thirtyDaysAgo())
+
+  updateDiaryChart(data)
+}
