@@ -223,7 +223,7 @@
       successAlert.classList.add('show');
     }
 
-    // Submit Login
+    // Submit Login con Correo
     loginForm.addEventListener('submit', async function(e) {
       e.preventDefault();
       loginBtn.classList.add('loading');
@@ -235,7 +235,10 @@
         });
         if (error) throw error;
         showSuccess('¡Éxito! Redirigiendo...');
-        setTimeout(() => window.location.href = 'app/dashboard.html', 1500);
+        setTimeout(() => {
+          // Ajuste de ruta para GitHub Pages
+          window.location.href = 'https://edimarivas-prog.github.io/bitacora-mental/app/dashboard.html';
+        }, 1500);
       } catch (error) {
         loginBtn.classList.remove('loading');
         loginBtn.textContent = 'Iniciar sesión';
@@ -243,13 +246,16 @@
       }
     });
 
-    // Google Sign In
+    // Google Sign In Ajustado
     googleSignInBtn.addEventListener('click', async function() {
       this.classList.add('loading');
       try {
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
-          options: { redirectTo: window.location.origin + '/app/dashboard.html' }
+          options: { 
+            // Ruta completa necesaria para GitHub Pages
+            redirectTo: 'https://edimarivas-prog.github.io/bitacora-mental/app/dashboard.html' 
+          }
         });
         if (error) throw error;
       } catch (error) {
