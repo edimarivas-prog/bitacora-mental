@@ -3,37 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crear Cuenta</title>
+  <title>Registro - Bitácora Mental</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root { --primary: #4F6F52; --background: #F9FBFA; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--background); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-    .auth-container { width: 100%; max-width: 500px; background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
-    .form-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #E6EFE8; border-radius: 8px; }
+    :root { --primary: #4F6F52; --background: #F9FBFA; --dark: #1F2933; --border: #E6EFE8; --danger: #EF4444; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--background); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+    .auth-container { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+    .form-input { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px; margin-bottom: 15px; font-family: inherit; }
     .btn { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    .btn:hover { opacity: 0.9; }
+    .alert { color: var(--danger); margin-bottom: 15px; display: none; text-align: center; }
   </style>
 </head>
 <body>
   <div class="auth-container">
-    <h1 style="text-align: center; color: #1F2933; margin-bottom: 20px;">Crear Cuenta</h1>
-    <div id="errorAlert" style="color: red; text-align: center; display: none; margin-bottom: 10px;"></div>
+    <h1 style="text-align: center; color: var(--dark); font-family: 'Outfit'; margin-bottom: 20px;">Crear Cuenta</h1>
     
+    <div id="errorAlert" class="alert"></div>
+
     <form id="registerForm">
       <input type="text" id="nombre" class="form-input" placeholder="Nombre" required>
       <input type="text" id="apellido" class="form-input" placeholder="Apellido" required>
-      <input type="email" id="email" class="form-input" placeholder="Correo" required>
-      <input type="password" id="password" class="form-input" placeholder="Contraseña" required>
+      <input type="email" id="email" class="form-input" placeholder="Correo electrónico" required>
+      <input type="password" id="password" class="form-input" placeholder="Contraseña (mínimo 6 caracteres)" required>
       
-      <div style="margin-bottom: 20px;">
-        <input type="checkbox" id="terms" required> <label for="terms">Acepto términos y condiciones</label>
+      <div style="margin-bottom: 20px; font-size: 0.9rem; color: #666;">
+        <input type="checkbox" id="terms" required> Acepto términos y condiciones
       </div>
 
       <button type="submit" class="btn" id="registerBtn">Registrarse</button>
     </form>
-    
-    <p style="text-align: center; margin-top: 20px;">
-      ¿Ya tienes cuenta? <a href="login.html" style="color: var(--primary);">Inicia sesión</a>
+
+    <p style="text-align: center; margin-top: 20px; color: #666;">
+      ¿Ya tienes cuenta? <a href="login.html" style="color: var(--primary); font-weight: 600;">Inicia sesión</a>
     </p>
   </div>
 
@@ -43,39 +46,50 @@
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('registerBtn');
-      btn.textContent = 'Creando...';
+      const errorDiv = document.getElementById('errorAlert');
+      
+      btn.textContent = 'Creando cuenta...';
       btn.disabled = true;
+      errorDiv.style.display = 'none';
 
-      const nombre = document.getElementById('nombre').value;
-      const apellido = document.getElementById('apellido').value;
-      const email = document.getElementById('email').value;
+      const nombre = document.getElementById('nombre').value.trim();
+      const apellido = document.getElementById('apellido').value.trim();
+      const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
       try {
-        // 1. Crear usuario auth
+        // 1. Crear usuario Auth
         const { data, error } = await supabase.auth.signUp({
-          email, password,
-          options: { data: { nombre, apellido } }
+          email, 
+          password,
+          options: {
+            data: { nombre, apellido } // Metadatos para recuperación rápida
+          }
         });
+
         if (error) throw error;
 
-        // 2. Guardar perfil en base de datos
+        // 2. Insertar en tabla de perfiles (Si el usuario se creó)
         if (data.user) {
-          await supabase.from('users_profile').insert({
-            id: data.user.id,
-            nombre: nombre,
-            apellido: apellido
-          });
+          const { error: profileError } = await supabase
+            .from('users_profile')
+            .insert({
+              id: data.user.id,
+              nombre: nombre,
+              apellido: apellido
+            });
+            
+          if (profileError) console.error("Error perfil:", profileError);
         }
 
-        alert('Cuenta creada con éxito. Redirigiendo...');
-        window.location.href = 'test-inicial.html';
+        alert('¡Cuenta creada con éxito! Ahora inicia sesión.');
+        window.location.href = 'login.html'; // O redirigir al test-inicial.html
 
       } catch (error) {
-        document.getElementById('errorAlert').textContent = error.message;
-        document.getElementById('errorAlert').style.display = 'block';
         btn.textContent = 'Registrarse';
         btn.disabled = false;
+        errorDiv.textContent = error.message;
+        errorDiv.style.display = 'block';
       }
     });
   </script>
