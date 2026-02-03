@@ -702,59 +702,40 @@
     </div>
   </div>
 
-  <script>
-    // DATOS DE EJEMPLO (en producción vendrían de Supabase)
-    const appointments = {
-      upcoming: [
-        {
-          id: 1,
-          psychologist: 'Dra. Patricia Gómez',
-          specialty: 'Ansiedad y manejo del estrés',
-          date: '2026-02-03',
-          time: '16:00',
-          duration: 50,
-          cost: 180,
-          videoLink: 'https://meet.google.com/abc-defg-hij',
-          status: 'today'
-        }
-      ],
-      completed: [
-        {
-          id: 2,
-          psychologist: 'Dra. Patricia Gómez',
-          specialty: 'Ansiedad y manejo del estrés',
-          date: '2026-01-27',
-          time: '16:00',
-          duration: 50,
-          cost: 180,
-          status: 'completed',
-          notes: 'Excelente sesión, trabajamos técnicas de respiración'
-        },
-        {
-          id: 3,
-          psychologist: 'Psic. Carlos Ramírez',
-          specialty: 'Burnout laboral',
-          date: '2026-01-20',
-          time: '11:00',
-          duration: 50,
-          cost: 150,
-          status: 'completed'
-        }
-      ],
-      cancelled: [
-        {
-          id: 4,
-          psychologist: 'Dra. Ana Martínez',
-          specialty: 'Depresión y duelo',
-          date: '2026-01-15',
-          time: '10:00',
-          duration: 50,
-          cost: 200,
-          status: 'cancelled',
-          cancelReason: 'Reprogramada por el paciente'
-        }
-      ]
-    };
+            <script>
+              // DATOS DE EJEMPLO (en producción vendrían de Supabase)
+              // Cargar citas del usuario
+          async function loadAppointments() {
+            const user = await getCurrentUser()
+          
+            const { data, error } = await supabase
+              .from('citas')
+              .select(`
+                *,
+                psicologos (nombre_completo, especialidades)
+              `)
+              .eq('paciente_id', user.id)
+              .order('fecha_hora', { ascending: true })
+          
+            // Separar por estado
+            const upcoming = data.filter(c => c.estado === 'agendada')
+            const completed = data.filter(c => c.estado === 'completada')
+            const cancelled = data.filter(c => c.estado === 'cancelada')
+          
+            renderAppointments(upcoming, completed, cancelled)
+          }
+          
+          // Cancelar cita
+          async function cancelAppointment(id) {
+            const { error } = await supabase
+              .from('citas')
+              .update({ estado: 'cancelada' })
+              .eq('id', id)
+          
+            if (!error) {
+              loadAppointments() // Recargar
+            }
+          }
 
     let selectedAppointmentId = null;
 
@@ -782,7 +763,7 @@
           </div>
         `;
         return;
-      }
+      };
 
       container.innerHTML = appointments.upcoming.map(apt => `
         <div class="appointment-card">
