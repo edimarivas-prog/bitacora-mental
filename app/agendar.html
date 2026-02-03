@@ -1056,6 +1056,40 @@
     costo: selectedSpecialist.price
   });
 
+    async function getCurrentUser() {
+      const { data: { user } } = await supabase.auth.getUser();
+      return user;
+    }
+
+    async function confirmAppointment() {
+      const user = await getCurrentUser();
+      if (!user) {
+        alert("Debes iniciar sesión para agendar.");
+        return;
+      }
+
+      // Combinar fecha y hora para la columna timestamptz
+      const fechaHoraISO = `${selectedDate.toISOString().split('T')[0]}T${selectedTime}:00`;
+
+      const { data, error } = await supabase
+        .from('citas')
+        .insert({
+          paciente_id: user.id,
+          psicologo_id: selectedSpecialist.id,
+          fecha_hora: fechaHoraISO,
+          duracion_minutos: 50,
+          estado: 'agendada',
+          costo: selectedSpecialist.tarifa_sesion
+        });
+
+      if (error) {
+        alert('Error al agendar: ' + error.message);
+      } else {
+        alert('¡Cita agendada con éxito!');
+        window.location.href = 'dashboard.html';
+      }
+    }
+
   </script>
 
     <!-- Supabase SDK -->
