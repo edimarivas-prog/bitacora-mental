@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crear Cuenta - Bitácora Mental</title>
+  <title>Test de Bienestar - Bitácora Mental</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -18,6 +18,7 @@
       --text-secondary: #6B7280;
       --border: #E6EFE8;
       --danger: #EF4444;
+      --warning: #F59E0B;
       --success: #10B981;
     }
 
@@ -31,48 +32,29 @@
       font-family: 'DM Sans', sans-serif;
       background: var(--background);
       color: var(--dark);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+      line-height: 1.6;
     }
 
     h1, h2, h3 {
       font-family: 'Outfit', sans-serif;
     }
 
-    .auth-container {
-      width: 100%;
-      max-width: 1000px;
-      background: white;
-      border-radius: 24px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-      overflow: hidden;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      animation: fadeIn 0.5s ease-out;
+    /* Container */
+    .test-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      min-height: 100vh;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .auth-form-side {
-      padding: 60px 50px;
-      max-height: 95vh;
-      overflow-y: auto;
+    /* Header */
+    .test-header {
+      text-align: center;
+      margin-bottom: 40px;
     }
 
     .logo {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 12px;
       font-family: 'Outfit', sans-serif;
@@ -87,193 +69,279 @@
       font-size: 1.8rem;
     }
 
-    .auth-header {
-      margin-bottom: 28px;
-    }
-
-    .auth-header h1 {
-      font-size: 2rem;
-      margin-bottom: 8px;
-      color: var(--dark);
-    }
-
-    .auth-header p {
-      color: var(--text-secondary);
-      font-size: 1rem;
-    }
-
-    .auth-header p a {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .auth-header p a:hover {
-      text-decoration: underline;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: var(--dark);
-      font-size: 0.95rem;
-    }
-
-    .form-input {
-      width: 100%;
-      padding: 14px 16px;
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      font-size: 1rem;
-      font-family: 'DM Sans', sans-serif;
-      transition: all 0.3s;
+    /* Progress Bar */
+    .progress-container {
       background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      margin-bottom: 32px;
     }
 
-    .form-input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(79, 111, 82, 0.1);
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
     }
 
-    .form-input.error {
-      border-color: var(--danger);
+    .progress-text {
+      font-weight: 600;
+      color: var(--dark);
     }
 
-    .form-input.success {
-      border-color: var(--success);
-    }
-
-    .form-error {
-      color: var(--danger);
-      font-size: 0.85rem;
-      margin-top: 6px;
-      display: none;
-    }
-
-    .form-error.show {
-      display: block;
-    }
-
-    .form-success {
-      color: var(--success);
-      font-size: 0.85rem;
-      margin-top: 6px;
-      display: none;
-    }
-
-    .form-success.show {
-      display: block;
-    }
-
-    .password-wrapper {
-      position: relative;
-    }
-
-    .toggle-password {
-      position: absolute;
-      right: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      cursor: pointer;
+    .progress-percent {
       font-size: 1.1rem;
-      padding: 4px;
-    }
-
-    .toggle-password:hover {
+      font-weight: 700;
       color: var(--primary);
     }
 
-    .password-strength {
-      margin-top: 8px;
-      display: none;
-    }
-
-    .password-strength.show {
-      display: block;
-    }
-
-    .strength-bar {
-      height: 4px;
+    .progress-bar {
+      width: 100%;
+      height: 12px;
       background: var(--border);
       border-radius: 999px;
       overflow: hidden;
-      margin-bottom: 6px;
     }
 
-    .strength-fill {
+    .progress-fill {
       height: 100%;
-      transition: all 0.3s;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
       border-radius: 999px;
+      transition: width 0.5s ease;
+      width: 0%;
     }
 
-    .strength-fill.weak {
-      width: 33%;
-      background: var(--danger);
+    /* Welcome Screen */
+    .welcome-screen {
+      background: white;
+      border-radius: 20px;
+      padding: 60px 40px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
     }
 
-    .strength-fill.medium {
-      width: 66%;
-      background: var(--warning);
-    }
-
-    .strength-fill.strong {
-      width: 100%;
-      background: var(--success);
-    }
-
-    .strength-text {
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    .strength-text.weak { color: var(--danger); }
-    .strength-text.medium { color: #F59E0B; }
-    .strength-text.strong { color: var(--success); }
-
-    .terms-wrapper {
-      margin-bottom: 24px;
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-    }
-
-    .terms-wrapper input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      cursor: pointer;
-      margin-top: 2px;
-      flex-shrink: 0;
-    }
-
-    .terms-wrapper label {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      cursor: pointer;
-      line-height: 1.6;
-    }
-
-    .terms-wrapper label a {
+    .welcome-icon {
+      font-size: 5rem;
       color: var(--primary);
-      text-decoration: none;
+      margin-bottom: 24px;
+    }
+
+    .welcome-screen h1 {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+      color: var(--dark);
+    }
+
+    .welcome-screen p {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      line-height: 1.8;
+    }
+
+    .info-box {
+      background: var(--background);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 32px;
+      text-align: left;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .info-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-item i {
+      color: var(--primary);
+      font-size: 1.2rem;
+      width: 24px;
+    }
+
+    /* Question Card */
+    .question-card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+      display: none;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .question-card.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .question-number {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+    }
+
+    .question-text {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 32px;
+      color: var(--dark);
+      line-height: 1.4;
+    }
+
+    .question-description {
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      font-size: 1rem;
+    }
+
+    /* Options */
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option {
+      background: var(--background);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 24px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .option:hover {
+      background: white;
+      border-color: var(--primary);
+      transform: translateX(4px);
+    }
+
+    .option.selected {
+      background: rgba(79, 111, 82, 0.08);
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(79, 111, 82, 0.2);
+    }
+
+    .option-radio {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      position: relative;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .option.selected .option-radio {
+      border-color: var(--primary);
+      background: var(--primary);
+    }
+
+    .option.selected .option-radio::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .option-text {
+      flex: 1;
+      font-weight: 500;
+    }
+
+    .option-value {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
       font-weight: 600;
     }
 
-    .terms-wrapper label a:hover {
-      text-decoration: underline;
+    /* Scale Options */
+    .scale-options {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .scale-option {
+      aspect-ratio: 1;
+      background: var(--background);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .scale-option:hover {
+      background: white;
+      border-color: var(--primary);
+      transform: translateY(-4px);
+    }
+
+    .scale-option.selected {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .scale-number {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .scale-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-align: center;
+      opacity: 0.8;
+    }
+
+    .scale-description {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 8px;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
     }
 
     .btn {
-      width: 100%;
-      padding: 15px;
+      padding: 14px 28px;
       border-radius: 12px;
       font-weight: 600;
       font-size: 1rem;
@@ -284,17 +352,24 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
     }
 
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+    .btn-secondary {
+      background: var(--background);
+      color: var(--dark);
+      border: 2px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: white;
+      border-color: var(--primary);
     }
 
     .btn-primary {
       background: var(--primary);
       color: white;
+      flex: 1;
       box-shadow: 0 4px 15px rgba(79, 111, 82, 0.3);
     }
 
@@ -304,609 +379,605 @@
       box-shadow: 0 6px 20px rgba(79, 111, 82, 0.4);
     }
 
-    .btn-primary:active {
-      transform: translateY(0);
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
-    .btn-google {
+    /* Results Screen */
+    .results-screen {
+      display: none;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .results-screen.active {
+      display: block;
+    }
+
+    .results-card {
       background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+      margin-bottom: 24px;
+    }
+
+    .results-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .results-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    .results-title {
+      font-size: 2rem;
+      margin-bottom: 12px;
       color: var(--dark);
-      border: 2px solid var(--border);
-      margin-top: 16px;
     }
 
-    .btn-google:hover {
+    .results-subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .score-card {
       background: var(--background);
-      border-color: var(--primary);
+      padding: 24px;
+      border-radius: 12px;
+      text-align: center;
     }
 
-    .divider {
+    .score-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .score-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .score-value.low { color: var(--success); }
+    .score-value.medium { color: var(--warning); }
+    .score-value.high { color: var(--danger); }
+
+    .score-status {
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .score-status.low {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+    }
+
+    .score-status.medium {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--warning);
+    }
+
+    .score-status.high {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+    }
+
+    .recommendation {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 32px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+    }
+
+    .recommendation h3 {
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+    }
+
+    .recommendation p {
+      line-height: 1.8;
+      opacity: 0.95;
+      margin-bottom: 24px;
+    }
+
+    .specialist-card {
+      background: rgba(255,255,255,0.15);
+      padding: 20px;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
       display: flex;
       align-items: center;
       gap: 16px;
-      margin: 24px 0;
-      color: var(--text-secondary);
-      font-size: 0.9rem;
     }
 
-    .divider::before,
-    .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    .auth-visual-side {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      padding: 60px 50px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      color: white;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .auth-visual-side::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -50%;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-      animation: float 20s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(-30px, 30px); }
-    }
-
-    .visual-content {
-      position: relative;
-      z-index: 1;
-    }
-
-    .visual-icon {
-      font-size: 5rem;
-      margin-bottom: 24px;
-      opacity: 0.9;
-    }
-
-    .visual-content h2 {
-      font-size: 2rem;
-      margin-bottom: 16px;
-      line-height: 1.2;
-    }
-
-    .visual-content p {
-      font-size: 1.05rem;
-      opacity: 0.9;
-      line-height: 1.7;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 40px;
-      text-align: center;
-    }
-
-    .stat {
-      padding: 20px;
-      background: rgba(255,255,255,0.1);
+    .specialist-icon {
+      width: 60px;
+      height: 60px;
+      background: white;
+      color: var(--primary);
       border-radius: 12px;
-      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      flex-shrink: 0;
     }
 
-    .stat-value {
-      font-size: 2rem;
-      font-weight: 700;
+    .specialist-info h4 {
       margin-bottom: 4px;
     }
 
-    .stat-label {
-      font-size: 0.85rem;
-      opacity: 0.9;
+    .specialist-info p {
+      font-size: 0.9rem;
+      margin: 0;
     }
 
-    .alert {
-      padding: 12px 16px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      display: none;
-      align-items: center;
-      gap: 10px;
+    .action-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 32px;
     }
 
-    .alert.show {
-      display: flex;
+    .btn-large {
+      padding: 18px 24px;
+      font-size: 1.05rem;
     }
 
-    .alert.error {
-      background: rgba(239, 68, 68, 0.1);
-      color: var(--danger);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-
-    .alert.success {
-      background: rgba(16, 185, 129, 0.1);
-      color: var(--success);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-
-    .loading {
-      pointer-events: none;
-      opacity: 0.7;
-      position: relative;
-    }
-
-    .loading::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 20px;
-      height: 20px;
-      border: 3px solid white;
-      border-top-color: transparent;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-
+    /* Mobile */
     @media (max-width: 768px) {
-      .auth-container {
-        grid-template-columns: 1fr;
-        max-width: 500px;
+      .welcome-screen {
+        padding: 40px 24px;
       }
 
-      .auth-visual-side {
+      .welcome-screen h1 {
+        font-size: 2rem;
+      }
+
+      .question-card {
+        padding: 24px;
+      }
+
+      .question-text {
+        font-size: 1.3rem;
+      }
+
+      .scale-options {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+      }
+
+      .scale-number {
+        font-size: 1.3rem;
+      }
+
+      .scale-label {
         display: none;
       }
 
-      .auth-form-side {
-        padding: 40px 30px;
+      .score-grid {
+        grid-template-columns: 1fr;
       }
 
-      .auth-header h1 {
-        font-size: 1.6rem;
-      }
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    @media (max-width: 480px) {
-      .form-row {
+      .action-buttons {
         grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  <div class="auth-container">
-    <!-- Left Side - Form -->
-    <div class="auth-form-side">
+  <div class="test-container">
+    <!-- Header -->
+    <div class="test-header">
       <a href="/" class="logo">
         <i class="fas fa-brain"></i>
         Bitácora Mental
       </a>
-
-      <div class="auth-header">
-        <h1>Crea tu cuenta</h1>
-        <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
-      </div>
-
-      <div class="alert error" id="errorAlert">
-        <i class="fas fa-exclamation-circle"></i>
-        <span id="errorMessage"></span>
-      </div>
-
-      <div class="alert success" id="successAlert">
-        <i class="fas fa-check-circle"></i>
-        <span id="successMessage"></span>
-      </div>
-
-      <form id="registerForm">
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" for="nombre">Nombre</label>
-            <input 
-              type="text" 
-              class="form-input" 
-              id="nombre" 
-              name="nombre"
-              placeholder="María"
-              required
-              autocomplete="given-name"
-            >
-            <div class="form-error" id="nombreError">Ingresa tu nombre</div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="apellido">Apellido</label>
-            <input 
-              type="text" 
-              class="form-input" 
-              id="apellido" 
-              name="apellido"
-              placeholder="Campos"
-              required
-              autocomplete="family-name"
-            >
-            <div class="form-error" id="apellidoError">Ingresa tu apellido</div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="email">Correo electrónico</label>
-          <input 
-            type="email" 
-            class="form-input" 
-            id="email" 
-            name="email"
-            placeholder="tu@email.com"
-            required
-            autocomplete="email"
-          >
-          <div class="form-error" id="emailError">Ingresa un email válido</div>
-          <div class="form-success" id="emailSuccess">
-            <i class="fas fa-check-circle"></i> Email disponible
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="password">Contraseña</label>
-          <div class="password-wrapper">
-            <input 
-              type="password" 
-              class="form-input" 
-              id="password" 
-              name="password"
-              placeholder="Mínimo 6 caracteres"
-              required
-              autocomplete="new-password"
-            >
-            <button type="button" class="toggle-password" id="togglePassword">
-              <i class="fas fa-eye"></i>
-            </button>
-          </div>
-          <div class="password-strength" id="passwordStrength">
-            <div class="strength-bar">
-              <div class="strength-fill" id="strengthFill"></div>
-            </div>
-            <div class="strength-text" id="strengthText"></div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="confirmPassword">Confirmar contraseña</label>
-          <div class="password-wrapper">
-            <input 
-              type="password" 
-              class="form-input" 
-              id="confirmPassword" 
-              name="confirmPassword"
-              placeholder="Repite tu contraseña"
-              required
-              autocomplete="new-password"
-            >
-            <button type="button" class="toggle-password" id="toggleConfirmPassword">
-              <i class="fas fa-eye"></i>
-            </button>
-          </div>
-          <div class="form-error" id="confirmPasswordError">Las contraseñas no coinciden</div>
-          <div class="form-success" id="confirmPasswordSuccess">
-            <i class="fas fa-check-circle"></i> Las contraseñas coinciden
-          </div>
-        </div>
-
-        <div class="terms-wrapper">
-          <input type="checkbox" id="terms" name="terms" required>
-          <label for="terms">
-            Acepto los <a href="terminos.html" target="_blank">Términos y Condiciones</a> 
-            y la <a href="privacidad.html" target="_blank">Política de Privacidad</a>
-          </label>
-        </div>
-
-        <button type="submit" class="btn btn-primary" id="registerBtn" disabled>
-          <i class="fas fa-user-plus"></i>
-          Crear cuenta
-        </button>
-
-        <div class="divider">o regístrate con</div>
-
-        <button type="button" class="btn btn-google" id="googleSignUp">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19.6 10.227c0-.709-.064-1.39-.182-2.045H10v3.868h5.382a4.6 4.6 0 01-1.996 3.018v2.51h3.232c1.891-1.742 2.982-4.305 2.982-7.35z" fill="#4285F4"/>
-            <path d="M10 20c2.7 0 4.964-.895 6.618-2.423l-3.232-2.509c-.895.6-2.04.955-3.386.955-2.605 0-4.81-1.76-5.595-4.123H1.064v2.59A9.996 9.996 0 0010 20z" fill="#34A853"/>
-            <path d="M4.405 11.9c-.2-.6-.314-1.24-.314-1.9 0-.66.114-1.3.314-1.9V5.51H1.064A9.996 9.996 0 000 10c0 1.614.386 3.14 1.064 4.49l3.34-2.59z" fill="#FBBC05"/>
-            <path d="M10 3.977c1.468 0 2.786.505 3.823 1.496l2.868-2.868C14.959.99 12.695 0 10 0 6.09 0 2.71 2.24 1.064 5.51l3.34 2.59C5.19 5.736 7.395 3.977 10 3.977z" fill="#EA4335"/>
-          </svg>
-          Continuar con Google
-        </button>
-      </form>
     </div>
 
-    <!-- Right Side - Visual -->
-    <div class="auth-visual-side">
-      <div class="visual-content">
-        <div class="visual-icon">
-          <i class="fas fa-heart-pulse"></i>
+    <!-- Progress Bar -->
+    <div class="progress-container" id="progressContainer" style="display: none;">
+      <div class="progress-info">
+        <span class="progress-text">Pregunta <span id="currentQuestion">1</span> de <span id="totalQuestions">10</span></span>
+        <span class="progress-percent" id="progressPercent">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <!-- Welcome Screen -->
+    <div class="welcome-screen" id="welcomeScreen">
+      <div class="welcome-icon">
+        <i class="fas fa-clipboard-list"></i>
+      </div>
+      <h1>Test de Bienestar Emocional</h1>
+      <p>Este cuestionario nos ayudará a entender cómo te sientes actualmente y recomendarte el mejor camino para tu bienestar.</p>
+      
+      <div class="info-box">
+        <div class="info-item">
+          <i class="fas fa-clock"></i>
+          <span>Tiempo estimado: 5 minutos</span>
         </div>
-        <h2>Únete a más de 500 personas que cuidan su salud mental</h2>
-        <p>Empieza tu viaje hacia el bienestar con herramientas profesionales y apoyo especializado.</p>
-        
-        <div class="stats">
-          <div class="stat">
-            <div class="stat-value">500+</div>
-            <div class="stat-label">Usuarios activos</div>
-          </div>
-          <div class="stat">
-            <div class="stat-value">15+</div>
-            <div class="stat-label">Especialistas</div>
-          </div>
-          <div class="stat">
-            <div class="stat-value">95%</div>
-            <div class="stat-label">Satisfacción</div>
-          </div>
+        <div class="info-item">
+          <i class="fas fa-question-circle"></i>
+          <span>10 preguntas sencillas</span>
         </div>
+        <div class="info-item">
+          <i class="fas fa-lock"></i>
+          <span>Tus respuestas son completamente privadas</span>
+        </div>
+        <div class="info-item">
+          <i class="fas fa-chart-line"></i>
+          <span>Recibirás un análisis personalizado al finalizar</span>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-large" onclick="startTest()">
+        <i class="fas fa-play"></i>
+        Comenzar test
+      </button>
+    </div>
+
+    <!-- Questions Container -->
+    <div id="questionsContainer"></div>
+
+    <!-- Results Screen -->
+    <div class="results-screen" id="resultsScreen">
+      <div class="results-card">
+        <div class="results-header">
+          <div class="results-icon">✨</div>
+          <h2 class="results-title">Resultados de tu evaluación</h2>
+          <p class="results-subtitle">Hemos analizado tus respuestas y aquí está tu perfil de bienestar</p>
+        </div>
+
+        <div class="score-grid" id="scoresGrid"></div>
+      </div>
+
+      <div class="recommendation" id="recommendationCard"></div>
+
+      <div class="action-buttons">
+        <button class="btn btn-primary btn-large" onclick="goToDashboard()">
+          <i class="fas fa-home"></i>
+          Ir a mi dashboard
+        </button>
+        <button class="btn btn-secondary btn-large" onclick="scheduleAppointment()">
+          <i class="fas fa-calendar-plus"></i>
+          Agendar sesión
+        </button>
       </div>
     </div>
   </div>
 
   <script>
-    // Toggle   password visibility
-    function setupPasswordToggle(toggleId, inputId) {
-      const toggle = document.getElementById(toggleId);
-      const input = document.getElementById(inputId);
-
-      toggle.addEventListener('click', function() {
-        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-        input.setAttribute('type', type);
-        
-        const icon = this.querySelector('i');
-        icon.classList.toggle('fa-eye');
-        icon.classList.toggle('fa-eye-slash');
-      });
-    }
-
-    setupPasswordToggle('togglePassword', 'password');
-    setupPasswordToggle('toggleConfirmPassword', 'confirmPassword');
-
-    // Form elements
-    const registerForm = document.getElementById('registerForm');
-    const nombreInput = document.getElementById('nombre');
-    const apellidoInput = document.getElementById('apellido');
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('confirmPassword');
-    const termsCheckbox = document.getElementById('terms');
-    const registerBtn = document.getElementById('registerBtn');
-    const errorAlert = document.getElementById('errorAlert');
-    const errorMessage = document.getElementById('errorMessage');
-    const successAlert = document.getElementById('successAlert');
-    const successMessage = document.getElementById('successMessage');
-
-    // Validation functions
-    function validateEmail(email) {
-      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return re.test(email);
-    }
-
-    function calculatePasswordStrength(password) {
-      let strength = 0;
-      if (password.length >= 6) strength++;
-      if (password.length >= 10) strength++;
-      if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-      if (/[0-9]/.test(password)) strength++;
-      if (/[^a-zA-Z0-9]/.test(password)) strength++;
-      
-      return strength;
-    }
-
-    function showError(message) {
-      errorMessage.textContent = message;
-      errorAlert.classList.add('show');
-      successAlert.classList.remove('show');
-      
-      setTimeout(() => {
-        errorAlert.classList.remove('show');
-      }, 5000);
-    }
-
-    function showSuccess(message) {
-      successMessage.textContent = message;
-      successAlert.classList.add('show');
-      errorAlert.classList.remove('show');
-    }
-
-    // Email validation
-    emailInput.addEventListener('blur', function() {
-      const emailError = document.getElementById('emailError');
-      const emailSuccess = document.getElementById('emailSuccess');
-      
-      if (!validateEmail(this.value) && this.value !== '') {
-        this.classList.add('error');
-        this.classList.remove('success');
-        emailError.classList.add('show');
-        emailSuccess.classList.remove('show');
-      } else if (this.value !== '') {
-        this.classList.remove('error');
-        this.classList.add('success');
-        emailError.classList.remove('show');
-        emailSuccess.classList.add('show');
+    // Test questions
+    const questions = [
+      {
+        id: 1,
+        category: 'ansiedad',
+        text: '¿Con qué frecuencia te sientes nervioso/a o ansioso/a?',
+        type: 'scale',
+        scaleLabels: ['Nunca', 'Rara vez', 'A veces', 'Frecuente', 'Siempre']
+      },
+      {
+        id: 2,
+        category: 'ansiedad',
+        text: '¿Te cuesta relajarte o tranquilizarte?',
+        type: 'scale',
+        scaleLabels: ['Nunca', 'Rara vez', 'A veces', 'Frecuente', 'Siempre']
+      },
+      {
+        id: 3,
+        category: 'estres',
+        text: '¿Te sientes abrumado/a por tus responsabilidades?',
+        type: 'scale',
+        scaleLabels: ['Nunca', 'Rara vez', 'A veces', 'Frecuente', 'Siempre']
+      },
+      {
+        id: 4,
+        category: 'estres',
+        text: '¿Tienes dificultad para concentrarte en tus tareas?',
+        type: 'scale',
+        scaleLabels: ['Nunca', 'Rara vez', 'A veces', 'Frecuente', 'Siempre']
+      },
+      {
+        id: 5,
+        category: 'animo',
+        text: '¿Cómo describirías tu estado de ánimo general?',
+        type: 'scale',
+        scaleLabels: ['Muy bajo', 'Bajo', 'Neutro', 'Bueno', 'Excelente']
+      },
+      {
+        id: 6,
+        category: 'animo',
+        text: '¿Disfrutas de las actividades que normalmente te gustan?',
+        type: 'scale',
+        scaleLabels: ['Nunca', 'Rara vez', 'A veces', 'Frecuente', 'Siempre']
+      },
+      {
+        id: 7,
+        category: 'sueno',
+        text: '¿Cómo calificarías la calidad de tu sueño?',
+        type: 'scale',
+        scaleLabels: ['Muy mala', 'Mala', 'Regular', 'Buena', 'Excelente']
+      },
+      {
+        id: 8,
+        category: 'social',
+        text: '¿Te sientes conectado/a con las personas importantes en tu vida?',
+        type: 'scale',
+        scaleLabels: ['Nunca', 'Rara vez', 'A veces', 'Frecuente', 'Siempre']
+      },
+      {
+        id: 9,
+        category: 'motivacion',
+        text: '¿Sientes motivación para tus metas y proyectos?',
+        type: 'scale',
+        scaleLabels: ['Nunca', 'Rara vez', 'A veces', 'Frecuente', 'Siempre']
+      },
+      {
+        id: 10,
+        category: 'general',
+        text: 'En general, ¿cómo calificarías tu bienestar emocional actual?',
+        type: 'scale',
+        scaleLabels: ['Muy malo', 'Malo', 'Regular', 'Bueno', 'Excelente']
       }
-      checkFormValidity();
-    });
+    ];
 
-    // Password strength
-    passwordInput.addEventListener('input', function() {
-      const strength = calculatePasswordStrength(this.value);
-      const strengthBar = document.getElementById('passwordStrength');
-      const strengthFill = document.getElementById('strengthFill');
-      const strengthText = document.getElementById('strengthText');
+    let currentQuestionIndex = 0;
+    let answers = {};
 
-      if (this.value.length > 0) {
-        strengthBar.classList.add('show');
-        
-        strengthFill.className = 'strength-fill';
-        strengthText.className = 'strength-text';
-        
-        if (strength <= 2) {
-          strengthFill.classList.add('weak');
-          strengthText.classList.add('weak');
-          strengthText.textContent = 'Débil';
-        } else if (strength <= 3) {
-          strengthFill.classList.add('medium');
-          strengthText.classList.add('medium');
-          strengthText.textContent = 'Media';
+    function startTest() {
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('progressContainer').style.display = 'block';
+      renderQuestion(0);
+    }
+
+    function renderQuestion(index) {
+      const question = questions[index];
+      const container = document.getElementById('questionsContainer');
+      
+      // Clear previous questions
+      container.innerHTML = '';
+
+      // Create question card
+      const card = document.createElement('div');
+      card.className = 'question-card active';
+      card.innerHTML = `
+        <div class="question-number">Pregunta ${index + 1} de ${questions.length}</div>
+        <h2 class="question-text">${question.text}</h2>
+        ${renderOptions(question)}
+        <div class="nav-buttons">
+          ${index > 0 ? '<button class="btn btn-secondary" onclick="previousQuestion()"><i class="fas fa-arrow-left"></i> Anterior</button>' : ''}
+          <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>
+            ${index === questions.length - 1 ? 'Ver resultados' : 'Siguiente'} <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      `;
+
+      container.appendChild(card);
+
+      // Update progress
+      updateProgress(index);
+
+      // Pre-select if already answered
+      if (answers[question.id]) {
+        selectOption(question.id, answers[question.id]);
+      }
+    }
+
+    function renderOptions(question) {
+      if (question.type === 'scale') {
+        return `
+          <div class="scale-options" id="options-${question.id}">
+            ${[1, 2, 3, 4, 5].map(value => `
+              <div class="scale-option" onclick="selectOption(${question.id}, ${value})" data-value="${value}">
+                <div class="scale-number">${value}</div>
+                <div class="scale-label">${question.scaleLabels[value - 1]}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="scale-description">
+            <span>${question.scaleLabels[0]}</span>
+            <span>${question.scaleLabels[4]}</span>
+          </div>
+        `;
+      }
+    }
+
+    function selectOption(questionId, value) {
+      answers[questionId] = value;
+      
+      // Update UI
+      const options = document.querySelectorAll(`#options-${questionId} .scale-option`);
+      options.forEach(opt => {
+        if (parseInt(opt.dataset.value) === value) {
+          opt.classList.add('selected');
         } else {
-          strengthFill.classList.add('strong');
-          strengthText.classList.add('strong');
-          strengthText.textContent = 'Fuerte';
+          opt.classList.remove('selected');
         }
-      } else {
-        strengthBar.classList.remove('show');
-      }
-      
-      checkFormValidity();
-    });
+      });
 
-    // Confirm password validation
-    confirmPasswordInput.addEventListener('input', function() {
-      const confirmError = document.getElementById('confirmPasswordError');
-      const confirmSuccess = document.getElementById('confirmPasswordSuccess');
-      
-      if (this.value !== passwordInput.value && this.value !== '') {
-        this.classList.add('error');
-        this.classList.remove('success');
-        confirmError.classList.add('show');
-        confirmSuccess.classList.remove('show');
-      } else if (this.value !== '') {
-        this.classList.remove('error');
-        this.classList.add('success');
-        confirmError.classList.remove('show');
-        confirmSuccess.classList.add('show');
-      }
-      
-      checkFormValidity();
-    });
-
-    // Check form validity
-    function checkFormValidity() {
-      const isValid = 
-        nombreInput.value.trim() !== '' &&
-        apellidoInput.value.trim() !== '' &&
-        validateEmail(emailInput.value) &&
-        passwordInput.value.length >= 6 &&
-        passwordInput.value === confirmPasswordInput.value &&
-        termsCheckbox.checked;
-      
-      registerBtn.disabled = !isValid;
+      // Enable next button
+      document.getElementById('nextBtn').disabled = false;
     }
 
-    // Listen to all required fields
-    [nombreInput, apellidoInput, emailInput, passwordInput, confirmPasswordInput, termsCheckbox].forEach(input => {
-      input.addEventListener('input', checkFormValidity);
-      input.addEventListener('change', checkFormValidity);
-    });
+    function updateProgress(index) {
+      const percent = ((index + 1) / questions.length) * 100;
+      document.getElementById('currentQuestion').textContent = index + 1;
+      document.getElementById('totalQuestions').textContent = questions.length;
+      document.getElementById('progressPercent').textContent = Math.round(percent) + '%';
+      document.getElementById('progressFill').style.width = percent + '%';
+    }
 
-    // Form submit
-    registerForm.addEventListener('submit', async function(e) {
-      e.preventDefault();
+    function nextQuestion() {
+      if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+        renderQuestion(currentQuestionIndex);
+      } else {
+        showResults();
+      }
+    }
 
-      const formData = {
-        nombre: nombreInput.value.trim(),
-        apellido: apellidoInput.value.trim(),
-        email: emailInput.value.trim(),
-        password: passwordInput.value
+    function previousQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        renderQuestion(currentQuestionIndex);
+      }
+    }
+
+    function calculateScores() {
+      const scores = {
+        ansiedad: 0,
+        estres: 0,
+        animo: 0
       };
 
-      registerBtn.classList.add('loading');
-      registerBtn.textContent = '';
-
-      try {
-        // AQUÍ VA LA INTEGRACIÓN CON SUPABASE
-        await simulateRegistration(formData);
-
-        showSuccess('¡Cuenta creada exitosamente! Redirigiendo al test inicial...');
+      questions.forEach(q => {
+        const answer = answers[q.id] || 0;
         
-        setTimeout(() => {
-          window.location.href = 'test-inicial.html';
-        }, 2000);
-
-      } catch (error) {
-        registerBtn.classList.remove('loading');
-        registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Crear cuenta';
-        showError(error.message || 'Error al crear la cuenta. Por favor intenta de nuevo.');
-      }
-    });
-
-    async function simulateRegistration(data) {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          // Simulamos registro exitoso
-          if (data.email && data.password) {
-            resolve({ user: { email: data.email, id: '123' } });
-          } else {
-            reject(new Error('Datos inválidos'));
-          }
-        }, 1500);
+        if (q.category === 'ansiedad') {
+          scores.ansiedad += answer;
+        } else if (q.category === 'estres') {
+          scores.estres += answer;
+        } else if (q.category === 'animo') {
+          // Invertir puntuación para ánimo (5 es bueno, 1 es malo)
+          scores.animo += (6 - answer);
+        }
       });
+
+      // Normalizar a escala de 10
+      scores.ansiedad = Math.round((scores.ansiedad / 10) * 10);
+      scores.estres = Math.round((scores.estres / 10) * 10);
+      scores.animo = Math.round((scores.animo / 10) * 10);
+
+      return scores;
     }
 
-    // Google Sign Up
-    const googleSignUpBtn = document.getElementById('googleSignUp');
-    
-    googleSignUpBtn.addEventListener('click', async function() {
-      if (!termsCheckbox.checked) {
-        showError('Debes aceptar los términos y condiciones para continuar');
-        return;
+    function getScoreLevel(score) {
+      if (score <= 3) return 'low';
+      if (score <= 6) return 'medium';
+      return 'high';
+    }
+
+    function getScoreLabel(score, isPositive = false) {
+      const level = getScoreLevel(score);
+      
+      if (isPositive) {
+        if (level === 'high') return 'Excelente';
+        if (level === 'medium') return 'Moderado';
+        return 'Bajo';
+      } else {
+        if (level === 'high') return 'Alto';
+        if (level === 'medium') return 'Moderado';
+        return 'Bajo';
       }
+    }
 
-      this.classList.add('loading');
-      this.textContent = '';
-
-      try {
-        // AQUÍ VA LA INTEGRACIÓN CON SUPABASE GOOGLE OAUTH
-        await simulateGoogleSignUp();
-        
-        showSuccess('¡Registro con Google exitoso! Redirigiendo al test inicial...');
-        
-        setTimeout(() => {
-          window.location.href = 'test-inicial.html';
-        }, 1500);
-
-      } catch (error) {
-        this.classList.remove('loading');
-        this.innerHTML = '<svg>...</svg> Continuar con Google';
-        showError('Error al registrarse con Google. Por favor intenta de nuevo.');
+    function getRecommendation(scores) {
+      const avgNegative = (scores.ansiedad + scores.estres) / 2;
+      
+      if (avgNegative >= 7 || scores.animo >= 7) {
+        return {
+          title: 'Te recomendamos acompañamiento profesional',
+          description: 'Tus respuestas indican que podrías beneficiarte significativamente del apoyo de un especialista. El acompañamiento terapéutico puede ayudarte a desarrollar herramientas efectivas para manejar estos desafíos.',
+          specialty: 'Ansiedad y manejo del estrés',
+          icon: '👨‍⚕️'
+        };
+      } else if (avgNegative >= 4 || scores.animo >= 4) {
+        return {
+          title: 'El autocuidado con recursos guiados sería ideal para ti',
+          description: 'Estás en un buen momento para trabajar en tu bienestar de forma preventiva. Nuestros recursos y talleres grupales pueden ayudarte a fortalecer tus habilidades de manejo emocional.',
+          specialty: 'Talleres grupales y recursos digitales',
+          icon: '🌱'
+        };
+      } else {
+        return {
+          title: '¡Tu bienestar está en buen estado!',
+          description: 'Tus respuestas reflejan un nivel saludable de bienestar emocional. Te recomendamos mantener este equilibrio con nuestros recursos preventivos y seguimiento ocasional.',
+          specialty: 'Recursos de mantenimiento',
+          icon: '✨'
+        };
       }
-    });
+    }
 
-    async function simulateGoogleSignUp() {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({ user: { email: 'usuario@gmail.com', id: '456' } });
-        }, 1500);
-      });
+    function showResults() {
+      const scores = calculateScores();
+      const recommendation = getRecommendation(scores);
+
+      // Hide questions
+      document.getElementById('questionsContainer').style.display = 'none';
+      document.getElementById('progressContainer').style.display = 'none';
+
+      // Show results
+      const resultsScreen = document.getElementById('resultsScreen');
+      resultsScreen.classList.add('active');
+
+      // Render scores
+      const scoresGrid = document.getElementById('scoresGrid');
+      scoresGrid.innerHTML = `
+        <div class="score-card">
+          <div class="score-label">Ansiedad</div>
+          <div class="score-value ${getScoreLevel(scores.ansiedad)}">${scores.ansiedad}/10</div>
+          <div class="score-status ${getScoreLevel(scores.ansiedad)}">${getScoreLabel(scores.ansiedad)}</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Estrés</div>
+          <div class="score-value ${getScoreLevel(scores.estres)}">${scores.estres}/10</div>
+          <div class="score-status ${getScoreLevel(scores.estres)}">${getScoreLabel(scores.estres)}</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Estado de ánimo</div>
+          <div class="score-value ${getScoreLevel(scores.animo)}">${scores.animo}/10</div>
+          <div class="score-status ${getScoreLevel(scores.animo)}">${getScoreLabel(scores.animo, false)}</div>
+        </div>
+      `;
+
+      // Render recommendation
+      const recommendationCard = document.getElementById('recommendationCard');
+      recommendationCard.innerHTML = `
+        <h3><i class="fas fa-lightbulb"></i> Recomendación personalizada</h3>
+        <p>${recommendation.description}</p>
+        <div class="specialist-card">
+          <div class="specialist-icon">${recommendation.icon}</div>
+          <div class="specialist-info">
+            <h4>${recommendation.title}</h4>
+            <p>Especialidad sugerida: ${recommendation.specialty}</p>
+          </div>
+        </div>
+      `;
+
+      // Save results to localStorage (en producción sería a Supabase)
+      localStorage.setItem('testResults', JSON.stringify({
+        scores: scores,
+        recommendation: recommendation,
+        date: new Date().toISOString()
+      }));
+    }
+
+    function goToDashboard() {
+      window.location.href = 'app/dashboard.html';
+    }
+
+    function scheduleAppointment() {
+      window.location.href = 'app/agendar.html';
     }
   </script>
-
 
   <!-- Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
