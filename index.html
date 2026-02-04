@@ -23,346 +23,106 @@
       --shadow: 0 4px 20px rgba(0,0,0,0.06);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--background);
-      color: var(--dark);
-      line-height: 1.6;
-    }
-
-    h1, h2, h3, h4 {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 600;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--background); color: var(--dark); line-height: 1.6; }
+    h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; font-weight: 600; }
+    html { scroll-behavior: smooth; }
 
     /* Navbar */
-    .navbar {
-      position: sticky;
-      top: 0;
-      background: rgba(249, 251, 250, 0.95);
-      backdrop-filter: blur(10px);
-      padding: 15px 8%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 100;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-    }
-
-    .logo {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 1.4rem;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 25px;
-      align-items: center;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: var(--dark);
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-
-    .nav-links a:hover {
-      color: var(--primary);
-    }
-
-    .nav-login {
-      padding: 8px 20px;
-      border: 2px solid var(--primary);
-      border-radius: var(--radius);
-      color: var(--primary) !important;
-      font-weight: 600;
-    }
-
-    .nav-login:hover {
-      background: var(--primary);
-      color: white !important;
-    }
-
-    .nav-cta {
-      background: var(--primary);
-      color: white !important;
-      padding: 10px 24px;
-      border-radius: var(--radius);
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .navbar { position: sticky; top: 0; background: rgba(249, 251, 250, 0.95); backdrop-filter: blur(10px); padding: 15px 8%; display: flex; justify-content: space-between; align-items: center; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+    .logo { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--primary); display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-links { display: flex; gap: 25px; align-items: center; }
+    .nav-links a { text-decoration: none; color: var(--dark); font-weight: 500; transition: color 0.3s; }
+    .nav-links a:hover { color: var(--primary); }
+    .nav-login { padding: 8px 20px; border: 2px solid var(--primary); border-radius: var(--radius); color: var(--primary) !important; font-weight: 600; }
+    .nav-login:hover { background: var(--primary); color: white !important; }
+    .nav-cta { background: var(--primary); color: white !important; padding: 10px 24px; border-radius: var(--radius); font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
 
     /* Hero Section */
-    .hero {
-      padding: 100px 8% 80px;
-      text-align: center;
-      background: radial-gradient(circle at 50% 50%, rgba(167, 196, 181, 0.1) 0%, transparent 70%);
-    }
-
-    .hero-badge {
-      background: #e8f3ec;
-      color: var(--primary);
-      padding: 8px 20px;
-      border-radius: 999px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      display: inline-block;
-      margin-bottom: 24px;
-    }
-
-    .hero h1 {
-      font-size: 3.5rem;
-      line-height: 1.2;
-      margin-bottom: 24px;
-      color: var(--dark);
-    }
-
-    .hero p {
-      font-size: 1.2rem;
-      color: var(--text-secondary);
-      margin-bottom: 40px;
-      max-width: 650px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-      padding: 16px 36px;
-      border-radius: var(--radius);
-      font-weight: 600;
-      font-size: 1.1rem;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 4px 15px rgba(79, 111, 82, 0.2);
-      transition: all 0.3s;
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-light);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(79, 111, 82, 0.3);
-    }
+    .hero { padding: 100px 8% 80px; text-align: center; background: radial-gradient(circle at 50% 50%, rgba(167, 196, 181, 0.1) 0%, transparent 70%); }
+    .hero-badge { background: #e8f3ec; color: var(--primary); padding: 8px 20px; border-radius: 999px; font-size: 0.9rem; font-weight: 600; display: inline-block; margin-bottom: 24px; }
+    .hero h1 { font-size: 3.5rem; line-height: 1.2; margin-bottom: 24px; }
+    .hero p { font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 40px; max-width: 650px; margin-left: auto; margin-right: auto; }
+    .btn-primary { background: var(--primary); color: white; padding: 16px 36px; border-radius: var(--radius); font-weight: 600; font-size: 1.1rem; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s; }
+    .btn-primary:hover { background: var(--primary-light); transform: translateY(-2px); }
 
     /* Steps Section */
-    .como-funciona {
-      padding: 80px 8%;
-      background: white;
-    }
+    .como-funciona { padding: 80px 8%; background: white; }
+    .section-header { text-align: center; margin-bottom: 50px; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+    .step { text-align: center; padding: 20px; }
+    .step-number { width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 700; margin: 0 auto 20px; }
 
-    .section-header {
-      text-align: center;
-      margin-bottom: 50px;
-    }
-
-    .section-header h2 { font-size: 2.5rem; margin-bottom: 15px; }
-
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 30px;
-    }
-
-    .step {
-      text-align: center;
-      padding: 20px;
-    }
-
-    .step-number {
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin: 0 auto 20px;
-    }
-
-    /* Planes y Precios */
-    .precios {
-      padding: 100px 8%;
-      background: var(--background);
-    }
-
-    .planes-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 25px;
-      margin-bottom: 40px;
-    }
-
-    .plan-card {
-      background: white;
-      padding: 40px 25px;
-      border-radius: 20px;
-      box-shadow: var(--shadow);
-      position: relative;
-      transition: all 0.3s;
-      border: 2px solid transparent;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .plan-destacado {
-      border-color: var(--primary);
-      transform: scale(1.03);
-      z-index: 2;
-    }
-
-    .plan-badge {
-      position: absolute;
-      top: -12px;
-      right: 20px;
-      background: var(--dark);
-      color: white;
-      padding: 5px 15px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    .badge-recomendado { background: var(--primary); }
-
+    /* Precios */
+    .precios { padding: 100px 8%; background: var(--background); }
+    .planes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; margin-bottom: 30px; }
+    .plan-card { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: var(--shadow); position: relative; display: flex; flex-direction: column; transition: transform 0.3s; }
+    .plan-destacado { border: 2px solid var(--primary); transform: scale(1.03); }
+    .plan-badge { position: absolute; top: -12px; right: 20px; background: var(--dark); color: white; padding: 5px 15px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
     .precio { font-size: 2.8rem; font-weight: 700; color: var(--primary); }
-
-    .plan-features {
-      list-style: none;
-      margin: 25px 0;
-      flex-grow: 1;
-    }
-
-    .plan-features li {
-      padding: 8px 0;
-      font-size: 0.95rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
+    .periodo { font-size: 0.9rem; color: var(--text-secondary); }
+    .plan-features { list-style: none; margin: 25px 0; flex-grow: 1; }
+    .plan-features li { padding: 8px 0; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
     .plan-features i { color: var(--primary); }
-
-    .plan-btn {
-      display: block;
-      padding: 14px;
-      text-align: center;
-      background: var(--background);
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 600;
-      border: 2px solid var(--border);
-      transition: all 0.3s;
-      color: var(--dark);
-    }
-
-    .plan-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
-
+    .plan-btn { display: block; padding: 14px; text-align: center; background: var(--background); border-radius: 12px; text-decoration: none; font-weight: 600; color: var(--dark); border: 2px solid var(--border); transition: 0.3s; }
     .btn-destacado { background: var(--primary); color: white; border-color: var(--primary); }
+    .precios-nota { background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 20px; border-radius: 12px; font-size: 0.9rem; color: #92400E; max-width: 900px; margin: 0 auto; }
+
+    /* Testimonios */
+    .testimonios { padding: 100px 8%; background: white; }
+    .testimonios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+    .testimonial { background: var(--background); padding: 32px; border-radius: 16px; }
+    .testimonial-author { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
+    .testimonial-avatar { width: 45px; height: 45px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+
+    /* CTA Final */
+    .cta-final { padding: 100px 8%; text-align: center; background: linear-gradient(135deg, var(--primary) 0%, #3e5a41 100%); color: white; }
+    .cta-final h2 { font-size: 2.5rem; margin-bottom: 20px; }
+    .cta-final .btn-primary { background: white; color: var(--primary); }
 
     /* Footer */
-    .footer {
-      background: var(--dark);
-      color: white;
-      padding: 60px 8% 30px;
-    }
-
-    .footer-content {
-      display: grid;
-      grid-template-columns: 1.5fr repeat(3, 1fr);
-      gap: 40px;
-      margin-bottom: 40px;
-    }
-
-    .footer h4 { margin-bottom: 20px; color: white; }
-    .footer ul { list-style: none; }
-    .footer li { margin-bottom: 12px; }
-    .footer a { color: #9ca3af; text-decoration: none; transition: 0.3s; }
-    .footer a:hover { color: white; }
+    .footer { background: var(--dark); color: white; padding: 60px 8% 30px; }
+    .footer-content { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 40px; }
+    .footer-brand p { color: #9ca3af; margin-top: 15px; }
+    .footer-links h4 { margin-bottom: 20px; font-size: 1.1rem; }
+    .footer-links ul { list-style: none; }
+    .footer-links li { margin-bottom: 10px; }
+    .footer-links a { color: #9ca3af; text-decoration: none; transition: 0.3s; }
+    .footer-links a:hover { color: white; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; margin-top: 40px; text-align: center; color: #9ca3af; font-size: 0.85rem; }
 
     /* WhatsApp Float */
-    .whatsapp-float {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: #25D366;
-      color: white;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
-      z-index: 999;
-      text-decoration: none;
-    }
+    .whatsapp-float { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; z-index: 999; text-decoration: none; }
 
-    @media (max-width: 768px) {
-      .hero h1 { font-size: 2.4rem; }
-      .steps, .footer-content { grid-template-columns: 1fr; }
+    @media (max-width: 968px) {
+      .footer-content, .testimonios-grid, .steps { grid-template-columns: 1fr; }
       .nav-links { display: none; }
-      .plan-destacado { transform: scale(1); }
+      .hero h1 { font-size: 2.5rem; }
     }
   </style>
 </head>
 <body>
+
   <nav class="navbar">
-    <a href="/" class="logo">
-      <i class="fas fa-brain"></i>
-      Bitácora Mental
-    </a>
+    <a href="/" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
     <div class="nav-links">
       <a href="#como-funciona">Cómo funciona</a>
       <a href="#precios">Precios</a>
+      <a href="#testimonios">Testimonios</a>
       <a href="login.html" class="nav-login">Iniciar sesión</a>
-      <a href="test-inicial.html" class="nav-cta">
-        <i class="fas fa-clipboard-check"></i>
-        Hacer Test Gratis
-      </a>
+      <a href="test-inicial.html" class="nav-cta"><i class="fas fa-clipboard-check"></i> Hacer Test Gratis</a>
     </div>
   </nav>
 
-  <a href="https://wa.me/51922483155" class="whatsapp-float" target="_blank">
-    <i class="fab fa-whatsapp"></i>
-  </a>
+  <a href="https://wa.me/51922483155" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
 
   <section class="hero">
     <div class="hero-content">
-      <span class="hero-badge"><i class="fas fa-heart"></i> +500 personas cuidando su bienestar</span>
+      <span class="hero-badge"><i class="fas fa-heart"></i> Más de 500 personas ya dieron el primer paso</span>
       <h1>Tu salud mental,<br>a un click de distancia</h1>
-      <p>Conecta con especialistas verificados y accede a recursos personalizados. Comienza hoy mismo con nuestra evaluación profesional gratuita.</p>
+      <p>Conecta con especialistas verificados, haz seguimiento de tu bienestar y accede a recursos personalizados. Todo en un solo lugar.</p>
       <div class="hero-actions">
-        <a href="test-inicial.html" class="btn-primary">
-          <i class="fas fa-clipboard-check"></i>
-          Comenzar Test Gratuito
-        </a>
+        <a href="test-inicial.html" class="btn-primary"><i class="fas fa-clipboard-check"></i> Hacer test gratuito</a>
       </div>
     </div>
   </section>
@@ -370,55 +130,55 @@
   <section class="como-funciona" id="como-funciona">
     <div class="section-header">
       <h2>Así de simple funciona</h2>
-      <p>Tu camino al bienestar en 3 simples pasos</p>
+      <p>En 3 pasos estarás conectado con el apoyo que necesitas</p>
     </div>
     <div class="steps">
       <div class="step">
         <div class="step-number">1</div>
-        <h3>Haz el test</h3>
-        <p>Responde preguntas clave para entender tu estado emocional actual.</p>
+        <h3>Haz el test gratuito</h3>
+        <p>Responde 10 preguntas que nos ayudan a entender cómo te sientes hoy.</p>
       </div>
       <div class="step">
         <div class="step-number">2</div>
-        <h3>Mira tus resultados</h3>
-        <p>Recibe un diagnóstico inicial y elige el plan de apoyo que prefieras.</p>
+        <h3>Conecta con tu especialista</h3>
+        <p>Te mostramos psicólogos verificados que se especializan en tu necesidad.</p>
       </div>
       <div class="step">
         <div class="step-number">3</div>
-        <h3>Empieza tu mejora</h3>
-        <p>Accede a tu dashboard con herramientas, diario y especialistas.</p>
+        <h3>Comienza tu camino</h3>
+        <p>Accede a tu dashboard con recursos, diario privado y seguimiento.</p>
       </div>
     </div>
   </section>
 
   <section class="precios" id="precios">
     <div class="section-header">
-      <h2>Planes adaptados a ti</h2>
-      <p>Elige el nivel de apoyo que necesitas hoy</p>
+      <h2>Niveles de apoyo para cada necesidad</h2>
+      <p>Elige el plan que mejor se adapte a ti. Sin compromisos.</p>
     </div>
     <div class="planes-grid">
       <div class="plan-card">
         <div class="plan-badge">Gratis</div>
-        <h3>Esencial</h3>
-        <div class="plan-precio"><span class="precio">S/ 0</span></div>
+        <h3>Comienza aquí</h3>
+        <div class="plan-precio"><span class="precio">S/ 0</span><span class="periodo">siempre</span></div>
         <ul class="plan-features">
-          <li><i class="fas fa-check"></i> Test de bienestar</li>
+          <li><i class="fas fa-check"></i> Test de bienestar inicial</li>
           <li><i class="fas fa-check"></i> Diario emocional</li>
-          <li><i class="fas fa-check"></i> Recursos básicos</li>
+          <li><i class="fas fa-check"></i> Recursos educativos básicos</li>
         </ul>
         <a href="registro.html" class="plan-btn">Comenzar gratis</a>
       </div>
 
       <div class="plan-card">
-        <div class="plan-badge" style="background:#F59E0B">Popular</div>
+        <div class="plan-badge">Popular</div>
         <h3>Kit Emocional</h3>
         <div class="plan-precio"><span class="precio">S/ 19</span><span class="periodo">pago único</span></div>
         <ul class="plan-features">
           <li><i class="fas fa-check"></i> Audios de relajación</li>
-          <li><i class="fas fa-check"></i> 5 Workbooks</li>
-          <li><i class="fas fa-check"></i> Guía de respiración</li>
+          <li><i class="fas fa-check"></i> 5 workbooks especializados</li>
+          <li><i class="fas fa-check"></i> Guía de técnicas de respiración</li>
         </ul>
-        <a href="registro.html" class="plan-btn">Obtener Kit</a>
+        <a href="registro.html" class="plan-btn">Obtener kit</a>
       </div>
 
       <div class="plan-card plan-destacado">
@@ -426,70 +186,111 @@
         <h3>Acompañamiento</h3>
         <div class="plan-precio"><span class="precio">S/ 165</span><span class="periodo">/ mes</span></div>
         <ul class="plan-features">
-          <li><i class="fas fa-check"></i> 2 sesiones mensuales</li>
+          <li><i class="fas fa-check"></i> 2 sesiones mensuales (50 min)</li>
+          <li><i class="fas fa-check"></i> Asesoría con psicólogos en formación</li>
           <li><i class="fas fa-check"></i> Seguimiento personalizado</li>
-          <li><i class="fas fa-check"></i> Soporte WhatsApp</li>
         </ul>
         <a href="registro.html" class="plan-btn btn-destacado">Empezar ahora</a>
       </div>
 
       <div class="plan-card">
         <div class="plan-badge">Premium</div>
-        <h3>Prioritario</h3>
+        <h3>Atención prioritaria</h3>
         <div class="plan-precio"><span class="precio">S/ 300</span><span class="periodo">/ mes</span></div>
         <ul class="plan-features">
           <li><i class="fas fa-check"></i> 4 sesiones mensuales</li>
-          <li><i class="fas fa-check"></i> Psicólogos senior</li>
-          <li><i class="fas fa-check"></i> Sesiones emergencia</li>
+          <li><i class="fas fa-check"></i> Psicólogos colegiados senior</li>
+          <li><i class="fas fa-check"></i> Prioridad en agendamiento</li>
         </ul>
         <a href="registro.html" class="plan-btn">Seleccionar</a>
       </div>
     </div>
+    <div class="precios-nota">
+      <p><strong>Nota:</strong> Los planes de asesoría (S/ 165 y S/ 300) incluyen sesiones con profesionales en formación supervisados. Para psicoterapia clínica, trabajamos con psicólogos colegiados experimentados.</p>
+    </div>
+  </section>
+
+  <section class="testimonios" id="testimonios">
+    <div class="section-header">
+      <h2>Historias que nos inspiran</h2>
+      <p>Personas reales que transformaron su bienestar con Bitácora Mental</p>
+    </div>
+    <div class="testimonios-grid">
+      <div class="testimonial">
+        <p>"El test me ayudó a entender que necesitaba ayuda profesional. Ahora estoy en terapia y mi vida cambió completamente. Súper agradecida."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">MC</div>
+          <div><strong>María C.</strong><br><small>Plan Intermedio</small></div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <p>"La posibilidad de elegir mi psicólogo y ver su perfil antes me dio mucha confianza. El proceso de agendamiento es súper fácil."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">JP</div>
+          <div><strong>Jorge P.</strong><br><small>Plan Premium</small></div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <p>"Me encanta tener mi diario integrado y poder ver mi progreso. Sentir que tengo todo en un solo lugar me ayuda mucho."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">AR</div>
+          <div><strong>Ana R.</strong><br><small>Plan Básico</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-final">
+    <h2>Da el primer paso hoy</h2>
+    <p>Cuidar tu salud mental nunca fue tan accesible</p>
+    <a href="test-inicial.html" class="btn-primary">Hacer test gratuito</a>
   </section>
 
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-brand">
-        <h3>Bitácora Mental</h3>
-        <p>Plataforma de salud mental que conecta personas con especialistas verificados.</p>
+        <h3><i class="fas fa-brain"></i> Bitácora Mental</h3>
+        <p>Plataforma de salud mental que conecta personas con especialistas verificados. Tu bienestar, nuestro compromiso.</p>
       </div>
-      <div>
+      <div class="footer-links">
         <h4>Plataforma</h4>
         <ul>
-          <li><a href="test-inicial.html">Test gratuito</a></li>
-          <li><a href="registro.html">Crear cuenta</a></li>
-          <li><a href="login.html">Ingresar</a></li>
+          <li><a href="#precios">Servicios</a></li>
+          <li><a href="https://wa.me/51922483155?text=Empresas">Empresas</a></li>
+          <li><a href="https://wa.me/51922483155?text=Unirme">Únete al equipo</a></li>
+          <li><a href="login.html">Iniciar sesión</a></li>
         </ul>
       </div>
-      <div>
+      <div class="footer-links">
         <h4>Recursos</h4>
         <ul>
-          <li><a href="#">Centro de ayuda</a></li>
-          <li><a href="https://wa.me/51922483155">Contacto</a></li>
+          <li><a href="#testimonios">Testimonios</a></li>
+          <li><a href="https://wa.me/51922483155">Centro de ayuda</a></li>
+          <li><a href="test-inicial.html">Test gratuito</a></li>
+          <li><a href="https://wa.me/51922483155">Preguntas frecuentes</a></li>
         </ul>
       </div>
-      <div>
+      <div class="footer-links">
         <h4>Legal</h4>
         <ul>
-          <li><a href="#">Términos</a></li>
-          <li><a href="#">Privacidad</a></li>
+          <li><a href="#">Términos y condiciones</a></li>
+          <li><a href="#">Política de privacidad</a></li>
+          <li><a href="#">Aviso de cookies</a></li>
         </ul>
       </div>
     </div>
-    <div style="text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 0.8rem; color: #9ca3af;">
-      © 2026 Bitácora Mental. Todos los derechos reservados.
+    <div class="footer-bottom">
+      <p><strong>Nota:</strong> Los servicios de asesoría son proporcionados por profesionales en formación. Para psicoterapia clínica, trabajamos con psicólogos colegiados.</p>
+      <p>© 2026 Bitácora Mental. Todos los derechos reservados.</p>
     </div>
   </footer>
 
   <script>
-    // Smooth scroll para anclas
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        if (target) { target.scrollIntoView({ behavior: 'smooth' }); }
       });
     });
   </script>
