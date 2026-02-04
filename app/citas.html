@@ -111,6 +111,15 @@
     .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); }
     .modal-actions { display: flex; gap: 12px; }
 
+    /* Sidebar Footer */
+    .sidebar-footer { padding: 0 24px; border-top: 1px solid var(--border); padding-top: 20px; margin-top: auto; }
+    .user-profile { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--background); border-radius: 12px; cursor: pointer; transition: all 0.2s; }
+    .user-profile:hover { background: var(--border); }
+    .user-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1rem; }
+    .user-info { flex: 1; min-width: 0; }
+    .user-name { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-email { font-size: 0.75rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
     @media (max-width: 968px) {
       .dashboard-container { grid-template-columns: 1fr; }
       .sidebar { display: none; }
@@ -140,16 +149,51 @@
           <a href="citas.html" class="nav-item active">
             <i class="fas fa-calendar-alt"></i> <span>Mis Citas</span>
           </a>
-          <a href="agendar.html" class="nav-item">
-            <i class="fas fa-calendar-plus"></i> <span>Agendar Cita</span>
+          <a href="especialistas.html" class="nav-item">
+            <i class="fas fa-user-md"></i> <span>Especialistas</span>
           </a>
         </div>
+
         <div class="nav-section">
           <div class="nav-section-title">Mi Espacio</div>
-          <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> <span>Mi Diario</span></a>
-          <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> <span>Mi Progreso</span></a>
+          <a href="diario.html" class="nav-item">
+            <i class="fas fa-book"></i> <span>Mi Diario</span>
+          </a>
+          <a href="progreso.html" class="nav-item">
+            <i class="fas fa-chart-line"></i> <span>Mi Progreso</span>
+          </a>
+          <a href="recursos.html" class="nav-item">
+            <i class="fas fa-folder-open"></i> <span>Recursos</span>
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Cuenta</div>
+          <a href="plan.html" class="nav-item">
+            <i class="fas fa-crown"></i> <span>Mi Plan</span>
+          </a>
+          <a href="perfil.html" class="nav-item">
+            <i class="fas fa-user-circle"></i> <span>Perfil</span>
+          </a>
+          <a href="#" class="nav-item" onclick="handleLogout()">
+            <i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span>
+          </a>
+          <a href="configuracion.html" class="nav-item">
+            <i class="fas fa-cog"></i> <span>Configuración</span>
+          </a>
         </div>
       </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar" id="avatarInitials">--</div>
+          <div class="user-info">
+            <div class="user-name" id="sidebarUserName">Cargando...</div>
+            <div class="user-email" id="sidebarUserEmail">...</div>
+          </div>
+          <i class="fas fa-ellipsis-v" style="color: var(--text-secondary);"></i>
+        </div>
+      </div>
     </aside>
 
     <main class="main-content">
@@ -227,6 +271,19 @@
             return;
         }
 
+        // Cargar datos del perfil para el sidebar footer
+        const { data: profile } = await window.supabase
+            .from('users_profile')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+
+        if (profile) {
+            document.getElementById('sidebarUserName').textContent = `${profile.nombre} ${profile.apellido}`;
+            document.getElementById('sidebarUserEmail').textContent = user.email;
+            document.getElementById('avatarInitials').textContent = (profile.nombre[0] + profile.apellido[0]).toUpperCase();
+        }
+
         // 2. Consulta Real a Supabase
         const { data: appointments, error } = await window.supabase
             .from('citas')
@@ -252,12 +309,12 @@
         const completed = appointments.filter(c => c.estado === 'completada');
         const cancelled = appointments.filter(c => c.estado === 'cancelada');
 
-        // Actualizar estadísticas (Si no hay datos, se queda en 0 por default)
+        // Actualizar estadísticas
         document.getElementById('completedCount').textContent = completed.length;
         document.getElementById('upcomingCount').textContent = upcoming.length;
         document.getElementById('upcomingBadge').textContent = upcoming.length;
         
-        // Calcular horas (asumiendo 50 mins por sesión si no hay duración)
+        // Calcular horas
         const totalMinutes = completed.reduce((sum, apt) => sum + (apt.duracion || 50), 0);
         document.getElementById('totalHours').textContent = (totalMinutes / 60).toFixed(1);
 
@@ -320,7 +377,7 @@
         });
     }
 
-    // Funciones de Cancelación (Conectadas a Supabase)
+    // Funciones de Cancelación
     function openCancelModal(id) {
         selectedAppointmentId = id;
         document.getElementById('cancelModal').classList.add('active');
@@ -357,6 +414,12 @@
         
         event.currentTarget.classList.add('active');
         document.getElementById(tabName + 'Content').classList.add('active');
+    }
+
+    // Función Logout agregada
+    async function handleLogout() {
+        await window.supabase.auth.signOut();
+        window.location.href = '../login.html';
     }
 
     // Iniciar
