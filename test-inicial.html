@@ -180,14 +180,20 @@
     }
 
     function showResults() {
+      // 1. CORRECCIÓN DE NOMBRES (Para que coincidan con Supabase)
       const scores = {
-        ans: (answers[1] + answers[2]) / 10 * 10,
-        est: (answers[3] + answers[9]) / 10 * 10,
-        ani: (12 - (answers[5] + answers[6])) / 10 * 10,
-        soc: answers[7],
-        sue: answers[4]
+        ansiedad: Math.round(((answers[1] + answers[2]) / 10) * 10),
+        estres: Math.round(((answers[3] + answers[9]) / 10) * 10), // Nota: Usé preg 3 y 9 para estrés según tu lógica anterior
+        animo: Math.round(((12 - (answers[5] + answers[6])) / 10) * 10),
+        social: answers[7],
+        sueno: answers[4]
       };
 
+      // 2. EL PUENTE DE DATOS (¡Muy importante!)
+      // Guardamos esto para que el Dashboard lo lea después del registro
+      localStorage.setItem('tempTestResults', JSON.stringify(scores));
+
+      // 3. Renderizado de la pantalla (Igual que antes)
       document.getElementById('questionsContainer').style.display = 'none';
       document.getElementById('progressContainer').style.display = 'none';
       document.getElementById('resultsScreen').classList.add('active');
@@ -196,17 +202,18 @@
       let casuistica = "";
       let tip = "";
       let clinical = "";
-      let recommendedPlanId = "acom";
+      let recommendedPlanId = "acom"; // Default
 
-      if(scores.ans >= 7 && scores.sue <= 2) {
+      // Usamos las variables con nombre completo ahora: scores.ansiedad, etc.
+      if(scores.ansiedad >= 7 && scores.sueno <= 2) {
         casuistica = "<strong>Perfil: Rumiación.</strong> Parece que al llegar la noche, tu mente se convierte en un lugar ruidoso. Analizar cada detalle del pasado o preocuparte por el futuro te está robando el descanso.";
         tip = "<strong>Tip de hoy:</strong> Prueba el 'vaciado mental' 30 minutos antes de dormir escribiendo tus pendientes en un papel.";
         clinical = "Te beneficiarías de un especialista con enfoque en <strong>Terapia Cognitivo-Conductual (TCC)</strong>.";
-      } else if(scores.est >= 7) {
+      } else if(scores.estres >= 7) {
         casuistica = "<strong>Perfil: Burnout.</strong> Tu batería interna está en rojo. Sentimos que has estado priorizando las necesidades de todos por encima de las tuyas y tu cuerpo envía señales de agotamiento.";
         tip = "<strong>Tip de hoy:</strong> Elige 10 minutos hoy para no hacer nada 'productivo'. Solo respira.";
         clinical = "Recomendamos un enfoque en <strong>Mindfulness y Regulación del Sistema Nervioso</strong>.";
-      } else if(scores.ani >= 7) {
+      } else if(scores.animo <= 4) { // Ojo: Ánimo bajo es preocupación
         casuistica = "<strong>Perfil: Desconexión.</strong> Últimamente el mundo se siente un poco más gris. Es válido no estar bien todo el tiempo.";
         tip = "<strong>Tip de hoy:</strong> Envía un mensaje corto de 'Hola' a alguien en quien confíes plenamente.";
         clinical = "Tu perfil sugiere acompañamiento de un <strong>Psicólogo Clínico especializado en regulación emocional</strong>.";
