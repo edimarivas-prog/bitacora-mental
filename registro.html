@@ -65,6 +65,35 @@
     .form-error.show { display: block; }
     .form-success { color: var(--success); font-size: 0.85rem; display: none; margin-top: 4px; }
     .form-success.show { display: block; }
+    @media (max-width: 768px) {
+      .auth-container {
+        grid-template-columns: 1fr;
+        margin: 10px;
+        border-radius: 16px;
+        max-height: none;
+      }
+
+      .auth-visual-side {
+        display: none; 
+      }
+
+      .auth-form-side {
+        padding: 30px 20px;
+        max-height: none;
+        overflow-y: visible;
+      }
+
+      
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .auth-header h1 {
+        font-size: 1.6rem;
+      }
+    }
+  
   </style>
 </head>
 <body>
