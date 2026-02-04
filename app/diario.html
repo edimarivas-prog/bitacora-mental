@@ -80,8 +80,10 @@
     
     .editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
     .entry-date-display { font-size: 1.4rem; font-weight: 700; color: var(--dark); }
-    .autosave-indicator { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.85rem; }
+    .autosave-indicator { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.85rem; opacity: 0; transition: opacity 0.3s; }
+    .autosave-indicator.visible { opacity: 1; }
     .autosave-indicator.saving { color: var(--warning); }
+    .autosave-indicator.saved { color: var(--success); }
     
     .emotion-selector { margin-bottom: 24px; }
     .emotions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 10px; }
@@ -120,7 +122,7 @@
     .summary-paper { background: white; padding: 40px; width: 100%; max-width: 500px; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); position: relative; background-image: linear-gradient(#F3F4F6 1px, transparent 1px); background-size: 100% 30px; line-height: 30px; }
     .paper-holes { position: absolute; left: 15px; top: 40px; bottom: 40px; display: flex; flex-direction: column; justify-content: space-between; }
     .hole { width: 15px; height: 15px; background: #E5E7EB; border-radius: 50%; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
-    .summary-content { margin-left: 30px; font-family: 'DM Sans', cursive; } /* Idealmente una fuente handwritten */
+    .summary-content { margin-left: 30px; font-family: 'DM Sans', cursive; }
     .checklist-item { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
     .checklist-box { width: 18px; height: 18px; border: 2px solid var(--dark); border-radius: 4px; }
 
@@ -189,7 +191,7 @@
           
           <div class="editor-header">
             <div class="entry-date-display" id="entryDate">Hoy</div>
-            <div class="autosave-indicator" id="saveStatus"><i class="fas fa-cloud"></i> Guardado</div>
+            <div class="autosave-indicator" id="saveStatus"></div>
           </div>
 
           <div class="emotion-selector">
@@ -217,15 +219,14 @@
               <i class="fas fa-user-md" style="font-size: 1.2rem;"></i>
               <h3 style="font-size: 1.1rem; margin:0;">Para mi próxima sesión</h3>
             </div>
-            <p style="font-size: 0.85rem; color: #B45309; margin-bottom: 12px;">Anota aquí temas clave que no quieras olvidar hablar con tu psicólogo.</p>
+            <p style="font-size: 0.85rem; color: #B45309; margin-bottom: 12px;">Anota temas clave para no olvidarlos.</p>
             
             <div class="therapy-input-group">
               <input type="text" id="therapyNoteInput" class="therapy-input" placeholder="Ej: Hablar sobre mi sueño...">
               <button class="btn-add-note" onclick="addTherapyNote()"><i class="fas fa-plus"></i></button>
             </div>
 
-            <ul class="therapy-list" id="therapyList">
-              </ul>
+            <ul class="therapy-list" id="therapyList"></ul>
 
             <button class="btn" style="width: 100%; margin-top: 15px; background: white; border: 1px solid #F59E0B; color: #F59E0B; font-size: 0.9rem;" onclick="openSummaryModal()">
               <i class="fas fa-list-check"></i> Ver Resumen / Checklist
@@ -252,8 +253,7 @@
         <button onclick="closeSummaryModal()" style="border:none; background:none; cursor:pointer; font-size:1.2rem; color: #9CA3AF;"><i class="fas fa-times"></i></button>
       </div>
       <h2 style="font-family: 'Outfit'; color: var(--dark); margin-bottom: 20px; text-align: center;">📝 Temas para mi sesión</h2>
-      <div class="summary-content" id="summaryContent">
-        </div>
+      <div class="summary-content" id="summaryContent"></div>
       <p style="text-align: center; margin-top: 30px; font-size: 0.8rem; color: #9CA3AF;">Bitácora Mental - Resumen Personal</p>
     </div>
   </div>
@@ -262,9 +262,9 @@
   <script src="../js/supabase-config.js"></script>
 
   <script>
-    // --- Configuración Inicial ---
+    // Variables Globales
     let currentDate = new Date();
-    let selectedDate = new Date();
+    let currentEmotion = null; // Variable agregada
     let therapyNotes = JSON.parse(localStorage.getItem('therapyNotes')) || [];
     
     // Frases aleatorias
@@ -277,13 +277,11 @@
     ];
     document.getElementById('dailyQuote').innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
 
-    // --- Funciones del Diario ---
-    
+    // --- Inicialización ---
     async function init() {
         const { data: { user } } = await window.supabase.auth.getUser();
         if (!user) { window.location.href = '../login.html'; return; }
 
-        // Cargar perfil sidebar
         const { data: profile } = await window.supabase.from('users_profile').select('*').eq('id', user.id).single();
         if (profile) {
             document.getElementById('sidebarUserName').textContent = `${profile.nombre} ${profile.apellido}`;
@@ -293,30 +291,69 @@
 
         renderCalendar();
         renderTherapyNotes();
-        // Aquí podrías cargar la entrada del día si existiera en Supabase
     }
 
+    // --- Funciones del Diario ---
     function usePrompt(text) {
         const editor = document.getElementById('diaryContent');
         editor.value += (editor.value ? '\n\n' : '') + text + '\n';
         editor.focus();
     }
 
-    function setEmotion(emotion) {
+    function setEmotion(emotionName) {
+        currentEmotion = emotionName; // Guardamos la emoción seleccionada
         document.querySelectorAll('.emotion-option').forEach(el => el.classList.remove('selected'));
         event.currentTarget.classList.add('selected');
-        // Guardar emoción en variable temporal o enviar a DB
+    }
+
+    // --- NUEVA FUNCIÓN: saveEntry (La que faltaba) ---
+    async function saveEntry() {
+        const content = document.getElementById('diaryContent').value;
+        const statusDiv = document.getElementById('saveStatus');
+
+        if (!content.trim()) {
+            alert("El diario está vacío. Escribe algo antes de guardar.");
+            return;
+        }
+
+        statusDiv.className = 'autosave-indicator visible saving';
+        statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+        const { data: { user } } = await window.supabase.auth.getUser();
+
+        const { error } = await window.supabase
+            .from('diario_emocional') // Asegúrate que tu tabla se llame así
+            .insert({
+                user_id: user.id,
+                fecha: new Date().toISOString(), // Fecha actual
+                contenido: content,
+                emocion: currentEmotion, // Puede ser null si no eligió nada
+                // necesidad_usuario: localStorage.getItem('userNeed') || 'general'
+            });
+
+        if (error) {
+            console.error('Error al guardar:', error);
+            statusDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error';
+            alert("Hubo un error al guardar tu entrada.");
+        } else {
+            statusDiv.className = 'autosave-indicator visible saved';
+            statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> Guardado';
+            
+            // Opcional: Limpiar después de unos segundos
+            setTimeout(() => {
+                statusDiv.classList.remove('visible');
+            }, 3000);
+        }
     }
 
     // --- Funciones Notas Terapéuticas ---
-
     function addTherapyNote() {
         const input = document.getElementById('therapyNoteInput');
         const text = input.value.trim();
         
         if (text) {
             therapyNotes.push({ id: Date.now(), text: text, done: false });
-            localStorage.setItem('therapyNotes', JSON.stringify(therapyNotes)); // Guardado local rápido
+            localStorage.setItem('therapyNotes', JSON.stringify(therapyNotes));
             input.value = '';
             renderTherapyNotes();
         }
@@ -330,6 +367,10 @@
 
     function renderTherapyNotes() {
         const list = document.getElementById('therapyList');
+        if (therapyNotes.length === 0) {
+            list.innerHTML = '<li style="color:#B45309; opacity:0.7; font-size:0.85rem; text-align:center; padding:10px;">Sin notas aún.</li>';
+            return;
+        }
         list.innerHTML = therapyNotes.map(note => `
             <li class="therapy-item">
                 <span>${note.text}</span>
@@ -357,7 +398,7 @@
         document.getElementById('summaryModal').classList.remove('active');
     }
 
-    // --- Calendario Simplificado ---
+    // --- Calendario Visual (Solo UI por ahora) ---
     function renderCalendar() {
         const grid = document.getElementById('miniCalendar');
         const monthYear = document.getElementById('calendarMonthYear');
@@ -376,7 +417,7 @@
 
         for(let i=1; i<=daysInMonth; i++) {
             const isToday = i === new Date().getDate() && currentDate.getMonth() === new Date().getMonth();
-            html += `<div class="mini-calendar-day ${isToday ? 'today' : ''}" onclick="alert('Cargar entrada del día ${i}')">${i}</div>`;
+            html += `<div class="mini-calendar-day ${isToday ? 'today' : ''}">${i}</div>`;
         }
         grid.innerHTML = html;
     }
