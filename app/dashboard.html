@@ -1104,6 +1104,10 @@
             sidebar.style.zIndex = '1001';
         });
     }
+  async function handleLogout() {
+  await window.supabase.auth.signOut();
+  window.location.href = '/login.html'; 
+}
   </script>
 
   <!-- Supabase SDK -->
