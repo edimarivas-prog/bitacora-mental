@@ -262,9 +262,12 @@
   <script src="../js/supabase-config.js"></script>
 
   <script>
-    // Variables Globales
-    let currentDate = new Date();
-    let currentEmotion = null; // Variable agregada
+    // --- VARIABLES GLOBALES ---
+    let currentDate = new Date(); // Para la navegación del mes del calendario
+    let selectedDate = new Date(); // La fecha que el usuario está viendo/editando
+    let currentEntryId = null; // Para saber si estamos editando una existente o creando nueva
+    let currentEmotion = null;
+    let existingDates = new Set(); // Guardará las fechas que tienen diario (para los puntitos)
     let therapyNotes = JSON.parse(localStorage.getItem('therapyNotes')) || [];
     
     // Frases aleatorias
@@ -277,11 +280,12 @@
     ];
     document.getElementById('dailyQuote').innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
 
-    // --- Inicialización ---
+    // --- INICIALIZACIÓN ---
     async function init() {
         const { data: { user } } = await window.supabase.auth.getUser();
         if (!user) { window.location.href = '../login.html'; return; }
 
+        // 1. Cargar perfil (Sidebar)
         const { data: profile } = await window.supabase.from('users_profile').select('*').eq('id', user.id).single();
         if (profile) {
             document.getElementById('sidebarUserName').textContent = `${profile.nombre} ${profile.apellido}`;
@@ -289,70 +293,220 @@
             document.getElementById('avatarInitials').textContent = (profile.nombre[0] + profile.apellido[0]).toUpperCase();
         }
 
+        // 2. Cargar fechas con entradas (para los puntitos del calendario)
+        await loadEntryDates(user.id);
+
+        // 3. Renderizar calendario y notas
         renderCalendar();
         renderTherapyNotes();
+
+        // 4. Cargar la entrada de HOY automáticamente
+        loadEntryForDate(new Date());
     }
 
-    // --- Funciones del Diario ---
+    // --- LÓGICA DEL DIARIO Y CALENDARIO ---
+
+    // Obtener todas las fechas donde hay diario para ponerles puntito
+    async function loadEntryDates(userId) {
+        const { data, error } = await window.supabase
+            .from('diario_emocional')
+            .select('fecha')
+            .eq('user_id', userId);
+        
+        if (data) {
+            existingDates.clear();
+            data.forEach(entry => {
+                // Guardamos solo la parte de la fecha YYYY-MM-DD
+                const dateStr = new Date(entry.fecha).toISOString().split('T')[0];
+                existingDates.add(dateStr);
+            });
+            renderCalendar(); // Re-renderizar para mostrar los puntos
+        }
+    }
+
+    // Cargar el contenido de una fecha específica
+    async function loadEntryForDate(date) {
+        selectedDate = date; // Actualizamos la fecha seleccionada global
+        updateHeaderDate(date);
+        
+        const { data: { user } } = await window.supabase.auth.getUser();
+        
+        // Calcular rango del día para buscar en base de datos (UTC)
+        const startOfDay = new Date(date); startOfDay.setHours(0,0,0,0);
+        const endOfDay = new Date(date); endOfDay.setHours(23,59,59,999);
+
+        // Mostrar "Cargando..."
+        document.getElementById('diaryContent').value = "Cargando...";
+        
+        const { data, error } = await window.supabase
+            .from('diario_emocional')
+            .select('*')
+            .eq('user_id', user.id)
+            .gte('fecha', startOfDay.toISOString())
+            .lte('fecha', endOfDay.toISOString())
+            .order('created_at', { ascending: false }) // Traer la más reciente si hay duplicados
+            .limit(1);
+
+        if (data && data.length > 0) {
+            // SI EXISTE ENTRADA: Cargar datos
+            const entry = data[0];
+            currentEntryId = entry.id; // Guardamos el ID para hacer UPDATE luego
+            document.getElementById('diaryContent').value = entry.contenido || "";
+            setEmotionUI(entry.emocion);
+            updateSaveStatus('Cargado', 'saved');
+        } else {
+            // SI NO EXISTE: Limpiar todo para escribir nuevo
+            currentEntryId = null;
+            document.getElementById('diaryContent').value = "";
+            setEmotionUI(null); // Limpiar emoción
+            updateSaveStatus('', '');
+        }
+    }
+
+    async function saveEntry() {
+        const content = document.getElementById('diaryContent').value;
+        if (!content.trim()) return;
+
+        updateSaveStatus('Guardando...', 'saving');
+        const { data: { user } } = await window.supabase.auth.getUser();
+
+        // Si tenemos currentEntryId, hacemos UPDATE. Si no, hacemos INSERT.
+        let result;
+        
+        // Ajustar la fecha seleccionada con la hora actual para el guardado
+        const saveDate = new Date(selectedDate);
+        const now = new Date();
+        saveDate.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
+
+        if (currentEntryId) {
+            // Actualizar existente
+            result = await window.supabase
+                .from('diario_emocional')
+                .update({ 
+                    contenido: content, 
+                    emocion: currentEmotion 
+                })
+                .eq('id', currentEntryId);
+        } else {
+            // Crear nueva
+            result = await window.supabase
+                .from('diario_emocional')
+                .insert({
+                    user_id: user.id,
+                    fecha: saveDate.toISOString(),
+                    contenido: content,
+                    emocion: currentEmotion
+                })
+                .select(); // Necesario para obtener el nuevo ID
+                
+            if (result.data) {
+                currentEntryId = result.data[0].id; // Guardamos el nuevo ID
+                // Agregar puntito al calendario
+                existingDates.add(saveDate.toISOString().split('T')[0]);
+                renderCalendar();
+            }
+        }
+
+        if (result.error) {
+            console.error(result.error);
+            updateSaveStatus('Error', 'error');
+            alert('Error al guardar.');
+        } else {
+            updateSaveStatus('Guardado', 'saved');
+        }
+    }
+
+    // --- UI HELPERS ---
+
+    function setEmotion(emotionName) {
+        currentEmotion = emotionName;
+        setEmotionUI(emotionName);
+    }
+
+    function setEmotionUI(emotionName) {
+        document.querySelectorAll('.emotion-option').forEach(el => el.classList.remove('selected'));
+        if (emotionName) {
+            // Buscar por texto o atributo (simplificado aquí por texto onclick)
+            // En una app real usaríamos data-attributes. 
+            // Aquí reiniciamos manualmente basado en el nombre pasado.
+            // Para simplificar, mapeamos el click:
+            const map = { 'feliz': 0, 'tranquilo': 1, 'triste': 2, 'ansioso': 3, 'enojado': 4 };
+            if (map[emotionName] !== undefined) {
+                document.querySelectorAll('.emotion-option')[map[emotionName]].classList.add('selected');
+            }
+        }
+    }
+
+    function updateHeaderDate(date) {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('entryDate').textContent = date.toLocaleDateString('es-ES', options);
+    }
+
+    function updateSaveStatus(text, type) {
+        const el = document.getElementById('saveStatus');
+        el.className = `autosave-indicator visible ${type}`;
+        el.innerHTML = type === 'saving' ? '<i class="fas fa-spinner fa-spin"></i> ' + text 
+                     : (type === 'saved' ? '<i class="fas fa-check-circle"></i> ' + text 
+                     : text);
+    }
+
+    // --- CALENDARIO (Renderizado) ---
+    function renderCalendar() {
+        const grid = document.getElementById('miniCalendar');
+        const monthYear = document.getElementById('calendarMonthYear');
+        const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        
+        monthYear.innerText = `${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+        
+        const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
+        const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+        
+        let html = '';
+        const daysHeader = ['D','L','M','M','J','V','S'];
+        daysHeader.forEach(d => html += `<div class="mini-calendar-day header">${d}</div>`);
+
+        for(let i=0; i<firstDay; i++) html += `<div></div>`;
+
+        for(let i=1; i<=daysInMonth; i++) {
+            // Construir fecha string YYYY-MM-DD para comparar con existingDates
+            const year = currentDate.getFullYear();
+            const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+            const dayStr = String(i).padStart(2, '0');
+            const dateKey = `${year}-${month}-${dayStr}`;
+
+            const isToday = i === new Date().getDate() && currentDate.getMonth() === new Date().getMonth() && currentDate.getFullYear() === new Date().getFullYear();
+            const isSelected = i === selectedDate.getDate() && currentDate.getMonth() === selectedDate.getMonth();
+            const hasEntry = existingDates.has(dateKey);
+
+            // Importante: onclick llama a selectDate(i)
+            html += `<div class="mini-calendar-day ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''} ${hasEntry ? 'has-entry' : ''}" 
+                     onclick="selectDate(${i})">${i}</div>`;
+        }
+        grid.innerHTML = html;
+    }
+
+    function selectDate(day) {
+        // Crear nueva fecha basada en el mes actual del calendario
+        const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+        loadEntryForDate(newDate);
+        renderCalendar(); // Para actualizar el estilo "selected"
+    }
+
+    function prevMonth() { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); }
+    function nextMonth() { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); }
+
+    // --- HERRAMIENTAS Y NOTAS ---
     function usePrompt(text) {
         const editor = document.getElementById('diaryContent');
         editor.value += (editor.value ? '\n\n' : '') + text + '\n';
         editor.focus();
     }
 
-    function setEmotion(emotionName) {
-        currentEmotion = emotionName; // Guardamos la emoción seleccionada
-        document.querySelectorAll('.emotion-option').forEach(el => el.classList.remove('selected'));
-        event.currentTarget.classList.add('selected');
-    }
-
-    // --- NUEVA FUNCIÓN: saveEntry (La que faltaba) ---
-    async function saveEntry() {
-        const content = document.getElementById('diaryContent').value;
-        const statusDiv = document.getElementById('saveStatus');
-
-        if (!content.trim()) {
-            alert("El diario está vacío. Escribe algo antes de guardar.");
-            return;
-        }
-
-        statusDiv.className = 'autosave-indicator visible saving';
-        statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
-
-        const { data: { user } } = await window.supabase.auth.getUser();
-
-        const { error } = await window.supabase
-            .from('diario_emocional') // Asegúrate que tu tabla se llame así
-            .insert({
-                user_id: user.id,
-                fecha: new Date().toISOString(), // Fecha actual
-                contenido: content,
-                emocion: currentEmotion, // Puede ser null si no eligió nada
-                // necesidad_usuario: localStorage.getItem('userNeed') || 'general'
-            });
-
-        if (error) {
-            console.error('Error al guardar:', error);
-            statusDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error';
-            alert("Hubo un error al guardar tu entrada.");
-        } else {
-            statusDiv.className = 'autosave-indicator visible saved';
-            statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> Guardado';
-            
-            // Opcional: Limpiar después de unos segundos
-            setTimeout(() => {
-                statusDiv.classList.remove('visible');
-            }, 3000);
-        }
-    }
-
-    // --- Funciones Notas Terapéuticas ---
     function addTherapyNote() {
         const input = document.getElementById('therapyNoteInput');
         const text = input.value.trim();
-        
         if (text) {
-            therapyNotes.push({ id: Date.now(), text: text, done: false });
+            therapyNotes.push({ id: Date.now(), text: text });
             localStorage.setItem('therapyNotes', JSON.stringify(therapyNotes));
             input.value = '';
             renderTherapyNotes();
@@ -394,42 +548,10 @@
         document.getElementById('summaryModal').classList.add('active');
     }
 
-    function closeSummaryModal() {
-        document.getElementById('summaryModal').classList.remove('active');
-    }
+    function closeSummaryModal() { document.getElementById('summaryModal').classList.remove('active'); }
+    async function handleLogout() { await window.supabase.auth.signOut(); window.location.href = '../login.html'; }
 
-    // --- Calendario Visual (Solo UI por ahora) ---
-    function renderCalendar() {
-        const grid = document.getElementById('miniCalendar');
-        const monthYear = document.getElementById('calendarMonthYear');
-        const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-        
-        monthYear.innerText = `${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
-        
-        const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
-        const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
-        
-        let html = '';
-        const daysHeader = ['D','L','M','M','J','V','S'];
-        daysHeader.forEach(d => html += `<div class="mini-calendar-day header">${d}</div>`);
-
-        for(let i=0; i<firstDay; i++) html += `<div></div>`;
-
-        for(let i=1; i<=daysInMonth; i++) {
-            const isToday = i === new Date().getDate() && currentDate.getMonth() === new Date().getMonth();
-            html += `<div class="mini-calendar-day ${isToday ? 'today' : ''}">${i}</div>`;
-        }
-        grid.innerHTML = html;
-    }
-
-    function prevMonth() { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); }
-    function nextMonth() { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); }
-
-    async function handleLogout() {
-        await window.supabase.auth.signOut();
-        window.location.href = '../login.html';
-    }
-
+    // Iniciar
     document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
