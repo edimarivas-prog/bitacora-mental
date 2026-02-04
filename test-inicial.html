@@ -37,7 +37,7 @@
     .progress-bar { width: 100%; height: 8px; background: var(--border); border-radius: 10px; overflow: hidden; }
     .progress-fill { height: 100%; background: var(--primary); transition: width 0.4s ease; width: 0%; }
 
-    /* Messages & Validation */
+    /* Messages */
     .validation-msg { background: #E8F3EC; color: var(--primary); padding: 15px; border-radius: 12px; margin-bottom: 20px; font-weight: 600; font-size: 0.9rem; animation: fadeIn 0.5s ease; display: none; }
     
     /* Options */
@@ -53,9 +53,9 @@
     
     .btn { width: 100%; padding: 16px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; transition: 0.3s; font-size: 1rem; }
     .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: white; border: 2px solid var(--border); color: var(--dark); }
     .btn-plan { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; margin-top: 15px; }
 
-    /* Countdown & Urgency */
     .countdown-timer { background: #FFF4F4; color: #D32F2F; padding: 8px 15px; border-radius: 50px; font-weight: 700; font-size: 0.85rem; margin-bottom: 20px; display: inline-block; border: 1px solid #FFCDD2; }
 
     @media (max-width: 768px) { .scale-options { gap: 8px; } .scale-option { border-radius: 10px; } }
@@ -112,6 +112,7 @@
           <li><i class="fas fa-check"></i> Tu reporte detallado en PDF</li>
         </ul>
         <button class="btn" style="background: white; color: var(--primary);" onclick="window.location.href='registro.html'">Guardar mis resultados y recursos gratis</button>
+        <button class="btn" style="background: transparent; color: white; border: 1px solid white; margin-top: 10px;" onclick="window.location.href='login.html'">Ya tengo cuenta</button>
       </div>
 
       <h3 style="text-align: center; margin: 40px 0 20px;">Planes de apoyo profesional personalizados</h3>
@@ -119,7 +120,31 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+
   <script>
+    // --- FUNCIÓN SALVAVIDAS: DETECTOR DE BUCLE ---
+    async function checkRedirectLoop() {
+      // 1. Verificar si el usuario ya está logueado
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session) {
+        // 2. Si está logueado Y tiene resultados pendientes en memoria...
+        if (localStorage.getItem('tempTestResults')) {
+          console.log("¡Usuario volvió del registro! Redirigiendo al Dashboard para guardar...");
+          // Lo enviamos al dashboard, donde el código que pusimos antes guardará los datos automáticamente
+          window.location.href = 'app/dashboard.html';
+        }
+      }
+    }
+
+    // Ejecutar inmediatamente
+    document.addEventListener('DOMContentLoaded', () => {
+      checkRedirectLoop();
+    });
+    // ----------------------------------------------
+
     const questions = [
       { id: 1, cat: 'ansiedad', text: '¿Con qué frecuencia te sientes nervioso/a o con inquietud?', labels: ['Nunca', 'Rara vez', 'A veces', 'Frecuente', 'Siempre'] },
       { id: 2, cat: 'ansiedad', text: '¿Sientes que tus pensamientos van más rápido de lo que puedes manejar?', labels: ['Nunca', 'Rara vez', 'A veces', 'Frecuente', 'Siempre'] },
@@ -146,7 +171,6 @@
       const q = questions[idx];
       const container = document.getElementById('questionsContainer');
       
-      // Validación intermedia
       const vMsg = document.getElementById('validationMsg');
       if(idx === 5) {
         vMsg.innerText = "Estás haciendo un gran trabajo al tomarte este tiempo para ti. Ya estamos a mitad de camino.";
@@ -163,6 +187,12 @@
                 <span style="font-size: 0.7rem; text-align: center;">${q.labels[v-1]}</span>
               </div>`).join('')}
           </div>
+          
+          <div style="display: flex; justify-content: space-between; margin: -15px 10px 25px; font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">
+            <span><i class="fas fa-minus-circle"></i> ${q.labels[0]}</span>
+            <span>${q.labels[4]} <i class="fas fa-plus-circle"></i></span>
+          </div>
+
           <div style="display: flex; gap: 15px;">
             ${idx > 0 ? `<button class="btn btn-secondary" onclick="renderQ(${idx-1})">Anterior</button>` : ''}
             <button class="btn btn-primary" onclick="next(${idx})" ${answers[q.id] ? '' : 'disabled'}>${idx === 9 ? 'Ver mi análisis personal' : 'Siguiente'}</button>
@@ -180,20 +210,19 @@
     }
 
     function showResults() {
-      // 1. CORRECCIÓN DE NOMBRES (Para que coincidan con Supabase)
+      // 1. CORRECCIÓN DE NOMBRES Y CÁLCULO
       const scores = {
         ansiedad: Math.round(((answers[1] + answers[2]) / 10) * 10),
-        estres: Math.round(((answers[3] + answers[9]) / 10) * 10), // Nota: Usé preg 3 y 9 para estrés según tu lógica anterior
+        estres: Math.round(((answers[3] + answers[9]) / 10) * 10),
         animo: Math.round(((12 - (answers[5] + answers[6])) / 10) * 10),
         social: answers[7],
         sueno: answers[4]
       };
 
-      // 2. EL PUENTE DE DATOS (¡Muy importante!)
-      // Guardamos esto para que el Dashboard lo lea después del registro
+      // 2. PUENTE DE DATOS: Guardar en memoria para cuando el usuario vuelva del registro
       localStorage.setItem('tempTestResults', JSON.stringify(scores));
 
-      // 3. Renderizado de la pantalla (Igual que antes)
+      // 3. Renderizado
       document.getElementById('questionsContainer').style.display = 'none';
       document.getElementById('progressContainer').style.display = 'none';
       document.getElementById('resultsScreen').classList.add('active');
@@ -202,24 +231,23 @@
       let casuistica = "";
       let tip = "";
       let clinical = "";
-      let recommendedPlanId = "acom"; // Default
+      let recommendedPlanId = "acom";
 
-      // Usamos las variables con nombre completo ahora: scores.ansiedad, etc.
       if(scores.ansiedad >= 7 && scores.sueno <= 2) {
-        casuistica = "<strong>Perfil: Rumiación.</strong> Parece que al llegar la noche, tu mente se convierte en un lugar ruidoso. Analizar cada detalle del pasado o preocuparte por el futuro te está robando el descanso.";
+        casuistica = "<strong>Perfil: Rumiación.</strong> Parece que al llegar la noche, tu mente se convierte en un lugar ruidoso. Analizar cada detalle te roba el descanso.";
         tip = "<strong>Tip de hoy:</strong> Prueba el 'vaciado mental' 30 minutos antes de dormir escribiendo tus pendientes en un papel.";
         clinical = "Te beneficiarías de un especialista con enfoque en <strong>Terapia Cognitivo-Conductual (TCC)</strong>.";
       } else if(scores.estres >= 7) {
-        casuistica = "<strong>Perfil: Burnout.</strong> Tu batería interna está en rojo. Sentimos que has estado priorizando las necesidades de todos por encima de las tuyas y tu cuerpo envía señales de agotamiento.";
+        casuistica = "<strong>Perfil: Burnout.</strong> Tu batería interna está en rojo. Sentimos que has estado priorizando a otros por encima de ti.";
         tip = "<strong>Tip de hoy:</strong> Elige 10 minutos hoy para no hacer nada 'productivo'. Solo respira.";
         clinical = "Recomendamos un enfoque en <strong>Mindfulness y Regulación del Sistema Nervioso</strong>.";
-      } else if(scores.animo <= 4) { // Ojo: Ánimo bajo es preocupación
+      } else if(scores.animo >= 7) {
         casuistica = "<strong>Perfil: Desconexión.</strong> Últimamente el mundo se siente un poco más gris. Es válido no estar bien todo el tiempo.";
         tip = "<strong>Tip de hoy:</strong> Envía un mensaje corto de 'Hola' a alguien en quien confíes plenamente.";
         clinical = "Tu perfil sugiere acompañamiento de un <strong>Psicólogo Clínico especializado en regulación emocional</strong>.";
         recommendedPlanId = "prem";
       } else {
-        casuistica = "<strong>Perfil: Búsqueda de Crecimiento.</strong> Tienes bases sólidas. Estás aquí para adquirir herramientas que protejan tu paz a largo plazo.";
+        casuistica = "<strong>Perfil: Búsqueda de Crecimiento.</strong> Tienes bases sólidas. Estás aquí para adquirir herramientas que protejan tu paz.";
         tip = "<strong>Tip de hoy:</strong> Escribe una cosa por la que estés agradecido hoy para fortalecer tu bienestar.";
         clinical = "Un enfoque de <strong>Psicología Positiva o Coaching emocional</strong> sería ideal para ti.";
       }
