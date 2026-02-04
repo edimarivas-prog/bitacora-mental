@@ -381,8 +381,6 @@
   <script src="../js/supabase-config.js"></script>
 
   <script>
-    // --- LÓGICA DEL DASHBOARD ---
-    
     async function loadDashboard() {
         // 1. Obtener usuario
         const { data: { user } } = await window.supabase.auth.getUser();
@@ -396,23 +394,15 @@
         if (tempTest) {
             try {
                 const scores = JSON.parse(tempTest);
-                const { error } = await window.supabase
-                    .from('test_results')
-                    .insert({
-                        user_id: user.id,
-                        nivel_ansiedad: scores.ansiedad,
-                        nivel_estres: scores.estres,
-                        nivel_animo: scores.animo,
-                        fecha_realizado: new Date().toISOString()
-                    });
-
-                if (!error) {
-                    console.log("Test migrado con éxito");
-                    localStorage.removeItem('tempTestResults');
-                }
-            } catch (err) {
-                console.error("Error migrando test:", err);
-            }
+                await window.supabase.from('test_results').insert({
+                    user_id: user.id,
+                    nivel_ansiedad: scores.ansiedad,
+                    nivel_estres: scores.estres,
+                    nivel_animo: scores.animo,
+                    fecha_realizado: new Date().toISOString()
+                });
+                localStorage.removeItem('tempTestResults');
+            } catch (err) { console.error("Error migrando test:", err); }
         }
 
         // 2. Cargar Perfil
@@ -426,11 +416,12 @@
             document.getElementById('welcomeName').textContent = `Bienvenida de nuevo, ${profile.nombre} 👋`;
             document.getElementById('sidebarUserName').textContent = `${profile.nombre} ${profile.apellido}`;
             document.getElementById('sidebarUserEmail').textContent = user.email;
-            document.querySelector('.user-avatar').textContent = 
-                (profile.nombre[0] + profile.apellido[0]).toUpperCase();
+            document.querySelector('.user-avatar').textContent = (profile.nombre[0] + profile.apellido[0]).toUpperCase();
         }
 
-        // 3. Cargar Estadísticas (Reales)
+        // 3. ESTADÍSTICAS
+
+        // A. Sesiones Completadas (Simple conteo)
         const { count: sesiones } = await window.supabase
             .from('citas')
             .select('*', { count: 'exact', head: true })
@@ -438,12 +429,54 @@
             .eq('estado', 'completada');
         document.getElementById('statSesiones').textContent = sesiones || 0;
 
-        const { count: diario } = await window.supabase
+        // B. Entradas de Diario (Total histórico)
+        const { count: diarioTotal } = await window.supabase
             .from('diario_emocional')
             .select('*', { count: 'exact', head: true })
             .eq('user_id', user.id);
-        document.getElementById('statDiario').textContent = diario || 0;
-        document.getElementById('statRacha').textContent = diario || 0;
+        document.getElementById('statDiario').textContent = diarioTotal || 0;
+
+        // C. RACHA (CÁLCULO REAL CORREGIDO)
+        // Pedimos solo las fechas para procesarlas en Javascript
+        const { data: entradas } = await window.supabase
+            .from('diario_emocional')
+            .select('fecha')
+            .eq('user_id', user.id)
+            .order('fecha', { ascending: false }); // Las más recientes primero
+
+        let racha = 0;
+        if (entradas && entradas.length > 0) {
+            // 1. Convertir a formato YYYY-MM-DD y eliminar duplicados usando Set
+            // Esto soluciona tu problema: 5 entradas el mismo día se convierten en 1 sola fecha en el Set
+            const diasUnicos = new Set(entradas.map(e => e.fecha.split('T')[0]));
+            const diasOrdenados = Array.from(diasUnicos).sort().reverse(); // Ordenar descendente (hoy, ayer...)
+
+            // 2. Comprobar si la racha está viva (última entrada fue HOY o AYER)
+            const hoy = new Date().toISOString().split('T')[0];
+            const ayerDate = new Date(); ayerDate.setDate(ayerDate.getDate() - 1);
+            const ayer = ayerDate.toISOString().split('T')[0];
+
+            if (diasOrdenados[0] === hoy || diasOrdenados[0] === ayer) {
+                racha = 1; // Empezamos con 1
+                let fechaChequeo = new Date(diasOrdenados[0]); // Empezamos a chequear desde el último día escrito
+
+                // 3. Recorrer hacia atrás buscando días consecutivos
+                for (let i = 1; i < diasOrdenados.length; i++) {
+                    fechaChequeo.setDate(fechaChequeo.getDate() - 1); // Restamos un día
+                    const fechaEsperada = fechaChequeo.toISOString().split('T')[0];
+
+                    if (diasOrdenados[i] === fechaEsperada) {
+                        racha++; // ¡Es consecutivo! Sumamos racha
+                    } else {
+                        break; // Se rompió la racha, dejamos de contar
+                    }
+                }
+            } else {
+                racha = 0; // La última entrada fue hace mucho, racha perdida
+            }
+        }
+        document.getElementById('statRacha').textContent = racha;
+
 
         // 4. Próxima Cita
         const { data: citas } = await window.supabase
