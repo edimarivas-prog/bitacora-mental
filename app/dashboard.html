@@ -760,6 +760,10 @@
             <i class="fas fa-user-circle"></i>
             <span>Perfil</span>
           </a>
+          <a href="#" class="nav-item" onclick="handleLogout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Cerrar Sesión</span>
+          </a>
           <a href="configuracion.html" class="nav-item">
             <i class="fas fa-cog"></i>
             <span>Configuración</span>
@@ -1104,10 +1108,19 @@
             sidebar.style.zIndex = '1001';
         });
     }
-  async function handleLogout() {
-  await window.supabase.auth.signOut();
-  window.location.href = '/login.html'; 
-}
+    async function handleLogout() {
+        try {
+            const { error } = await window.supabase.auth.signOut();
+            if (error) throw error;
+            
+            // Redirigir al login (ajusta la ruta si es necesario)
+            window.location.href = '../login.html'; 
+        } catch (error) {
+            console.error('Error al cerrar sesión:', error.message);
+            alert('No se pudo cerrar la sesión correctamente.');
+        }
+    }
+  
   </script>
 
   <!-- Supabase SDK -->
