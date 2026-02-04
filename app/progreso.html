@@ -33,7 +33,7 @@
 
     .dashboard-container { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
 
-    /* Sidebar Estandarizado */
+    /* Sidebar */
     .sidebar { background: white; border-right: 1px solid var(--border); padding: 24px 0; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
     .sidebar-header { padding: 0 24px 24px; border-bottom: 1px solid var(--border); }
     .logo { display: flex; align-items: center; gap: 12px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--primary); text-decoration: none; }
@@ -66,23 +66,8 @@
     .chart-subtitle { color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px; }
     .chart-container { position: relative; height: 300px; }
 
-    /* Test History */
-    .test-history { background: white; border-radius: 16px; padding: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 32px; }
-    .test-item { display: flex; gap: 20px; padding: 20px; border-radius: 12px; background: var(--background); margin-bottom: 16px; transition: all 0.2s; }
-    .test-item:hover { background: var(--border); }
-    .test-date-badge { flex-shrink: 0; width: 60px; text-align: center; }
-    .test-day { font-size: 1.8rem; font-weight: 700; color: var(--primary); }
-    .test-month { font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; }
-    .test-content { flex: 1; }
-    .test-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
-    .test-scores { display: flex; gap: 16px; flex-wrap: wrap; }
-    .score-badge { padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; }
-    .score-badge.low { background: rgba(16, 185, 129, 0.1); color: var(--success); }
-    .score-badge.medium { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
-    .score-badge.high { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
-
     /* Insights Grid */
-    .insights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .insights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 32px; }
     .insight-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border-left: 4px solid var(--primary); }
     .insight-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(79, 111, 82, 0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 1.3rem; }
     .insight-title { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
@@ -93,7 +78,6 @@
       .sidebar { display: none; }
       .main-content { padding: 20px; }
       .charts-grid { grid-template-columns: 1fr; }
-      .test-item { flex-direction: column; }
     }
   </style>
 </head>
@@ -141,12 +125,30 @@
         <p class="page-subtitle">Visualiza tu evolución y celebra tus logros</p>
       </div>
 
+      <div class="insights-grid">
+        <div class="insight-card">
+          <div class="insight-icon"><i class="fas fa-trophy"></i></div>
+          <div class="insight-title">Tu Constancia</div>
+          <div class="insight-text" id="insightRacha">Calculando...</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-icon"><i class="fas fa-lightbulb"></i></div>
+          <div class="insight-title">Tu Ritmo</div>
+          <div class="insight-text" id="insightPattern">Analizando cuándo escribes...</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-icon"><i class="fas fa-heart"></i></div>
+          <div class="insight-title">Estado Emocional</div>
+          <div class="insight-text" id="insightTrend">Revisando tus últimos tests...</div>
+        </div>
+      </div>
+
       <div class="charts-grid">
         <div class="chart-card">
           <div class="chart-header">
             <div>
               <div class="chart-title">Evolución Emocional</div>
-              <div class="chart-subtitle">Basado en tus tests de bienestar</div>
+              <div class="chart-subtitle">Cómo te has sentido en tus evaluaciones</div>
             </div>
           </div>
           <div class="chart-container">
@@ -157,36 +159,13 @@
         <div class="chart-card">
           <div class="chart-header">
             <div>
-              <div class="chart-title">Hábitos de Escritura</div>
-              <div class="chart-subtitle">Frecuencia por día de la semana</div>
+              <div class="chart-title">Momentos de Escritura</div>
+              <div class="chart-subtitle">Tus días preferidos para expresarte</div>
             </div>
           </div>
           <div class="chart-container">
             <canvas id="diaryActivityChart"></canvas>
           </div>
-        </div>
-      </div>
-
-      <div class="test-history">
-        <h2 style="margin-bottom: 24px;">Historial de Evaluaciones</h2>
-        </div>
-
-      <h2 style="margin-bottom: 24px;">Patrones Identificados</h2>
-      <div class="insights-grid">
-        <div class="insight-card">
-          <div class="insight-icon"><i class="fas fa-trophy"></i></div>
-          <div class="insight-title">Constancia</div>
-          <div class="insight-text" id="insightRacha">Calculando tu racha actual...</div>
-        </div>
-        <div class="insight-card">
-          <div class="insight-icon"><i class="fas fa-chart-line"></i></div>
-          <div class="insight-title">Tendencia de Ánimo</div>
-          <div class="insight-text" id="insightTrend">Analizando tus últimos registros...</div>
-        </div>
-        <div class="insight-card">
-          <div class="insight-icon"><i class="fas fa-clock"></i></div>
-          <div class="insight-title">Momento de Reflexión</div>
-          <div class="insight-text" id="insightReflection">Sueles escribir más en tu diario los fines de semana. ¡Es un excelente hábito!</div>
         </div>
       </div>
     </main>
@@ -196,17 +175,14 @@
   <script src="../js/supabase-config.js"></script>
 
   <script>
-    // --- CONFIGURACIÓN DE GRÁFICOS ---
     Chart.defaults.font.family = "'DM Sans', sans-serif";
     Chart.defaults.color = '#6B7280';
     let testsChart, diaryChart;
 
-    // --- INICIALIZACIÓN ---
     async function init() {
         const { data: { user } } = await window.supabase.auth.getUser();
         if (!user) { window.location.href = '../login.html'; return; }
 
-        // Cargar Perfil Sidebar
         const { data: profile } = await window.supabase.from('users_profile').select('*').eq('id', user.id).single();
         if (profile) {
             document.getElementById('sidebarUserName').textContent = `${profile.nombre} ${profile.apellido}`;
@@ -218,92 +194,73 @@
     }
 
     async function loadProgressData(userId) {
-        // 1. Cargar Historial de Tests
+        // 1. Cargar Tests
         const { data: tests } = await window.supabase
             .from('test_results')
             .select('*')
             .eq('user_id', userId)
-            .order('fecha_realizado', { ascending: false });
+            .order('fecha_realizado', { ascending: true }); // Orden cronológico para gráfico
 
-        if (tests) {
-            renderTestHistory(tests);
+        if (tests && tests.length > 0) {
             updateTestChart(tests);
-            generateInsights(tests);
+            analyzeTrend(tests);
+        } else {
+            document.getElementById('insightTrend').textContent = "Realiza tu primer test para ver tu evolución emocional aquí.";
         }
 
-        // 2. Cargar Actividad de Diario (Últimos 30 días)
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-        
+        // 2. Cargar Diario (Para Racha y Patrones)
         const { data: entries } = await window.supabase
             .from('diario_emocional')
             .select('fecha')
-            .eq('user_id', userId)
-            .gte('fecha', thirtyDaysAgo.toISOString());
+            .eq('user_id', userId);
 
-        if (entries) {
-            updateDiaryChart(entries);
+        if (entries && entries.length > 0) {
+            // Filtrar fechas futuras (Protección de datos)
+            const today = new Date();
+            today.setHours(23, 59, 59, 999);
+            const validEntries = entries.filter(e => new Date(e.fecha) <= today);
+
+            updateDiaryChart(validEntries);
+            calculateInsights(validEntries);
+        } else {
+            document.getElementById('insightRacha').textContent = "Empieza a escribir en tu diario para generar tu racha.";
+            document.getElementById('insightPattern').textContent = "Pronto descubrirás qué días sueles escribir más.";
         }
-    }
-
-    // --- RENDERIZADO ---
-    function renderTestHistory(tests) {
-        const container = document.querySelector('.test-history');
-        // Mantener el título H2, limpiar el resto de divs hijos
-        const title = container.querySelector('h2');
-        container.innerHTML = '';
-        container.appendChild(title);
-
-        if (tests.length === 0) {
-            container.innerHTML += '<p style="color:var(--text-secondary); text-align:center; padding:20px;">Aún no has realizado ningún test.</p>';
-            return;
-        }
-
-        tests.forEach(test => {
-            const date = new Date(test.fecha_realizado);
-            const day = date.getDate().toString().padStart(2, '0');
-            const month = date.toLocaleString('es-ES', { month: 'short' });
-
-            const html = `
-                <div class="test-item">
-                    <div class="test-date-badge">
-                        <div class="test-day">${day}</div>
-                        <div class="test-month">${month}</div>
-                    </div>
-                    <div class="test-content">
-                        <div class="test-title">Evaluación de Bienestar</div>
-                        <div class="test-scores">
-                            <span class="score-badge ${getLevelClass(test.nivel_ansiedad)}">Ansiedad: ${test.nivel_ansiedad}/10</span>
-                            <span class="score-badge ${getLevelClass(test.nivel_estres)}">Estrés: ${test.nivel_estres}/10</span>
-                            <span class="score-badge ${test.nivel_animo >= 7 ? 'low' : (test.nivel_animo >= 4 ? 'medium' : 'high')}">Ánimo: ${test.nivel_animo}/10</span>
-                        </div>
-                    </div>
-                </div>`;
-            container.insertAdjacentHTML('beforeend', html);
-        });
-    }
-
-    function getLevelClass(val) {
-        return val <= 3 ? 'low' : (val <= 6 ? 'medium' : 'high');
     }
 
     // --- GRÁFICOS ---
+
     function updateTestChart(tests) {
         const ctx = document.getElementById('testsChart').getContext('2d');
-        // Invertir para mostrar cronológico en gráfico (antiguo -> nuevo)
-        const cronoTests = [...tests].reverse();
         
+        // Configuración "Humana" del eje Y
+        const yLabels = { 0: '', 2: 'Crítico', 4: 'Bajo', 6: 'Moderado', 8: 'Bueno', 10: 'Excelente' };
+
         testsChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: cronoTests.map(t => new Date(t.fecha_realizado).toLocaleDateString('es-ES', {day: '2-digit', month: 'short'})),
+                labels: tests.map(t => new Date(t.fecha_realizado).toLocaleDateString('es-ES', {day: '2-digit', month: 'short'})),
                 datasets: [
-                    { label: 'Ansiedad', data: cronoTests.map(t => t.nivel_ansiedad), borderColor: '#EF4444', tension: 0.3 },
-                    { label: 'Estrés', data: cronoTests.map(t => t.nivel_estres), borderColor: '#F59E0B', tension: 0.3 },
-                    { label: 'Ánimo', data: cronoTests.map(t => t.nivel_animo), borderColor: '#10B981', tension: 0.3 }
+                    { label: 'Ánimo', data: tests.map(t => t.nivel_animo), borderColor: '#10B981', backgroundColor: '#10B981', tension: 0.4, pointRadius: 4 },
+                    { label: 'Ansiedad', data: tests.map(t => t.nivel_ansiedad), borderColor: '#EF4444', backgroundColor: '#EF4444', tension: 0.4, pointRadius: 4 }
                 ]
             },
-            options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 10 } } }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        min: 0, max: 10,
+                        ticks: {
+                            callback: function(value) { return yLabels[value] || ''; },
+                            stepSize: 2
+                        },
+                        grid: { color: '#F3F4F6' }
+                    },
+                    x: { grid: { display: false } }
+                },
+                plugins: { legend: { position: 'bottom' } }
+            }
         });
     }
 
@@ -311,49 +268,114 @@
         const ctx = document.getElementById('diaryActivityChart').getContext('2d');
         const dayCounts = [0, 0, 0, 0, 0, 0, 0]; // Dom-Sáb
         
+        // Agrupar por día de la semana
         entries.forEach(e => {
-            const dayIndex = new Date(e.fecha).getDay(); // 0 = Domingo
+            // Usamos UTC o local pero consistente
+            const date = new Date(e.fecha); 
+            const dayIndex = date.getDay(); 
             dayCounts[dayIndex]++;
         });
 
-        // Reordenar para empezar Lunes (1) hasta Domingo (0)
-        const orderedCounts = [...dayCounts.slice(1), dayCounts[0]];
+        // Mover Domingo al final (Lunes=0 ... Domingo=6 visualmente)
+        const labels = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+        const data = [...dayCounts.slice(1), dayCounts[0]];
 
         diaryChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+                labels: labels,
                 datasets: [{
-                    label: 'Entradas',
-                    data: orderedCounts,
+                    label: 'Momentos de escritura',
+                    data: data,
                     backgroundColor: '#4F6F52',
-                    borderRadius: 4
+                    borderRadius: 6,
+                    barThickness: 20
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { display: false } },
+                    x: { grid: { display: false } }
+                },
+                plugins: { legend: { display: false } }
+            }
         });
     }
 
-    // --- INSIGHTS ---
-    function generateInsights(tests) {
-        // Racha (placeholder, idealmente calculado con diario)
-        document.getElementById('insightRacha').textContent = "Mantener la constancia es clave. ¡Sigue así!";
+    // --- INSIGHTS INTELIGENTES ---
 
-        // Tendencia Ánimo
-        if (tests.length >= 2) {
-            const current = tests[0].nivel_animo;
-            const previous = tests[1].nivel_animo;
-            const diff = current - previous;
-            
-            let msg = "";
-            if (diff > 0) msg = "Tu estado de ánimo ha mejorado respecto a tu última evaluación.";
-            else if (diff < 0) msg = "Tu ánimo ha bajado un poco. Es normal tener altibajos, sé amable contigo.";
-            else msg = "Tu estado de ánimo se mantiene estable.";
-            
-            document.getElementById('insightTrend').textContent = msg;
-        } else {
-            document.getElementById('insightTrend').textContent = "Realiza más evaluaciones para detectar tendencias.";
+    function calculateInsights(entries) {
+        // 1. Racha Real (Días consecutivos únicos)
+        // Convertimos a Set de fechas string YYYY-MM-DD para eliminar duplicados del mismo día
+        const uniqueDates = new Set(entries.map(e => e.fecha.split('T')[0]));
+        const sortedDates = Array.from(uniqueDates).sort().reverse(); // Hoy hacia atrás
+
+        let streak = 0;
+        if (sortedDates.length > 0) {
+            const today = new Date().toISOString().split('T')[0];
+            const yesterdayDate = new Date(); yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+            const yesterday = yesterdayDate.toISOString().split('T')[0];
+
+            // Si escribió hoy o ayer, la racha está viva
+            if (sortedDates[0] === today || sortedDates[0] === yesterday) {
+                streak = 1;
+                let checkDate = new Date(sortedDates[0]);
+                
+                for (let i = 1; i < sortedDates.length; i++) {
+                    checkDate.setDate(checkDate.getDate() - 1);
+                    if (sortedDates[i] === checkDate.toISOString().split('T')[0]) {
+                        streak++;
+                    } else {
+                        break;
+                    }
+                }
+            }
         }
+        
+        const streakMsg = streak > 1 
+            ? `¡Llevas ${streak} días seguidos escribiendo! Esa constancia es clave.` 
+            : (streak === 1 ? "Has empezado una racha hoy. ¡Vuelve mañana para mantenerla!" : "Hace días que no escribes. Hoy es un buen día para retomar.");
+        
+        document.getElementById('insightRacha').textContent = streakMsg;
+
+        // 2. Patrón de Día Preferido
+        const dayCounts = [0, 0, 0, 0, 0, 0, 0];
+        entries.forEach(e => dayCounts[new Date(e.fecha).getDay()]++);
+        
+        const maxVal = Math.max(...dayCounts);
+        const maxDayIndex = dayCounts.indexOf(maxVal);
+        const dayNames = ["Domingos", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábados"];
+        
+        if (entries.length < 3) {
+            document.getElementById('insightPattern').textContent = "Aún estamos aprendiendo tus hábitos. Escribe un poco más para ver patrones.";
+        } else {
+            document.getElementById('insightPattern').textContent = `Parece que los ${dayNames[maxDayIndex]} son tu momento de mayor reflexión.`;
+        }
+    }
+
+    function analyzeTrend(tests) {
+        if (tests.length < 2) {
+            document.getElementById('insightTrend').textContent = "Necesitamos al menos dos evaluaciones para decirte cómo has avanzado.";
+            return;
+        }
+
+        // Comparar último vs penúltimo
+        const last = tests[tests.length - 1];
+        const prev = tests[tests.length - 2];
+
+        let msg = "";
+        if (last.nivel_animo > prev.nivel_animo) {
+            msg = "¡Tu ánimo ha mejorado desde la última vez! Sigue cuidando de ti.";
+        } else if (last.nivel_ansiedad < prev.nivel_ansiedad) {
+            msg = "Has logrado reducir tu ansiedad comparado con el test anterior. ¡Gran trabajo!";
+        } else if (Math.abs(last.nivel_animo - prev.nivel_animo) <= 1) {
+            msg = "Tu bienestar se mantiene estable. La estabilidad también es un logro.";
+        } else {
+            msg = "Parece que ha sido una semana difícil. Recuerda ser amable contigo mismo.";
+        }
+        document.getElementById('insightTrend').textContent = msg;
     }
 
     async function handleLogout() {
