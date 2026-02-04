@@ -23,555 +23,111 @@
       --info: #3B82F6;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--background); color: var(--dark); line-height: 1.6; }
+    h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; font-weight: 600; }
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--background);
-      color: var(--dark);
-      line-height: 1.6;
-    }
-
-    h1, h2, h3, h4 {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 600;
-    }
-
-    .dashboard-container {
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      min-height: 100vh;
-    }
+    .dashboard-container { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
 
     /* Sidebar */
-    .sidebar {
-      background: white;
-      border-right: 1px solid var(--border);
-      padding: 24px 0;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .sidebar-header {
-      padding: 0 24px 24px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 1.3rem;
-      color: var(--primary);
-      text-decoration: none;
-    }
-
-    .logo i {
-      font-size: 1.5rem;
-    }
-
-    .sidebar-nav {
-      flex: 1;
-      padding: 24px 0;
-      overflow-y: auto;
-    }
-
-    .nav-section {
-      margin-bottom: 24px;
-    }
-
-    .nav-section-title {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-secondary);
-      padding: 0 24px 8px;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 24px;
-      color: var(--dark);
-      text-decoration: none;
-      transition: all 0.2s;
-      border-left: 3px solid transparent;
-    }
-
-    .nav-item:hover {
-      background: var(--background);
-      color: var(--primary);
-    }
-
-    .nav-item.active {
-      background: rgba(79, 111, 82, 0.08);
-      color: var(--primary);
-      border-left-color: var(--primary);
-      font-weight: 600;
-    }
-
-    .nav-item i {
-      font-size: 1.2rem;
-      width: 20px;
-    }
-
+    .sidebar { background: white; border-right: 1px solid var(--border); padding: 24px 0; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
+    .sidebar-header { padding: 0 24px 24px; border-bottom: 1px solid var(--border); }
+    .logo { display: flex; align-items: center; gap: 12px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--primary); text-decoration: none; }
+    .sidebar-nav { flex: 1; padding: 24px 0; overflow-y: auto; }
+    .nav-section { margin-bottom: 24px; }
+    .nav-section-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); padding: 0 24px 8px; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 24px; color: var(--dark); text-decoration: none; transition: all 0.2s; border-left: 3px solid transparent; }
+    .nav-item:hover { background: var(--background); color: var(--primary); }
+    .nav-item.active { background: rgba(79, 111, 82, 0.08); color: var(--primary); border-left-color: var(--primary); font-weight: 600; }
+    
     /* Main Content */
-    .main-content {
-      padding: 32px 40px;
-      max-width: 1400px;
-    }
+    .main-content { padding: 32px 40px; max-width: 1400px; }
+    .page-header { margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; }
+    .page-title h1 { font-size: 2rem; margin-bottom: 8px; }
+    .page-subtitle { color: var(--text-secondary); font-size: 1rem; }
 
-    .page-header {
-      margin-bottom: 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .btn { padding: 12px 24px; border-radius: 12px; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; border: none; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(79, 111, 82, 0.3); }
+    .btn-primary:hover { background: var(--primary-light); transform: translateY(-2px); }
 
-    .page-title h1 {
-      font-size: 2rem;
-      margin-bottom: 8px;
-    }
-
-    .page-subtitle {
-      color: var(--text-secondary);
-      font-size: 1rem;
-    }
-
-    .btn {
-      padding: 12px 24px;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: all 0.3s;
-      border: none;
-      font-family: 'DM Sans', sans-serif;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-      box-shadow: 0 4px 15px rgba(79, 111, 82, 0.3);
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-light);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(79, 111, 82, 0.4);
-    }
+    /* Stats Grid */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 32px; }
+    .stat-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+    .stat-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(79, 111, 82, 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: var(--primary); font-size: 1.5rem; }
+    .stat-value { font-size: 2rem; font-weight: 700; color: var(--primary); }
+    .stat-label { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px; }
 
     /* Tabs */
-    .tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 32px;
-      border-bottom: 2px solid var(--border);
-      padding-bottom: 0;
-    }
+    .tabs { display: flex; gap: 8px; margin-bottom: 32px; border-bottom: 2px solid var(--border); padding-bottom: 0; }
+    .tab { padding: 12px 24px; background: none; border: none; color: var(--text-secondary); font-weight: 600; cursor: pointer; position: relative; font-size: 1rem; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+    .tab:hover { color: var(--primary); }
+    .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .tab-badge { background: var(--primary); color: white; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; margin-left: 8px; }
+    
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    .tab {
-      padding: 12px 24px;
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      font-weight: 600;
-      cursor: pointer;
-      position: relative;
-      transition: all 0.2s;
-      font-size: 1rem;
-      border-bottom: 3px solid transparent;
-      margin-bottom: -2px;
-    }
+    /* Appointments */
+    .appointments-grid { display: grid; gap: 20px; }
+    .appointment-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border-left: 4px solid var(--primary); transition: all 0.3s; }
+    .appointment-card.completed { border-left-color: var(--success); opacity: 0.9; }
+    .appointment-card.cancelled { border-left-color: var(--danger); opacity: 0.8; }
+    
+    .appointment-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+    .appointment-date { font-size: 1.3rem; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+    .appointment-time { color: var(--text-secondary); font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
+    
+    .status-badge { padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 600; }
+    .status-badge.upcoming { background: rgba(59, 130, 246, 0.1); color: var(--info); }
+    .status-badge.completed { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+    .status-badge.cancelled { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
 
-    .tab:hover {
-      color: var(--primary);
-    }
+    .appointment-details { display: grid; grid-template-columns: auto 1fr; gap: 16px; margin-bottom: 20px; }
+    .psychologist-avatar { width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; }
+    .psychologist-info h3 { font-size: 1.1rem; margin-bottom: 4px; }
+    .psychologist-specialty { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px; }
+    
+    .appointment-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+    .meta-item { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; color: var(--text-secondary); }
+    .meta-item i { color: var(--primary); }
 
-    .tab.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-    }
+    .appointment-actions { display: flex; gap: 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .btn-action { flex: 1; padding: 10px 16px; border-radius: 10px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; border: 2px solid var(--border); background: white; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-action:hover { border-color: var(--primary); background: rgba(79, 111, 82, 0.05); }
+    .btn-action.danger:hover { border-color: var(--danger); background: rgba(239, 68, 68, 0.05); color: var(--danger); }
 
-    .tab-badge {
-      background: var(--primary);
-      color: white;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      margin-left: 8px;
-    }
-
-    /* Tab Content */
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-      animation: fadeIn 0.3s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Appointment Cards */
-    .appointments-grid {
-      display: grid;
-      gap: 20px;
-    }
-
-    .appointment-card {
-      background: white;
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-      border-left: 4px solid var(--primary);
-      transition: all 0.3s;
-    }
-
-    .appointment-card:hover {
-      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-      transform: translateY(-2px);
-    }
-
-    .appointment-card.completed {
-      border-left-color: var(--success);
-      opacity: 0.9;
-    }
-
-    .appointment-card.cancelled {
-      border-left-color: var(--danger);
-      opacity: 0.8;
-    }
-
-    .appointment-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 20px;
-    }
-
-    .appointment-info {
-      flex: 1;
-    }
-
-    .appointment-date {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--dark);
-      margin-bottom: 4px;
-    }
-
-    .appointment-time {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .status-badge {
-      padding: 6px 14px;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    .status-badge.upcoming {
-      background: rgba(59, 130, 246, 0.1);
-      color: var(--info);
-    }
-
-    .status-badge.today {
-      background: rgba(245, 158, 11, 0.1);
-      color: var(--warning);
-    }
-
-    .status-badge.completed {
-      background: rgba(16, 185, 129, 0.1);
-      color: var(--success);
-    }
-
-    .status-badge.cancelled {
-      background: rgba(239, 68, 68, 0.1);
-      color: var(--danger);
-    }
-
-    .appointment-details {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-
-    .psychologist-avatar {
-      width: 60px;
-      height: 60px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-
-    .psychologist-info h3 {
-      font-size: 1.1rem;
-      margin-bottom: 4px;
-    }
-
-    .psychologist-specialty {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      margin-bottom: 8px;
-    }
-
-    .appointment-meta {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .meta-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-    }
-
-    .meta-item i {
-      color: var(--primary);
-    }
-
-    .appointment-actions {
-      display: flex;
-      gap: 12px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-    }
-
-    .btn-action {
-      flex: 1;
-      padding: 10px 16px;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      border: 2px solid var(--border);
-      background: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-action:hover {
-      border-color: var(--primary);
-      background: rgba(79, 111, 82, 0.05);
-    }
-
-    .btn-action.danger:hover {
-      border-color: var(--danger);
-      background: rgba(239, 68, 68, 0.05);
-      color: var(--danger);
-    }
-
-    /* Empty State */
-    .empty-state {
-      text-align: center;
-      padding: 80px 20px;
-    }
-
-    .empty-icon {
-      font-size: 5rem;
-      color: var(--border);
-      margin-bottom: 20px;
-    }
-
-    .empty-title {
-      font-size: 1.5rem;
-      margin-bottom: 12px;
-      color: var(--dark);
-    }
-
-    .empty-text {
-      color: var(--text-secondary);
-      margin-bottom: 24px;
-      font-size: 1rem;
-    }
-
-    /* Stats */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin-bottom: 32px;
-    }
-
-    .stat-card {
-      background: white;
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-    }
-
-    .stat-label {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      margin-bottom: 8px;
-    }
-
-    .stat-value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--primary);
-    }
-
-    .stat-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      background: rgba(79, 111, 82, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-      color: var(--primary);
-      font-size: 1.5rem;
-    }
+    .empty-state { text-align: center; padding: 80px 20px; }
+    .empty-icon { font-size: 5rem; color: var(--border); margin-bottom: 20px; }
+    .empty-title { font-size: 1.5rem; margin-bottom: 12px; color: var(--dark); }
+    .empty-text { color: var(--text-secondary); margin-bottom: 24px; font-size: 1rem; }
 
     /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+    .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+    .modal.active { display: flex; }
+    .modal-content { background: white; border-radius: 20px; padding: 32px; max-width: 500px; width: 100%; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .modal-title { font-size: 1.5rem; }
+    .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); }
+    .modal-actions { display: flex; gap: 12px; }
 
-    .modal.active {
-      display: flex;
-    }
-
-    .modal-content {
-      background: white;
-      border-radius: 20px;
-      padding: 32px;
-      max-width: 500px;
-      width: 100%;
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-    }
-
-    .modal-title {
-      font-size: 1.5rem;
-    }
-
-    .modal-close {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: var(--text-secondary);
-    }
-
-    .modal-close:hover {
-      color: var(--dark);
-    }
-
-    .modal-text {
-      color: var(--text-secondary);
-      margin-bottom: 24px;
-      line-height: 1.6;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 12px;
-    }
-
-    /* Mobile */
     @media (max-width: 968px) {
-      .dashboard-container {
-        grid-template-columns: 1fr;
-      }
-
-      .sidebar {
-        display: none;
-      }
-
-      .main-content {
-        padding: 20px;
-      }
-
-      .page-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
-      }
-
-      .tabs {
-        overflow-x: auto;
-        white-space: nowrap;
-      }
-
-      .appointment-details {
-        grid-template-columns: 1fr;
-      }
-
-      .appointment-actions {
-        flex-direction: column;
-      }
+      .dashboard-container { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .main-content { padding: 20px; }
+      .page-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .tabs { overflow-x: auto; white-space: nowrap; }
+      .appointment-details { grid-template-columns: 1fr; }
+      .appointment-actions { flex-direction: column; }
     }
   </style>
 </head>
 <body>
   <div class="dashboard-container">
-    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-header">
         <a href="dashboard.html" class="logo">
-          <i class="fas fa-brain"></i>
-          Bitácora Mental
+          <i class="fas fa-brain"></i> Bitácora Mental
         </a>
       </div>
 
@@ -579,34 +135,23 @@
         <div class="nav-section">
           <div class="nav-section-title">Principal</div>
           <a href="dashboard.html" class="nav-item">
-            <i class="fas fa-home"></i>
-            <span>Dashboard</span>
+            <i class="fas fa-home"></i> <span>Dashboard</span>
           </a>
           <a href="citas.html" class="nav-item active">
-            <i class="fas fa-calendar-alt"></i>
-            <span>Mis Citas</span>
+            <i class="fas fa-calendar-alt"></i> <span>Mis Citas</span>
           </a>
           <a href="agendar.html" class="nav-item">
-            <i class="fas fa-calendar-plus"></i>
-            <span>Agendar Cita</span>
+            <i class="fas fa-calendar-plus"></i> <span>Agendar Cita</span>
           </a>
         </div>
-
         <div class="nav-section">
           <div class="nav-section-title">Mi Espacio</div>
-          <a href="diario.html" class="nav-item">
-            <i class="fas fa-book"></i>
-            <span>Mi Diario</span>
-          </a>
-          <a href="progreso.html" class="nav-item">
-            <i class="fas fa-chart-line"></i>
-            <span>Mi Progreso</span>
-          </a>
+          <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> <span>Mi Diario</span></a>
+          <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> <span>Mi Progreso</span></a>
         </div>
       </nav>
     </aside>
 
-    <!-- Main Content -->
     <main class="main-content">
       <div class="page-header">
         <div class="page-title">
@@ -614,380 +159,208 @@
           <p class="page-subtitle">Gestiona tus sesiones y revisa tu historial</p>
         </div>
         <a href="agendar.html" class="btn btn-primary">
-          <i class="fas fa-plus"></i>
-          Agendar nueva cita
+          <i class="fas fa-plus"></i> Agendar nueva cita
         </a>
       </div>
 
-      <!-- Stats -->
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-calendar-check"></i>
-          </div>
+          <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
           <div class="stat-label">Sesiones completadas</div>
-          <div class="stat-value" id="completedCount">8</div>
+          <div class="stat-value" id="completedCount">0</div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-clock"></i>
-          </div>
+          <div class="stat-icon"><i class="fas fa-clock"></i></div>
           <div class="stat-label">Próximas citas</div>
-          <div class="stat-value" id="upcomingCount">1</div>
+          <div class="stat-value" id="upcomingCount">0</div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-chart-line"></i>
-          </div>
+          <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
           <div class="stat-label">Horas de terapia</div>
-          <div class="stat-value" id="totalHours">6.7</div>
+          <div class="stat-value" id="totalHours">0.0</div>
         </div>
       </div>
 
-      <!-- Tabs -->
       <div class="tabs">
-        <button class="tab active" onclick="switchTab('upcoming')">
-          Próximas
-          <span class="tab-badge" id="upcomingBadge">1</span>
-        </button>
-        <button class="tab" onclick="switchTab('completed')">
-          Completadas
-        </button>
-        <button class="tab" onclick="switchTab('cancelled')">
-          Canceladas
-        </button>
+        <button class="tab active" onclick="switchTab('upcoming')">Próximas <span class="tab-badge" id="upcomingBadge">0</span></button>
+        <button class="tab" onclick="switchTab('completed')">Completadas</button>
+        <button class="tab" onclick="switchTab('cancelled')">Canceladas</button>
       </div>
 
-      <!-- Upcoming Appointments -->
       <div class="tab-content active" id="upcomingContent">
         <div class="appointments-grid" id="upcomingAppointments"></div>
       </div>
-
-      <!-- Completed Appointments -->
       <div class="tab-content" id="completedContent">
         <div class="appointments-grid" id="completedAppointments"></div>
       </div>
-
-      <!-- Cancelled Appointments -->
       <div class="tab-content" id="cancelledContent">
         <div class="appointments-grid" id="cancelledAppointments"></div>
       </div>
     </main>
   </div>
 
-  <!-- Cancel Confirmation Modal -->
   <div class="modal" id="cancelModal">
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title">Cancelar cita</h3>
-        <button class="modal-close" onclick="closeModal()">
-          <i class="fas fa-times"></i>
-        </button>
+        <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
       </div>
-      <p class="modal-text">
-        ¿Estás seguro/a de que deseas cancelar esta cita? Esta acción no se puede deshacer.
-      </p>
-      <p class="modal-text" style="font-size: 0.9rem;">
-        <strong>Política de cancelación:</strong> Las cancelaciones deben realizarse con al menos 24 horas de anticipación.
-      </p>
+      <p class="modal-text">¿Estás seguro/a de que deseas cancelar esta cita? Esta acción no se puede deshacer.</p>
       <div class="modal-actions">
-        <button class="btn-action" onclick="closeModal()">
-          No, mantener cita
-        </button>
-        <button class="btn-action danger" onclick="confirmCancel()">
-          <i class="fas fa-times-circle"></i>
-          Sí, cancelar
-        </button>
+        <button class="btn-action" onclick="closeModal()">No, mantener</button>
+        <button class="btn-action danger" onclick="confirmCancel()"><i class="fas fa-times-circle"></i> Sí, cancelar</button>
       </div>
     </div>
   </div>
 
-            <script>
-              // DATOS DE EJEMPLO (en producción vendrían de Supabase)
-              // Cargar citas del usuario
-          async function loadAppointments() {
-            const user = await getCurrentUser()
-          
-            const { data, error } = await supabase
-              .from('citas')
-              .select(`
-                *,
-                psicologos (nombre_completo, especialidades)
-              `)
-              .eq('paciente_id', user.id)
-              .order('fecha_hora', { ascending: true })
-          
-            // Separar por estado
-            const upcoming = data.filter(c => c.estado === 'agendada')
-            const completed = data.filter(c => c.estado === 'completada')
-            const cancelled = data.filter(c => c.estado === 'cancelada')
-          
-            renderAppointments(upcoming, completed, cancelled)
-          }
-          
-          // Cancelar cita
-          async function cancelAppointment(id) {
-            const { error } = await supabase
-              .from('citas')
-              .update({ estado: 'cancelada' })
-              .eq('id', id)
-          
-            if (!error) {
-              loadAppointments() // Recargar
-            }
-          }
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
 
+  <script>
     let selectedAppointmentId = null;
 
-    // Render appointments
-    function renderAppointments() {
-      renderUpcoming();
-      renderCompleted();
-      renderCancelled();
-      updateStats();
+    async function loadAppointments() {
+        // 1. Obtener usuario
+        const { data: { user } } = await window.supabase.auth.getUser();
+        if (!user) {
+            window.location.href = '../login.html';
+            return;
+        }
+
+        // 2. Consulta Real a Supabase
+        const { data: appointments, error } = await window.supabase
+            .from('citas')
+            .select(`
+                id,
+                fecha_hora,
+                estado,
+                duracion,
+                costo,
+                link_videollamada,
+                psicologos (nombre_completo, especialidades)
+            `)
+            .eq('paciente_id', user.id)
+            .order('fecha_hora', { ascending: true });
+
+        if (error) {
+            console.error('Error cargando citas:', error);
+            return;
+        }
+
+        // 3. Procesar datos reales
+        const upcoming = appointments.filter(c => c.estado === 'agendada');
+        const completed = appointments.filter(c => c.estado === 'completada');
+        const cancelled = appointments.filter(c => c.estado === 'cancelada');
+
+        // Actualizar estadísticas (Si no hay datos, se queda en 0 por default)
+        document.getElementById('completedCount').textContent = completed.length;
+        document.getElementById('upcomingCount').textContent = upcoming.length;
+        document.getElementById('upcomingBadge').textContent = upcoming.length;
+        
+        // Calcular horas (asumiendo 50 mins por sesión si no hay duración)
+        const totalMinutes = completed.reduce((sum, apt) => sum + (apt.duracion || 50), 0);
+        document.getElementById('totalHours').textContent = (totalMinutes / 60).toFixed(1);
+
+        // Renderizar listas
+        renderList(upcoming, 'upcomingAppointments', 'upcoming');
+        renderList(completed, 'completedAppointments', 'completed');
+        renderList(cancelled, 'cancelledAppointments', 'cancelled');
     }
 
-    function renderUpcoming() {
-      const container = document.getElementById('upcomingAppointments');
-      
-      if (appointments.upcoming.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-icon"><i class="fas fa-calendar"></i></div>
-            <h3 class="empty-title">No tienes citas próximas</h3>
-            <p class="empty-text">Agenda una sesión con uno de nuestros especialistas</p>
-            <a href="agendar.html" class="btn btn-primary">
-              <i class="fas fa-calendar-plus"></i>
-              Agendar cita
-            </a>
-          </div>
-        `;
-        return;
-      };
+    function renderList(list, containerId, type) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
 
-      container.innerHTML = appointments.upcoming.map(apt => `
-        <div class="appointment-card">
-          <div class="appointment-header">
-            <div class="appointment-info">
-              <div class="appointment-date">${formatDate(apt.date)}</div>
-              <div class="appointment-time">
-                <i class="fas fa-clock"></i>
-                ${apt.time} hrs
-              </div>
-            </div>
-            <span class="status-badge ${apt.status}">
-              ${apt.status === 'today' ? 'Hoy' : 'Próxima'}
-            </span>
-          </div>
+        if (list.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon"><i class="fas fa-calendar-times"></i></div>
+                    <h3 class="empty-title">No hay citas en esta sección</h3>
+                    <p class="empty-text">${type === 'upcoming' ? 'Agenda tu próxima sesión para empezar.' : ''}</p>
+                    ${type === 'upcoming' ? `<a href="agendar.html" class="btn btn-primary">Agendar cita</a>` : ''}
+                </div>`;
+            return;
+        }
 
-          <div class="appointment-details">
-            <div class="psychologist-avatar">
-              ${apt.psychologist.split(' ')[1][0]}
-            </div>
-            <div class="psychologist-info">
-              <h3>${apt.psychologist}</h3>
-              <div class="psychologist-specialty">${apt.specialty}</div>
-              <div class="appointment-meta">
-                <div class="meta-item">
-                  <i class="fas fa-video"></i>
-                  <span>Videollamada</span>
+        list.forEach(apt => {
+            const date = new Date(apt.fecha_hora);
+            const docName = apt.psicologos?.nombre_completo || 'Psicólogo asignado';
+            const specialty = apt.psicologos?.especialidades || 'General';
+            const initial = docName.charAt(0);
+
+            const card = document.createElement('div');
+            card.className = `appointment-card ${type}`;
+            card.innerHTML = `
+                <div class="appointment-header">
+                    <div class="appointment-info">
+                        <div class="appointment-date">${date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
+                        <div class="appointment-time"><i class="fas fa-clock"></i> ${date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</div>
+                    </div>
+                    <span class="status-badge ${type}">${type === 'upcoming' ? 'Próxima' : (type === 'completed' ? 'Completada' : 'Cancelada')}</span>
                 </div>
-                <div class="meta-item">
-                  <i class="fas fa-hourglass-half"></i>
-                  <span>${apt.duration} minutos</span>
+                <div class="appointment-details">
+                    <div class="psychologist-avatar">${initial}</div>
+                    <div class="psychologist-info">
+                        <h3>${docName}</h3>
+                        <div class="psychologist-specialty">${specialty}</div>
+                        <div class="appointment-meta">
+                            <div class="meta-item"><i class="fas fa-video"></i> Videollamada</div>
+                            <div class="meta-item"><i class="fas fa-hourglass-half"></i> ${apt.duracion || 50} min</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="meta-item">
-                  <i class="fas fa-money-bill-wave"></i>
-                  <span>S/ ${apt.cost}</span>
+                <div class="appointment-actions">
+                    ${type === 'upcoming' ? `
+                        <button class="btn-action" onclick="window.open('${apt.link_videollamada}', '_blank')"><i class="fas fa-video"></i> Unirse</button>
+                        <button class="btn-action danger" onclick="openCancelModal('${apt.id}')"><i class="fas fa-times"></i> Cancelar</button>
+                    ` : ''}
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="appointment-actions">
-            ${apt.status === 'today' ? `
-              <button class="btn-action" onclick="joinSession('${apt.videoLink}')" style="background: var(--primary); color: white; border-color: var(--primary);">
-                <i class="fas fa-video"></i>
-                Unirse a la sesión
-              </button>
-            ` : `
-              <button class="btn-action" onclick="reschedule(${apt.id})">
-                <i class="fas fa-calendar"></i>
-                Reprogramar
-              </button>
-              <button class="btn-action danger" onclick="openCancelModal(${apt.id})">
-                <i class="fas fa-times-circle"></i>
-                Cancelar
-              </button>
-            `}
-          </div>
-        </div>
-      `).join('');
+            `;
+            container.appendChild(card);
+        });
     }
 
-    function renderCompleted() {
-      const container = document.getElementById('completedAppointments');
-      
-      if (appointments.completed.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-icon"><i class="fas fa-check-circle"></i></div>
-            <h3 class="empty-title">Sin sesiones completadas</h3>
-            <p class="empty-text">Tus sesiones completadas aparecerán aquí</p>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = appointments.completed.map(apt => `
-        <div class="appointment-card completed">
-          <div class="appointment-header">
-            <div class="appointment-info">
-              <div class="appointment-date">${formatDate(apt.date)}</div>
-              <div class="appointment-time">
-                <i class="fas fa-clock"></i>
-                ${apt.time} hrs
-              </div>
-            </div>
-            <span class="status-badge completed">
-              <i class="fas fa-check-circle"></i>
-              Completada
-            </span>
-          </div>
-
-          <div class="appointment-details">
-            <div class="psychologist-avatar">
-              ${apt.psychologist.split(' ')[1][0]}
-            </div>
-            <div class="psychologist-info">
-              <h3>${apt.psychologist}</h3>
-              <div class="psychologist-specialty">${apt.specialty}</div>
-              ${apt.notes ? `<p style="margin-top: 12px; font-size: 0.9rem; color: var(--text-secondary);"><i class="fas fa-sticky-note"></i> ${apt.notes}</p>` : ''}
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function renderCancelled() {
-      const container = document.getElementById('cancelledAppointments');
-      
-      if (appointments.cancelled.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-icon"><i class="fas fa-ban"></i></div>
-            <h3 class="empty-title">Sin citas canceladas</h3>
-            <p class="empty-text">Aquí aparecerán las citas que hayas cancelado</p>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = appointments.cancelled.map(apt => `
-        <div class="appointment-card cancelled">
-          <div class="appointment-header">
-            <div class="appointment-info">
-              <div class="appointment-date">${formatDate(apt.date)}</div>
-              <div class="appointment-time">
-                <i class="fas fa-clock"></i>
-                ${apt.time} hrs
-              </div>
-            </div>
-            <span class="status-badge cancelled">
-              <i class="fas fa-times-circle"></i>
-              Cancelada
-            </span>
-          </div>
-
-          <div class="appointment-details">
-            <div class="psychologist-avatar">
-              ${apt.psychologist.split(' ')[1][0]}
-            </div>
-            <div class="psychologist-info">
-              <h3>${apt.psychologist}</h3>
-              <div class="psychologist-specialty">${apt.specialty}</div>
-              ${apt.cancelReason ? `<p style="margin-top: 12px; font-size: 0.9rem; color: var(--text-secondary);"><i class="fas fa-info-circle"></i> ${apt.cancelReason}</p>` : ''}
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function updateStats() {
-      document.getElementById('completedCount').textContent = appointments.completed.length;
-      document.getElementById('upcomingCount').textContent = appointments.upcoming.length;
-      document.getElementById('upcomingBadge').textContent = appointments.upcoming.length;
-      
-      const totalMinutes = appointments.completed.reduce((sum, apt) => sum + apt.duration, 0);
-      document.getElementById('totalHours').textContent = (totalMinutes / 60).toFixed(1);
-    }
-
-    function formatDate(dateStr) {
-      const date = new Date(dateStr);
-      const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-      return `${date.getDate()} ${months[date.getMonth()]}`;
-    }
-
-    function switchTab(tab) {
-      // Update tabs
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      event.target.classList.add('active');
-
-      // Update content
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      document.getElementById(tab + 'Content').classList.add('active');
-    }
-
-    function joinSession(link) {
-      window.open(link, '_blank');
-    }
-
-    function reschedule(id) {
-      // En producción, redirigir a página de reagendamiento
-      alert('Función de reprogramación próximamente disponible');
-      // window.location.href = `agendar.html?reschedule=${id}`;
-    }
-
+    // Funciones de Cancelación (Conectadas a Supabase)
     function openCancelModal(id) {
-      selectedAppointmentId = id;
-      document.getElementById('cancelModal').classList.add('active');
+        selectedAppointmentId = id;
+        document.getElementById('cancelModal').classList.add('active');
     }
 
     function closeModal() {
-      document.getElementById('cancelModal').classList.remove('active');
-      selectedAppointmentId = null;
+        document.getElementById('cancelModal').classList.remove('active');
+        selectedAppointmentId = null;
     }
 
     async function confirmCancel() {
-      if (!selectedAppointmentId) return;
+        if (!selectedAppointmentId) return;
 
-      // AQUÍ VA LA INTEGRACIÓN CON SUPABASE
-      // const { error } = await supabase
-      //   .from('citas')
-      //   .update({ estado: 'cancelada' })
-      //   .eq('id', selectedAppointmentId)
+        try {
+            const { error } = await window.supabase
+                .from('citas')
+                .update({ estado: 'cancelada' })
+                .eq('id', selectedAppointmentId);
 
-      // Simulación
-      const aptIndex = appointments.upcoming.findIndex(a => a.id === selectedAppointmentId);
-      if (aptIndex !== -1) {
-        const apt = appointments.upcoming.splice(aptIndex, 1)[0];
-        apt.status = 'cancelled';
-        apt.cancelReason = 'Cancelada por el paciente';
-        appointments.cancelled.unshift(apt);
-      }
+            if (error) throw error;
 
-      closeModal();
-      renderAppointments();
-      alert('Cita cancelada exitosamente');
+            closeModal();
+            loadAppointments(); // Recargar lista
+            alert('Cita cancelada correctamente');
+        } catch (err) {
+            console.error('Error al cancelar:', err);
+            alert('Hubo un error al cancelar la cita.');
+        }
     }
 
-    // Initialize 
-    renderAppointments();
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        event.currentTarget.classList.add('active');
+        document.getElementById(tabName + 'Content').classList.add('active');
+    }
+
+    // Iniciar
+    document.addEventListener('DOMContentLoaded', loadAppointments);
   </script>
-  
-    <!-- Supabase SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/js/supabase-config.js"></script>
-  
 </body>
 </html>
