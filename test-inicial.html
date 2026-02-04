@@ -26,103 +26,111 @@
     body { font-family: 'DM Sans', sans-serif; background: var(--background); color: var(--dark); line-height: 1.6; }
     h1, h2, h3 { font-family: 'Outfit', sans-serif; }
 
-    .test-container { max-width: 900px; margin: 0 auto; padding: 40px 20px; min-height: 100vh; }
-    .test-header { text-align: center; margin-bottom: 40px; }
-    .logo { display: inline-flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.4rem; color: var(--primary); text-decoration: none; }
-
-    /* Cards */
+    .test-container { max-width: 850px; margin: 0 auto; padding: 40px 20px; min-height: 100vh; }
+    
+    /* Elements */
     .card { background: white; border-radius: 24px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); margin-bottom: 30px; border: 1px solid var(--border); }
     .welcome-screen { text-align: center; }
-    .welcome-icon { font-size: 4rem; color: var(--primary); margin-bottom: 20px; }
-
-    /* Progress Bar */
+    
+    /* Progress */
     .progress-container { margin-bottom: 32px; background: white; padding: 20px; border-radius: 16px; border: 1px solid var(--border); }
-    .progress-bar { width: 100%; height: 10px; background: var(--border); border-radius: 10px; overflow: hidden; }
+    .progress-bar { width: 100%; height: 8px; background: var(--border); border-radius: 10px; overflow: hidden; }
     .progress-fill { height: 100%; background: var(--primary); transition: width 0.4s ease; width: 0%; }
 
-    /* Questions */
-    .question-card { display: none; animation: fadeInUp 0.5s ease; }
-    .question-card.active { display: block; }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
+    /* Messages & Validation */
+    .validation-msg { background: #E8F3EC; color: var(--primary); padding: 15px; border-radius: 12px; margin-bottom: 20px; font-weight: 600; font-size: 0.9rem; animation: fadeIn 0.5s ease; display: none; }
+    
+    /* Options */
     .scale-options { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 30px 0; }
     .scale-option { aspect-ratio: 1; border: 2px solid var(--border); border-radius: 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.3s; }
     .scale-option.selected { background: var(--primary); border-color: var(--primary); color: white; transform: scale(1.05); }
 
-    /* Results */
+    /* Results Screen */
     .results-screen { display: none; }
     .results-screen.active { display: block; }
-    .score-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 30px 0; }
-    .score-item { background: var(--background); padding: 20px; border-radius: 15px; text-align: center; }
-    .score-value { font-size: 2rem; font-weight: 700; color: var(--primary); }
+    .casuistica-box { background: #f0f4f1; padding: 25px; border-radius: 18px; margin: 20px 0; border-left: 5px solid var(--primary); text-align: left; }
+    .tip-box { background: #FFF9E6; padding: 20px; border-radius: 15px; margin: 20px 0; border: 1px solid #FFE082; }
+    
+    .btn { width: 100%; padding: 16px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; transition: 0.3s; font-size: 1rem; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-plan { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; margin-top: 15px; }
 
-    /* Conversion Elements */
-    .countdown-timer { background: #FFF4F4; color: #D32F2F; padding: 10px 20px; border-radius: 50px; font-weight: 700; display: inline-block; margin-bottom: 20px; border: 1px solid #FFCDD2; }
-    .guarantee-badge { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.85rem; color: var(--text-secondary); margin-top: 15px; }
+    /* Countdown & Urgency */
+    .countdown-timer { background: #FFF4F4; color: #D32F2F; padding: 8px 15px; border-radius: 50px; font-weight: 700; font-size: 0.85rem; margin-bottom: 20px; display: inline-block; border: 1px solid #FFCDD2; }
 
-    /* Planes */
-    .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; }
-    .plan-card { background: white; border: 2px solid var(--border); border-radius: 20px; padding: 30px; position: relative; transition: 0.3s; }
-    .plan-card.recommended { border-color: var(--primary); transform: scale(1.03); box-shadow: 0 15px 30px rgba(79, 111, 82, 0.15); }
-    .plan-badge { position: absolute; top: -12px; right: 20px; background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; }
-
-    .btn { width: 100%; padding: 16px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; transition: 0.3s; font-family: 'DM Sans', sans-serif; font-size: 1rem; }
-    .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(79, 111, 82, 0.3); }
-    .btn-primary:hover { transform: translateY(-3px); background: var(--primary-light); }
-    .btn-plan { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; margin-top: 20px; }
-
-    @media (max-width: 768px) { .score-grid, .plans-grid { grid-template-columns: 1fr; } .scale-label { display: none; } }
+    @media (max-width: 768px) { .scale-options { gap: 8px; } .scale-option { border-radius: 10px; } }
   </style>
 </head>
 <body>
   <div class="test-container">
-    <div class="test-header">
-      <a href="index.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
+    <div class="test-header" style="text-align: center; margin-bottom: 30px;">
+      <a href="index.html" style="text-decoration: none; color: var(--primary); font-weight: 700; font-size: 1.5rem;"><i class="fas fa-brain"></i> Bitácora Mental</a>
     </div>
 
     <div class="progress-container" id="progressContainer" style="display: none;">
       <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-      <p style="text-align: center; margin-top: 10px; font-size: 0.9rem; color: var(--text-secondary);">Pregunta <span id="currentQNum">1</span> de 10</p>
+      <p style="text-align: center; margin-top: 10px; font-size: 0.85rem; color: var(--text-secondary);">Pregunta <span id="currentQNum">1</span> de 10</p>
     </div>
 
+    <div id="validationMsg" class="validation-msg"></div>
+
     <div class="card welcome-screen" id="welcomeScreen">
-      <div class="welcome-icon"><i class="fas fa-clipboard-check"></i></div>
-      <h1>Evaluación de Bienestar</h1>
-      <p>Entiende tu estado emocional hoy. Solo toma 5 minutos y es totalmente privado.</p>
-      <div class="info-box">
-        <div class="info-item"><i class="fas fa-shield-alt"></i><span>Resultados 100% privados</span></div>
-        <div class="info-item"><i class="fas fa-magic"></i><span>Recomendación personalizada de plan</span></div>
+      <div style="font-size: 4rem; color: var(--primary); margin-bottom: 20px;"><i class="fas fa-heartbeat"></i></div>
+      <h1>Test de Bienestar Emocional</h1>
+      <p>Este es un espacio seguro. Responde con honestidad para que podamos entender tu momento actual y ofrecerte el apoyo que realmente necesitas.</p>
+      <div style="background: var(--background); padding: 20px; border-radius: 15px; margin: 25px 0; text-align: left;">
+        <div style="margin-bottom: 10px;"><i class="fas fa-clock" style="color: var(--primary)"></i> 5 minutos de introspección</div>
+        <div style="margin-bottom: 10px;"><i class="fas fa-lock" style="color: var(--primary)"></i> 100% privado y confidencial</div>
+        <div><i class="fas fa-gift" style="color: var(--primary)"></i> Recursos gratuitos al finalizar</div>
       </div>
-      <button class="btn btn-primary" onclick="startTest()">Comenzar Evaluación Gratis</button>
+      <button class="btn btn-primary" onclick="startTest()">Comenzar con calma</button>
     </div>
 
     <div id="questionsContainer"></div>
 
     <div class="results-screen" id="resultsScreen">
       <div class="card" style="text-align: center;">
-        <div class="countdown-timer"><i class="fas fa-clock"></i> Oferta de bienvenida expira en: <span id="timer">15:00</span></div>
-        <h2>Tu perfil de bienestar</h2>
-        <div class="score-grid" id="scoresGrid"></div>
-        <p id="recommendationText" style="color: var(--text-secondary);"></p>
+        <div class="countdown-timer" id="countdownBanner"><i class="fas fa-clock"></i> Tu reporte y recursos expiran en: <span id="timer">15:00</span></div>
+        <h2 id="resultTitle">Analizando tus respuestas...</h2>
+        
+        <div id="humanSummary" class="casuistica-box"></div>
+        
+        <div id="quickWin" class="tip-box"></div>
+
+        <div style="background: #E8F3EC; padding: 20px; border-radius: 15px; margin-top: 25px;">
+          <h4 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-user-md"></i> Orientación Clínica Sugerida</h4>
+          <p id="clinicalMatch" style="font-size: 0.95rem;"></p>
+        </div>
       </div>
 
-      <h3 style="text-align: center; margin: 40px 0 20px;">Planes sugeridos para tu nivel de necesidad</h3>
-      <div class="plans-grid" id="plansGrid"></div>
+      <div class="card" style="background: var(--primary); color: white; text-align: center;">
+        <h3>🎁 ¡Tu Regalo de Bienvenida está listo!</h3>
+        <p style="margin: 15px 0; opacity: 0.9;">Hemos desbloqueado recursos gratuitos para tu perfil en tu cuenta nueva:</p>
+        <ul style="text-align: left; margin: 0 auto 25px; max-width: 400px; font-size: 0.9rem;">
+          <li><i class="fas fa-check"></i> Guía: "Pasos para tu primera sesión"</li>
+          <li><i class="fas fa-check"></i> Audio de respiración para tu perfil</li>
+          <li><i class="fas fa-check"></i> Tu reporte detallado en PDF</li>
+        </ul>
+        <button class="btn" style="background: white; color: var(--primary);" onclick="window.location.href='registro.html'">Guardar mis resultados y recursos gratis</button>
+      </div>
+
+      <h3 style="text-align: center; margin: 40px 0 20px;">Planes de apoyo profesional personalizados</h3>
+      <div id="plansGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;"></div>
     </div>
   </div>
 
   <script>
     const questions = [
-      { id: 1, cat: 'ansiedad', text: '¿Con qué frecuencia te sientes nervioso/a o ansioso/a?' },
-      { id: 2, cat: 'ansiedad', text: '¿Te cuesta relajarte o tranquilizarte?' },
-      { id: 3, cat: 'estres', text: '¿Te sientes abrumado/a por tus responsabilidades?' },
-      { id: 4, cat: 'estres', text: '¿Tienes dificultad para concentrarte?' },
-      { id: 5, cat: 'animo', text: '¿Cómo describirías tu estado de ánimo general?' },
-      { id: 6, cat: 'animo', text: '¿Disfrutas de las actividades habituales?' },
-      { id: 7, cat: 'sueno', text: '¿Cómo calificarías la calidad de tu sueño?' },
-      { id: 8, cat: 'social', text: '¿Te sientes conectado/a con otros?' },
-      { id: 9, cat: 'motivacion', text: '¿Sientes motivación para tus metas?' },
-      { id: 10, cat: 'general', text: '¿Cómo calificarías tu bienestar emocional actual?' }
+      { id: 1, cat: 'ansiedad', text: '¿Con qué frecuencia te sientes nervioso/a o con inquietud?', labels: ['Nunca', 'Rara vez', 'A veces', 'Frecuente', 'Siempre'] },
+      { id: 2, cat: 'ansiedad', text: '¿Sientes que tus pensamientos van más rápido de lo que puedes manejar?', labels: ['Nunca', 'Rara vez', 'A veces', 'Frecuente', 'Siempre'] },
+      { id: 3, cat: 'estres', text: '¿Sientes que las responsabilidades diarias te abruman físicamente?', labels: ['Nunca', 'Rara vez', 'A veces', 'Frecuente', 'Siempre'] },
+      { id: 4, cat: 'sueno', text: '¿Te cuesta conciliar el sueño porque no puedes dejar de pensar?', labels: ['Nunca', 'Rara vez', 'A veces', 'Frecuente', 'Siempre'] },
+      { id: 5, cat: 'animo', text: '¿Cómo describirías tu nivel de energía emocional hoy?', labels: ['Muy bajo', 'Bajo', 'Neutro', 'Bueno', 'Excelente'] },
+      { id: 6, cat: 'animo', text: '¿Has perdido el interés por cosas que antes disfrutabas?', labels: ['Nunca', 'Rara vez', 'A veces', 'Frecuente', 'Siempre'] },
+      { id: 7, cat: 'social', text: '¿Sientes que tienes a alguien en quien confiar plenamente?', labels: ['Nunca', 'Rara vez', 'A veces', 'Frecuente', 'Siempre'] },
+      { id: 8, cat: 'motivacion', text: '¿Sientes esperanza respecto a tus proyectos futuros?', labels: ['Nunca', 'Rara vez', 'A veces', 'Frecuente', 'Siempre'] },
+      { id: 9, cat: 'estres', text: '¿Sientes tensión en tu cuerpo (hombros, mandíbula) seguido?', labels: ['Nunca', 'Rara vez', 'A veces', 'Frecuente', 'Siempre'] },
+      { id: 10, cat: 'general', text: '¿Qué tanta prioridad le has dado a tu salud mental este mes?', labels: ['Ninguna', 'Poca', 'Regular', 'Mucha', 'Total'] }
     ];
 
     let currentIdx = 0;
@@ -137,18 +145,27 @@
     function renderQ(idx) {
       const q = questions[idx];
       const container = document.getElementById('questionsContainer');
+      
+      // Validación intermedia
+      const vMsg = document.getElementById('validationMsg');
+      if(idx === 5) {
+        vMsg.innerText = "Estás haciendo un gran trabajo al tomarte este tiempo para ti. Ya estamos a mitad de camino.";
+        vMsg.style.display = 'block';
+      } else { vMsg.style.display = 'none'; }
+
       container.innerHTML = `
-        <div class="card question-card active">
-          <h2 class="question-text">${q.text}</h2>
+        <div class="card active" style="animation: fadeInUp 0.4s ease;">
+          <h2 style="margin-bottom: 25px; font-size: 1.4rem;">${q.text}</h2>
           <div class="scale-options">
             ${[1,2,3,4,5].map(v => `
               <div class="scale-option ${answers[q.id] == v ? 'selected' : ''}" onclick="select(${q.id}, ${v})">
-                <span class="scale-number">${v}</span>
+                <span style="font-size: 1.5rem; font-weight: 700;">${v}</span>
+                <span style="font-size: 0.7rem; text-align: center;">${q.labels[v-1]}</span>
               </div>`).join('')}
           </div>
           <div style="display: flex; gap: 15px;">
             ${idx > 0 ? `<button class="btn btn-secondary" onclick="renderQ(${idx-1})">Anterior</button>` : ''}
-            <button class="btn btn-primary" onclick="next(${idx})" ${answers[q.id] ? '' : 'disabled'}>${idx === 9 ? 'Ver Resultados' : 'Siguiente'}</button>
+            <button class="btn btn-primary" onclick="next(${idx})" ${answers[q.id] ? '' : 'disabled'}>${idx === 9 ? 'Ver mi análisis personal' : 'Siguiente'}</button>
           </div>
         </div>`;
       document.getElementById('currentQNum').innerText = idx + 1;
@@ -158,50 +175,72 @@
     function select(id, v) { answers[id] = v; renderQ(questions.findIndex(q => q.id === id)); }
     
     function next(idx) { 
-      if(idx < 9) renderQ(idx + 1); 
+      if(idx < 9) { currentIdx = idx + 1; renderQ(currentIdx); } 
       else showResults();
     }
 
     function showResults() {
       const scores = {
-        ansiedad: Math.round(((answers[1] + answers[2]) / 10) * 10),
-        estres: Math.round(((answers[3] + answers[4]) / 10) * 10),
-        animo: Math.round(((12 - (answers[5] + answers[6])) / 10) * 10)
+        ans: (answers[1] + answers[2]) / 10 * 10,
+        est: (answers[3] + answers[9]) / 10 * 10,
+        ani: (12 - (answers[5] + answers[6])) / 10 * 10,
+        soc: answers[7],
+        sue: answers[4]
       };
 
       document.getElementById('questionsContainer').style.display = 'none';
       document.getElementById('progressContainer').style.display = 'none';
       document.getElementById('resultsScreen').classList.add('active');
 
-      const getLvl = (s) => s <= 3 ? 'low' : s <= 6 ? 'medium' : 'high';
-      document.getElementById('scoresGrid').innerHTML = `
-        <div class="score-item"><span>Ansiedad</span><div class="score-value ${getLvl(scores.ansiedad)}">${scores.ansiedad}/10</div></div>
-        <div class="score-item"><span>Estrés</span><div class="score-value ${getLvl(scores.estres)}">${scores.estres}/10</div></div>
-        <div class="score-item"><span>Ánimo</span><div class="score-value ${getLvl(scores.animo)}">${scores.animo}/10</div></div>
-      `;
+      // Lógica de Casuísticas
+      let casuistica = "";
+      let tip = "";
+      let clinical = "";
+      let recommendedPlanId = "acom";
 
-      renderFinalPlans(scores);
+      if(scores.ans >= 7 && scores.sue <= 2) {
+        casuistica = "<strong>Perfil: Rumiación.</strong> Parece que al llegar la noche, tu mente se convierte en un lugar ruidoso. Analizar cada detalle del pasado o preocuparte por el futuro te está robando el descanso.";
+        tip = "<strong>Tip de hoy:</strong> Prueba el 'vaciado mental' 30 minutos antes de dormir escribiendo tus pendientes en un papel.";
+        clinical = "Te beneficiarías de un especialista con enfoque en <strong>Terapia Cognitivo-Conductual (TCC)</strong>.";
+      } else if(scores.est >= 7) {
+        casuistica = "<strong>Perfil: Burnout.</strong> Tu batería interna está en rojo. Sentimos que has estado priorizando las necesidades de todos por encima de las tuyas y tu cuerpo envía señales de agotamiento.";
+        tip = "<strong>Tip de hoy:</strong> Elige 10 minutos hoy para no hacer nada 'productivo'. Solo respira.";
+        clinical = "Recomendamos un enfoque en <strong>Mindfulness y Regulación del Sistema Nervioso</strong>.";
+      } else if(scores.ani >= 7) {
+        casuistica = "<strong>Perfil: Desconexión.</strong> Últimamente el mundo se siente un poco más gris. Es válido no estar bien todo el tiempo.";
+        tip = "<strong>Tip de hoy:</strong> Envía un mensaje corto de 'Hola' a alguien en quien confíes plenamente.";
+        clinical = "Tu perfil sugiere acompañamiento de un <strong>Psicólogo Clínico especializado en regulación emocional</strong>.";
+        recommendedPlanId = "prem";
+      } else {
+        casuistica = "<strong>Perfil: Búsqueda de Crecimiento.</strong> Tienes bases sólidas. Estás aquí para adquirir herramientas que protejan tu paz a largo plazo.";
+        tip = "<strong>Tip de hoy:</strong> Escribe una cosa por la que estés agradecido hoy para fortalecer tu bienestar.";
+        clinical = "Un enfoque de <strong>Psicología Positiva o Coaching emocional</strong> sería ideal para ti.";
+      }
+
+      document.getElementById('humanSummary').innerHTML = casuistica;
+      document.getElementById('quickWin').innerHTML = tip;
+      document.getElementById('clinicalMatch').innerHTML = clinical;
+
+      renderPlans(scores, recommendedPlanId);
       startTimer();
     }
 
-    function renderFinalPlans(scores) {
-      const avg = (scores.ansiedad + scores.estres) / 2;
+    function renderPlans(scores, recommendedId) {
       const plans = [
-        { id: 'kit', name: 'Kit Emocional', price: 'S/ 19', feat: ['Audios relajación', '5 Workbooks'], show: avg < 7 },
-        { id: 'acom', name: 'Acompañamiento', price: 'S/ 165', feat: ['2 sesiones/mes', 'Soporte WhatsApp'], show: true, recommended: true },
-        { id: 'prem', name: 'Premium', price: 'S/ 300', feat: ['4 sesiones/mes', 'Psicólogos senior'], show: avg >= 6 }
+        { id: 'kit', name: 'Kit Emocional', price: 'S/ 19', feat: ['Audios relajación', '5 Workbooks'], show: true },
+        { id: 'acom', name: 'Acompañamiento', price: 'S/ 165', feat: ['2 sesiones/mes', 'Soporte WhatsApp'], show: true },
+        { id: 'prem', name: 'Premium', price: 'S/ 300', feat: ['4 sesiones/mes', 'Psicólogos senior'], show: true }
       ];
 
-      document.getElementById('plansGrid').innerHTML = plans.filter(p => p.show).map(p => `
-        <div class="plan-card ${p.recommended ? 'recommended' : ''}">
-          ${p.recommended ? '<div class="plan-badge">IDEAL PARA TI</div>' : ''}
-          <h3>${p.name}</h3>
-          <div class="plan-price">${p.price}</div>
-          <ul style="list-style: none; margin: 15px 0; font-size: 0.85rem;">
+      document.getElementById('plansGrid').innerHTML = plans.map(p => `
+        <div class="card" style="padding: 30px; border: 2px solid ${p.id === recommendedId ? 'var(--primary)' : 'var(--border)'}; position: relative;">
+          ${p.id === recommendedId ? '<div style="position: absolute; top: -12px; right: 20px; background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700;">RECOMENDADO</div>' : ''}
+          <h3 style="margin-bottom: 10px;">${p.name}</h3>
+          <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">${p.price}</div>
+          <ul style="list-style: none; margin: 20px 0; font-size: 0.85rem;">
             ${p.feat.map(f => `<li><i class="fas fa-check" style="color: var(--primary)"></i> ${f}</li>`).join('')}
           </ul>
-          <button class="btn btn-plan" onclick="window.location.href='registro.html?plan=${p.id}'">Elegir ${p.name}</button>
-          <div class="guarantee-badge"><i class="fas fa-shield-check"></i> Garantía 7 días</div>
+          <button class="btn btn-plan" onclick="window.location.href='registro.html?plan=${p.id}'">Elegir este plan</button>
         </div>`).join('');
     }
 
