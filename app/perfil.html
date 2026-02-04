@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil - Bitácora Mental</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    /* Estilos Base */
+    :root {
+      --primary: #4F6F52;
+      --primary-light: #6B8A6E;
+      --secondary: #A7C4B5;
+      --background: #F9FBFA;
+      --card-bg: #FFFFFF;
+      --dark: #1F2933;
+      --text-secondary: #6B7280;
+      --border: #E6EFE8;
+      --danger: #EF4444;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --radius: 16px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--background); color: var(--dark); line-height: 1.6; }
+    h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; font-weight: 600; }
+
+    .dashboard-container { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+
+    /* Sidebar Estandarizado */
+    .sidebar { background: white; border-right: 1px solid var(--border); padding: 24px 0; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
+    .sidebar-header { padding: 0 24px 24px; border-bottom: 1px solid var(--border); }
+    .logo { display: flex; align-items: center; gap: 12px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--primary); text-decoration: none; }
+    .sidebar-nav { flex: 1; padding: 24px 0; overflow-y: auto; }
+    .nav-section { margin-bottom: 24px; }
+    .nav-section-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); padding: 0 24px 8px; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 24px; color: var(--dark); text-decoration: none; transition: all 0.2s; border-left: 3px solid transparent; }
+    .nav-item:hover { background: var(--background); color: var(--primary); }
+    .nav-item.active { background: rgba(79, 111, 82, 0.08); color: var(--primary); border-left-color: var(--primary); font-weight: 600; }
+    
+    .sidebar-footer { padding: 0 24px; border-top: 1px solid var(--border); padding-top: 20px; margin-top: auto; }
+    .user-profile { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--background); border-radius: 12px; cursor: pointer; transition: all 0.2s; }
+    .user-profile:hover { background: var(--border); }
+    .user-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1rem; object-fit: cover;}
+    .user-info { flex: 1; min-width: 0; }
+    .user-name { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-email { font-size: 0.75rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Main Content */
+    .main-content { padding: 32px 40px; max-width: 1200px; }
+    .page-header { margin-bottom: 32px; }
+    .page-header h1 { font-size: 2rem; margin-bottom: 8px; }
+    .page-subtitle { color: var(--text-secondary); font-size: 1rem; }
+
+    /* Profile Layout */
+    .profile-layout { display: grid; grid-template-columns: 300px 1fr; gap: 32px; }
+    .profile-sidebar-content { display: flex; flex-direction: column; gap: 24px; }
+    
+    .profile-card { background: white; border-radius: 16px; padding: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); text-align: center; }
+    
+    /* Avatar Grande */
+    .avatar-section { position: relative; display: inline-block; margin-bottom: 20px; }
+    .avatar-large { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: white; font-weight: 700; position: relative; overflow: hidden; margin: 0 auto; }
+    .avatar-large img { width: 100%; height: 100%; object-fit: cover; }
+    .avatar-upload { position: absolute; bottom: 5px; right: 5px; width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: white; border: 3px solid white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+    .avatar-upload:hover { background: var(--primary-light); transform: scale(1.1); }
+    .avatar-upload input { display: none; }
+
+    .profile-name-display { font-size: 1.5rem; margin-bottom: 4px; }
+    .profile-email-display { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 20px; }
+
+    .profile-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--primary); display: block; }
+    .stat-label { font-size: 0.85rem; color: var(--text-secondary); }
+
+    /* Tabs */
+    .profile-tabs { background: white; border-radius: 16px; padding: 8px; display: flex; gap: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 24px;}
+    .tab-btn { flex: 1; padding: 12px 20px; background: transparent; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .tab-btn:hover { background: var(--background); }
+    .tab-btn.active { background: var(--primary); color: white; }
+
+    /* Tab Content */
+    .tab-content { display: none; animation: fadeIn 0.3s; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .settings-card { background: white; border-radius: 16px; padding: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+    .settings-card h3 { margin-bottom: 24px; font-size: 1.3rem; }
+
+    .form-group { margin-bottom: 24px; }
+    .form-label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--dark); }
+    .form-input { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 10px; font-size: 1rem; transition: all 0.3s; font-family: 'DM Sans', sans-serif; }
+    .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 111, 82, 0.1); }
+    .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .form-hint { font-size: 0.85rem; color: var(--text-secondary); margin-top: 6px; }
+
+    /* Buttons */
+    .btn { padding: 12px 24px; border-radius: 10px; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; border: none; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-light); transform: translateY(-2px); }
+    .btn-secondary { background: var(--background); color: var(--dark); border: 2px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-danger:hover { background: #dc2626; }
+    .button-group { display: flex; gap: 12px; margin-top: 32px; }
+
+    /* Alert */
+    .alert { padding: 16px 20px; border-radius: 10px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; display: none; }
+    .alert.show { display: flex; animation: fadeIn 0.3s; }
+    .alert-success { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid var(--success); }
+    .alert-error { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); }
+
+    /* Danger Zone */
+    .danger-zone { background: rgba(239, 68, 68, 0.05); border: 2px solid rgba(239, 68, 68, 0.2); border-radius: 12px; padding: 24px; margin-top: 32px; }
+    .danger-zone h4 { color: var(--danger); margin-bottom: 12px; }
+    .danger-zone p { color: var(--text-secondary); margin-bottom: 16px; }
+
+    /* Password Toggle */
+    .password-wrapper { position: relative; }
+    .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 8px; }
+    .toggle-password:hover { color: var(--primary); }
+
+    /* Mobile */
+    @media (max-width: 968px) {
+      .dashboard-container { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .main-content { padding: 20px; }
+      .profile-layout { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .profile-tabs { overflow-x: auto; }
+      .tab-btn { white-space: nowrap; }
+      .button-group { flex-direction: column; }
+      .btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Principal</div>
+          <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+          <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> <span>Mis Citas</span></a>
+          <a href="especialistas.html" class="nav-item"><i class="fas fa-user-md"></i> <span>Especialistas</span></a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Mi Espacio</div>
+          <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> <span>Mi Diario</span></a>
+          <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> <span>Mi Progreso</span></a>
+          <a href="recursos.html" class="nav-item"><i class="fas fa-folder-open"></i> <span>Recursos</span></a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Cuenta</div>
+          <a href="plan.html" class="nav-item"><i class="fas fa-crown"></i> <span>Mi Plan</span></a>
+          <a href="perfil.html" class="nav-item active"><i class="fas fa-user-circle"></i> <span>Perfil</span></a>
+          <a href="#" class="nav-item" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a>
+          <a href="configuracion.html" class="nav-item"><i class="fas fa-cog"></i> <span>Configuración</span></a>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar" id="sidebarAvatarInitials">--</div>
+          <img src="" alt="Avatar" id="sidebarAvatarImg" class="user-avatar" style="display: none; object-fit: cover;">
+          <div class="user-info">
+            <div class="user-name" id="sidebarUserName">Cargando...</div>
+            <div class="user-email" id="sidebarUserEmail">...</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h1>Mi Perfil</h1>
+        <p class="page-subtitle">Administra tu información personal y preferencias</p>
+      </div>
+
+      <div class="alert alert-success" id="successAlert">
+        <i class="fas fa-check-circle"></i>
+        <span id="successMessage"></span>
+      </div>
+      <div class="alert alert-error" id="errorAlert">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="errorMessage"></span>
+      </div>
+
+      <div class="profile-layout">
+        <div class="profile-sidebar-content">
+          <div class="profile-card">
+            <div class="avatar-section">
+              <div class="avatar-large" id="avatarDisplay">
+                <img src="" alt="Avatar" id="avatarImg" style="display: none;">
+                <span id="avatarInitials">--</span>
+              </div>
+              <label class="avatar-upload">
+                <i class="fas fa-camera"></i>
+                <input type="file" id="avatarInput" accept="image/*">
+              </label>
+            </div>
+
+            <h3 class="profile-name-display" id="profileName">Cargando...</h3>
+            <p class="profile-email-display" id="profileEmail">...</p>
+
+            <div class="profile-stats">
+              <div class="stat-item">
+                <span class="stat-value" id="statSessions">0</span>
+                <span class="stat-label">Sesiones</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="statDays">0</span>
+                <span class="stat-label">Días activo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-content">
+          <div class="profile-tabs">
+            <button class="tab-btn active" onclick="switchTab('info')">
+              <i class="fas fa-user"></i> Información Personal
+            </button>
+            <button class="tab-btn" onclick="switchTab('security')">
+              <i class="fas fa-lock"></i> Seguridad
+            </button>
+            <button class="tab-btn" onclick="switchTab('preferences')">
+              <i class="fas fa-cog"></i> Preferencias
+            </button>
+          </div>
+
+          <div class="tab-content active" id="infoTab">
+            <div class="settings-card">
+              <h3>Información Personal</h3>
+              <form id="infoForm">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="nombre">Nombre</label>
+                    <input type="text" class="form-input" id="nombre" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="apellido">Apellido</label>
+                    <input type="text" class="form-input" id="apellido" required>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="email">Correo Electrónico</label>
+                  <input type="email" class="form-input" id="email" disabled style="background: #f5f5f5; cursor: not-allowed;">
+                  <p class="form-hint">Para cambiar tu correo, contacta a soporte.</p>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="telefono">Teléfono</label>
+                    <input type="tel" class="form-input" id="telefono" placeholder="+51 ...">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="fechaNacimiento">Fecha de Nacimiento</label>
+                    <input type="date" class="form-input" id="fechaNacimiento">
+                  </div>
+                </div>
+
+                <div class="button-group">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Guardar Cambios
+                  </button>
+                  <button type="button" class="btn btn-secondary" onclick="location.reload()">
+                    <i class="fas fa-times"></i> Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="tab-content" id="securityTab">
+            <div class="settings-card">
+              <h3>Cambiar Contraseña</h3>
+              <form id="passwordForm">
+                <div class="form-group">
+                  <label class="form-label" for="newPassword">Nueva Contraseña</label>
+                  <div class="password-wrapper">
+                    <input type="password" class="form-input" id="newPassword" placeholder="••••••••" required>
+                    <button type="button" class="toggle-password" onclick="togglePassword('newPassword')">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                  </div>
+                  <p class="form-hint">Mínimo 6 caracteres.</p>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="confirmPassword">Confirmar Nueva Contraseña</label>
+                  <div class="password-wrapper">
+                    <input type="password" class="form-input" id="confirmPassword" placeholder="••••••••" required>
+                    <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="button-group">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-key"></i> Actualizar Contraseña
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="tab-content" id="preferencesTab">
+            <div class="settings-card">
+              <h3>Preferencias de Notificaciones</h3>
+              <form id="preferencesForm">
+                <div class="form-group">
+                  <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                    <input type="checkbox" id="emailNotifications" style="width: 20px; height: 20px;">
+                    <div>
+                      <strong>Notificaciones por Email</strong>
+                      <p class="form-hint" style="margin: 0;">Recibe recordatorios de citas y actualizaciones</p>
+                    </div>
+                  </label>
+                </div>
+
+                <div class="form-group">
+                  <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                    <input type="checkbox" id="smsNotifications" style="width: 20px; height: 20px;">
+                    <div>
+                      <strong>Notificaciones por SMS</strong>
+                      <p class="form-hint" style="margin: 0;">Recibe mensajes de texto para citas próximas</p>
+                    </div>
+                  </label>
+                </div>
+
+                <div class="form-group">
+                  <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                    <input type="checkbox" id="newsletterNotifications" style="width: 20px; height: 20px;">
+                    <div>
+                      <strong>Newsletter</strong>
+                      <p class="form-hint" style="margin: 0;">Recibe consejos y recursos sobre salud mental</p>
+                    </div>
+                  </label>
+                </div>
+
+                <div class="button-group">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Guardar Preferencias
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div class="danger-zone">
+              <h4><i class="fas fa-exclamation-triangle"></i> Zona de Peligro</h4>
+              <p>Una vez que elimines tu cuenta, no hay vuelta atrás. Por favor, ten cuidado.</p>
+              <button class="btn btn-danger" onclick="deleteAccount()">
+                <i class="fas fa-trash"></i> Eliminar mi cuenta
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+
+  <script>
+    // --- LÓGICA DEL PERFIL ---
+
+    async function init() {
+      const { data: { user } } = await window.supabase.auth.getUser();
+      if (!user) { window.location.href = '../login.html'; return; }
+
+      // Cargar Datos del Perfil
+      const { data: profile, error } = await window.supabase
+        .from('users_profile')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (profile) {
+        // Sidebar y Header
+        const fullName = `${profile.nombre} ${profile.apellido}`;
+        const initials = (profile.nombre[0] + profile.apellido[0]).toUpperCase();
+        
+        document.getElementById('profileName').textContent = fullName;
+        document.getElementById('profileEmail').textContent = user.email;
+        document.getElementById('sidebarUserName').textContent = fullName;
+        document.getElementById('sidebarUserEmail').textContent = user.email;
+
+        // Avatar
+        if (profile.avatar_url) {
+          document.getElementById('avatarImg').src = profile.avatar_url;
+          document.getElementById('avatarImg').style.display = 'block';
+          document.getElementById('avatarInitials').style.display = 'none';
+          
+          // Sidebar avatar
+          document.getElementById('sidebarAvatarImg').src = profile.avatar_url;
+          document.getElementById('sidebarAvatarImg').style.display = 'block';
+          document.getElementById('sidebarAvatarInitials').style.display = 'none';
+        } else {
+          document.getElementById('avatarInitials').textContent = initials;
+          document.getElementById('sidebarAvatarInitials').textContent = initials;
+        }
+
+        // Formulario Info
+        document.getElementById('nombre').value = profile.nombre;
+        document.getElementById('apellido').value = profile.apellido;
+        document.getElementById('email').value = user.email;
+        document.getElementById('telefono').value = profile.telefono || '';
+        document.getElementById('fechaNacimiento').value = profile.fecha_nacimiento || '';
+
+        // Formulario Preferencias
+        document.getElementById('emailNotifications').checked = profile.notif_email;
+        document.getElementById('smsNotifications').checked = profile.notif_sms;
+        document.getElementById('newsletterNotifications').checked = profile.notif_newsletter;
+      }
+
+      // Cargar Estadísticas Reales
+      const { count: sesiones } = await window.supabase.from('citas').select('*', { count: 'exact', head: true }).eq('paciente_id', user.id).eq('estado', 'completada');
+      document.getElementById('statSessions').textContent = sesiones || 0;
+
+      // Calcular días activo (entradas de diario únicas)
+      const { data: diary } = await window.supabase.from('diario_emocional').select('fecha').eq('user_id', user.id);
+      if (diary) {
+        const uniqueDays = new Set(diary.map(e => e.fecha.split('T')[0])).size;
+        document.getElementById('statDays').textContent = uniqueDays;
+      }
+    }
+
+    // --- ACTUALIZAR INFO PERSONAL ---
+    document.getElementById('infoForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const { data: { user } } = await window.supabase.auth.getUser();
+
+      const updates = {
+        nombre: document.getElementById('nombre').value,
+        apellido: document.getElementById('apellido').value,
+        telefono: document.getElementById('telefono').value,
+        fecha_nacimiento: document.getElementById('fechaNacimiento').value
+      };
+
+      const { error } = await window.supabase.from('users_profile').update(updates).eq('id', user.id);
+
+      if (error) showError('Error al actualizar: ' + error.message);
+      else {
+        showSuccess('Información actualizada correctamente');
+        init(); // Recargar datos visuales
+      }
+    });
+
+    // --- ACTUALIZAR CONTRASEÑA ---
+    document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (newPassword !== confirmPassword) {
+        showError('Las contraseñas no coinciden');
+        return;
+      }
+      if (newPassword.length < 6) {
+        showError('La contraseña debe tener al menos 6 caracteres');
+        return;
+      }
+
+      const { error } = await window.supabase.auth.updateUser({ password: newPassword });
+
+      if (error) showError('Error: ' + error.message);
+      else {
+        showSuccess('Contraseña actualizada. Inicia sesión nuevamente.');
+        document.getElementById('passwordForm').reset();
+      }
+    });
+
+    // --- ACTUALIZAR PREFERENCIAS ---
+    document.getElementById('preferencesForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const { data: { user } } = await window.supabase.auth.getUser();
+
+      const updates = {
+        notif_email: document.getElementById('emailNotifications').checked,
+        notif_sms: document.getElementById('smsNotifications').checked,
+        notif_newsletter: document.getElementById('newsletterNotifications').checked
+      };
+
+      const { error } = await window.supabase.from('users_profile').update(updates).eq('id', user.id);
+
+      if (error) showError('Error al guardar preferencias');
+      else showSuccess('Preferencias guardadas correctamente');
+    });
+
+    // --- SUBIR AVATAR ---
+    document.getElementById('avatarInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const { data: { user } } = await window.supabase.auth.getUser();
+      const filePath = `avatars/${user.id}-${Date.now()}`; // Nombre único
+
+      // 1. Subir archivo
+      const { error: uploadError } = await window.supabase.storage.from('avatars').upload(filePath, file);
+      if (uploadError) { showError('Error subiendo imagen: ' + uploadError.message); return; }
+
+      // 2. Obtener URL pública
+      const { data: { publicUrl } } = window.supabase.storage.from('avatars').getPublicUrl(filePath);
+
+      // 3. Guardar URL en perfil
+      const { error: updateError } = await window.supabase.from('users_profile').update({ avatar_url: publicUrl }).eq('id', user.id);
+
+      if (updateError) showError('Error actualizando perfil');
+      else {
+        showSuccess('Foto de perfil actualizada');
+        init();
+      }
+    });
+
+    // --- ELIMINAR CUENTA ---
+    async function deleteAccount() {
+      if (confirm('¿Estás seguro/a de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.')) {
+        if (confirm('Esta es tu última oportunidad. ¿Realmente quieres eliminar tu cuenta permanentemente?')) {
+          // Llamar a función RPC de base de datos (Requiere configuración en Supabase)
+          // Si no está configurada, mostramos aviso
+          try {
+             const { error } = await window.supabase.rpc('delete_user'); 
+             if(error) throw error;
+             
+             await window.supabase.auth.signOut();
+             window.location.href = '../index.html';
+          } catch(err) {
+             console.error(err);
+             alert("Para eliminar tu cuenta definitivamente, por favor contacta a soporte o configura la función 'delete_user' en tu base de datos.");
+          }
+        }
+      }
+    }
+
+    // UI Helpers
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.closest('.tab-btn').classList.add('active');
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      document.getElementById(tab + 'Tab').classList.add('active');
+    }
+
+    function togglePassword(inputId) {
+      const input = document.getElementById(inputId);
+      const icon = event.currentTarget.querySelector('i');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    function showSuccess(message) {
+      const alert = document.getElementById('successAlert');
+      document.getElementById('successMessage').textContent = message;
+      alert.classList.add('show');
+      setTimeout(() => alert.classList.remove('show'), 4000);
+    }
+
+    function showError(message) {
+      const alert = document.getElementById('errorAlert');
+      document.getElementById('errorMessage').textContent = message;
+      alert.classList.add('show');
+      setTimeout(() => alert.classList.remove('show'), 4000);
+    }
+
+    async function handleLogout() {
+      await window.supabase.auth.signOut();
+      window.location.href = '../login.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
