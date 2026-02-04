@@ -38,138 +38,184 @@
     h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; font-weight: 600; }
 
     /* Layout */
-    .dashboard-container {
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      min-height: 100vh;
-    }
+    .dashboard-container { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
 
     /* Sidebar */
     .sidebar {
-      background: white;
-      border-right: 1px solid var(--border);
-      padding: 24px 0;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      transition: all 0.3s ease;
+      background: white; border-right: 1px solid var(--border); padding: 24px 0;
+      position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column;
     }
-
     .sidebar-header { padding: 0 24px 24px; border-bottom: 1px solid var(--border); }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 1.3rem;
-      color: var(--primary);
-      text-decoration: none;
-    }
-
+    .logo { display: flex; align-items: center; gap: 12px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--primary); text-decoration: none; }
     .sidebar-nav { flex: 1; padding: 24px 0; overflow-y: auto; }
     .nav-section { margin-bottom: 24px; }
     .nav-section-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); padding: 0 24px 8px; }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 24px;
-      color: var(--dark);
-      text-decoration: none;
-      transition: all 0.2s;
-      border-left: 3px solid transparent;
-    }
-
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 24px; color: var(--dark); text-decoration: none; transition: all 0.2s; border-left: 3px solid transparent; }
     .nav-item:hover { background: var(--background); color: var(--primary); }
     .nav-item.active { background: rgba(79, 111, 82, 0.08); color: var(--primary); border-left-color: var(--primary); font-weight: 600; }
     .nav-badge { margin-left: auto; background: var(--danger); color: white; font-size: 0.7rem; padding: 2px 8px; border-radius: 999px; font-weight: 600; }
-
     .sidebar-footer { padding: 0 24px; border-top: 1px solid var(--border); padding-top: 20px; }
-    .user-profile { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--background); border-radius: 12px; cursor: pointer; }
-
-    .user-avatar {
-      width: 40px; height: 40px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 600;
-    }
+    .user-profile { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--background); border-radius: 12px; cursor: pointer; transition: all 0.2s; }
+    .user-profile:hover { background: var(--border); }
+    .user-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1rem; }
+    .user-info { flex: 1; min-width: 0; }
+    .user-name { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-email { font-size: 0.75rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     /* Main Content */
     .main-content { padding: 32px 40px; max-width: 1400px; }
     .page-header { margin-bottom: 32px; }
-
-    /* Grid Layouts */
-    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .page-header h1 { font-size: 2rem; margin-bottom: 8px; color: var(--dark); }
+    .page-subtitle { color: var(--text-secondary); font-size: 1rem; }
 
     /* Cards */
     .card { background: var(--card-bg); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); border: 1px solid var(--border); transition: all 0.3s; }
     .card:hover { box-shadow: var(--shadow-lg); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .card-title { font-size: 1.2rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+    .card-action { color: var(--primary); text-decoration: none; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; transition: gap 0.2s; }
+    .card-action:hover { gap: 10px; }
 
-    .stat-card { display: flex; align-items: center; gap: 16px; padding: 20px; }
-    .stat-icon { width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    /* Grids */
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+    /* Stats Cards */
+    .stat-card { background: var(--card-bg); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); display: flex; align-items: center; gap: 16px; transition: all 0.3s; }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .stat-icon { width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
     .stat-icon.green { background: rgba(16, 185, 129, 0.1); color: var(--success); }
     .stat-icon.blue { background: rgba(79, 111, 82, 0.1); color: var(--primary); }
-    .stat-value { font-size: 1.8rem; font-weight: 700; line-height: 1; }
+    .stat-icon.orange { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+    .stat-icon.purple { background: rgba(167, 196, 181, 0.2); color: var(--primary-light); }
+    .stat-info { flex: 1; }
+    .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--dark); line-height: 1; margin-bottom: 4px; }
+    .stat-label { color: var(--text-secondary); font-size: 0.85rem; }
 
+    /* Appointment Card */
     .appointment-card { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; border: none; }
+    .appointment-card:hover { transform: translateY(-4px); }
+    .appointment-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .appointment-icon { width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+    .appointment-title { font-size: 1rem; opacity: 0.9; }
+    .appointment-datetime { font-size: 1.5rem; font-weight: 600; margin-bottom: 16px; }
+    .appointment-info { display: flex; flex-direction: column; gap: 12px; }
+    .appointment-detail { display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
+    .appointment-detail i { width: 20px; }
+    .appointment-actions { display: flex; gap: 12px; margin-top: 20px; }
 
-    .btn { padding: 10px 20px; border-radius: 10px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9rem; border: none; }
+    /* Buttons */
+    .btn { padding: 10px 20px; border-radius: 10px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; border: none; cursor: pointer; font-size: 0.9rem; }
     .btn-white { background: white; color: var(--primary); }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .btn-outline-white { background: transparent; border: 2px solid white; color: white; }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.1); }
 
-    /* Test Result UI */
+    /* Test Results */
     .test-result { background: var(--background); padding: 20px; border-radius: 12px; margin-bottom: 16px; }
-    .progress-bar { width: 100%; height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; margin-top: 8px; }
-    .progress-fill { height: 100%; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+    .test-result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .test-label { font-weight: 600; color: var(--dark); }
+    .test-score { font-weight: 700; font-size: 1.1rem; }
+    .test-score.low { color: var(--success); }
+    .test-score.medium { color: var(--warning); }
+    .test-score.high { color: var(--danger); }
+    .progress-bar { width: 100%; height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 999px; transition: width 0.5s ease; }
+    .progress-fill.low { background: var(--success); }
+    .progress-fill.medium { background: var(--warning); }
+    .progress-fill.high { background: var(--danger); }
 
-    .mobile-menu-btn { display: none; position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: var(--primary); color: white; border-radius: 50%; z-index: 1000; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+    /* Resources List */
+    .resource-list { display: flex; flex-direction: column; gap: 12px; }
+    .resource-item { display: flex; align-items: center; gap: 16px; padding: 16px; background: var(--background); border-radius: 12px; text-decoration: none; color: var(--dark); transition: all 0.2s; }
+    .resource-item:hover { background: var(--border); transform: translateX(4px); }
+    .resource-icon { width: 48px; height: 48px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--primary); flex-shrink: 0; }
+    .resource-info { flex: 1; }
+    .resource-title { font-weight: 600; margin-bottom: 4px; }
+    .resource-meta { font-size: 0.85rem; color: var(--text-secondary); }
 
+    /* Quick Actions */
+    .quick-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .quick-action { background: var(--background); padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.2s; text-decoration: none; color: var(--dark); border: 2px solid transparent; }
+    .quick-action:hover { background: white; border-color: var(--primary); transform: translateY(-4px); }
+    .quick-action i { font-size: 2rem; color: var(--primary); margin-bottom: 12px; display: block; }
+    .quick-action-label { font-weight: 600; font-size: 0.95rem; }
+
+    /* Mobile */
+    .mobile-menu-btn { display: none; position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: var(--primary); color: white; border: none; border-radius: 50%; font-size: 1.5rem; box-shadow: 0 4px 20px rgba(79, 111, 82, 0.3); cursor: pointer; z-index: 1000; }
+    
     @media (max-width: 968px) {
       .dashboard-container { grid-template-columns: 1fr; }
-      .sidebar { display: none; width: 260px; z-index: 1001; }
-      .grid-2, .grid-4 { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .main-content { padding: 20px; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .quick-actions { grid-template-columns: 1fr; }
       .mobile-menu-btn { display: block; }
     }
   </style>
 </head>
 <body>
   <div class="dashboard-container">
-    <aside class="sidebar" id="sidebar">
+    <aside class="sidebar">
       <div class="sidebar-header">
-        <a href="/" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
+        <a href="/" class="logo">
+          <i class="fas fa-brain"></i>
+          Bitácora Mental
+        </a>
       </div>
 
       <nav class="sidebar-nav">
         <div class="nav-section">
           <div class="nav-section-title">Principal</div>
-          <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i> <span>Dashboard</span></a>
-          <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> <span>Mis Citas</span> <span class="nav-badge">1</span></a>
-          <a href="especialistas.html" class="nav-item"><i class="fas fa-user-md"></i> <span>Especialistas</span></a>
+          <a href="dashboard.html" class="nav-item active">
+            <i class="fas fa-home"></i> <span>Dashboard</span>
+          </a>
+          <a href="citas.html" class="nav-item">
+            <i class="fas fa-calendar-alt"></i> <span>Mis Citas</span> <span class="nav-badge" id="navCitasBadge" style="display:none">0</span>
+          </a>
+          <a href="especialistas.html" class="nav-item">
+            <i class="fas fa-user-md"></i> <span>Especialistas</span>
+          </a>
         </div>
+
         <div class="nav-section">
           <div class="nav-section-title">Mi Espacio</div>
-          <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> <span>Mi Diario</span></a>
-          <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> <span>Mi Progreso</span></a>
+          <a href="diario.html" class="nav-item">
+            <i class="fas fa-book"></i> <span>Mi Diario</span>
+          </a>
+          <a href="progreso.html" class="nav-item">
+            <i class="fas fa-chart-line"></i> <span>Mi Progreso</span>
+          </a>
+          <a href="recursos.html" class="nav-item">
+            <i class="fas fa-folder-open"></i> <span>Recursos</span>
+          </a>
         </div>
+
         <div class="nav-section">
           <div class="nav-section-title">Cuenta</div>
-          <a href="#" class="nav-item" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a>
+          <a href="plan.html" class="nav-item">
+            <i class="fas fa-crown"></i> <span>Mi Plan</span>
+          </a>
+          <a href="perfil.html" class="nav-item">
+            <i class="fas fa-user-circle"></i> <span>Perfil</span>
+          </a>
+          <a href="#" class="nav-item" onclick="handleLogout()">
+            <i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span>
+          </a>
+          <a href="configuracion.html" class="nav-item">
+            <i class="fas fa-cog"></i> <span>Configuración</span>
+          </a>
         </div>
       </nav>
 
       <div class="sidebar-footer">
         <div class="user-profile">
-          <div class="user-avatar" id="avatarInitials">--</div>
+          <div class="user-avatar">--</div>
           <div class="user-info">
             <div class="user-name" id="sidebarUserName">Cargando...</div>
             <div class="user-email" id="sidebarUserEmail">...</div>
           </div>
+          <i class="fas fa-ellipsis-v" style="color: var(--text-secondary);"></i>
         </div>
       </div>
     </aside>
@@ -177,19 +223,36 @@
     <main class="main-content">
       <div class="page-header">
         <h1 id="welcomeName">Bienvenida 👋</h1>
-        <p class="page-subtitle">Este es tu resumen de bienestar personalizado</p>
+        <p class="page-subtitle">Aquí está tu resumen de bienestar y próximas actividades</p>
       </div>
 
       <div class="grid-4" style="margin-bottom: 32px;">
-        <div class="card stat-card">
-          <div class="stat-icon blue"><i class="fas fa-fire"></i></div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="fas fa-heart"></i></div>
           <div class="stat-info">
-            <div class="stat-value" id="statRacha">1</div>
+            <div class="stat-value" id="statBienestar">--</div>
+            <div class="stat-label">Bienestar general</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="fas fa-calendar-check"></i></div>
+          <div class="stat-info">
+            <div class="stat-value" id="statSesiones">0</div>
+            <div class="stat-label">Sesiones completadas</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon orange"><i class="fas fa-fire"></i></div>
+          <div class="stat-info">
+            <div class="stat-value" id="statRacha">0</div>
             <div class="stat-label">Días de racha</div>
           </div>
         </div>
-        <div class="card stat-card">
-          <div class="stat-icon green"><i class="fas fa-book-open"></i></div>
+
+        <div class="stat-card">
+          <div class="stat-icon purple"><i class="fas fa-book-open"></i></div>
           <div class="stat-info">
             <div class="stat-value" id="statDiario">0</div>
             <div class="stat-label">Entradas de diario</div>
@@ -197,125 +260,265 @@
         </div>
       </div>
 
-      <div class="grid-2">
+      <div class="grid-2" style="margin-bottom: 32px;">
         <div class="card appointment-card">
           <div class="appointment-header">
-            <i class="fas fa-video"></i> <span>Próxima sesión</span>
+            <div class="appointment-icon"><i class="fas fa-video"></i></div>
+            <div class="appointment-title">Próxima sesión</div>
           </div>
-          <div class="appointment-datetime" id="nextCitaDate">No hay citas agendadas</div>
-          <div class="appointment-info" id="citaDetails" style="display: none;">
-            <div class="appointment-detail"><i class="fas fa-user-md"></i> <span id="docName">...</span></div>
+          
+          <div class="appointment-datetime" id="nextCitaDate">
+            Sin citas agendadas
           </div>
+
+          <div class="appointment-info" id="nextCitaInfo" style="display: none;">
+            <div class="appointment-detail">
+              <i class="fas fa-user-md"></i> <span id="nextCitaDoc">...</span>
+            </div>
+            <div class="appointment-detail">
+              <i class="fas fa-clock"></i> <span>50 minutos</span>
+            </div>
+          </div>
+
           <div class="appointment-actions">
-            <a href="agendar.html" class="btn btn-white">Agendar Nueva</a>
+            <a href="agendar.html" class="btn btn-white" id="btnCitaAction">
+              <i class="fas fa-plus"></i> Agendar
+            </a>
           </div>
         </div>
 
         <div class="card">
-          <h3 class="card-title" style="margin-bottom: 20px;"><i class="fas fa-clipboard-check"></i> Último test</h3>
-          <div id="testContainer">
-             <p class="text-secondary">No has realizado tests aún.</p>
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-clipboard-check"></i> Último test de bienestar</h3>
+            <span class="badge info" id="testDateBadge" style="display:none">Reciente</span>
           </div>
-          <a href="..test-inicial.html" class="card-action" style="margin-top: 20px;">Repetir test <i class="fas fa-arrow-right"></i></a>
+
+          <div id="testResultsContainer">
+            <div class="empty-state" style="padding: 10px;">
+                <p class="empty-text">Aún no has realizado tu test de bienestar.</p>
+            </div>
+          </div>
+
+          <a href="../test-inicial.html" class="card-action" style="margin-top: 20px; display: inline-flex;">
+            <span id="testActionText">Hacer test ahora</span> <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-star"></i> Recursos recomendados</h3>
+            <a href="recursos.html" class="card-action">Ver todos <i class="fas fa-arrow-right"></i></a>
+          </div>
+
+          <div class="resource-list">
+            <a href="#" class="resource-item">
+              <div class="resource-icon"><i class="fas fa-headphones"></i></div>
+              <div class="resource-info">
+                <div class="resource-title">Audio: Respiración guiada</div>
+                <div class="resource-meta">5 min · Relajación</div>
+              </div>
+            </a>
+            <a href="#" class="resource-item">
+              <div class="resource-icon"><i class="fas fa-file-pdf"></i></div>
+              <div class="resource-info">
+                <div class="resource-title">Guía: Manejo del estrés</div>
+                <div class="resource-meta">PDF · 12 páginas</div>
+              </div>
+            </a>
+            <a href="#" class="resource-item">
+              <div class="resource-icon"><i class="fas fa-video"></i></div>
+              <div class="resource-info">
+                <div class="resource-title">Video: Técnicas de grounding</div>
+                <div class="resource-meta">8 min · Ansiedad</div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-bolt"></i> Acciones rápidas</h3>
+          </div>
+
+          <div class="quick-actions">
+            <a href="agendar.html" class="quick-action">
+              <i class="fas fa-calendar-plus"></i>
+              <div class="quick-action-label">Agendar sesión</div>
+            </a>
+            <a href="diario.html" class="quick-action">
+              <i class="fas fa-pencil-alt"></i>
+              <div class="quick-action-label">Escribir en diario</div>
+            </a>
+            <a href="../test-inicial.html" class="quick-action">
+              <i class="fas fa-clipboard-list"></i>
+              <div class="quick-action-label">Hacer test</div>
+            </a>
+            <a href="chat.html" class="quick-action">
+              <i class="fas fa-comments"></i>
+              <div class="quick-action-label">Contactar soporte</div>
+            </a>
+          </div>
         </div>
       </div>
     </main>
   </div>
 
-  <button class="mobile-menu-btn" id="mobileBtn"><i class="fas fa-bars"></i></button>
+  <button class="mobile-menu-btn">
+    <i class="fas fa-bars"></i>
+  </button>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
-  
+
   <script>
+    // --- LÓGICA DEL DASHBOARD ---
+    
     async function loadDashboard() {
-        const { data: { user } } = await supabase.auth.getUser();
-        
+        // 1. Obtener usuario
+        const { data: { user } } = await window.supabase.auth.getUser();
         if (!user) {
             window.location.href = '../login.html';
             return;
         }
 
-        // 1. Cargar Perfil
-        const { data: profile } = await supabase
+        // 2. Cargar Perfil
+        const { data: profile } = await window.supabase
             .from('users_profile')
             .select('*')
             .eq('id', user.id)
             .single();
 
         if (profile) {
-            document.getElementById('welcomeName').textContent = `Hola, ${profile.nombre} 👋`;
+            document.getElementById('welcomeName').textContent = `Bienvenida de nuevo, ${profile.nombre} 👋`;
             document.getElementById('sidebarUserName').textContent = `${profile.nombre} ${profile.apellido}`;
             document.getElementById('sidebarUserEmail').textContent = user.email;
-            document.getElementById('avatarInitials').textContent = (profile.nombre[0] + profile.apellido[0]).toUpperCase();
+            document.querySelector('.user-avatar').textContent = 
+                (profile.nombre[0] + profile.apellido[0]).toUpperCase();
         }
 
-        // 2. Cargar Estadísticas (Diario)
-        const { count: diarioCount } = await supabase
+        // 3. Cargar Estadísticas (Reales)
+        // Sesiones
+        const { count: sesiones } = await window.supabase
+            .from('citas')
+            .select('*', { count: 'exact', head: true })
+            .eq('paciente_id', user.id)
+            .eq('estado', 'completada');
+        document.getElementById('statSesiones').textContent = sesiones || 0;
+
+        // Diario
+        const { count: diario } = await window.supabase
             .from('diario_emocional')
             .select('*', { count: 'exact', head: true })
             .eq('user_id', user.id);
+        document.getElementById('statDiario').textContent = diario || 0;
         
-        document.getElementById('statDiario').textContent = diarioCount || 0;
+        // Racha (Simplificado por ahora igual a entradas)
+        document.getElementById('statRacha').textContent = diario || 0;
 
-        // 3. Cargar Próxima Cita
-        const { data: citas } = await supabase
+        // 4. Próxima Cita
+        const { data: citas } = await window.supabase
             .from('citas')
-            .select('fecha_hora, psicologos(nombre_completo)')
+            .select('*, psicologos(nombre_completo)')
             .eq('paciente_id', user.id)
             .eq('estado', 'agendada')
             .gte('fecha_hora', new Date().toISOString())
             .order('fecha_hora', { ascending: true })
             .limit(1);
 
-        if (citas?.[0]) {
+        if (citas && citas.length > 0) {
             const cita = citas[0];
             const fecha = new Date(cita.fecha_hora);
-            document.getElementById('nextCitaDate').textContent = fecha.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-            document.getElementById('docName').textContent = cita.psicologos.nombre_completo;
-            document.getElementById('citaDetails').style.display = 'block';
+            
+            document.getElementById('nextCitaDate').textContent = 
+                fecha.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+            
+            document.getElementById('nextCitaDoc').textContent = cita.psicologos?.nombre_completo || 'Tu especialista';
+            document.getElementById('nextCitaInfo').style.display = 'flex';
+            
+            const btn = document.getElementById('btnCitaAction');
+            btn.innerHTML = '<i class="fas fa-video"></i> Unirse';
+            btn.classList.remove('btn-white');
+            btn.classList.add('btn-white'); // Mantener estilo
         }
 
-        // 4. Cargar Último Test
-        const { data: tests } = await supabase
+        // 5. Último Test
+        const { data: tests } = await window.supabase
             .from('test_results')
             .select('*')
             .eq('user_id', user.id)
             .order('fecha_realizado', { ascending: false })
             .limit(1);
 
-        if (tests?.[0]) {
+        if (tests && tests.length > 0) {
             const test = tests[0];
-            const container = document.getElementById('testContainer');
-            container.innerHTML = `
-              <div class="test-result">
-                <div class="test-result-header"><span class="test-label">Ansiedad</span> <strong>${test.nivel_ansiedad}/10</strong></div>
-                <div class="progress-bar"><div class="progress-fill" style="width:${test.nivel_ansiedad*10}%; background:var(--danger)"></div></div>
-              </div>
-              <div class="test-result">
-                <div class="test-result-header"><span class="test-label">Estrés</span> <strong>${test.nivel_estres}/10</strong></div>
-                <div class="progress-bar"><div class="progress-fill" style="width:${test.nivel_estres*10}%; background:var(--warning)"></div></div>
-              </div>
-            `;
+            renderTestResults(test);
+            
+            // Calcular bienestar promedio (Invertido: menos ansiedad es mejor)
+            const bienestar = Math.round(((10 - test.nivel_ansiedad) + (10 - test.nivel_estres) + test.nivel_animo) / 3 * 10);
+            document.getElementById('statBienestar').textContent = `${bienestar}%`;
+            document.getElementById('testActionText').textContent = 'Repetir test';
+            document.getElementById('testDateBadge').style.display = 'inline-block';
+        } else {
+            document.getElementById('statBienestar').textContent = '--';
         }
     }
 
-    // Lógica del menú móvil corregida
-    const mobileBtn = document.getElementById('mobileBtn');
-    const sidebar = document.getElementById('sidebar');
-    if (mobileBtn) {
-        mobileBtn.addEventListener('click', () => {
-            const isVisible = sidebar.style.display === 'flex';
-            sidebar.style.display = isVisible ? 'none' : 'flex';
-            sidebar.style.position = 'fixed';
-        });
+    function renderTestResults(test) {
+        const container = document.getElementById('testResultsContainer');
+        const getLevel = (val) => val <= 3 ? 'low' : val <= 6 ? 'medium' : 'high';
+        const getTxt = (val) => val <= 3 ? 'Bajo' : val <= 6 ? 'Moderado' : 'Alto';
+        
+        container.innerHTML = `
+            <div class="test-result">
+                <div class="test-result-header">
+                    <span class="test-label">Ansiedad</span>
+                    <span class="test-score ${getLevel(test.nivel_ansiedad)}">${getTxt(test.nivel_ansiedad)} - ${test.nivel_ansiedad}/10</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill ${getLevel(test.nivel_ansiedad)}" style="width: ${test.nivel_ansiedad * 10}%"></div>
+                </div>
+            </div>
+            <div class="test-result">
+                <div class="test-result-header">
+                    <span class="test-label">Estrés</span>
+                    <span class="test-score ${getLevel(test.nivel_estres)}">${getTxt(test.nivel_estres)} - ${test.nivel_estres}/10</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill ${getLevel(test.nivel_estres)}" style="width: ${test.nivel_estres * 10}%"></div>
+                </div>
+            </div>
+            <div class="test-result" style="margin-bottom:0">
+                <div class="test-result-header">
+                    <span class="test-label">Ánimo</span>
+                    <span class="test-score ${getLevel(test.nivel_animo)}">${getTxt(test.nivel_animo)} - ${test.nivel_animo}/10</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill ${getLevel(test.nivel_animo)}" style="width: ${test.nivel_animo * 10}%"></div>
+                </div>
+            </div>
+        `;
     }
 
+    // Funciones Globales
     async function handleLogout() {
-        await supabase.auth.signOut();
+        await window.supabase.auth.signOut();
         window.location.href = '../login.html';
     }
 
+    // Menu Móvil
+    const mobileBtn = document.querySelector('.mobile-menu-btn');
+    if (mobileBtn) {
+        mobileBtn.addEventListener('click', () => {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.style.display = sidebar.style.display === 'flex' ? 'none' : 'flex';
+            sidebar.style.position = 'fixed';
+            sidebar.style.zIndex = '1001';
+        });
+    }
+
+    // Iniciar
     document.addEventListener('DOMContentLoaded', loadDashboard);
   </script>
 </body>
