@@ -141,6 +141,14 @@
     .quick-action i { font-size: 2rem; color: var(--primary); margin-bottom: 12px; display: block; }
     .quick-action-label { font-weight: 600; font-size: 0.95rem; }
 
+    /* Badge */
+    .badge { padding: 4px 12px; border-radius: 999px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+    .badge.info { background: rgba(79, 111, 82, 0.1); color: var(--primary); }
+
+    /* Empty State */
+    .empty-state { padding: 20px; text-align: center; }
+    .empty-text { color: var(--text-secondary); }
+
     /* Mobile */
     .mobile-menu-btn { display: none; position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: var(--primary); color: white; border: none; border-radius: 50%; font-size: 1.5rem; box-shadow: 0 4px 20px rgba(79, 111, 82, 0.3); cursor: pointer; z-index: 1000; }
     
@@ -294,7 +302,7 @@
           </div>
 
           <div id="testResultsContainer">
-            <div class="empty-state" style="padding: 10px;">
+            <div class="empty-state">
                 <p class="empty-text">Aún no has realizado tu test de bienestar.</p>
             </div>
           </div>
@@ -383,6 +391,30 @@
             return;
         }
 
+        // --- MIGRAR TEST ANÓNIMO (SI EXISTE) ---
+        const tempTest = localStorage.getItem('tempTestResults');
+        if (tempTest) {
+            try {
+                const scores = JSON.parse(tempTest);
+                const { error } = await window.supabase
+                    .from('test_results')
+                    .insert({
+                        user_id: user.id,
+                        nivel_ansiedad: scores.ansiedad,
+                        nivel_estres: scores.estres,
+                        nivel_animo: scores.animo,
+                        fecha_realizado: new Date().toISOString()
+                    });
+
+                if (!error) {
+                    console.log("Test migrado con éxito");
+                    localStorage.removeItem('tempTestResults');
+                }
+            } catch (err) {
+                console.error("Error migrando test:", err);
+            }
+        }
+
         // 2. Cargar Perfil
         const { data: profile } = await window.supabase
             .from('users_profile')
@@ -399,7 +431,6 @@
         }
 
         // 3. Cargar Estadísticas (Reales)
-        // Sesiones
         const { count: sesiones } = await window.supabase
             .from('citas')
             .select('*', { count: 'exact', head: true })
@@ -407,14 +438,11 @@
             .eq('estado', 'completada');
         document.getElementById('statSesiones').textContent = sesiones || 0;
 
-        // Diario
         const { count: diario } = await window.supabase
             .from('diario_emocional')
             .select('*', { count: 'exact', head: true })
             .eq('user_id', user.id);
         document.getElementById('statDiario').textContent = diario || 0;
-        
-        // Racha (Simplificado por ahora igual a entradas)
         document.getElementById('statRacha').textContent = diario || 0;
 
         // 4. Próxima Cita
@@ -439,8 +467,6 @@
             
             const btn = document.getElementById('btnCitaAction');
             btn.innerHTML = '<i class="fas fa-video"></i> Unirse';
-            btn.classList.remove('btn-white');
-            btn.classList.add('btn-white'); // Mantener estilo
         }
 
         // 5. Último Test
@@ -455,7 +481,6 @@
             const test = tests[0];
             renderTestResults(test);
             
-            // Calcular bienestar promedio (Invertido: menos ansiedad es mejor)
             const bienestar = Math.round(((10 - test.nivel_ansiedad) + (10 - test.nivel_estres) + test.nivel_animo) / 3 * 10);
             document.getElementById('statBienestar').textContent = `${bienestar}%`;
             document.getElementById('testActionText').textContent = 'Repetir test';
