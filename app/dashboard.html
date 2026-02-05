@@ -245,9 +245,11 @@
           // Verificar si es Admin
           const { data: profile } = await window.sb.from('users_profile').select('rol').eq('id', session.user.id).single();
           
-          if (profile && profile.rol === 'admin') {
-              window.location.replace('admin.html'); // Redirigir al panel correcto
-              return;
+        if (profile && profile.rol === 'admin') {
+            window.location.replace('../admin/panel-admin.html'); 
+            return;
+        }
+
           }
 
           loadDashboard(session.user);
