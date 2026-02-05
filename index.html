@@ -3,118 +3,328 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bitácora Mental</title>
+  <meta name="description" content="Bitácora Mental - Conecta con especialistas en salud mental verificados.">
+  <title>Bitácora Mental - Tu salud mental, a un click</title>
+  
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
-    :root { --primary: #4F6F52; --secondary: #A7C4B5; --bg: #F9FBFA; --text: #1F2933; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
-    h1, h2, h3 { font-family: 'Outfit', sans-serif; }
-    
-    /* Navbar y Banner */
-    .promo-banner { background: var(--secondary); color: var(--text); text-align: center; padding: 10px; font-weight: 700; display: none; }
-    .navbar { padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.9); position: sticky; top: 0; z-index: 100; }
-    .logo { font-size: 1.4rem; font-weight: 700; color: var(--primary); text-decoration: none; }
-    .btn-nav { padding: 10px 20px; border: 2px solid var(--primary); border-radius: 20px; text-decoration: none; color: var(--primary); font-weight: 600; }
-    
-    /* Estilos Generales de Secciones */
-    section { padding: 80px 8%; }
-    .btn-primary { background: var(--primary); color: white; padding: 15px 30px; border-radius: 12px; text-decoration: none; display: inline-block; font-weight: 600; }
-    
-    /* Estilos Específicos (simplificados para el ejemplo) */
-    .hero { text-align: center; background: radial-gradient(circle, rgba(167,196,181,0.2), transparent); }
-    .hero h1 { font-size: 3rem; margin-bottom: 20px; }
-    
-    .steps-grid, .pricing-grid, .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 40px; }
-    .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); text-align: center; }
-    
-    .cta-final { background: var(--primary); color: white; text-align: center; }
+    :root {
+      /* Estas variables se sobrescriben desde el Admin */
+      --primary: #4F6F52;
+      --primary-light: #6B8A6E;
+      --secondary: #A7C4B5;
+      --background: #F9FBFA;
+      --card-bg: #FFFFFF;
+      --dark: #1F2933;
+      --text-secondary: #6B7280;
+      --border: #E6EFE8;
+      --radius: 16px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--background); color: var(--dark); line-height: 1.6; }
+    h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; font-weight: 600; }
+    html { scroll-behavior: smooth; }
+
+    /* BANNER PROMO (Oculto por defecto, se activa desde Admin) */
+    #topBanner {
+        background: var(--secondary);
+        color: var(--dark);
+        text-align: center;
+        padding: 10px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        display: none; 
+    }
+
+    /* Navbar */
+    .navbar { position: sticky; top: 0; background: rgba(249, 251, 250, 0.95); backdrop-filter: blur(10px); padding: 15px 8%; display: flex; justify-content: space-between; align-items: center; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+    .logo { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--primary); display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-links { display: flex; gap: 25px; align-items: center; }
+    .nav-links a { text-decoration: none; color: var(--dark); font-weight: 500; transition: color 0.3s; }
+    .nav-links a:hover { color: var(--primary); }
+    .nav-login { padding: 8px 20px; border: 2px solid var(--primary); border-radius: var(--radius); color: var(--primary) !important; font-weight: 600; text-decoration: none; }
+    .nav-login:hover { background: var(--primary); color: white !important; }
+    .nav-cta { background: var(--primary); color: white !important; padding: 10px 24px; border-radius: var(--radius); font-weight: 600; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+
+    /* Hero Section */
+    .hero { padding: 100px 8% 80px; text-align: center; background: radial-gradient(circle at 50% 50%, rgba(167, 196, 181, 0.1) 0%, transparent 70%); }
+    .hero-badge { background: #e8f3ec; color: var(--primary); padding: 8px 20px; border-radius: 999px; font-size: 0.9rem; font-weight: 600; display: inline-block; margin-bottom: 24px; }
+    .hero h1 { font-size: 3.5rem; line-height: 1.2; margin-bottom: 24px; color: var(--dark); }
+    .hero p { font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 40px; max-width: 650px; margin-left: auto; margin-right: auto; }
+    .btn-primary { background: var(--primary); color: white; padding: 16px 36px; border-radius: var(--radius); font-weight: 600; font-size: 1.1rem; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s; }
+    .btn-primary:hover { background: var(--primary-light); transform: translateY(-2px); }
+
+    /* Steps Section */
+    .como-funciona { padding: 80px 8%; background: white; }
+    .section-header { text-align: center; margin-bottom: 50px; }
+    .section-header h2 { font-size: 2.5rem; margin-bottom: 15px; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+    .step { text-align: center; padding: 20px; }
+    .step-number { width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 700; margin: 0 auto 20px; }
+
+    /* Precios */
+    .precios { padding: 100px 8%; background: var(--background); }
+    .planes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; margin-bottom: 30px; }
+    .plan-card { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: var(--shadow); position: relative; display: flex; flex-direction: column; transition: transform 0.3s; }
+    .plan-destacado { border: 2px solid var(--primary); transform: scale(1.03); }
+    .plan-badge { position: absolute; top: -12px; right: 20px; background: var(--dark); color: white; padding: 5px 15px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+    .precio { font-size: 2.8rem; font-weight: 700; color: var(--primary); }
+    .periodo { font-size: 0.9rem; color: var(--text-secondary); }
+    .plan-features { list-style: none; margin: 25px 0; flex-grow: 1; }
+    .plan-features li { padding: 8px 0; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
+    .plan-features i { color: var(--primary); }
+    .plan-btn { display: block; padding: 14px; text-align: center; background: var(--background); border-radius: 12px; text-decoration: none; font-weight: 600; color: var(--dark); border: 2px solid var(--border); transition: 0.3s; }
+    .btn-destacado { background: var(--primary); color: white; border-color: var(--primary); }
+    .precios-nota { background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 20px; border-radius: 12px; font-size: 0.9rem; color: #92400E; max-width: 900px; margin: 0 auto; }
+
+    /* Testimonios */
+    .testimonios { padding: 100px 8%; background: white; }
+    .testimonios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+    .testimonial { background: var(--background); padding: 32px; border-radius: 16px; }
+    .testimonial-author { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
+    .testimonial-avatar { width: 45px; height: 45px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+
+    /* CTA Final */
+    .cta-final { padding: 100px 8%; text-align: center; background: linear-gradient(135deg, var(--primary) 0%, #3e5a41 100%); color: white; border-radius: 0; }
+    .cta-final h2 { font-size: 2.5rem; margin-bottom: 20px; }
     .cta-final .btn-primary { background: white; color: var(--primary); }
+
+    /* Footer */
+    .footer { background: var(--dark); color: white; padding: 60px 8% 30px; }
+    .footer-content { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 40px; }
+    .footer-brand p { color: #9ca3af; margin-top: 15px; }
+    .footer-links h4 { margin-bottom: 20px; font-size: 1.1rem; }
+    .footer-links ul { list-style: none; }
+    .footer-links li { margin-bottom: 10px; }
+    .footer-links a { color: #9ca3af; text-decoration: none; transition: 0.3s; }
+    .footer-links a:hover { color: white; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; margin-top: 40px; text-align: center; color: #9ca3af; font-size: 0.85rem; }
+
+    /* WhatsApp Float */
+    .whatsapp-float { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; z-index: 999; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    .whatsapp-float:hover { transform: scale(1.1); }
+
+    @media (max-width: 968px) {
+      .footer-content, .testimonios-grid, .steps { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .hero h1 { font-size: 2.5rem; }
+    }
   </style>
 </head>
 <body>
 
-  <div id="topBanner" class="promo-banner"></div>
+  <div id="topBanner"></div>
 
   <nav class="navbar">
-    <a href="#" class="logo"><i class="fas fa-brain"></i> Bitácora</a>
-    <a href="login.html" class="btn-nav">Entrar</a>
+    <a href="/" class="logo"><i class="fas fa-brain"></i> <span id="brandName">Bitácora Mental</span></a>
+    <div class="nav-links">
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#precios">Precios</a>
+      <a href="#testimonios">Testimonios</a>
+      <a href="login.html" class="nav-login">Iniciar sesión</a>
+      <a href="app/entrevista.html" class="nav-cta"><i class="fas fa-comments"></i> Iniciar Entrevista</a>
+    </div>
   </nav>
 
-  <main id="dynamicContent"></main>
+  <a href="https://wa.me/51922483155" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
 
-  <template id="tpl-hero">
-    <section class="hero">
-      <h1 data-key="hero_titulo">...</h1>
-      <p data-key="hero_subtitulo" style="font-size:1.2rem; margin-bottom:30px; max-width:600px; margin-inline:auto;">...</p>
-      <a href="registro.html" class="btn-primary" data-key="hero_btn">...</a>
-    </section>
-  </template>
-
-  <template id="tpl-como-funciona">
-    <section>
-      <div style="text-align:center;">
-        <h2 data-key="steps_titulo">...</h2>
-        <p data-key="steps_subtitulo">...</p>
+  <section class="hero">
+    <div class="hero-content">
+      <span class="hero-badge"><i class="fas fa-heart"></i> Más de 500 personas ya dieron el primer paso</span>
+      
+      <h1 data-key="hero_titulo">Tu salud mental,<br>a un click de distancia</h1>
+      <p data-key="hero_subtitulo">Conecta con especialistas verificados, realiza tu seguimiento clínico y accede a recursos personalizados. Todo en un solo lugar.</p>
+      
+      <div class="hero-actions">
+        <a href="app/entrevista.html" class="btn-primary">
+            <i class="fas fa-comments"></i> <span data-key="hero_btn">Iniciar entrevista de bienvenida</span>
+        </a>
       </div>
-      <div class="steps-grid">
-        <div class="card"><h3>1. Entrevista</h3><p>Cuéntanos tu historia.</p></div>
-        <div class="card"><h3>2. Conexión</h3><p>Encuentra tu psicólogo.</p></div>
-        <div class="card"><h3>3. Progreso</h3><p>Mejora día a día.</p></div>
-      </div>
-    </section>
-  </template>
+    </div>
+  </section>
 
-  <template id="tpl-precios">
-    <section style="background:var(--bg);">
-      <h2 style="text-align:center;" data-key="pricing_titulo">...</h2>
-      <div class="pricing-grid">
-        <div class="card"><h3>Básico</h3><h2 style="color:var(--primary);">S/ <span data-key="pricing_card_1_precio">0</span></h2></div>
-        <div class="card" style="border:2px solid var(--primary)"><h3>Kit</h3><h2 style="color:var(--primary);">S/ <span data-key="pricing_card_2_precio">19</span></h2></div>
-        <div class="card"><h3>Terapia</h3><h2 style="color:var(--primary);">S/ <span data-key="pricing_card_3_precio">165</span></h2></div>
+  <section class="como-funciona" id="como-funciona">
+    <div class="section-header">
+      <h2 data-key="steps_titulo">Así de simple funciona</h2>
+      <p data-key="steps_subtitulo">En 3 pasos estarás conectado con el apoyo que necesitas</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Entrevista de Bienvenida</h3>
+        <p>Cuéntanos tu historia y motivo de consulta para personalizar tu experiencia desde el inicio.</p>
       </div>
-    </section>
-  </template>
-
-  <template id="tpl-testimonios">
-    <section>
-      <h2 style="text-align:center;" data-key="testi_titulo">...</h2>
-      <div class="testi-grid">
-        <div class="card"><p>"Me cambió la vida por completo."</p><strong>- Ana R.</strong></div>
-        <div class="card"><p>"La plataforma es súper fácil de usar."</p><strong>- Carlos M.</strong></div>
-        <div class="card"><p>"Encontré al terapeuta ideal."</p><strong>- Sofia L.</strong></div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Conecta con tu especialista</h3>
+        <p>Te mostramos psicólogos verificados que se especializan en tu necesidad.</p>
       </div>
-    </section>
-  </template>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Monitoreo Semanal</h3>
+        <p>Accede a tu dashboard, registra tu pulso emocional y prepara tus sesiones.</p>
+      </div>
+    </div>
+  </section>
 
-  <template id="tpl-cta-final">
-    <section class="cta-final">
-      <h2 data-key="cta_final_titulo">...</h2>
-      <br>
-      <a href="registro.html" class="btn-primary" data-key="cta_final_btn">...</a>
-    </section>
-  </template>
+  <section class="precios" id="precios">
+    <div class="section-header">
+      <h2 data-key="pricing_titulo">Niveles de apoyo para cada necesidad</h2>
+      <p>Elige el plan que mejor se adapte a ti. Sin compromisos.</p>
+    </div>
+    <div class="planes-grid">
+      <div class="plan-card">
+        <div class="plan-badge">Gratis</div>
+        <h3>Comienza aquí</h3>
+        <div class="plan-precio"><span class="precio">S/ <span data-key="pricing_card_1_precio">0</span></span><span class="periodo">siempre</span></div>
+        <ul class="plan-features">
+          <li><i class="fas fa-check"></i> Entrevista clínica inicial</li>
+          <li><i class="fas fa-check"></i> Diario emocional</li>
+          <li><i class="fas fa-check"></i> Monitoreo de síntomas básico</li>
+        </ul>
+        <a href="registro.html" class="plan-btn">Comenzar gratis</a>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-badge">Popular</div>
+        <h3>Kit Emocional</h3>
+        <div class="plan-precio"><span class="precio">S/ <span data-key="pricing_card_2_precio">19</span></span><span class="periodo">pago único</span></div>
+        <ul class="plan-features">
+          <li><i class="fas fa-check"></i> Audios de relajación</li>
+          <li><i class="fas fa-check"></i> 5 workbooks especializados</li>
+          <li><i class="fas fa-check"></i> Guía de técnicas de respiración</li>
+        </ul>
+        <a href="registro.html" class="plan-btn">Obtener kit</a>
+      </div>
+
+      <div class="plan-card plan-destacado">
+        <div class="plan-badge badge-recomendado">Recomendado</div>
+        <h3>Acompañamiento</h3>
+        <div class="plan-precio"><span class="precio">S/ <span data-key="pricing_card_3_precio">165</span></span><span class="periodo">/ mes</span></div>
+        <ul class="plan-features">
+          <li><i class="fas fa-check"></i> 2 sesiones mensuales (50 min)</li>
+          <li><i class="fas fa-check"></i> Asesoría con psicólogos en formación</li>
+          <li><i class="fas fa-check"></i> Seguimiento personalizado</li>
+        </ul>
+        <a href="registro.html" class="plan-btn btn-destacado">Empezar ahora</a>
+      </div>
+    </div>
+    
+    <div class="precios-nota">
+      <p><strong>Nota:</strong> Los planes de asesoría incluyen sesiones con profesionales en formación supervisados. Para psicoterapia clínica, trabajamos con psicólogos colegiados experimentados.</p>
+    </div>
+  </section>
+
+  <section class="testimonios" id="testimonios">
+    <div class="section-header">
+      <h2 data-key="testi_titulo">Historias que nos inspiran</h2>
+      <p>Personas reales que transformaron su bienestar con Bitácora Mental</p>
+    </div>
+    <div class="testimonios-grid">
+      <div class="testimonial">
+        <p>"La entrevista de bienvenida me ayudó a enfocar lo que realmente necesitaba trabajar. Ahora estoy en terapia y me siento mucho más tranquila."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">MC</div>
+          <div><strong>María C.</strong><br><small>Plan Intermedio</small></div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <p>"Poder llevar un registro de mi semana y compartirlo con mi psicólogo ha hecho que mis sesiones sean mucho más productivas."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">JP</div>
+          <div><strong>Jorge P.</strong><br><small>Plan Premium</small></div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <p>"Me encanta tener mi diario integrado y ver mi evolución sin etiquetas ni diagnósticos fríos. Muy humano."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">AR</div>
+          <div><strong>Ana R.</strong><br><small>Plan Básico</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-final">
+    <h2 data-key="cta_final_titulo">Da el primer paso hoy</h2>
+    <p>Cuidar tu salud mental nunca fue tan accesible</p>
+    <a href="app/entrevista.html" class="btn-primary" data-key="cta_final_btn">Iniciar entrevista</a>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3><i class="fas fa-brain"></i> Bitácora Mental</h3>
+        <p>Plataforma de salud mental que conecta personas con especialistas verificados.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Plataforma</h4>
+        <ul>
+          <li><a href="#precios">Servicios</a></li>
+          <li><a href="login.html">Iniciar sesión</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Recursos</h4>
+        <ul>
+          <li><a href="#testimonios">Testimonios</a></li>
+          <li><a href="app/entrevista.html">Entrevista inicial</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Términos y condiciones</a></li>
+          <li><a href="#">Política de privacidad</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Bitácora Mental. Todos los derechos reservados.</p>
+    </div>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
   <script>
+    // 1. Smooth Scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // 2. Conexión con Admin Panel (Inyección de Contenido)
     document.addEventListener('DOMContentLoaded', async () => {
         if (!window.sb) return;
 
-        // 1. Cargar Configuración
+        // Cargar configuración
         const { data: configs } = await window.sb.from('config_interfaz').select('*');
         if(!configs) return;
 
-        // 2. Aplicar Estilos Globales
-        const setVar = (key, cssVar) => {
+        // A. Variables CSS Globales
+        const setCSS = (key, cssVar) => {
             const item = configs.find(c => c.clave === key);
             if(item) document.documentElement.style.setProperty(cssVar, item.valor);
         };
-        setVar('style_color_primary', '--primary');
-        setVar('style_color_secondary', '--secondary');
-        setVar('style_bg_color', '--bg');
+        setCSS('style_color_primary', '--primary');
+        setCSS('style_color_secondary', '--secondary');
+        setCSS('style_bg_color', '--background');
 
-        // 3. Aplicar Banner Promocional
+        // B. Textos (Data-Keys)
+        document.querySelectorAll('[data-key]').forEach(el => {
+            const key = el.getAttribute('data-key');
+            const item = configs.find(c => c.clave === key);
+            if(item) el.innerHTML = item.valor.replace(/\n/g, '<br>'); // Respeta saltos de línea
+        });
+
+        // C. Banner Promo
         const promoActive = configs.find(c => c.clave === 'promo_top_active')?.valor === 'true';
         if(promoActive) {
             const banner = document.getElementById('topBanner');
@@ -123,27 +333,12 @@
             banner.style.backgroundColor = configs.find(c => c.clave === 'promo_top_color')?.valor;
         }
 
-        // 4. CONSTRUIR LAYOUT (El corazón del sistema)
-        const layoutConfig = configs.find(c => c.clave === 'home_layout_config');
-        const sectionOrder = layoutConfig ? JSON.parse(layoutConfig.valor) : ['hero', 'precios']; // Fallback
-        
-        const main = document.getElementById('dynamicContent');
-
-        sectionOrder.forEach(sectionId => {
-            const template = document.getElementById(`tpl-${sectionId}`);
-            if(template) {
-                const clone = template.content.cloneNode(true);
-                
-                // Rellenar textos dentro de esta sección clonada
-                clone.querySelectorAll('[data-key]').forEach(el => {
-                    const key = el.getAttribute('data-key');
-                    const configItem = configs.find(c => c.clave === key);
-                    if(configItem) el.textContent = configItem.valor.replace(/\\n/g, '\n');
-                });
-
-                main.appendChild(clone);
-            }
-        });
+        // D. Branding
+        const brandName = configs.find(c => c.clave === 'brand_nombre')?.valor;
+        if(brandName) {
+            document.getElementById('brandName').textContent = brandName;
+            document.title = brandName;
+        }
     });
   </script>
 </body>
