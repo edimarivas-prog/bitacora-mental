@@ -146,12 +146,15 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+
   <script>
     const form = document.getElementById('registerForm');
     const errorBox = document.getElementById('errorBox');
     const submitBtn = document.getElementById('submitBtn');
 
-    // Verificar si viene de la entrevista para cambiar el título
+    // Verificar si viene de la entrevista
     document.addEventListener('DOMContentLoaded', () => {
         if (sessionStorage.getItem('temp_entrevista')) {
             document.querySelector('h1').textContent = "Guarda tu perfil clínico";
@@ -174,8 +177,10 @@
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando cuenta...';
 
       try {
-        // 1. Crear Usuario
-        const { data, error } = await window.supabase.auth.signUp({
+        // 🛑 CORRECCIÓN AQUÍ: Usamos 'window.sb' en lugar de 'window.supabase'
+        if (!window.sb) throw new Error("No hay conexión con la base de datos.");
+
+        const { data, error } = await window.sb.auth.signUp({
           email: email, password: password
         });
 
@@ -186,25 +191,22 @@
             const tempEntrevista = sessionStorage.getItem('temp_entrevista');
             
             if (tempEntrevista) {
-                // Si existe, la guardamos en el perfil del nuevo usuario
                 const datos = JSON.parse(tempEntrevista);
                 
-                const { error: profileError } = await window.supabase
+                // 🛑 CORRECCIÓN AQUÍ TAMBIÉN: 'window.sb'
+                const { error: profileError } = await window.sb
                     .from('users_profile')
-                    .update(datos) // Actualizamos con los datos que trajo de la entrevista
+                    .update(datos)
                     .eq('id', data.user.id);
                 
                 if (!profileError) {
-                    // Limpiar memoria y redirigir al Dashboard
                     sessionStorage.removeItem('temp_entrevista');
                     window.location.href = 'app/dashboard.html';
                     return;
                 }
             }
 
-            // Si no había entrevista, o falló el guardado, flujo normal:
-            // (Si queremos forzar entrevista, mandamos a entrevista. Si no, a dashboard)
-            // En tu caso, si se registró directo desde el home, lo mandamos a entrevista.
+            // Redirección normal
             window.location.href = tempEntrevista ? 'app/dashboard.html' : 'app/entrevista.html';
 
         } else if (data.session === null && !error) {
