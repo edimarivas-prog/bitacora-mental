@@ -3,93 +3,154 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mega Panel CMS - Bitácora Mental</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>Editor Maestro CMS - Bitácora Mental</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
-    :root { --sidebar-bg: #1F2933; --accent: #4F6F52; --bg: #F3F4F6; --border: #E5E7EB; }
+    /* --- VARIABLES Y RESET --- */
+    :root { 
+      --sidebar-bg: #1F2933; 
+      --accent: #4F6F52; 
+      --bg: #F3F4F6; 
+      --border: #E5E7EB; 
+      --text-main: #1F2933;
+      --text-soft: #64748B;
+      --white: #FFFFFF;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); display: flex; height: 100vh; overflow: hidden; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); display: flex; height: 100vh; overflow: hidden; color: var(--text-main); }
 
-    /* Sidebar Estilo Shopify */
-    .cms-sidebar { width: 300px; background: white; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
-    .cms-header { padding: 20px; border-bottom: 1px solid var(--border); font-family: 'Outfit'; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+    /* --- SIDEBAR (Estilo Shopify) --- */
+    .cms-sidebar { width: 320px; background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 10; }
     
-    .sections-list { flex: 1; overflow-y: auto; padding: 10px; }
-    .section-group { margin-bottom: 20px; }
-    .section-title { font-size: 0.75rem; text-transform: uppercase; color: #94A3B8; font-weight: 800; padding: 10px; letter-spacing: 1px; }
-    
-    .setting-item { padding: 12px 15px; border-radius: 8px; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; font-size: 0.9rem; color: #4B5563; }
-    .setting-item:hover { background: #F3F4F6; }
-    .setting-item.active { background: #EEF2FF; color: #4338CA; font-weight: 600; }
+    .cms-header { padding: 25px; border-bottom: 1px solid var(--border); font-family: 'Outfit'; font-weight: 700; color: var(--sidebar-bg); display: flex; align-items: center; gap: 12px; font-size: 1.1rem; }
+    .cms-header i { color: var(--accent); }
 
-    /* Editor de Propiedades (Derecha) */
-    .editor-pane { flex: 1; background: #F9FAFB; display: flex; flex-direction: column; }
-    .editor-header { padding: 20px 40px; background: white; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .sections-list { flex: 1; overflow-y: auto; padding: 15px; }
+    .section-group-title { font-size: 0.7rem; text-transform: uppercase; color: #94A3B8; font-weight: 800; padding: 15px 10px 8px; letter-spacing: 1.5px; }
     
-    .editor-content { padding: 40px; max-width: 800px; margin: 0 auto; width: 100%; overflow-y: auto; }
-    
-    /* Controles */
-    .control-card { background: white; padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    .control-label { display: block; font-size: 0.85rem; font-weight: 700; color: #374151; margin-bottom: 15px; text-transform: uppercase; }
-    
-    .input-main { width: 100%; padding: 12px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 1rem; margin-bottom: 20px; }
-    
-    .prop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding-top: 20px; border-top: 1px solid #F3F4F6; }
-    .prop-box label { font-size: 0.75rem; color: #6B7280; display: block; margin-bottom: 5px; }
-    
-    .btn-save { background: #1F2933; color: white; padding: 10px 25px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; }
-    .btn-save:hover { background: #374151; }
+    .setting-item { padding: 14px 15px; border-radius: 12px; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; font-size: 0.95rem; color: #4B5563; border: 1px solid transparent; }
+    .setting-item:hover { background: #F8FAFC; border-color: var(--border); color: var(--text-main); }
+    .setting-item.active { background: #EEF2FF; color: #4338CA; font-weight: 600; border-color: #C7D2FE; }
 
-    /* Estilos de Switch y Color */
-    .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+    /* Navegación Auxiliar */
+    .nav-footer { padding: 20px; border-top: 1px solid var(--border); background: #F8FAFC; display: flex; flex-direction: column; gap: 8px; }
+    .nav-aux-btn { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--white); color: #4B5563; font-family: inherit; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
+    .nav-aux-btn:hover { background: #F1F5F9; color: var(--sidebar-bg); }
+    .nav-aux-btn.logout { color: #DC2626; border-color: #FEE2E2; }
+    .nav-aux-btn.logout:hover { background: #FEF2F2; }
+
+    /* --- PANEL EDITOR (Derecha) --- */
+    .editor-pane { flex: 1; background: #F9FAFB; display: flex; flex-direction: column; position: relative; }
+    
+    .editor-header { padding: 20px 40px; background: var(--white); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; height: 80px; flex-shrink: 0; }
+    .editor-header h2 { font-family: 'Outfit'; font-size: 1.3rem; font-weight: 700; }
+    
+    .btn-publish { background: var(--sidebar-bg); color: var(--white); padding: 12px 28px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+    .btn-publish:hover { background: #374151; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .btn-publish:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .editor-body { padding: 40px; max-width: 850px; margin: 0 auto; width: 100%; overflow-y: auto; }
+    
+    /* Tarjetas de Propiedades */
+    .prop-card { background: var(--white); padding: 30px; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 25px; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .label-main { display: block; font-size: 0.8rem; font-weight: 800; color: var(--text-soft); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+    
+    .input-main { width: 100%; padding: 15px; border: 1px solid #D1D5DB; border-radius: 12px; font-size: 1rem; margin-bottom: 25px; font-family: inherit; transition: 0.2s; background: #F8FAFC; }
+    .input-main:focus { border-color: var(--accent); outline: none; background: white; box-shadow: 0 0 0 4px rgba(79, 111, 82, 0.1); }
+
+    /* Grid de Estilo (Negrita, Tamaño, Color) */
+    .style-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding-top: 25px; border-top: 1px solid #F3F4F6; }
+    .style-box label { font-size: 0.75rem; color: var(--text-soft); font-weight: 700; display: block; margin-bottom: 10px; text-transform: uppercase; }
+
+    /* Switch Custom */
+    .switch { position: relative; display: inline-block; width: 52px; height: 28px; }
     .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #D1D5DB; transition: .4s; border-radius: 24px; }
-    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-    input:checked + .slider { background-color: #4F6F52; }
-    input:checked + .slider:before { transform: translateX(20px); }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #D1D5DB; transition: .4s; border-radius: 30px; }
+    .slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    input:checked + .slider { background-color: var(--accent); }
+    input:checked + .slider:before { transform: translateX(24px); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+        .cms-sidebar { width: 80px; }
+        .cms-header span, .setting-item span, .section-group-title, .nav-aux-btn span { display: none; }
+        .setting-item i { margin: 0 auto; font-size: 1.2rem; }
+    }
   </style>
 </head>
 <body>
 
   <aside class="cms-sidebar">
-    <div class="cms-header"><i class="fas fa-sliders-h"></i> BITÁCORA ENGINE</div>
+    <div class="cms-header">
+        <i class="fas fa-wand-magic-sparkles"></i> 
+        <span>DISEÑADOR WEB</span>
+    </div>
+    
     <div class="sections-list" id="sectionsList">
-        </div>
-    <div style="padding:20px; border-top:1px solid var(--border);">
-        <a href="../index.html" target="_blank" style="text-decoration:none; color:var(--accent); font-weight:600; font-size:0.9rem;">
-            <i class="fas fa-external-link-alt"></i> Ver Web en vivo
-        </a>
+        <p style="padding:20px; color:#94A3B8; text-align:center;"><i class="fas fa-circle-notch fa-spin"></i></p>
+    </div>
+
+    <div class="nav-footer">
+        <button class="nav-aux-btn" onclick="location.href='panel-admin.html'">
+            <i class="fas fa-th-large"></i> <span>Dashboard</span>
+        </button>
+        <button class="nav-aux-btn logout" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span>
+        </button>
     </div>
   </aside>
 
   <main class="editor-pane">
     <div class="editor-header">
-        <h2 id="editingTitle">Selecciona una opción</h2>
-        <button class="btn-save" onclick="saveAll()">Guardar Cambios</button>
+        <h2 id="editingTitle">Bienvenido al Editor</h2>
+        <button class="btn-publish" id="publishBtn" onclick="saveActive()">
+            <i class="fas fa-cloud-arrow-up"></i> Publicar Cambios
+        </button>
     </div>
-    <div class="editor-content" id="editorContent">
-        <div style="text-align:center; color:#94A3B8; margin-top:100px;">
-            <i class="fas fa-mouse-pointer fa-3x" style="margin-bottom:20px;"></i>
-            <p>Haz clic en una sección de la izquierda para editar sus propiedades.</p>
+
+    <div class="editor-body" id="editorContent">
+        <div style="text-align:center; margin-top:100px; color:#94A3B8;">
+            <i class="fas fa-layer-group fa-4x" style="margin-bottom:20px; opacity:0.2;"></i>
+            <h3>Control Total de Bitácora Mental</h3>
+            <p style="margin-top:10px;">Selecciona cualquier elemento de la izquierda para editar su contenido y estilo.</p>
         </div>
     </div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
+  
   <script>
     let allConfigs = [];
     let activeKey = null;
 
+    // 1. INICIALIZACIÓN
     async function init() {
         if (!window.sb) return setTimeout(init, 100);
-        const { data } = await window.sb.from('config_interfaz').select('*').order('orden');
+        
+        // Verificar si es Admin antes de cargar
+        const { data: { session } } = await window.sb.auth.getSession();
+        if (!session) return window.location.href = '../login.html';
+
+        const { data: profile } = await window.sb.from('users_profile').select('rol').eq('id', session.user.id).single();
+        if (profile.rol !== 'admin') return window.location.href = '../app/dashboard.html';
+
+        // Cargar Datos del CMS
+        const { data, error } = await window.sb.from('config_interfaz').select('*').order('orden');
+        if (error) { console.error(error); return; }
+        
         allConfigs = data;
         renderSidebar();
     }
     init();
 
+    // 2. RENDERIZAR SIDEBAR DINÁMICO
     function renderSidebar() {
         const list = document.getElementById('sectionsList');
         const groups = {};
@@ -100,18 +161,17 @@
         });
 
         list.innerHTML = Object.keys(groups).map(sec => `
-            <div class="section-group">
-                <div class="section-title">${sec}</div>
-                ${groups[sec].map(item => `
-                    <div class="setting-item" id="item-${item.clave}" onclick="openEditor('${item.clave}')">
-                        ${item.label}
-                        <i class="fas fa-chevron-right" style="font-size:0.7rem; opacity:0.3;"></i>
-                    </div>
-                `).join('')}
-            </div>
+            <div class="section-group-title">${sec}</div>
+            ${groups[sec].map(item => `
+                <div class="setting-item" id="item-${item.clave}" onclick="openEditor('${item.clave}')">
+                    <span>${item.label}</span>
+                    <i class="fas fa-angle-right" style="opacity:0.3;"></i>
+                </div>
+            `).join('')}
         `).join('');
     }
 
+    // 3. ABRIR EDITOR DE PROPIEDADES
     function openEditor(key) {
         activeKey = key;
         document.querySelectorAll('.setting-item').forEach(el => el.classList.remove('active'));
@@ -119,80 +179,114 @@
 
         const item = allConfigs.find(c => c.clave === key);
         const meta = item.metadata || {};
-        document.getElementById('editingTitle').textContent = item.label;
+        document.getElementById('editingTitle').textContent = `Editando: ${item.label}`;
 
-        let editorHtml = `<div class="control-card">
-            <label class="control-label">Contenido Principal</label>`;
+        let html = `
+            <div class="prop-card">
+                <label class="label-main">Contenido Base / Valor</label>`;
 
+        // Control principal según tipo
         if (item.tipo_control === 'texto') {
-            editorHtml += `<input type="text" id="edit-val" class="input-main" value="${item.valor}">`;
+            html += `<input type="text" id="edit-val" class="input-main" value="${item.valor || ''}">`;
         } else if (item.tipo_control === 'area') {
-            editorHtml += `<textarea id="edit-val" class="input-main" rows="4">${item.valor}</textarea>`;
+            html += `<textarea id="edit-val" class="input-main" rows="4">${item.valor || ''}</textarea>`;
         } else if (item.tipo_control === 'switch') {
-            editorHtml += `<label class="switch"><input type="checkbox" id="edit-val" ${item.valor === 'true' ? 'checked' : ''}><span class="slider"></span></label>`;
+            html += `
+                <div style="margin-bottom:20px;">
+                    <label class="switch">
+                        <input type="checkbox" id="edit-val" ${item.valor === 'true' ? 'checked' : ''}>
+                        <span class="slider"></span>
+                    </label>
+                    <span style="margin-left:15px; font-weight:600; color:var(--text-soft);">Habilitar / Deshabilitar</span>
+                </div>`;
         } else if (item.tipo_control === 'color') {
-            editorHtml += `<input type="color" id="edit-val" class="input-main" value="${item.valor}" style="height:50px;">`;
+            html += `<input type="color" id="edit-val" class="input-main" value="${item.valor || '#4F6F52'}" style="height:60px; padding:5px; cursor:pointer;">`;
         } else if (item.tipo_control === 'fuente') {
-            editorHtml += `<select id="edit-val" class="input-main">
-                ${meta.options.map(o => `<option value="${o}" ${item.valor === o ? 'selected' : ''}>${o}</option>`).join('')}
+            const opts = meta.options || ['Outfit', 'DM Sans'];
+            html += `<select id="edit-val" class="input-main">
+                ${opts.map(o => `<option value="${o}" ${item.valor === o ? 'selected' : ''}>${o}</option>`).join('')}
             </select>`;
         }
 
-        // AGREGAR PROPIEDADES ESTILO SHOPIFY (Metadata)
+        // CONTROLES DE ESTILO AVANZADO (Shopify Style)
         if (['texto', 'area'].includes(item.tipo_control)) {
-            editorHtml += `
-                <div class="prop-grid">
-                    <div class="prop-box">
-                        <label>Tamaño de Fuente (rem)</label>
+            html += `
+                <div class="style-grid">
+                    <div class="style-box">
+                        <label><i class="fas fa-text-height"></i> Tamaño (rem)</label>
                         <input type="number" step="0.1" id="meta-size" class="input-main" value="${meta.size || 1}">
                     </div>
-                    <div class="prop-box">
-                        <label>Grosor (Weight)</label>
+                    <div class="style-box">
+                        <label><i class="fas fa-bold"></i> Grosor / Peso</label>
                         <select id="meta-weight" class="input-main">
-                            <option value="300" ${meta.weight == 300 ? 'selected' : ''}>Fino</option>
-                            <option value="400" ${meta.weight == 400 ? 'selected' : ''}>Normal</option>
-                            <option value="600" ${meta.weight == 600 ? 'selected' : ''}>Semibold</option>
-                            <option value="700" ${meta.weight == 700 ? 'selected' : ''}>Negrita</option>
+                            <option value="300" ${meta.weight == 300 ? 'selected' : ''}>300 - Fino</option>
+                            <option value="400" ${meta.weight == 400 ? 'selected' : ''}>400 - Normal</option>
+                            <option value="600" ${meta.weight == 600 ? 'selected' : ''}>600 - Semibold</option>
+                            <option value="700" ${meta.weight == 700 ? 'selected' : ''}>700 - Negrita</option>
+                            <option value="800" ${meta.weight == 800 ? 'selected' : ''}>800 - Extra Bold</option>
                         </select>
                     </div>
-                    <div class="prop-box">
-                        <label>Color de Texto</label>
-                        <input type="color" id="meta-color" class="input-main" value="${meta.color || '#000000'}" style="height:40px; padding:2px;">
+                    <div class="style-box">
+                        <label><i class="fas fa-droplet"></i> Color Específico</label>
+                        <input type="color" id="meta-color" class="input-main" value="${meta.color || '#1F2933'}" style="height:45px; padding:2px;">
                     </div>
-                </div>
-            `;
+                </div>`;
         }
-
-        editorHtml += `</div>`;
-        document.getElementById('editorContent').innerHTML = editorHtml;
+        
+        html += `</div>`;
+        document.getElementById('editorContent').innerHTML = html;
     }
 
-    async function saveAll() {
+    // 4. GUARDAR Y PUBLICAR
+    async function saveActive() {
         if (!activeKey) return;
+        
+        const btn = document.getElementById('publishBtn');
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publicando...';
+
         const item = allConfigs.find(c => c.clave === activeKey);
         const input = document.getElementById('edit-val');
         
+        // Obtener valor según tipo
         let newVal = input.type === 'checkbox' ? input.checked.toString() : input.value;
+        
+        // Obtener metadatos de estilo
         let newMeta = { ...item.metadata };
-
         if (document.getElementById('meta-size')) {
             newMeta.size = document.getElementById('meta-size').value;
             newMeta.weight = document.getElementById('meta-weight').value;
             newMeta.color = document.getElementById('meta-color').value;
         }
 
-        const btn = document.querySelector('.btn-save');
-        btn.textContent = "Guardando...";
-
         const { error } = await window.sb.from('config_interfaz')
             .update({ valor: newVal, metadata: newMeta })
             .eq('clave', activeKey);
 
-        if (!error) {
+        if (error) {
+            alert("Error al guardar: " + error.message);
+        } else {
+            // Actualizar local
             item.valor = newVal;
             item.metadata = newMeta;
-            btn.textContent = "¡Guardado!";
-            setTimeout(() => btn.textContent = "Guardar Cambios", 2000);
+            
+            btn.innerHTML = '<i class="fas fa-check"></i> ¡Publicado!';
+            btn.style.background = '#10B981';
+            
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+                btn.style.background = '';
+            }, 2000);
+        }
+    }
+
+    // 5. LOGOUT
+    async function logout() {
+        if (confirm("¿Segura que deseas salir del editor?")) {
+            await window.sb.auth.signOut();
+            window.location.href = '../login.html';
         }
     }
   </script>
