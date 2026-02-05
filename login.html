@@ -170,7 +170,7 @@
       try {
         if (!window.sb) throw new Error("Error de conexión.");
         sessionStorage.setItem('show_welcome_back', 'true');
-        // Google siempre redirige a una URL fija, el dashboard se encargará de redirigir al admin si es necesario
+        // Google siempre redirige a una URL fija,  el dashboard se encargará de redirigir al admin si es necesario
         await window.sb.auth.signInWithOAuth({
           provider: 'google',
           options: { redirectTo: window.location.origin + '/bitacora-mental/app/dashboard.html' }
