@@ -2,535 +2,139 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Dashboard - Bitácora Mental</title>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    :root {
-      --primary: #4F6F52;
-      --primary-light: #6B8A6E;
-      --secondary: #A7C4B5;
-      --background: #F9FBFA;
-      --card-bg: #FFFFFF;
-      --dark: #1F2933;
-      --text-secondary: #6B7280;
-      --border: #E6EFE8;
-      --success: #10B981;
-      --warning: #F59E0B;
-      --danger: #EF4444;
-      --radius: 16px;
-      --shadow: 0 4px 20px rgba(0,0,0,0.06);
-      --shadow-lg: 0 10px 40px rgba(0,0,0,0.1);
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--background);
-      color: var(--dark);
-      line-height: 1.6;
-    }
-
-    h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; font-weight: 600; }
-
-    /* Layout */
-    .dashboard-container { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
-
-    /* Sidebar */
-    .sidebar {
-      background: white; border-right: 1px solid var(--border); padding: 24px 0;
-      position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column;
-    }
-    .sidebar-header { padding: 0 24px 24px; border-bottom: 1px solid var(--border); }
-    .logo { display: flex; align-items: center; gap: 12px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--primary); text-decoration: none; }
-    .sidebar-nav { flex: 1; padding: 24px 0; overflow-y: auto; }
-    .nav-section { margin-bottom: 24px; }
-    .nav-section-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); padding: 0 24px 8px; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 24px; color: var(--dark); text-decoration: none; transition: all 0.2s; border-left: 3px solid transparent; }
-    .nav-item:hover { background: var(--background); color: var(--primary); }
-    .nav-item.active { background: rgba(79, 111, 82, 0.08); color: var(--primary); border-left-color: var(--primary); font-weight: 600; }
-    .nav-badge { margin-left: auto; background: var(--danger); color: white; font-size: 0.7rem; padding: 2px 8px; border-radius: 999px; font-weight: 600; }
-    .sidebar-footer { padding: 0 24px; border-top: 1px solid var(--border); padding-top: 20px; }
-    .user-profile { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--background); border-radius: 12px; cursor: pointer; transition: all 0.2s; }
-    .user-profile:hover { background: var(--border); }
-    .user-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1rem; }
-    .user-info { flex: 1; min-width: 0; }
-    .user-name { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .user-email { font-size: 0.75rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-    /* Main Content */
-    .main-content { padding: 32px 40px; max-width: 1400px; }
-    .page-header { margin-bottom: 32px; }
-    .page-header h1 { font-size: 2rem; margin-bottom: 8px; color: var(--dark); }
-    .page-subtitle { color: var(--text-secondary); font-size: 1rem; }
-
-    /* Cards */
-    .card { background: var(--card-bg); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); border: 1px solid var(--border); transition: all 0.3s; }
-    .card:hover { box-shadow: var(--shadow-lg); }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .card-title { font-size: 1.2rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
-    .card-action { color: var(--primary); text-decoration: none; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; transition: gap 0.2s; }
-    .card-action:hover { gap: 10px; }
-
-    /* Grids */
-    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-
-    /* Stats Cards */
-    .stat-card { background: var(--card-bg); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); display: flex; align-items: center; gap: 16px; transition: all 0.3s; }
-    .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-    .stat-icon { width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
-    .stat-icon.green { background: rgba(16, 185, 129, 0.1); color: var(--success); }
-    .stat-icon.blue { background: rgba(79, 111, 82, 0.1); color: var(--primary); }
-    .stat-icon.orange { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
-    .stat-icon.purple { background: rgba(167, 196, 181, 0.2); color: var(--primary-light); }
-    .stat-info { flex: 1; }
-    .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--dark); line-height: 1; margin-bottom: 4px; }
-    .stat-label { color: var(--text-secondary); font-size: 0.85rem; }
-
-    /* Appointment Card */
-    .appointment-card { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; border: none; }
-    .appointment-card:hover { transform: translateY(-4px); }
-    .appointment-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-    .appointment-icon { width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
-    .appointment-title { font-size: 1rem; opacity: 0.9; }
-    .appointment-datetime { font-size: 1.5rem; font-weight: 600; margin-bottom: 16px; }
-    .appointment-info { display: flex; flex-direction: column; gap: 12px; }
-    .appointment-detail { display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
-    .appointment-detail i { width: 20px; }
-    .appointment-actions { display: flex; gap: 12px; margin-top: 20px; }
-
-    /* Buttons */
-    .btn { padding: 10px 20px; border-radius: 10px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; border: none; cursor: pointer; font-size: 0.9rem; }
-    .btn-white { background: white; color: var(--primary); }
-    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-    .btn-outline-white { background: transparent; border: 2px solid white; color: white; }
-    .btn-outline-white:hover { background: rgba(255,255,255,0.1); }
-
-    /* Resources List */
-    .resource-list { display: flex; flex-direction: column; gap: 12px; }
-    .resource-item { display: flex; align-items: center; gap: 16px; padding: 16px; background: var(--background); border-radius: 12px; text-decoration: none; color: var(--dark); transition: all 0.2s; }
-    .resource-item:hover { background: var(--border); transform: translateX(4px); }
-    .resource-icon { width: 48px; height: 48px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--primary); flex-shrink: 0; }
-    .resource-info { flex: 1; }
-    .resource-title { font-weight: 600; margin-bottom: 4px; }
-    .resource-meta { font-size: 0.85rem; color: var(--text-secondary); }
-
-    /* Quick Actions */
-    .quick-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-    .quick-action { background: var(--background); padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.2s; text-decoration: none; color: var(--dark); border: 2px solid transparent; }
-    .quick-action:hover { background: white; border-color: var(--primary); transform: translateY(-4px); }
-    .quick-action i { font-size: 2rem; color: var(--primary); margin-bottom: 12px; display: block; }
-    .quick-action-label { font-weight: 600; font-size: 0.95rem; }
-
-    /* Badge */
-    .badge { padding: 4px 12px; border-radius: 999px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
-    .badge.info { background: rgba(79, 111, 82, 0.1); color: var(--primary); }
-
-    /* Empty State */
-    .empty-state { padding: 20px; text-align: center; }
-    .empty-text { color: var(--text-secondary); }
-
-    /* Mobile */
-    .mobile-menu-btn { display: none; position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: var(--primary); color: white; border: none; border-radius: 50%; font-size: 1.5rem; box-shadow: 0 4px 20px rgba(79, 111, 82, 0.3); cursor: pointer; z-index: 1000; }
+    /* Diseño Unificado "Soft & Human" */
+    :root { --primary: #4F6F52; --bg: #F3F6F4; --white: #fff; --text: #1F2933; --border: #E6EFE8; --radius: 20px; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; display: flex; min-height: 100vh; }
     
-    @media (max-width: 968px) {
-      .dashboard-container { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
-      .main-content { padding: 20px; }
-      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-      .quick-actions { grid-template-columns: 1fr; }
-      .mobile-menu-btn { display: block; }
+    /* Sidebar Desktop */
+    .sidebar { width: 260px; background: var(--white); padding: 24px; display: flex; flex-direction: column; border-right: 1px solid var(--border); position: fixed; height: 100%; top: 0; z-index: 100; transition: transform 0.3s; }
+    .logo { font-family: 'Outfit'; font-weight: 700; color: var(--primary); font-size: 1.3rem; text-decoration: none; margin-bottom: 40px; display: flex; align-items: center; gap: 8px; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 14px; color: #64748B; text-decoration: none; border-radius: 12px; margin-bottom: 4px; font-weight: 500; transition: 0.2s; }
+    .nav-item:hover, .nav-item.active { background: #E8F5E9; color: var(--primary); }
+    .nav-item.active { font-weight: 600; }
+    
+    /* Main Content */
+    .main { flex: 1; padding: 30px; margin-left: 260px; max-width: 100%; }
+    h1 { font-family: 'Outfit'; font-size: 1.8rem; margin: 0 0 5px 0; }
+    p.subtitle { color: #64748B; margin-bottom: 30px; }
+    
+    /* Cards */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .card { background: var(--white); border-radius: var(--radius); padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); transition: transform 0.2s; }
+    .card:hover { transform: translateY(-2px); }
+    .card-title { font-family: 'Outfit'; font-weight: 600; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; color: var(--primary); }
+    
+    /* Mobile */
+    .mobile-header { display: none; padding: 15px; background: var(--white); align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .menu-btn { font-size: 1.5rem; color: var(--text); background: none; border: none; cursor: pointer; }
+    
+    @media (max-width: 800px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; padding: 20px; }
+      .mobile-header { display: flex; }
     }
   </style>
 </head>
 <body>
-  <div class="dashboard-container">
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <a href="dashboard.html" class="logo">
-          <i class="fas fa-brain"></i>
-          Bitácora Mental
-        </a>
-      </div>
 
-      <nav class="sidebar-nav">
-        <div class="nav-section">
-          <div class="nav-section-title">Principal</div>
-          <a href="dashboard.html" class="nav-item active">
-            <i class="fas fa-home"></i> <span>Dashboard</span>
-          </a>
-          <a href="citas.html" class="nav-item">
-            <i class="fas fa-calendar-alt"></i> <span>Mis Citas</span> <span class="nav-badge" id="navCitasBadge" style="display:none">0</span>
-          </a>
-          <a href="especialistas.html" class="nav-item">
-            <i class="fas fa-user-md"></i> <span>Especialistas</span>
-          </a>
-        </div>
-
-        <div class="nav-section">
-          <div class="nav-section-title">Mi Espacio</div>
-          <a href="diario.html" class="nav-item">
-            <i class="fas fa-book"></i> <span>Mi Diario</span>
-          </a>
-          <a href="progreso.html" class="nav-item">
-            <i class="fas fa-chart-line"></i> <span>Mi Progreso</span>
-          </a>
-          <a href="recursos.html" class="nav-item">
-            <i class="fas fa-folder-open"></i> <span>Recursos</span>
-          </a>
-        </div>
-
-        <div class="nav-section">
-          <div class="nav-section-title">Cuenta</div>
-          <a href="plan.html" class="nav-item">
-            <i class="fas fa-crown"></i> <span>Mi Plan</span>
-          </a>
-          <a href="perfil.html" class="nav-item">
-            <i class="fas fa-user-circle"></i> <span>Perfil</span>
-          </a>
-          <a href="#" class="nav-item" onclick="handleLogout()">
-            <i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span>
-          </a>
-          <a href="configuracion.html" class="nav-item">
-            <i class="fas fa-cog"></i> <span>Configuración</span>
-          </a>
-        </div>
-      </nav>
-
-      <div class="sidebar-footer">
-        <div class="user-profile">
-          <div class="user-avatar" id="avatarInitials">--</div>
-          <div class="user-info">
-            <div class="user-name" id="sidebarUserName">Cargando...</div>
-            <div class="user-email" id="sidebarUserEmail">...</div>
-          </div>
-          <i class="fas fa-ellipsis-v" style="color: var(--text-secondary);"></i>
-        </div>
-      </div>
-    </aside>
-
-    <main class="main-content">
-      <div class="page-header">
-        <h1 id="welcomeName">Bienvenida 👋</h1>
-        <p class="page-subtitle">Aquí está tu resumen de bienestar y próximas actividades</p>
-      </div>
-
-      <div class="grid-4" style="margin-bottom: 32px;">
-        <div class="stat-card">
-          <div class="stat-icon green"><i class="fas fa-heart"></i></div>
-          <div class="stat-info">
-            <div class="stat-value" id="statBienestar">--</div>
-            <div class="stat-label">Ánimo (Último)</div>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon blue"><i class="fas fa-calendar-check"></i></div>
-          <div class="stat-info">
-            <div class="stat-value" id="statSesiones">0</div>
-            <div class="stat-label">Sesiones completadas</div>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon orange"><i class="fas fa-fire"></i></div>
-          <div class="stat-info">
-            <div class="stat-value" id="statRacha">0</div>
-            <div class="stat-label">Días de racha</div>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon purple"><i class="fas fa-book-open"></i></div>
-          <div class="stat-info">
-            <div class="stat-value" id="statDiario">0</div>
-            <div class="stat-label">Entradas de diario</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid-2" style="margin-bottom: 32px;">
-        <div class="card appointment-card">
-          <div class="appointment-header">
-            <div class="appointment-icon"><i class="fas fa-video"></i></div>
-            <div class="appointment-title">Próxima sesión</div>
-          </div>
-          
-          <div class="appointment-datetime" id="nextCitaDate">
-            Sin citas agendadas
-          </div>
-
-          <div class="appointment-info" id="nextCitaInfo" style="display: none;">
-            <div class="appointment-detail">
-              <i class="fas fa-user-md"></i> <span id="nextCitaDoc">...</span>
-            </div>
-            <div class="appointment-detail">
-              <i class="fas fa-clock"></i> <span>50 minutos</span>
-            </div>
-          </div>
-
-          <div class="appointment-actions">
-            <a href="agendar.html" class="btn btn-white" id="btnCitaAction">
-              <i class="fas fa-plus"></i> Agendar
-            </a>
-          </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-heartbeat" style="color:var(--primary)"></i> Estado de la Semana</h3>
-                <span class="badge info" id="pulseStatusBadge">Verificando...</span>
-            </div>
-
-            <div id="pulseContent">
-                <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:20px;">
-                    Registra tu pulso semanal para mantener un historial clínico útil para tu terapeuta.
-                </p>
-                
-                <div style="margin-bottom:20px;">
-                   <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:5px; color:var(--text-secondary);">
-                       <span>Intensidad de síntomas</span>
-                       <span id="dashAnsiedadText" style="font-weight:600; color:var(--dark);">--</span>
-                   </div>
-                   <div style="height:8px; background:#F3F4F6; border-radius:4px; overflow:hidden;">
-                       <div id="dashAnsiedadBar" style="width:0%; height:100%; background:var(--warning); transition:width 1s ease;"></div>
-                   </div>
-                </div>
-            </div>
-
-            <button id="btnPulseAction" class="card-action" style="width:100%; justify-content:center; border:none; cursor:pointer; font-size:0.95rem;" onclick="window.location.href='pulso.html'">
-                Cargando estado...
-            </button>
-        </div>
-      </div>
-
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title"><i class="fas fa-star"></i> Recursos recomendados</h3>
-            <a href="recursos.html" class="card-action">Ver todos <i class="fas fa-arrow-right"></i></a>
-          </div>
-
-          <div class="resource-list">
-            <a href="recursos.html" class="resource-item">
-              <div class="resource-icon"><i class="fas fa-headphones"></i></div>
-              <div class="resource-info">
-                <div class="resource-title">Audio: Respiración guiada</div>
-                <div class="resource-meta">5 min · Relajación</div>
-              </div>
-            </a>
-            <a href="recursos.html" class="resource-item">
-              <div class="resource-icon"><i class="fas fa-file-pdf"></i></div>
-              <div class="resource-info">
-                <div class="resource-title">Guía: Manejo del estrés</div>
-                <div class="resource-meta">PDF · 12 páginas</div>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title"><i class="fas fa-bolt"></i> Acciones rápidas</h3>
-          </div>
-
-          <div class="quick-actions">
-            <a href="agendar.html" class="quick-action">
-              <i class="fas fa-calendar-plus"></i>
-              <div class="quick-action-label">Agendar sesión</div>
-            </a>
-            <a href="diario.html" class="quick-action">
-              <i class="fas fa-pencil-alt"></i>
-              <div class="quick-action-label">Escribir en diario</div>
-            </a>
-            <a href="pulso.html" class="quick-action">
-              <i class="fas fa-heartbeat"></i>
-              <div class="quick-action-label">Pulso Semanal</div>
-            </a>
-            <a href="#" class="quick-action">
-              <i class="fas fa-comments"></i>
-              <div class="quick-action-label">Contactar soporte</div>
-            </a>
-          </div>
-        </div>
-      </div>
-    </main>
+  <div class="mobile-header">
+    <a href="#" class="logo" style="margin:0"><i class="fas fa-brain"></i> Bitácora</a>
+    <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
   </div>
 
-  <button class="mobile-menu-btn">
-    <i class="fas fa-bars"></i>
-  </button>
+  <aside class="sidebar" id="sidebar">
+    <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
+    <nav>
+      <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i> Inicio</a>
+      <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
+      <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> Diario</a>
+      <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> Progreso</a>
+      <a href="recursos.html" class="nav-item"><i class="fas fa-box-open"></i> Recursos</a>
+      <div style="flex:1"></div>
+      <a href="perfil.html" class="nav-item"><i class="fas fa-user-circle"></i> Mi Perfil</a>
+      <a href="#" onclick="logout()" class="nav-item" style="color: #EF4444;"><i class="fas fa-sign-out-alt"></i> Salir</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <h1 id="greeting">Hola...</h1>
+    <p class="subtitle" id="dateDisplay">Cargando fecha...</p>
+
+    <div class="grid">
+      <div class="card">
+        <div class="card-title"><i class="fas fa-heartbeat"></i> Pulso Semanal</div>
+        <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">
+          ¿Cómo te sientes hoy? Registra tu estado para que tu terapeuta pueda ayudarte mejor.
+        </p>
+        <button id="btnPulse" class="nav-item active" style="width:100%; justify-content:center; cursor:pointer; border:none;" onclick="location.href='pulso.html'">
+          <i class="fas fa-plus"></i> Registrar ahora
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="fas fa-video"></i> Próxima Sesión</div>
+        <div id="nextSessionInfo">
+          <p style="color:#666;">No tienes citas agendadas.</p>
+          <a href="agendar.html" style="color:var(--primary); font-weight:600; text-decoration:none;">Agendar una cita &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
-
   <script>
-    async function loadDashboard() {
-        // 1. Obtener usuario
-        const { data: { user } } = await window.supabase.auth.getUser();
-        if (!user) { window.location.href = '../login.html'; return; }
+    // 1. SEGURIDAD: Auth Guard
+    async function checkAuth() {
+        if (!window.sb) { setTimeout(checkAuth, 100); return; }
+        const { data: { session } } = await window.sb.auth.getSession();
+        if (!session) window.location.replace('../login.html'); // Expulsar a raíz
+        else loadData(session.user);
+    }
+    checkAuth();
 
-        // 2. Cargar Perfil
-        const { data: profile } = await window.supabase
-            .from('users_profile')
-            .select('*')
-            .eq('id', user.id)
-            .single();
+    // 2. Cargar Datos
+    async function loadData(user) {
+        // Saludo Humano
+        const hour = new Date().getHours();
+        const saludo = hour < 12 ? 'Buenos días' : (hour < 18 ? 'Buenas tardes' : 'Buenas noches');
+        
+        const { data: profile } = await window.sb.from('users_profile').select('nombre').eq('id', user.id).single();
+        document.getElementById('greeting').textContent = `${saludo}, ${profile?.nombre || 'viajero'} 👋`;
 
-        if (profile) {
-            document.getElementById('welcomeName').textContent = `Bienvenida de nuevo, ${profile.nombre} 👋`;
-            document.getElementById('sidebarUserName').textContent = `${profile.nombre} ${profile.apellido}`;
-            document.getElementById('sidebarUserEmail').textContent = user.email;
-            document.getElementById('avatarInitials').textContent = (profile.nombre[0] + profile.apellido[0]).toUpperCase();
-        }
+        // Fecha Perú
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Lima' };
+        document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('es-PE', options);
 
-        // 3. ESTADÍSTICAS
-
-        // A. Sesiones
-        const { count: sesiones } = await window.supabase
-            .from('citas')
-            .select('*', { count: 'exact', head: true })
-            .eq('paciente_id', user.id)
-            .eq('estado', 'completada');
-        document.getElementById('statSesiones').textContent = sesiones || 0;
-
-        // B. Entradas de Diario
-        const { count: diarioTotal } = await window.supabase
-            .from('diario_emocional')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', user.id);
-        document.getElementById('statDiario').textContent = diarioTotal || 0;
-
-        // C. Racha (Calculada con fechas reales)
-        const { data: entradas } = await window.supabase
-            .from('diario_emocional')
-            .select('fecha')
-            .eq('user_id', user.id)
-            .order('fecha', { ascending: false });
-
-        let racha = 0;
-        if (entradas && entradas.length > 0) {
-            const diasUnicos = new Set(entradas.map(e => e.fecha.split('T')[0]));
-            const diasOrdenados = Array.from(diasUnicos).sort().reverse();
+        // Lógica de Pulso (Bloqueo 7 días)
+        const { data: pulses } = await window.sb.from('monitoreo_sintomas').select('fecha_realizado').eq('user_id', user.id).order('fecha_realizado', {ascending:false}).limit(1);
+        
+        if (pulses && pulses.length > 0) {
+            const lastDate = new Date(pulses[0].fecha_realizado);
+            const diff = new Date() - lastDate;
+            const days = diff / (1000 * 60 * 60 * 24);
             
-            const hoy = new Date().toISOString().split('T')[0];
-            const ayerDate = new Date(); ayerDate.setDate(ayerDate.getDate() - 1);
-            const ayer = ayerDate.toISOString().split('T')[0];
-
-            if (diasOrdenados[0] === hoy || diasOrdenados[0] === ayer) {
-                racha = 1;
-                let fechaChequeo = new Date(diasOrdenados[0]);
-                for (let i = 1; i < diasOrdenados.length; i++) {
-                    fechaChequeo.setDate(fechaChequeo.getDate() - 1);
-                    if (diasOrdenados[i] === fechaChequeo.toISOString().split('T')[0]) racha++;
-                    else break;
-                }
+            if (days < 7) {
+                const btn = document.getElementById('btnPulse');
+                btn.innerHTML = `<i class="fas fa-check"></i> Todo listo por hoy`;
+                btn.style.background = '#E8F5E9';
+                btn.style.color = '#4F6F52';
+                btn.onclick = null;
             }
         }
-        document.getElementById('statRacha').textContent = racha;
-
-        // 4. Próxima Cita
-        const { data: citas } = await window.supabase
-            .from('citas')
-            .select('*, psicologos(nombre_completo)')
-            .eq('paciente_id', user.id)
-            .eq('estado', 'agendada')
-            .gte('fecha_hora', new Date().toISOString())
-            .order('fecha_hora', { ascending: true })
-            .limit(1);
-
-        if (citas && citas.length > 0) {
-            const cita = citas[0];
-            const fecha = new Date(cita.fecha_hora);
-            document.getElementById('nextCitaDate').textContent = 
-                fecha.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-            document.getElementById('nextCitaDoc').textContent = cita.psicologos?.nombre_completo || 'Tu especialista';
-            document.getElementById('nextCitaInfo').style.display = 'flex';
-            document.getElementById('btnCitaAction').innerHTML = '<i class="fas fa-video"></i> Unirse';
-        }
-
-        // 5. ESTADO DE LA SEMANA (Pulso Semanal)
-        const { data: registros } = await window.supabase
-            .from('monitoreo_sintomas')
-            .select('*')
-            .eq('user_id', user.id)
-            .order('fecha_realizado', { ascending: false })
-            .limit(1);
-
-        const btnPulse = document.getElementById('btnPulseAction');
-        const badge = document.getElementById('pulseStatusBadge');
-        const bar = document.getElementById('dashAnsiedadBar');
-        const txt = document.getElementById('dashAnsiedadText');
-        const statBienestar = document.getElementById('statBienestar');
-
-        if (registros && registros.length > 0) {
-            const ultimo = registros[0];
-            const fechaUltimo = new Date(ultimo.fecha_realizado);
-            const hoy = new Date();
-            const diasPasados = Math.floor((hoy - fechaUltimo) / (1000 * 60 * 60 * 24));
-            
-            // Visualización
-            const nivel = ultimo.nivel_ansiedad || 0;
-            bar.style.width = `${Math.min(nivel * 10, 100)}%`;
-            txt.textContent = nivel <= 3 ? 'Baja' : (nivel <= 7 ? 'Moderada' : 'Alta');
-            
-            // Actualizar Tarjeta Stat "Bienestar"
-            const animo = ultimo.nivel_animo || 0;
-            statBienestar.textContent = `${animo}/10`;
-
-            if (diasPasados < 7) {
-                // BLOQUEADO
-                const diasRestantes = 7 - diasPasados;
-                btnPulse.innerHTML = `<i class="fas fa-clock"></i> Esperar ${diasRestantes} días`;
-                btnPulse.disabled = true;
-                btnPulse.style.opacity = '0.6';
-                btnPulse.style.cursor = 'not-allowed';
-                badge.textContent = 'Actualizado';
-                badge.className = 'badge info';
-                badge.style.background = '#D1FAE5';
-                badge.style.color = '#065F46';
-            } else {
-                // DISPONIBLE
-                btnPulse.innerHTML = '📝 Registrar Pulso Semanal';
-                btnPulse.disabled = false;
-                btnPulse.style.opacity = '1';
-                btnPulse.style.cursor = 'pointer';
-                badge.textContent = 'Pendiente';
-                badge.className = 'badge info';
-                badge.style.background = '#FEF3C7';
-                badge.style.color = '#92400E';
-            }
-        } else {
-            // NUNCA HIZO REGISTRO (Mandar a Entrevista)
-            btnPulse.innerHTML = '🚀 Iniciar Entrevista';
-            btnPulse.onclick = () => window.location.href = 'entrevista.html';
-            badge.textContent = 'Bienvenida';
-            txt.textContent = '-';
-            statBienestar.textContent = '-';
-        }
     }
 
-    async function handleLogout() {
-        await window.supabase.auth.signOut();
-        window.location.href = '../login.html';
-    }
-
-    const mobileBtn = document.querySelector('.mobile-menu-btn');
-    if (mobileBtn) {
-        mobileBtn.addEventListener('click', () => {
-            const sidebar = document.querySelector('.sidebar');
-            sidebar.style.display = sidebar.style.display === 'flex' ? 'none' : 'flex';
-            sidebar.style.position = 'fixed';
-            sidebar.style.zIndex = '1001';
-        });
-    }
-
-    document.addEventListener('DOMContentLoaded', loadDashboard);
+    // UI Mobile
+    function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
+    async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
   </script>
 </body>
 </html>
