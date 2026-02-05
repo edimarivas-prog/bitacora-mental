@@ -4,58 +4,105 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mis Citas - Bitácora Mental</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root { --primary: #4F6F52; --bg: #F3F6F4; --white: #fff; --text: #1F2933; --border: #E6EFE8; --radius: 20px; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); margin: 0; display: flex; }
-    .sidebar { width: 260px; background: white; padding: 24px; border-right: 1px solid var(--border); position: fixed; height: 100%; top: 0; z-index: 100; }
-    .main { flex: 1; padding: 30px; margin-left: 260px; }
-    
-    .tabs { display: flex; gap: 15px; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-    .tab { background: none; border: none; font-size: 1rem; color: #64748B; cursor: pointer; padding: 5px 10px; font-weight: 600; }
-    .tab.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
-    
-    .cita-card { background: white; padding: 20px; border-radius: var(--radius); box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; border-left: 5px solid var(--primary); }
-    .cita-info h3 { margin: 0 0 5px 0; font-family: 'Outfit'; }
-    .cita-info p { margin: 0; color: #64748B; font-size: 0.9rem; }
-    .btn { padding: 10px 20px; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 0.9rem; border: none; cursor: pointer; transition: 0.2s; }
-    .btn-join { background: var(--primary); color: white; }
-    .btn-cancel { background: #fee2e2; color: #dc2626; }
-    
-    @media (max-width: 900px) { .sidebar { display: none; } .main { margin-left: 0; padding: 20px; } }
+    /* Estilos Maestros */
+    :root { --primary: #4F6F52; --primary-light: #E8F5E9; --accent: #F59E0B; --bg: #F9FBFA; --white: #FFFFFF; --text: #1F2933; --text-soft: #64748B; --border: #E6EFE8; --radius: 20px; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
+    .sidebar { width: 260px; background: var(--white); padding: 24px; border-right: 1px solid var(--border); position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s; }
+    .logo { font-family: 'Outfit'; font-weight: 700; color: var(--primary); font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 8px; margin-bottom: 30px; }
+    .nav-section { margin-bottom: 20px; }
+    .nav-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-soft); letter-spacing: 1px; margin-bottom: 10px; padding-left: 10px; font-weight: 700; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-soft); text-decoration: none; border-radius: 12px; font-weight: 500; transition: 0.2s; }
+    .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
+    .nav-item.active { font-weight: 600; }
+    .main { flex: 1; padding: 30px; margin-left: 260px; max-width: 100%; }
+    .mobile-nav { display: none; padding: 15px; background: white; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .menu-toggle { font-size: 1.5rem; background: none; border: none; color: var(--text); }
+    @media (max-width: 900px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main { margin-left: 0; padding: 20px; } .mobile-nav { display: flex; } }
+
+    /* Estilos Específicos Citas */
+    .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .btn-action { background: var(--primary); color: white; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
+    .btn-action:hover { background: #3E5A41; transform: translateY(-2px); }
+
+    .tabs { display: flex; gap: 20px; border-bottom: 1px solid var(--border); margin-bottom: 25px; }
+    .tab { padding: 10px 0; background: none; border: none; font-size: 1rem; color: var(--text-soft); cursor: pointer; border-bottom: 3px solid transparent; font-weight: 500; transition: 0.3s; }
+    .tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+
+    .cita-card { background: white; padding: 24px; border-radius: var(--radius); margin-bottom: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border-left: 5px solid var(--primary); }
+    .cita-info h3 { margin: 0 0 5px 0; font-family: 'Outfit'; font-size: 1.2rem; }
+    .cita-meta { display: flex; gap: 15px; color: var(--text-soft); font-size: 0.9rem; align-items: center; }
+    .cita-actions { display: flex; gap: 10px; }
+    .btn-join { background: var(--primary-light); color: var(--primary); padding: 8px 16px; border-radius: 10px; text-decoration: none; font-weight: 600; }
+    .btn-cancel { background: #FEF2F2; color: #DC2626; padding: 8px 16px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; }
+
+    /* Empty State */
+    .empty-state { text-align: center; padding: 40px; color: var(--text-soft); }
+    .empty-icon { font-size: 3rem; color: #E2E8F0; margin-bottom: 15px; }
   </style>
 </head>
 <body>
-  <aside class="sidebar">
-    <a href="dashboard.html" style="font-family:'Outfit'; font-weight:700; color:var(--primary); font-size:1.3rem; margin-bottom:30px; text-decoration:none;"><i class="fas fa-brain"></i> Bitácora</a>
-    <nav style="display:flex; flex-direction:column; gap:5px;">
-        <a href="dashboard.html" style="padding:12px; color:#64748B; text-decoration:none;"><i class="fas fa-home"></i> Inicio</a>
-        <a href="diario.html" style="padding:12px; color:#64748B; text-decoration:none;"><i class="fas fa-book"></i> Diario</a>
-        <a href="citas.html" style="padding:12px; background:#E8F5E9; color:var(--primary); font-weight:600; border-radius:12px; text-decoration:none;"><i class="fas fa-calendar-alt"></i> Citas</a>
-        <a href="recursos.html" style="padding:12px; color:#64748B; text-decoration:none;"><i class="fas fa-box-open"></i> Recursos</a>
-    </nav>
+  <div class="mobile-nav">
+    <a href="#" class="logo" style="margin:0"><i class="fas fa-brain"></i> Bitácora</a>
+    <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+  </div>
+
+  <aside class="sidebar" id="sidebar">
+    <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
+    <div class="nav-section">
+      <div class="nav-title">Principal</div>
+      <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
+      <a href="citas.html" class="nav-item active"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
+      <a href="especialistas.html" class="nav-item"><i class="fas fa-user-md"></i> Especialistas</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-title">Tu Espacio</div>
+      <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> Diario</a>
+      <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> Progreso</a>
+      <a href="recursos.html" class="nav-item"><i class="fas fa-box-open"></i> Recursos</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-title">Cuenta</div>
+      <a href="plan.html" class="nav-item"><i class="fas fa-crown"></i> Mi Plan</a>
+      <a href="configuracion.html" class="nav-item"><i class="fas fa-cog"></i> Configuración</a>
+      <a href="perfil.html" class="nav-item"><i class="fas fa-user-circle"></i> Perfil</a>
+      <a href="#" onclick="logout()" class="nav-item" style="color:#EF4444"><i class="fas fa-sign-out-alt"></i> Salir</a>
+    </div>
   </aside>
 
   <main class="main">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-        <h1 style="font-family:'Outfit'; margin:0;">Mis Citas</h1>
-        <a href="agendar.html" class="btn btn-join"><i class="fas fa-plus"></i> Nueva Cita</a>
+    <div class="header-actions">
+      <h1 style="font-family:'Outfit'; margin:0;">Mis Sesiones</h1>
+      <a href="agendar.html" class="btn-action"><i class="fas fa-plus"></i> Agendar Cita</a>
     </div>
 
     <div class="tabs">
-        <button class="tab active" onclick="filterCitas('proxima')">Próximas</button>
-        <button class="tab" onclick="filterCitas('historial')">Historial</button>
+      <button class="tab active" onclick="showTab('proximas')">Próximas</button>
+      <button class="tab" onclick="showTab('historial')">Historial</button>
     </div>
 
-    <div id="citasContainer">Cargando...</div>
+    <div id="proximas">
+      <div class="empty-state" id="loadingCitas">
+        <div class="empty-icon"><i class="fas fa-spinner fa-spin"></i></div>
+        <p>Cargando tus citas...</p>
+      </div>
+      <div id="citasList"></div>
+    </div>
+
+    <div id="historial" style="display:none;">
+       <div class="empty-state">
+         <div class="empty-icon"><i class="fas fa-history"></i></div>
+         <p>No tienes citas pasadas.</p>
+       </div>
+    </div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
-    let allCitas = [];
-
     async function checkAuth() {
         if (!window.sb) { setTimeout(checkAuth, 100); return; }
         const { data: { session } } = await window.sb.auth.getSession();
@@ -65,55 +112,53 @@
     checkAuth();
 
     async function loadCitas(userId) {
-        // Obtenemos citas con datos del psicólogo
-        const { data } = await window.sb.from('citas')
+        const list = document.getElementById('citasList');
+        // Consulta real
+        const { data: citas } = await window.sb.from('citas')
             .select('*, psicologos(nombre_completo)')
             .eq('paciente_id', userId)
-            .order('fecha_hora', { ascending: true });
-        
-        allCitas = data || [];
-        filterCitas('proxima');
-    }
+            .eq('estado', 'agendada')
+            .order('fecha_hora', {ascending: true});
 
-    function filterCitas(tipo) {
-        const container = document.getElementById('citasContainer');
-        container.innerHTML = '';
-        
-        const now = new Date();
-        const filtered = allCitas.filter(c => {
-            const d = new Date(c.fecha_hora);
-            return tipo === 'proxima' ? (d >= now && c.estado === 'agendada') : (d < now || c.estado !== 'agendada');
-        });
+        document.getElementById('loadingCitas').style.display = 'none';
 
-        if (filtered.length === 0) {
-            container.innerHTML = '<p style="color:#666">No hay citas en esta sección.</p>';
+        if (!citas || citas.length === 0) {
+            list.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon"><i class="far fa-calendar-check"></i></div>
+                    <p>No tienes citas programadas.<br>¿Hablamos con un especialista?</p>
+                </div>`;
             return;
         }
 
-        filtered.forEach(c => {
+        list.innerHTML = citas.map(c => {
             const date = new Date(c.fecha_hora);
-            const div = document.createElement('div');
-            div.className = 'cita-card';
-            div.innerHTML = `
+            return `
+            <div class="cita-card">
                 <div class="cita-info">
-                    <h3>${c.psicologos?.nombre_completo || 'Especialista'}</h3>
-                    <p><i class="far fa-clock"></i> ${date.toLocaleDateString('es-PE')} - ${date.toLocaleTimeString('es-PE', {hour:'2-digit', minute:'2-digit'})}</p>
-                    <p style="color:var(--primary); font-weight:600; font-size:0.8rem; margin-top:5px;">${c.estado.toUpperCase()}</p>
+                    <h3>${c.psicologos?.nombre_completo || 'Psicólogo Bitácora'}</h3>
+                    <div class="cita-meta">
+                        <span><i class="far fa-calendar"></i> ${date.toLocaleDateString('es-PE', {weekday:'long', day:'numeric', month:'long'})}</span>
+                        <span><i class="far fa-clock"></i> ${date.toLocaleTimeString('es-PE', {hour:'2-digit', minute:'2-digit'})}</span>
+                    </div>
                 </div>
-                <div>
-                    ${c.link_videollamada ? `<a href="${c.link_videollamada}" target="_blank" class="btn btn-join">Unirse</a>` : ''}
-                    ${tipo === 'proxima' ? `<button onclick="cancelCita(${c.id})" class="btn btn-cancel">Cancelar</button>` : ''}
+                <div class="cita-actions">
+                    <button class="btn-cancel" onclick="cancelCita(${c.id})">Cancelar</button>
+                    <a href="${c.link_videollamada || '#'}" target="_blank" class="btn-join">Unirse</a>
                 </div>
-            `;
-            container.appendChild(div);
-        });
+            </div>`;
+        }).join('');
     }
 
-    async function cancelCita(id) {
-        if(!confirm('¿Seguro que deseas cancelar?')) return;
-        await window.sb.from('citas').update({ estado: 'cancelada' }).eq('id', id);
-        location.reload();
+    function showTab(tab) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById('proximas').style.display = tab === 'proximas' ? 'block' : 'none';
+        document.getElementById('historial').style.display = tab === 'historial' ? 'block' : 'none';
     }
+
+    function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
+    async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
   </script>
 </body>
 </html>
