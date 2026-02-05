@@ -147,8 +147,7 @@
             // 3. Redirección según el rol encontrado
             if (profile && profile.rol === 'admin') {
                 console.log("👑 Usuario Admin detectado");
-                // Asegúrate de tener creado el archivo 'app/admin.html'
-                window.location.href = 'app/admin.html';
+                window.location.href = 'admin/panel-admin.html';
             } else if (profile && profile.rol === 'psicologo') {
                 console.log("🧠 Usuario Psicólogo detectado");
                 window.location.href = 'app/dashboard-psico.html';
