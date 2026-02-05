@@ -10,7 +10,8 @@
     /* Estilos Maestros */
     :root { --primary: #4F6F52; --primary-light: #E8F5E9; --bg: #F9FBFA; --white: #FFFFFF; --text: #1F2933; --border: #E6EFE8; --radius: 20px; }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
-    /* Sidebar CSS igual a los anteriores... */
+    
+    /* Sidebar */
     .sidebar { width: 260px; background: var(--white); padding: 24px; border-right: 1px solid var(--border); position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; z-index: 100; }
     .logo { font-family: 'Outfit'; font-weight: 700; color: var(--primary); font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 8px; margin-bottom: 30px; }
     .nav-section { margin-bottom: 20px; }
@@ -18,9 +19,9 @@
     .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: #64748B; text-decoration: none; border-radius: 12px; font-weight: 500; }
     .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
     .nav-item.active { font-weight: 600; }
+    
     .main { flex: 1; padding: 30px 40px; }
-    @media (max-width: 900px) { .sidebar { display: none; } }
-
+    
     /* Estilos Planes */
     .plans-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; max-width: 900px; }
     
@@ -47,11 +48,24 @@
     .premium-card .plan-features li { border-color: rgba(255,255,255,0.1); color: white; }
     .premium-card .plan-features i { color: #F59E0B; }
     .badge { position: absolute; top: 20px; right: 20px; background: #F59E0B; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+
+    /* Mobile */
+    .mobile-nav { display: none; padding: 15px; background: white; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .menu-toggle { font-size: 1.5rem; background: none; border: none; color: var(--text); }
+    @media (max-width: 900px) { 
+        .sidebar { display: none; } 
+        .mobile-nav { display: flex; }
+    }
   </style>
 </head>
 <body>
+  <div class="mobile-nav">
+    <a href="#" class="logo" style="margin:0"><i class="fas fa-brain"></i> Bitácora</a>
+    <button class="menu-toggle" onclick="document.getElementById('sidebar').style.display='flex'"><i class="fas fa-bars"></i></button>
+  </div>
+
   <div style="display:flex; width:100%;">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
         <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
         <div class="nav-section">
           <div class="nav-title">Principal</div>
@@ -68,6 +82,7 @@
         <div class="nav-section">
             <div class="nav-title">Cuenta</div>
             <a href="plan.html" class="nav-item active"><i class="fas fa-crown"></i> Mi Plan</a>
+            <a href="configuracion.html" class="nav-item"><i class="fas fa-cog"></i> Configuración</a>
             <a href="perfil.html" class="nav-item"><i class="fas fa-user-circle"></i> Perfil</a>
             <a href="#" onclick="logout()" class="nav-item" style="color:#EF4444"><i class="fas fa-sign-out-alt"></i> Salir</a>
         </div>
