@@ -4,376 +4,90 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Crear Cuenta - Bitácora Mental</title>
-  
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
   <style>
-    :root {
-      --primary: #4F6F52;
-      --primary-dark: #3A523E;
-      --bg-color: #F2F4F3;
-      --white: #FFFFFF;
-      --text-main: #1F2933;
-      --text-soft: #64748B;
-      --border: #E2E8F0;
-      --danger: #EF4444;
-      --radius: 16px;
-    }
-
+    /* Mismos estilos base que Login para coherencia */
+    :root { --primary: #4F6F52; --bg: #F3F6F4; --text: #1F2933; --border: #E6EFE8; --white: #fff; }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: 'DM Sans', sans-serif;
-      background-color: var(--bg-color);
-      background-image: radial-gradient(#4F6F52 0.5px, transparent 0.5px);
-      background-size: 24px 24px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .auth-card {
-      background: var(--white);
-      width: 100%;
-      max-width: 420px;
-      padding: 32px 28px;
-      border-radius: var(--radius);
-      box-shadow: 0 20px 40px -10px rgba(0,0,0,0.08);
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Decoración superior */
-    .auth-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 6px;
-      background: linear-gradient(90deg, var(--primary), #86A689);
-    }
-
-    .logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 1.4rem;
-      color: var(--primary);
-      text-decoration: none;
-      margin-bottom: 24px;
-    }
-
-    h1 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.6rem;
-      color: var(--text-main);
-      margin: 0 0 8px 0;
-      font-weight: 700;
-    }
-
-    p.subtitle {
-      color: var(--text-soft);
-      font-size: 0.95rem;
-      margin: 0 0 28px 0;
-      line-height: 1.5;
-    }
-
-    /* Botón Google */
-    .btn-google {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      background: var(--white);
-      color: var(--text-main);
-      border: 1px solid var(--border);
-      padding: 14px;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-family: inherit;
-    }
-    .btn-google:hover {
-      background: #F8FAFC;
-      border-color: #CBD5E1;
-      transform: translateY(-1px);
-    }
-    .btn-google:active { transform: translateY(0); }
-
-    /* Separador */
-    .divider {
-      display: flex;
-      align-items: center;
-      color: var(--text-soft);
-      font-size: 0.85rem;
-      margin: 24px 0;
-    }
-    .divider::before, .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-    .divider span { padding: 0 10px; font-weight: 500; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
-
-    /* Formulario */
-    .form-group { margin-bottom: 18px; text-align: left; }
-    
-    label {
-      display: block;
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: var(--text-main);
-      margin-bottom: 8px;
-      padding-left: 4px;
-    }
-
-    .input-wrapper { position: relative; }
-    .input-wrapper i {
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #94A3B8;
-      font-size: 1rem;
-      transition: color 0.3s;
-    }
-
-    input {
-      width: 100%;
-      padding: 14px 16px 14px 44px; /* Espacio para el icono */
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      font-size: 1rem; /* Importante para evitar zoom en iPhone */
-      font-family: inherit;
-      color: var(--text-main);
-      background: #F8FAFC;
-      outline: none;
-      transition: all 0.2s;
-    }
-    input:focus {
-      border-color: var(--primary);
-      background: var(--white);
-      box-shadow: 0 0 0 4px rgba(79, 111, 82, 0.1);
-    }
-    input:focus + i { color: var(--primary); }
-
-    .btn-submit {
-      width: 100%;
-      padding: 16px;
-      background: var(--primary);
-      color: var(--white);
-      border: none;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      margin-top: 10px;
-      box-shadow: 0 4px 12px rgba(79, 111, 82, 0.25);
-    }
-    .btn-submit:hover { background: var(--primary-dark); transform: translateY(-2px); }
-    .btn-submit:active { transform: scale(0.98); }
-    .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
-
-    /* Links y Errores */
-    .auth-footer { margin-top: 24px; font-size: 0.95rem; color: var(--text-soft); }
-    .auth-footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
-    
-    .error-msg {
-      background: #FEF2F2;
-      color: #B91C1C;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      margin-bottom: 20px;
-      display: none;
-      text-align: left;
-      border-left: 4px solid var(--danger);
-      animation: shake 0.4s ease-in-out;
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      75% { transform: translateX(5px); }
-    }
-
-    /* Mobile Responsive */
-    @media (max-width: 480px) {
-      body { padding: 15px; }
-      .auth-card { padding: 25px 20px; }
-      h1 { font-size: 1.4rem; }
-    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; margin: 0; }
+    .card { background: var(--white); padding: 32px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); width: 100%; max-width: 400px; text-align: center; }
+    .logo { color: var(--primary); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.4rem; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; }
+    h1 { font-family: 'Outfit'; font-size: 1.5rem; margin: 0 0 8px 0; color: var(--text); }
+    p { color: #64748B; font-size: 0.95rem; margin-bottom: 24px; line-height: 1.5; }
+    input { width: 100%; padding: 16px; margin-bottom: 16px; border: 2px solid var(--border); border-radius: 16px; font-size: 1rem; outline: none; transition: 0.3s; }
+    input:focus { border-color: var(--primary); background: #FAFAFA; }
+    .btn { width: 100%; padding: 16px; border-radius: 16px; font-weight: 600; font-size: 1rem; cursor: pointer; border: none; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .btn-primary { background: var(--primary); color: white; margin-bottom: 16px; }
+    .links { margin-top: 24px; font-size: 0.9rem; }
+    .links a { color: var(--primary); text-decoration: none; font-weight: 600; }
   </style>
 </head>
 <body>
-
-  <div class="auth-card">
-    <a href="index.html" class="logo">
-      <i class="fas fa-brain"></i> Bitácora Mental
-    </a>
-    
-    <h1>Crea tu cuenta</h1>
-    <p class="subtitle">Empieza a cuidar tu bienestar hoy mismo.</p>
-
-    <div id="errorBox" class="error-msg"></div>
-
-    <button id="googleBtn" class="btn-google">
-      <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="20" height="20">
-      Continuar con Google
-    </button>
-
-    <div class="divider"><span>o regístrate con email</span></div>
+  <div class="card">
+    <a href="index.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
+    <h1 id="title">Empieza hoy</h1>
+    <p id="subtitle">Crea tu cuenta segura para acceder a herramientas profesionales.</p>
 
     <form id="registerForm">
-      <div class="form-group">
-        <label>Correo electrónico</label>
-        <div class="input-wrapper">
-          <input type="email" id="email" placeholder="hola@ejemplo.com" required autocomplete="email">
-          <i class="far fa-envelope"></i>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Contraseña</label>
-        <div class="input-wrapper">
-          <input type="password" id="password" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password">
-          <i class="fas fa-lock"></i>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Confirmar contraseña</label>
-        <div class="input-wrapper">
-          <input type="password" id="confirmPassword" placeholder="Repite tu contraseña" required autocomplete="new-password">
-          <i class="fas fa-check-circle"></i>
-        </div>
-      </div>
-
-      <button type="submit" class="btn-submit" id="submitBtn">
-        Crear cuenta gratis <i class="fas fa-arrow-right"></i>
-      </button>
+      <input type="email" id="email" placeholder="Correo electrónico" required autocomplete="email">
+      <input type="password" id="password" placeholder="Contraseña (mín 6 caracteres)" required minlength="6" autocomplete="new-password">
+      <input type="password" id="confirm" placeholder="Repite la contraseña" required autocomplete="new-password">
+      <button type="submit" class="btn btn-primary" id="submitBtn">Crear cuenta gratuita</button>
     </form>
 
-    <div class="auth-footer">
+    <div class="links">
       ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
-
   <script>
-    const form = document.getElementById('registerForm');
-    const errorBox = document.getElementById('errorBox');
-    const submitBtn = document.getElementById('submitBtn');
-    const googleBtn = document.getElementById('googleBtn');
+    // Detectar si viene de entrevista
+    if (sessionStorage.getItem('temp_entrevista')) {
+        document.getElementById('title').textContent = "Guarda tu perfil clínico";
+        document.getElementById('subtitle').textContent = "Para no perder tus respuestas, crea una cuenta y accede a tu plan.";
+    }
 
-    // 1. Detección de Entrevista Pendiente (UX Personalizada)
-    document.addEventListener('DOMContentLoaded', () => {
-        if (sessionStorage.getItem('temp_entrevista')) {
-            document.querySelector('h1').textContent = "Guarda tu progreso";
-            document.querySelector('.subtitle').textContent = "Crea tu cuenta para guardar los resultados de tu entrevista.";
-            // Añadir efecto visual sutil
-            document.querySelector('.auth-card').style.border = "2px solid #4F6F52";
-        }
-    });
-
-    // 2. Registro con Google (OAuth)
-    googleBtn.addEventListener('click', async () => {
-        try {
-            if (!window.sb) throw new Error("Conexión inestable. Recarga la página.");
-            
-            // Iniciar OAuth
-            const { error } = await window.sb.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    // Redirigir al dashboard tras loguearse
-                    // IMPORTANTE: Asegúrate de añadir esta URL en Supabase Dashboard -> Auth -> URL Configuration
-                    redirectTo: window.location.origin + '/app/dashboard.html'
-                }
-            });
-            if (error) throw error;
-        } catch (err) {
-            console.error(err);
-            showError("No se pudo conectar con Google.");
-        }
-    });
-
-    // 3. Registro con Email y Password
-    form.addEventListener('submit', async (e) => {
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      errorBox.style.display = 'none';
-      
       const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const confirm = document.getElementById('confirmPassword').value;
+      const pass = document.getElementById('password').value;
+      const confirm = document.getElementById('confirm').value;
+      const btn = document.getElementById('submitBtn');
 
-      if (password !== confirm) return showError("Las contraseñas no coinciden.");
-      if (password.length < 6) return showError("La contraseña es muy corta (mín. 6).");
-
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando...';
+      if (pass !== confirm) return alert("Las contraseñas no coinciden.");
+      
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando...';
+      btn.disabled = true;
 
       try {
-        if (!window.sb) throw new Error("Error de conexión. Recarga la página.");
-
-        const { data, error } = await window.sb.auth.signUp({
-          email: email, password: password
-        });
-
+        if (!window.sb) throw new Error("Recarga la página.");
+        
+        // 1. Crear Usuario
+        const { data, error } = await window.sb.auth.signUp({ email, password: pass });
         if (error) throw error;
 
+        // 2. Rescate de Entrevista
         if (data.user) {
-            // Lógica de "Rescate de Entrevista"
-            const tempEntrevista = sessionStorage.getItem('temp_entrevista');
-            
-            if (tempEntrevista) {
-                const datos = JSON.parse(tempEntrevista);
-                // Guardar datos en perfil
-                await window.sb.from('users_profile').update(datos).eq('id', data.user.id);
+            const temp = sessionStorage.getItem('temp_entrevista');
+            if (temp) {
+                await window.sb.from('users_profile').update(JSON.parse(temp)).eq('id', data.user.id);
                 sessionStorage.removeItem('temp_entrevista');
-                window.location.href = 'app/dashboard.html';
-            } else {
-                // Flujo normal: Si no hay entrevista, ir a hacerla
-                window.location.href = 'app/entrevista.html';
             }
-
-        } else if (data.session === null && !error) {
-            alert("📩 Te hemos enviado un correo de confirmación.");
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Reenviar correo';
+            window.location.href = 'app/dashboard.html';
+        } else {
+            alert("Revisa tu correo para confirmar.");
+            btn.innerHTML = "Reenviar correo";
+            btn.disabled = false;
         }
-
       } catch (err) {
-        console.error(err);
-        showError(translateError(err.message));
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Crear cuenta gratis <i class="fas fa-arrow-right"></i>';
+        alert("Error: " + err.message);
+        btn.innerHTML = "Crear cuenta gratuita";
+        btn.disabled = false;
       }
     });
-
-    function showError(msg) {
-      errorBox.textContent = msg;
-      errorBox.style.display = 'block';
-    }
-
-    function translateError(msg) {
-      if (msg.includes("already registered")) return "Este correo ya está registrado.";
-      if (msg.includes("weak_password")) return "La contraseña es muy débil.";
-      return "Ocurrió un error: " + msg;
-    }
   </script>
 </body>
 </html>
