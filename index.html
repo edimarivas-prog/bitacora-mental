@@ -4,209 +4,108 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Bitácora Mental - Conecta con especialistas en salud mental verificados.">
-  <title>Bitácora Mental - Tu salud mental, a un click</title>
+  <title>Bitácora Mental</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
+    /* Estilos Originales Preservados */
     :root {
-      /* Variables conectadas al Admin Panel */
-      --primary: #4F6F52;
-      --primary-light: #6B8A6E;
-      --secondary: #A7C4B5;
-      --background: #F9FBFA;
-      --card-bg: #FFFFFF;
-      --dark: #1F2933;
-      --text-secondary: #6B7280;
-      --border: #E6EFE8;
-      --radius: 16px;
-      --shadow: 0 4px 20px rgba(0,0,0,0.06);
-      --promo-bg: #F59E0B;
-      
-      /* Fuentes dinámicas */
-      --font-titles: 'Outfit', sans-serif;
-      --font-body: 'DM Sans', sans-serif;
+      --primary: #4F6F52; --primary-light: #6B8A6E; --secondary: #A7C4B5;
+      --background: #F9FBFA; --dark: #1F2933; --text-soft: #6B7280;
+      --border: #E6EFE8; --shadow: 0 4px 20px rgba(0,0,0,0.06);
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: var(--font-body); background: var(--background); color: var(--dark); line-height: 1.6; }
-    h1, h2, h3, h4 { font-family: var(--font-titles); font-weight: 600; }
-    html { scroll-behavior: smooth; }
-
-    /* BANNER PROMO */
-    #promoBanner {
-        background: var(--promo-bg);
-        color: var(--dark);
-        text-align: center;
-        padding: 12px;
-        font-weight: 700;
-        font-size: 0.95rem;
-        display: none; 
+    body { font-family: 'DM Sans', sans-serif; background: var(--background); color: var(--dark); line-height: 1.6; }
+    h1, h2, h3 { font-family: 'Outfit', sans-serif; font-weight: 600; }
+    
+    .navbar { position: sticky; top: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 15px 8%; display: flex; justify-content: space-between; align-items: center; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+    .logo { font-size: 1.4rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-login { border: 2px solid var(--primary); padding: 8px 20px; border-radius: 16px; color: var(--primary); text-decoration: none; font-weight: 600; }
+    
+    .hero { padding: 100px 8%; text-align: center; background: radial-gradient(circle, rgba(167,196,181,0.2), transparent); }
+    .hero h1 { font-size: 3.5rem; margin-bottom: 20px; line-height: 1.2; }
+    .btn-hero { background: var(--primary); color: white; padding: 16px 32px; border-radius: 16px; text-decoration: none; font-weight: 600; display: inline-block; }
+    
+    /* SECCIÓN PLANES (Grid Responsivo Automático) */
+    .precios { padding: 80px 8%; }
+    .planes-grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* MAGIA RESPONSIVE: Se ajustan solos */
+        gap: 25px; 
+        margin-top: 40px; 
     }
-
-    /* Navbar */
-    .navbar { position: sticky; top: 0; background: rgba(249, 251, 250, 0.95); backdrop-filter: blur(10px); padding: 15px 8%; display: flex; justify-content: space-between; align-items: center; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
-    .logo { font-family: var(--font-titles); font-weight: 700; font-size: 1.4rem; color: var(--primary); display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .nav-links { display: flex; gap: 25px; align-items: center; }
-    .nav-links a { text-decoration: none; color: var(--dark); font-weight: 500; transition: color 0.3s; }
-    .nav-links a:hover { color: var(--primary); }
-    .nav-login { padding: 8px 20px; border: 2px solid var(--primary); border-radius: var(--radius); color: var(--primary) !important; font-weight: 600; text-decoration: none; transition: 0.3s; }
-    .nav-login:hover { background: var(--primary); color: white !important; }
-    .nav-cta { background: var(--primary); color: white !important; padding: 10px 24px; border-radius: var(--radius); font-weight: 600; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; transition: 0.3s; }
-    .nav-cta:hover { background: var(--primary-light); }
-
-    /* Hero Section */
-    .hero { padding: 100px 8% 80px; text-align: center; background: radial-gradient(circle at 50% 50%, rgba(167, 196, 181, 0.1) 0%, transparent 70%); }
-    .hero-badge { background: #e8f3ec; color: var(--primary); padding: 8px 20px; border-radius: 999px; font-size: 0.9rem; font-weight: 600; display: inline-block; margin-bottom: 24px; }
-    .hero h1 { font-size: 3.5rem; line-height: 1.2; margin-bottom: 24px; color: var(--dark); }
-    .hero p { font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 40px; max-width: 650px; margin-left: auto; margin-right: auto; }
-    .btn-primary { background: var(--primary); color: white; padding: 16px 36px; border-radius: var(--radius); font-weight: 600; font-size: 1.1rem; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s; }
-    .btn-primary:hover { background: var(--primary-light); transform: translateY(-2px); }
-
-    /* Steps Section */
-    .como-funciona { padding: 80px 8%; background: white; }
-    .section-header { text-align: center; margin-bottom: 50px; }
-    .section-header h2 { font-size: 2.5rem; margin-bottom: 10px; }
-    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
-    .step { text-align: center; padding: 20px; }
-    .step-number { width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 700; margin: 0 auto 20px; }
-    .step h3 { margin-bottom: 10px; font-size: 1.3rem; }
-
-    /* Precios */
-    .precios { padding: 100px 8%; background: var(--background); }
-    .planes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; margin-bottom: 30px; }
-    .plan-card { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: var(--shadow); position: relative; display: flex; flex-direction: column; transition: transform 0.3s; }
+    
+    /* Tarjeta Plan */
+    .plan-card { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: var(--shadow); position: relative; border: 1px solid transparent; transition: 0.3s; display: flex; flex-direction: column; }
     .plan-card:hover { transform: translateY(-5px); }
-    .plan-destacado { border: 2px solid var(--primary); transform: scale(1.03); z-index: 10; }
-    .plan-badge { position: absolute; top: -12px; right: 20px; background: var(--dark); color: white; padding: 5px 15px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
-    .badge-recomendado { background: var(--primary); }
+    .plan-card.recomendado { border: 2px solid var(--primary); transform: scale(1.03); z-index: 2; }
     
-    .plan-precio { margin: 15px 0; }
-    .precio { font-size: 2.8rem; font-weight: 700; color: var(--primary); }
-    .periodo { font-size: 0.9rem; color: var(--text-secondary); margin-left: 5px; }
+    .plan-badge { position: absolute; top: -12px; right: 20px; background: var(--dark); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+    .plan-card.recomendado .plan-badge { background: var(--primary); }
     
-    .plan-features { list-style: none; margin: 25px 0; flex-grow: 1; }
-    .plan-features li { padding: 8px 0; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-secondary); }
+    .plan-price { font-size: 2.5rem; font-weight: 700; color: var(--primary); margin: 15px 0; }
+    .plan-period { font-size: 0.9rem; color: var(--text-soft); font-weight: 400; }
+    
+    .plan-features { list-style: none; margin: 25px 0; flex: 1; }
+    .plan-features li { padding: 8px 0; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: #4B5563; }
     .plan-features i { color: var(--primary); }
     
-    .plan-btn { display: block; padding: 14px; text-align: center; background: var(--background); border-radius: 12px; text-decoration: none; font-weight: 600; color: var(--dark); border: 2px solid var(--border); transition: 0.3s; }
-    .plan-btn:hover { background: #e5e7eb; }
-    .btn-destacado { background: var(--primary); color: white; border-color: var(--primary); }
-    .btn-destacado:hover { background: var(--primary-light); color: white; }
+    .plan-btn { display: block; padding: 14px; text-align: center; background: #F3F4F6; border-radius: 12px; text-decoration: none; font-weight: 600; color: var(--dark); transition: 0.2s; }
+    .plan-card.recomendado .plan-btn { background: var(--primary); color: white; }
     
-    .precios-nota { background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 20px; border-radius: 12px; font-size: 0.9rem; color: #92400E; max-width: 900px; margin: 0 auto; }
-
     /* Testimonios */
-    .testimonios { padding: 100px 8%; background: white; }
-    .testimonios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
-    .testimonial { background: var(--background); padding: 32px; border-radius: 16px; display: flex; flex-direction: column; justify-content: space-between; }
-    .testimonial-text { font-style: italic; color: #4B5563; margin-bottom: 20px; }
-    .testimonial-author { display: flex; align-items: center; gap: 12px; }
-    .testimonial-avatar { width: 45px; height: 45px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.9rem; }
+    .testimonios-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
+    .testimonial { background: white; padding: 30px; border-radius: 16px; box-shadow: var(--shadow); }
 
-    /* CTA Final */
-    .cta-final { padding: 100px 8%; text-align: center; background: linear-gradient(135deg, var(--primary) 0%, #3e5a41 100%); color: white; }
-    .cta-final h2 { font-size: 2.5rem; margin-bottom: 20px; }
-    .cta-final .btn-primary { background: white; color: var(--primary); }
-    .cta-final .btn-primary:hover { background: #f0fdf4; }
-
-    /* Footer */
-    .footer { background: var(--dark); color: white; padding: 60px 8% 30px; }
-    .footer-content { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 40px; }
-    .footer-brand h3 { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-    .footer-brand p { color: #9ca3af; line-height: 1.6; }
-    .footer-links h4 { margin-bottom: 20px; font-size: 1.1rem; color: white; }
-    .footer-links ul { list-style: none; }
-    .footer-links li { margin-bottom: 10px; }
-    .footer-links a { color: #9ca3af; text-decoration: none; transition: 0.3s; }
-    .footer-links a:hover { color: white; }
-    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; margin-top: 40px; text-align: center; color: #9ca3af; font-size: 0.85rem; }
-
-    /* WhatsApp Float */
-    .whatsapp-float { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; z-index: 999; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-    .whatsapp-float:hover { transform: scale(1.1); }
-
-    @media (max-width: 968px) {
-      .footer-content, .testimonios-grid, .steps { grid-template-columns: 1fr; }
-      .nav-links { display: none; }
-      .hero h1 { font-size: 2.5rem; }
-    }
+    /* Footer y otros */
+    .footer { background: var(--dark); color: white; padding: 60px 8%; text-align: center; }
+    
+    @media(max-width: 900px) { .nav-links { display: none; } .hero h1 { font-size: 2.5rem; } }
   </style>
 </head>
 <body>
 
-  <div id="promoBanner" data-key="promo_text">...</div>
+  <div id="promoBanner" style="display:none; background:#F59E0B; color:black; text-align:center; padding:10px; font-weight:700;"></div>
 
   <nav class="navbar">
-    <a href="/" class="logo"><i class="fas fa-brain"></i> <span id="brandName" data-key="brand_nombre">Bitácora Mental</span></a>
+    <a href="/" class="logo" id="brandName">Bitácora Mental</a>
     <div class="nav-links">
-      <a href="#como-funciona" data-key="nav_link_1">Cómo funciona</a>
-      <a href="#precios">Precios</a>
-      <a href="#testimonios">Testimonios</a>
-      <a href="login.html" class="nav-login" data-key="nav_btn_login">Iniciar sesión</a>
-      <a href="app/entrevista.html" class="nav-cta"><i class="fas fa-comments"></i> <span data-key="nav_btn_cta">Empezar Gratis</span></a>
+      <a href="#precios">Planes</a>
+      <a href="login.html" class="nav-login">Login</a>
     </div>
   </nav>
 
-  <a href="https://wa.me/51922483155" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+  <section class="hero">
+    <span style="background:#E8F3EC; color:var(--primary); padding:8px 20px; border-radius:50px; font-weight:600; font-size:0.9rem;" id="heroBadge">...</span>
+    <h1 id="heroTitle">...</h1>
+    <p id="heroSubtitle" style="max-width:600px; margin:0 auto 30px;">...</p>
+    <a href="app/entrevista.html" class="btn-hero">Iniciar Entrevista</a>
+  </section>
 
-  <section class="hero" data-section="h">
-    <div class="hero-content">
-      <span class="hero-badge" data-key="h_badge"><i class="fas fa-heart"></i> Más de 500 personas ya dieron el primer paso</span>
-      <h1 data-key="h_titulo">Tu salud mental,<br>a un click de distancia</h1>
-      <p data-key="h_subtitulo">Conecta con especialistas verificados, realiza tu seguimiento clínico y accede a recursos personalizados. Todo en un solo lugar.</p>
-      <div class="hero-actions">
-        <a href="app/entrevista.html" class="btn-primary">
-            <i class="fas fa-comments"></i> <span data-key="hero_btn">Iniciar entrevista de bienvenida</span>
-        </a>
-      </div>
+  <section class="precios" id="precios">
+    <div style="text-align:center;">
+      <h2>Niveles de apoyo para cada necesidad</h2>
+      <p>Elige el plan que mejor se adapte a ti.</p>
+    </div>
+    
+    <div class="planes-grid" id="planesContainer">
+        <p style="text-align:center; width:100%;">Cargando planes...</p>
     </div>
   </section>
 
-  <section class="como-funciona" id="como-funciona" data-section="steps">
-    <div class="section-header">
-      <h2 data-key="steps_titulo">Así de simple funciona</h2>
-      <p data-key="steps_sub">En 3 pasos estarás conectado con el apoyo que necesitas</p>
+  <section class="precios" style="background:white;">
+    <div style="text-align:center;">
+      <h2>Lo que dicen nuestros usuarios</h2>
     </div>
-    <div class="steps">
-      <div class="step">
-        <div class="step-number">1</div>
-        <h3 data-key="step_1_title">Entrevista de Bienvenida</h3>
-        <p data-key="step_1_desc">Cuéntanos tu historia y motivo de consulta para personalizar tu experiencia desde el inicio.</p>
-      </div>
-      <div class="step">
-        <div class="step-number">2</div>
-        <h3 data-key="step_2_title">Conecta con tu especialista</h3>
-        <p data-key="step_2_desc">Te mostramos psicólogos verificados que se especializan en tu necesidad.</p>
-      </div>
-      <div class="step">
-        <div class="step-number">3</div>
-        <h3 data-key="step_3_title">Monitoreo Semanal</h3>
-        <p data-key="step_3_desc">Accede a tu dashboard, registra tu pulso emocional y prepara tus sesiones.</p>
-      </div>
-    </div>
+    <div class="testimonios-grid" id="testiContainer"></div>
   </section>
 
-  <section class="precios" id="precios" data-section="p">
-    <div class="section-header">
-      <h2 data-key="p_titulo">Niveles de apoyo para cada necesidad</h2>
-      <p>Elige el plan que mejor se adapte a ti. Sin compromisos.</p>
-    </div>
-    <div class="planes-grid">
-      <div class="plan-card">
-        <div class="plan-badge">Gratis</div>
-        <h3 data-key="p1_nombre">Comienza aquí</h3>
-        <div class="plan-precio"><span class="precio">S/ <span data-key="p1_precio">0</span></span><span class="periodo">siempre</span></div>
-        <ul class="plan-features">
-          <li><i class="fas fa-check"></i> Entrevista clínica inicial</li>
-          <li><i class="fas fa-check"></i> Diario emocional</li>
-          <li><i class="fas fa-check"></i> Monitoreo de síntomas básico</li>
-        </ul>
-        <a href="registro.html" class="plan-btn">Comenzar gratis</a>
-      </div>
-      </div>
-  </section>
+  <footer class="footer">
+    <p>© 2026 Bitácora Mental.</p>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
@@ -214,43 +113,53 @@
     document.addEventListener('DOMContentLoaded', async () => {
         if (!window.sb) return;
 
+        // 1. CARGAR CONFIGURACIÓN GLOBAL (Colores, Textos Hero)
         const { data: configs } = await window.sb.from('config_interfaz').select('*');
-        if(!configs) return;
-
-        configs.forEach(c => {
-            const val = c.valor;
-            const meta = c.metadata || {};
-
-            // 1. Estilos Globales
-            if(c.clave === 'g_primary_color') document.documentElement.style.setProperty('--primary', val);
-            if(c.clave === 'g_bg_color') document.documentElement.style.setProperty('--background', val);
-            if(c.clave === 'g_font_titles') document.documentElement.style.setProperty('--font-titles', val + ', sans-serif');
-            if(c.clave === 'g_font_body') document.documentElement.style.setProperty('--font-body', val + ', sans-serif');
-
-            // 2. Visibilidad de Secciones
-            if(c.clave.endsWith('_visibilidad')) {
-                const sectionName = c.clave.replace('_visibilidad', '');
-                const section = document.querySelector(`[data-section="${sectionName}"]`);
-                if(section) section.style.display = (val === 'true') ? 'block' : 'none';
+        configs?.forEach(c => {
+            if(c.clave === 'style_primary') document.documentElement.style.setProperty('--primary', c.valor);
+            if(c.clave === 'hero_title') document.getElementById('heroTitle').innerHTML = c.valor.replace(/\n/g, '<br>');
+            if(c.clave === 'hero_badge') document.getElementById('heroBadge').textContent = c.valor;
+            if(c.clave === 'brand_name') document.getElementById('brandName').textContent = c.valor;
+            
+            if(c.clave === 'promo_active' && c.valor === 'true') {
+                const banner = document.getElementById('promoBanner');
+                banner.style.display = 'block';
+                // Buscar texto del banner
+                const txt = configs.find(x => x.clave === 'promo_text');
+                if(txt) banner.textContent = txt.valor;
             }
-
-            // 3. Contenido y Estilos Individuales
-            document.querySelectorAll(`[data-key="${c.clave}"]`).forEach(el => {
-                // Actualizar Texto (si no tiene iconos internos que proteger)
-                if(!el.querySelector('i')) {
-                    el.innerHTML = val.replace(/\n/g, '<br>');
-                } else {
-                    // Si tiene icono, buscamos el texto y lo cambiamos
-                    const textNode = Array.from(el.childNodes).find(n => n.nodeType === 3 && n.textContent.trim() !== "");
-                    if(textNode) textNode.textContent = val;
-                }
-
-                // APLICAR METADATOS (Shopify Style)
-                if(meta.size) el.style.fontSize = meta.size + "rem";
-                if(meta.weight) el.style.fontWeight = meta.weight;
-                if(meta.color) el.style.color = meta.color;
-            });
         });
+
+        // 2. CARGAR PLANES DINÁMICOS (Loop)
+        const { data: planes } = await window.sb.from('web_planes').select('*').eq('visible', true).order('orden');
+        const planesDiv = document.getElementById('planesContainer');
+        
+        if(planes && planes.length > 0) {
+            planesDiv.innerHTML = planes.map(plan => `
+                <div class="plan-card ${plan.es_recomendado ? 'recomendado' : ''}">
+                    ${plan.es_recomendado ? '<div class="plan-badge">RECOMENDADO</div>' : ''}
+                    <h3>${plan.nombre}</h3>
+                    <div class="plan-price">S/ ${plan.precio}<span class="plan-period">${plan.periodo}</span></div>
+                    <ul class="plan-features">
+                        ${plan.features.map(f => `<li><i class="fas fa-check-circle"></i> ${f}</li>`).join('')}
+                    </ul>
+                    <a href="registro.html" class="plan-btn">${plan.btn_texto || 'Elegir'}</a>
+                </div>
+            `).join('');
+        }
+
+        // 3. CARGAR TESTIMONIOS DINÁMICOS
+        const { data: testis } = await window.sb.from('web_testimonios').select('*');
+        const testiDiv = document.getElementById('testiContainer');
+        if(testis) {
+            testiDiv.innerHTML = testis.map(t => `
+                <div class="testimonial">
+                    <p style="font-style:italic; color:#555;">"${t.texto}"</p>
+                    <div style="margin-top:15px; font-weight:700;">${t.autor}</div>
+                    <div style="font-size:0.8rem; color:var(--primary);">${t.detalle || ''}</div>
+                </div>
+            `).join('');
+        }
     });
   </script>
 </body>
