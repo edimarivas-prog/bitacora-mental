@@ -140,6 +140,7 @@
             await window.sb.from('users_profile').update(JSON.parse(temp)).eq('id', data.user.id);
             sessionStorage.removeItem('temp_entrevista');
           }
+          // Señal para mostrar el Tour de Bienvenida
           sessionStorage.setItem('show_onboarding', 'true');
           window.location.href = 'app/dashboard.html';
         } else {
@@ -157,6 +158,10 @@
     document.getElementById('googleBtn').addEventListener('click', async () => {
       try {
         if (!window.sb) throw new Error("Error de conexión.");
+        
+        // --- CÓDIGO AGREGADO: Señal para activar el Tour si se registra con Google ---
+        sessionStorage.setItem('show_onboarding', 'true');
+
         await window.sb.auth.signInWithOAuth({
           provider: 'google',
           options: { redirectTo: window.location.origin + '/bitacora-mental/app/dashboard.html' }
