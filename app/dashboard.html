@@ -296,22 +296,31 @@
         </div>
 
         <div class="card">
-          <div class="card-header">
-            <h3 class="card-title"><i class="fas fa-clipboard-check"></i> Último test de bienestar</h3>
-            <span class="badge info" id="testDateBadge" style="display:none">Reciente</span>
-          </div>
-
-          <div id="testResultsContainer">
-            <div class="empty-state">
-                <p class="empty-text">Aún no has realizado tu test de bienestar.</p>
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-heartbeat" style="color:var(--primary)"></i> Estado de la Semana</h3>
+                <span class="badge info" id="pulseStatusBadge">Verificando...</span>
             </div>
-          </div>
 
-          <a href="../test-inicial.html" class="card-action" style="margin-top: 20px; display: inline-flex;">
-            <span id="testActionText">Hacer test ahora</span> <i class="fas fa-arrow-right"></i>
-          </a>
+            <div id="pulseContent">
+                <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:20px;">
+                    Registra tu pulso semanal para mantener un historial clínico útil para tu terapeuta.
+                </p>
+                
+                <div style="margin-bottom:20px;">
+                   <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:5px; color:var(--text-secondary);">
+                       <span>Intensidad de síntomas</span>
+                       <span id="dashAnsiedadText" style="font-weight:600; color:var(--dark);">--</span>
+                   </div>
+                   <div style="height:8px; background:#F3F4F6; border-radius:4px; overflow:hidden;">
+                       <div id="dashAnsiedadBar" style="width:0%; height:100%; background:var(--warning); transition:width 1s ease;"></div>
+                   </div>
+                </div>
+            </div>
+
+            <button id="btnPulseAction" class="card-action" style="width:100%; justify-content:center; border:none; cursor:pointer; font-size:0.95rem;" onclick="window.location.href='pulso.html'">
+                Cargando estado...
+            </button>
         </div>
-      </div>
 
       <div class="grid-2">
         <div class="card">
