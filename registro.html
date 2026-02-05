@@ -143,52 +143,72 @@
   
   <script src="js/supabase-config.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+
   <script>
     const form = document.getElementById('registerForm');
     const errorBox = document.getElementById('errorBox');
     const submitBtn = document.getElementById('submitBtn');
 
+    // Verificar si viene de la entrevista para cambiar el título
+    document.addEventListener('DOMContentLoaded', () => {
+        if (sessionStorage.getItem('temp_entrevista')) {
+            document.querySelector('h1').textContent = "Guarda tu perfil clínico";
+            document.querySelector('.subtitle').textContent = "Crea tu cuenta para no perder los datos de tu entrevista.";
+        }
+    });
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
-      // Limpiar errores previos
       errorBox.style.display = 'none';
-      errorBox.textContent = '';
       
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
       const confirm = document.getElementById('confirmPassword').value;
 
-      // 1. Validaciones básicas
-      if (password !== confirm) {
-        showError("Las contraseñas no coinciden.");
-        return;
-      }
-      if (password.length < 6) {
-        showError("La contraseña debe tener al menos 6 caracteres.");
-        return;
-      }
+      if (password !== confirm) return showError("Las contraseñas no coinciden.");
+      if (password.length < 6) return showError("La contraseña debe tener al menos 6 caracteres.");
 
-      // 2. Estado de carga
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando cuenta...';
 
       try {
-        // 3. Crear usuario en Supabase
+        // 1. Crear Usuario
         const { data, error } = await window.supabase.auth.signUp({
-          email: email,
-          password: password
+          email: email, password: password
         });
 
         if (error) throw error;
 
-        // 4. Éxito y Redirección
         if (data.user) {
-            // REDIRECCIÓN CORREGIDA: Entra a la carpeta 'app' para ir a la entrevista
-            window.location.href = 'app/entrevista.html';
+            // 2. ¿HAY ENTREVISTA PENDIENTE?
+            const tempEntrevista = sessionStorage.getItem('temp_entrevista');
+            
+            if (tempEntrevista) {
+                // Si existe, la guardamos en el perfil del nuevo usuario
+                const datos = JSON.parse(tempEntrevista);
+                
+                const { error: profileError } = await window.supabase
+                    .from('users_profile')
+                    .update(datos) // Actualizamos con los datos que trajo de la entrevista
+                    .eq('id', data.user.id);
+                
+                if (!profileError) {
+                    // Limpiar memoria y redirigir al Dashboard
+                    sessionStorage.removeItem('temp_entrevista');
+                    window.location.href = 'app/dashboard.html';
+                    return;
+                }
+            }
+
+            // Si no había entrevista, o falló el guardado, flujo normal:
+            // (Si queremos forzar entrevista, mandamos a entrevista. Si no, a dashboard)
+            // En tu caso, si se registró directo desde el home, lo mandamos a entrevista.
+            window.location.href = tempEntrevista ? 'app/dashboard.html' : 'app/entrevista.html';
+
         } else if (data.session === null && !error) {
-            // Caso: Confirmación de email requerida (si está activada en Supabase)
-            alert("Te hemos enviado un correo de confirmación. Por favor revísalo para continuar.");
+            alert("Te hemos enviado un correo de confirmación.");
             submitBtn.disabled = false;
             submitBtn.textContent = 'Reenviar correo';
         }
@@ -208,8 +228,6 @@
 
     function translateError(msg) {
       if (msg.includes("already registered")) return "Este correo ya está registrado.";
-      if (msg.includes("password")) return "La contraseña es muy débil (usa letras y números).";
-      if (msg.includes("valid email")) return "El correo no es válido.";
       return "Ocurrió un error: " + msg;
     }
   </script>
