@@ -2,91 +2,165 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crear Cuenta - Bitácora Mental</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
-    /* Mismos estilos base que Login para coherencia */
-    :root { --primary: #4F6F52; --bg: #F3F6F4; --text: #1F2933; --border: #E6EFE8; --white: #fff; }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; margin: 0; }
-    .card { background: var(--white); padding: 32px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); width: 100%; max-width: 400px; text-align: center; }
-    .logo { color: var(--primary); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.4rem; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; }
-    h1 { font-family: 'Outfit'; font-size: 1.5rem; margin: 0 0 8px 0; color: var(--text); }
-    p { color: #64748B; font-size: 0.95rem; margin-bottom: 24px; line-height: 1.5; }
-    input { width: 100%; padding: 16px; margin-bottom: 16px; border: 2px solid var(--border); border-radius: 16px; font-size: 1rem; outline: none; transition: 0.3s; }
-    input:focus { border-color: var(--primary); background: #FAFAFA; }
-    .btn { width: 100%; padding: 16px; border-radius: 16px; font-weight: 600; font-size: 1rem; cursor: pointer; border: none; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .btn-primary { background: var(--primary); color: white; margin-bottom: 16px; }
-    .links { margin-top: 24px; font-size: 0.9rem; }
-    .links a { color: var(--primary); text-decoration: none; font-weight: 600; }
+    /* Estilos base iguales a Login para coherencia */
+    :root { --primary: #4F6F52; --bg: #F9FBFA; --text: #1F2933; --border: #E6EFE8; --strength-weak: #EF4444; --strength-med: #F59E0B; --strength-strong: #10B981; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    
+    .register-card { background: white; width: 100%; max-width: 500px; padding: 40px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); text-align: center; }
+    
+    .logo { color: var(--primary); font-family: 'Outfit'; font-weight: 700; font-size: 1.4rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+    h1 { font-family: 'Outfit'; font-size: 1.8rem; color: var(--text); margin-bottom: 8px; }
+    p.subtitle { color: #64748B; margin-bottom: 30px; font-size: 0.95rem; }
+    
+    .input-wrapper { position: relative; margin-bottom: 15px; text-align: left; }
+    input { width: 100%; padding: 14px 16px; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; outline: none; transition: 0.3s; font-family: inherit; }
+    input:focus { border-color: var(--primary); }
+    
+    .toggle-pass { position: absolute; right: 16px; top: 16px; cursor: pointer; color: #94A3B8; background: none; border: none; }
+    
+    /* Barra de fortaleza */
+    .strength-meter { height: 4px; background: #E2E8F0; margin-top: 8px; border-radius: 2px; overflow: hidden; display: flex; }
+    .strength-bar { height: 100%; width: 0; transition: 0.3s; }
+    .strength-text { font-size: 0.75rem; text-align: right; margin-top: 4px; color: #64748B; }
+
+    .terms { text-align: left; margin: 20px 0; font-size: 0.9rem; color: #64748B; display: flex; gap: 10px; align-items: flex-start; }
+    .terms input { width: auto; margin-top: 4px; }
+    
+    .btn { width: 100%; padding: 14px; border-radius: 12px; font-weight: 600; cursor: pointer; border: none; font-size: 1rem; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .btn-primary { background: var(--primary); color: white; margin-bottom: 15px; }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-google { background: white; border: 2px solid #E2E8F0; color: var(--text); }
+    
+    .divider { display: flex; align-items: center; gap: 15px; margin: 20px 0; color: #94A3B8; font-size: 0.85rem; }
+    .divider::before, .divider::after { content: ''; height: 1px; background: #E2E8F0; flex: 1; }
   </style>
 </head>
 <body>
-  <div class="card">
+
+  <div class="register-card">
     <a href="index.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
-    <h1 id="title">Empieza hoy</h1>
-    <p id="subtitle">Crea tu cuenta segura para acceder a herramientas profesionales.</p>
+    <h1 id="regTitle">Crea tu cuenta</h1>
+    <p class="subtitle" id="regSubtitle">Únete a nuestra comunidad de bienestar.</p>
+
+    <button id="googleBtn" class="btn btn-google">
+      <img src="https://www.svgrepo.com/show/475656/google-color.svg" width="20"> Registrarse con Google
+    </button>
+
+    <div class="divider">o usa tu correo</div>
 
     <form id="registerForm">
-      <input type="email" id="email" placeholder="Correo electrónico" required autocomplete="email">
-      <input type="password" id="password" placeholder="Contraseña (mín 6 caracteres)" required minlength="6" autocomplete="new-password">
-      <input type="password" id="confirm" placeholder="Repite la contraseña" required autocomplete="new-password">
-      <button type="submit" class="btn btn-primary" id="submitBtn">Crear cuenta gratuita</button>
+      <div class="input-wrapper">
+        <input type="email" id="email" placeholder="Correo electrónico" required>
+      </div>
+      
+      <div class="input-wrapper">
+        <input type="password" id="password" placeholder="Contraseña (mín. 6 caracteres)" required oninput="checkStrength()">
+        <button type="button" class="toggle-pass" onclick="togglePass('password')"><i class="far fa-eye"></i></button>
+        <div class="strength-meter"><div class="strength-bar" id="strengthBar"></div></div>
+        <div class="strength-text" id="strengthText"></div>
+      </div>
+
+      <div class="input-wrapper">
+        <input type="password" id="confirm" placeholder="Repite tu contraseña" required>
+      </div>
+
+      <label class="terms">
+        <input type="checkbox" id="termsCheck" required>
+        <span>Acepto los <a href="#" style="color:var(--primary)">Términos y Condiciones</a> y la Política de Privacidad.</span>
+      </label>
+
+      <button type="submit" class="btn btn-primary" id="submitBtn">Crear cuenta gratis</button>
     </form>
 
-    <div class="links">
-      ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
-    </div>
+    <p style="margin-top:20px; font-size:0.9rem; color:#64748B;">
+      ¿Ya tienes cuenta? <a href="login.html" style="color:var(--primary); font-weight:600; text-decoration:none;">Inicia sesión</a>
+    </p>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
   <script>
-    // Detectar si viene de entrevista
+    // UX: Detectar Entrevista
     if (sessionStorage.getItem('temp_entrevista')) {
-        document.getElementById('title').textContent = "Guarda tu perfil clínico";
-        document.getElementById('subtitle').textContent = "Para no perder tus respuestas, crea una cuenta y accede a tu plan.";
+      document.getElementById('regTitle').textContent = "Guarda tu perfil";
+      document.getElementById('regSubtitle').textContent = "Crea una cuenta para no perder tus resultados.";
     }
 
+    // Funciones UX
+    function togglePass(id) {
+      const input = document.getElementById(id);
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    function checkStrength() {
+      const val = document.getElementById('password').value;
+      const bar = document.getElementById('strengthBar');
+      const txt = document.getElementById('strengthText');
+      let strength = 0;
+      if (val.length >= 6) strength++;
+      if (val.match(/[A-Z]/)) strength++;
+      if (val.match(/[0-9]/)) strength++;
+      
+      if (val.length === 0) { bar.style.width = '0'; txt.textContent = ''; }
+      else if (strength === 1) { bar.style.width = '33%'; bar.style.background = '#EF4444'; txt.textContent = 'Débil'; }
+      else if (strength === 2) { bar.style.width = '66%'; bar.style.background = '#F59E0B'; txt.textContent = 'Media'; }
+      else { bar.style.width = '100%'; bar.style.background = '#10B981'; txt.textContent = 'Fuerte'; }
+    }
+
+    // Registro
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('email').value;
-      const pass = document.getElementById('password').value;
+      const password = document.getElementById('password').value;
       const confirm = document.getElementById('confirm').value;
-      const btn = document.getElementById('submitBtn');
-
-      if (pass !== confirm) return alert("Las contraseñas no coinciden.");
       
+      if (password !== confirm) return alert("Las contraseñas no coinciden.");
+      if (!document.getElementById('termsCheck').checked) return alert("Debes aceptar los términos.");
+
+      const btn = document.getElementById('submitBtn');
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando...';
       btn.disabled = true;
 
       try {
-        if (!window.sb) throw new Error("Recarga la página.");
-        
-        // 1. Crear Usuario
-        const { data, error } = await window.sb.auth.signUp({ email, password: pass });
+        if (!window.sb) throw new Error("Error de conexión.");
+        const { data, error } = await window.sb.auth.signUp({ email, password });
         if (error) throw error;
 
-        // 2. Rescate de Entrevista
+        // Rescate de entrevista
         if (data.user) {
-            const temp = sessionStorage.getItem('temp_entrevista');
-            if (temp) {
-                await window.sb.from('users_profile').update(JSON.parse(temp)).eq('id', data.user.id);
-                sessionStorage.removeItem('temp_entrevista');
-            }
-            window.location.href = 'app/dashboard.html';
+          const temp = sessionStorage.getItem('temp_entrevista');
+          if (temp) {
+            await window.sb.from('users_profile').update(JSON.parse(temp)).eq('id', data.user.id);
+            sessionStorage.removeItem('temp_entrevista');
+          }
+          window.location.href = 'app/dashboard.html';
         } else {
-            alert("Revisa tu correo para confirmar.");
-            btn.innerHTML = "Reenviar correo";
-            btn.disabled = false;
+          alert("Revisa tu correo para confirmar.");
+          btn.disabled = false;
         }
       } catch (err) {
         alert("Error: " + err.message);
-        btn.innerHTML = "Crear cuenta gratuita";
+        btn.innerHTML = 'Crear cuenta gratis';
         btn.disabled = false;
       }
+    });
+
+    // Google
+    document.getElementById('googleBtn').addEventListener('click', async () => {
+      try {
+        if (!window.sb) throw new Error("Error de conexión.");
+        await window.sb.auth.signInWithOAuth({
+          provider: 'google',
+          options: { redirectTo: window.location.origin + '/app/dashboard.html' }
+        });
+      } catch (err) { alert("Error con Google."); }
     });
   </script>
 </body>
