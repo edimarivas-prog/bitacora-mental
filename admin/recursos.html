@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Recursos - Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root { --primary: #1F2933; --accent: #4F6F52; --bg: #F3F4F6; --white: #FFFFFF; --text: #1F2933; --border: #E5E7EB; --radius: 16px; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
+    .sidebar { width: 260px; background: var(--primary); color: white; padding: 24px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
+    .logo { font-family: 'Outfit'; font-weight: 700; color: white; font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 10px; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: #CBD5E1; text-decoration: none; border-radius: 12px; transition: 0.2s; font-size: 0.95rem; }
+    .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; }
+    .nav-item.active { border-left: 3px solid var(--accent); }
+    .main { flex: 1; padding: 30px 40px; overflow-y: auto; }
+    
+    .card { background: white; padding: 25px; border-radius: var(--radius); box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 30px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: #64748B; }
+    input, select, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 0.95rem; outline: none; }
+    .btn { padding: 12px 24px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-danger { background: #FEE2E2; color: #DC2626; }
+    
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th { text-align: left; padding: 15px; color: #64748B; font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+    td { padding: 15px; border-bottom: 1px solid #F3F4F6; font-size: 0.95rem; }
+    .type-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <a href="panel-admin.html" class="logo"><i class="fas fa-brain"></i> ADMIN PRO</a>
+    <nav>
+      <a href="panel-admin.html" class="nav-item"><i class="fas fa-chart-pie"></i> Dashboard</a>
+      <a href="verificacion.html" class="nav-item"><i class="fas fa-user-check"></i> Verificación</a>
+      <a href="gestion-usuarios.html" class="nav-item"><i class="fas fa-users-cog"></i> Usuarios</a>
+      <a href="recursos.html" class="nav-item active"><i class="fas fa-folder-open"></i> Recursos</a>
+      <a href="ajustes.html" class="nav-item"><i class="fas fa-sliders-h"></i> Ajustes Web</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <h1>Biblioteca de Recursos</h1>
+    
+    <div class="card">
+      <h3 style="margin-top:0;">Agregar Nuevo Recurso</h3>
+      <form id="resourceForm" class="form-grid">
+        <div>
+          <label>Título</label>
+          <input type="text" id="titulo" required placeholder="Ej: Respiración Guiada">
+        </div>
+        <div>
+          <label>Tipo</label>
+          <select id="tipo">
+            <option value="audio">Audio (MP3 / Spotify)</option>
+            <option value="pdf">PDF / Guía</option>
+            <option value="video">Video (YouTube / Vimeo)</option>
+            <option value="lectura">Lectura Corta</option>
+          </select>
+        </div>
+        <div style="grid-column: span 2;">
+          <label>URL del Recurso</label>
+          <input type="url" id="url" required placeholder="https://...">
+        </div>
+        <div>
+          <label>Categoría</label>
+          <input type="text" id="categoria" placeholder="Ej: Ansiedad, Sueño">
+        </div>
+        <div style="display: flex; align-items: flex-end;">
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Publicar Recurso</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0;">Recursos Publicados</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Tipo</th>
+            <th>Categoría</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="resourcesList"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script>
+    async function loadResources() {
+      const { data } = await window.sb.from('recursos').select('*').order('fecha_publicacion', { ascending: false });
+      const tbody = document.getElementById('resourcesList');
+      tbody.innerHTML = data.map(r => `
+        <tr>
+          <td><strong>${r.titulo}</strong></td>
+          <td><span class="type-badge" style="background:#E0F2FE; color:#0369A1">${r.tipo}</span></td>
+          <td>${r.categoria || '--'}</td>
+          <td>
+            <button class="btn btn-danger" onclick="deleteResource('${r.id}')" style="padding: 5px 12px; font-size: 0.8rem;">Eliminar</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('resourceForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nuevo = {
+        titulo: document.getElementById('titulo').value,
+        tipo: document.getElementById('tipo').value,
+        url: document.getElementById('url').value,
+        categoria: document.getElementById('categoria').value
+      };
+      await window.sb.from('recursos').insert(nuevo);
+      location.reload();
+    });
+
+    async function deleteResource(id) {
+      if(confirm('¿Seguro?')) {
+        await window.sb.from('recursos').delete().eq('id', id);
+        loadResources();
+      }
+    }
+    loadResources();
+  </script>
+</body>
+</html>
