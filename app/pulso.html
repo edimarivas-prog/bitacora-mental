@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pulso Semanal - Bitácora Mental</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* (Mismos estilos base que entrevista.html) */
+    :root { --primary: #4F6F52; --background: #F9FBFA; --dark: #1F2933; --border: #E6EFE8; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--background); color: var(--dark); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+    .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 600px; width: 100%; }
+    h1 { font-family: 'Outfit', sans-serif; color: var(--primary); margin-bottom: 20px; text-align: center; }
+    .question { margin-bottom: 25px; }
+    .question label { font-weight: 600; display: block; margin-bottom: 10px; }
+    .scale-options { display: flex; justify-content: space-between; gap: 5px; }
+    .scale-btn { flex: 1; padding: 10px; border: 1px solid var(--border); background: white; border-radius: 8px; cursor: pointer; transition: 0.2s; text-align: center; font-size: 0.9rem; }
+    .scale-btn:hover, .scale-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
+    textarea { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 10px; margin-top: 10px; }
+    .btn { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: 600; font-size: 1rem; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🩺 Pulso Semanal</h1>
+    <p style="text-align:center; color:#666; margin-bottom:30px;">Responde pensando en los últimos 7 días.</p>
+    
+    <div id="questionsContainer">
+      <div class="question" data-id="animo">
+        <label>1. ¿Con qué frecuencia has sentido poco interés o placer en hacer cosas?</label>
+        <div class="scale-options">
+          <div class="scale-btn" onclick="selectOption(this, 'animo', 0)">Nunca</div>
+          <div class="scale-btn" onclick="selectOption(this, 'animo', 1)">Varios días</div>
+          <div class="scale-btn" onclick="selectOption(this, 'animo', 2)">Más de la mitad</div>
+          <div class="scale-btn" onclick="selectOption(this, 'animo', 3)">Casi todos</div>
+        </div>
+      </div>
+
+      <div class="question" data-id="ansiedad">
+        <label>2. ¿Con qué frecuencia te has sentido nervioso/a, ansioso/a o con los nervios de punta?</label>
+        <div class="scale-options">
+          <div class="scale-btn" onclick="selectOption(this, 'ansiedad', 0)">Nunca</div>
+          <div class="scale-btn" onclick="selectOption(this, 'ansiedad', 1)">Varios días</div>
+          <div class="scale-btn" onclick="selectOption(this, 'ansiedad', 2)">Más de la mitad</div>
+          <div class="scale-btn" onclick="selectOption(this, 'ansiedad', 3)">Casi todos</div>
+        </div>
+      </div>
+
+      <div class="question">
+        <label>3. Contexto (Opcional)</label>
+        <p style="font-size:0.9rem; margin-bottom:5px;">¿Pasó algo específico esta semana que influyó en tus respuestas?</p>
+        <textarea id="observacion" placeholder="Ej: Tuve mucha carga de trabajo, discutí con alguien..."></textarea>
+      </div>
+
+      <button class="btn" onclick="savePulse()">Guardar Registro</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script>
+    let scores = { animo: null, ansiedad: null };
+
+    function selectOption(btn, category, value) {
+      // UI Update
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      // Logic Update
+      scores[category] = value;
+    }
+
+    async function savePulse() {
+      if (scores.animo === null || scores.ansiedad === null) {
+        alert('Por favor responde las preguntas de frecuencia.');
+        return;
+      }
+
+      const { data: { user } } = await window.supabase.auth.getUser();
+      const observacion = document.getElementById('observacion').value;
+
+      // Calcular "niveles" aproximados para compatibilidad con gráficos antiguos (0-10)
+      // Escala 0-3 se mapea a 0-10 aproximadamente
+      const mapScore = (s) => Math.round((s / 3) * 10);
+
+      const { error } = await window.supabase.from('monitoreo_sintomas').insert({
+        user_id: user.id,
+        tipo_registro: 'pulso_semanal',
+        nivel_animo: 10 - mapScore(scores.animo), // Invertido: 0 sintomas = 10 animo
+        nivel_ansiedad: mapScore(scores.ansiedad),
+        nivel_estres: mapScore(scores.ansiedad), // Simplificacion inicial
+        observaciones_paciente: observacion,
+        escala_sintomas: scores
+      });
+
+      if (error) {
+        console.error(error);
+        alert('Error al guardar.');
+      } else {
+        window.location.href = 'dashboard.html';
+      }
+    }
+  </script>
+</body>
+</html>
