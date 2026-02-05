@@ -111,20 +111,6 @@
     .btn-outline-white { background: transparent; border: 2px solid white; color: white; }
     .btn-outline-white:hover { background: rgba(255,255,255,0.1); }
 
-    /* Test Results */
-    .test-result { background: var(--background); padding: 20px; border-radius: 12px; margin-bottom: 16px; }
-    .test-result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .test-label { font-weight: 600; color: var(--dark); }
-    .test-score { font-weight: 700; font-size: 1.1rem; }
-    .test-score.low { color: var(--success); }
-    .test-score.medium { color: var(--warning); }
-    .test-score.high { color: var(--danger); }
-    .progress-bar { width: 100%; height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; }
-    .progress-fill { height: 100%; border-radius: 999px; transition: width 0.5s ease; }
-    .progress-fill.low { background: var(--success); }
-    .progress-fill.medium { background: var(--warning); }
-    .progress-fill.high { background: var(--danger); }
-
     /* Resources List */
     .resource-list { display: flex; flex-direction: column; gap: 12px; }
     .resource-item { display: flex; align-items: center; gap: 16px; padding: 16px; background: var(--background); border-radius: 12px; text-decoration: none; color: var(--dark); transition: all 0.2s; }
@@ -218,7 +204,7 @@
 
       <div class="sidebar-footer">
         <div class="user-profile">
-          <div class="user-avatar">--</div>
+          <div class="user-avatar" id="avatarInitials">--</div>
           <div class="user-info">
             <div class="user-name" id="sidebarUserName">Cargando...</div>
             <div class="user-email" id="sidebarUserEmail">...</div>
@@ -239,7 +225,7 @@
           <div class="stat-icon green"><i class="fas fa-heart"></i></div>
           <div class="stat-info">
             <div class="stat-value" id="statBienestar">--</div>
-            <div class="stat-label">Bienestar general</div>
+            <div class="stat-label">Ánimo (Último)</div>
           </div>
         </div>
 
@@ -321,6 +307,7 @@
                 Cargando estado...
             </button>
         </div>
+      </div>
 
       <div class="grid-2">
         <div class="card">
@@ -330,25 +317,18 @@
           </div>
 
           <div class="resource-list">
-            <a href="#" class="resource-item">
+            <a href="recursos.html" class="resource-item">
               <div class="resource-icon"><i class="fas fa-headphones"></i></div>
               <div class="resource-info">
                 <div class="resource-title">Audio: Respiración guiada</div>
                 <div class="resource-meta">5 min · Relajación</div>
               </div>
             </a>
-            <a href="#" class="resource-item">
+            <a href="recursos.html" class="resource-item">
               <div class="resource-icon"><i class="fas fa-file-pdf"></i></div>
               <div class="resource-info">
                 <div class="resource-title">Guía: Manejo del estrés</div>
                 <div class="resource-meta">PDF · 12 páginas</div>
-              </div>
-            </a>
-            <a href="#" class="resource-item">
-              <div class="resource-icon"><i class="fas fa-video"></i></div>
-              <div class="resource-info">
-                <div class="resource-title">Video: Técnicas de grounding</div>
-                <div class="resource-meta">8 min · Ansiedad</div>
               </div>
             </a>
           </div>
@@ -368,11 +348,11 @@
               <i class="fas fa-pencil-alt"></i>
               <div class="quick-action-label">Escribir en diario</div>
             </a>
-            <a href="../test-inicial.html" class="quick-action">
-              <i class="fas fa-clipboard-list"></i>
-              <div class="quick-action-label">Hacer test</div>
+            <a href="pulso.html" class="quick-action">
+              <i class="fas fa-heartbeat"></i>
+              <div class="quick-action-label">Pulso Semanal</div>
             </a>
-            <a href="chat.html" class="quick-action">
+            <a href="#" class="quick-action">
               <i class="fas fa-comments"></i>
               <div class="quick-action-label">Contactar soporte</div>
             </a>
@@ -393,26 +373,7 @@
     async function loadDashboard() {
         // 1. Obtener usuario
         const { data: { user } } = await window.supabase.auth.getUser();
-        if (!user) {
-            window.location.href = '../login.html';
-            return;
-        }
-
-        // --- MIGRAR TEST ANÓNIMO (SI EXISTE) ---
-        const tempTest = localStorage.getItem('tempTestResults');
-        if (tempTest) {
-            try {
-                const scores = JSON.parse(tempTest);
-                await window.supabase.from('test_results').insert({
-                    user_id: user.id,
-                    nivel_ansiedad: scores.ansiedad,
-                    nivel_estres: scores.estres,
-                    nivel_animo: scores.animo,
-                    fecha_realizado: new Date().toISOString()
-                });
-                localStorage.removeItem('tempTestResults');
-            } catch (err) { console.error("Error migrando test:", err); }
-        }
+        if (!user) { window.location.href = '../login.html'; return; }
 
         // 2. Cargar Perfil
         const { data: profile } = await window.supabase
@@ -425,12 +386,12 @@
             document.getElementById('welcomeName').textContent = `Bienvenida de nuevo, ${profile.nombre} 👋`;
             document.getElementById('sidebarUserName').textContent = `${profile.nombre} ${profile.apellido}`;
             document.getElementById('sidebarUserEmail').textContent = user.email;
-            document.querySelector('.user-avatar').textContent = (profile.nombre[0] + profile.apellido[0]).toUpperCase();
+            document.getElementById('avatarInitials').textContent = (profile.nombre[0] + profile.apellido[0]).toUpperCase();
         }
 
         // 3. ESTADÍSTICAS
 
-        // A. Sesiones Completadas (Simple conteo)
+        // A. Sesiones
         const { count: sesiones } = await window.supabase
             .from('citas')
             .select('*', { count: 'exact', head: true })
@@ -438,54 +399,40 @@
             .eq('estado', 'completada');
         document.getElementById('statSesiones').textContent = sesiones || 0;
 
-        // B. Entradas de Diario (Total histórico)
+        // B. Entradas de Diario
         const { count: diarioTotal } = await window.supabase
             .from('diario_emocional')
             .select('*', { count: 'exact', head: true })
             .eq('user_id', user.id);
         document.getElementById('statDiario').textContent = diarioTotal || 0;
 
-        // C. RACHA (CÁLCULO REAL CORREGIDO)
-        // Pedimos solo las fechas para procesarlas en Javascript
+        // C. Racha (Calculada con fechas reales)
         const { data: entradas } = await window.supabase
             .from('diario_emocional')
             .select('fecha')
             .eq('user_id', user.id)
-            .order('fecha', { ascending: false }); // Las más recientes primero
+            .order('fecha', { ascending: false });
 
         let racha = 0;
         if (entradas && entradas.length > 0) {
-            // 1. Convertir a formato YYYY-MM-DD y eliminar duplicados usando Set
-            // Esto soluciona tu problema: 5 entradas el mismo día se convierten en 1 sola fecha en el Set
             const diasUnicos = new Set(entradas.map(e => e.fecha.split('T')[0]));
-            const diasOrdenados = Array.from(diasUnicos).sort().reverse(); // Ordenar descendente (hoy, ayer...)
-
-            // 2. Comprobar si la racha está viva (última entrada fue HOY o AYER)
+            const diasOrdenados = Array.from(diasUnicos).sort().reverse();
+            
             const hoy = new Date().toISOString().split('T')[0];
             const ayerDate = new Date(); ayerDate.setDate(ayerDate.getDate() - 1);
             const ayer = ayerDate.toISOString().split('T')[0];
 
             if (diasOrdenados[0] === hoy || diasOrdenados[0] === ayer) {
-                racha = 1; // Empezamos con 1
-                let fechaChequeo = new Date(diasOrdenados[0]); // Empezamos a chequear desde el último día escrito
-
-                // 3. Recorrer hacia atrás buscando días consecutivos
+                racha = 1;
+                let fechaChequeo = new Date(diasOrdenados[0]);
                 for (let i = 1; i < diasOrdenados.length; i++) {
-                    fechaChequeo.setDate(fechaChequeo.getDate() - 1); // Restamos un día
-                    const fechaEsperada = fechaChequeo.toISOString().split('T')[0];
-
-                    if (diasOrdenados[i] === fechaEsperada) {
-                        racha++; // ¡Es consecutivo! Sumamos racha
-                    } else {
-                        break; // Se rompió la racha, dejamos de contar
-                    }
+                    fechaChequeo.setDate(fechaChequeo.getDate() - 1);
+                    if (diasOrdenados[i] === fechaChequeo.toISOString().split('T')[0]) racha++;
+                    else break;
                 }
-            } else {
-                racha = 0; // La última entrada fue hace mucho, racha perdida
             }
         }
         document.getElementById('statRacha').textContent = racha;
-
 
         // 4. Próxima Cita
         const { data: citas } = await window.supabase
@@ -500,81 +447,79 @@
         if (citas && citas.length > 0) {
             const cita = citas[0];
             const fecha = new Date(cita.fecha_hora);
-            
             document.getElementById('nextCitaDate').textContent = 
                 fecha.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-            
             document.getElementById('nextCitaDoc').textContent = cita.psicologos?.nombre_completo || 'Tu especialista';
             document.getElementById('nextCitaInfo').style.display = 'flex';
-            
-            const btn = document.getElementById('btnCitaAction');
-            btn.innerHTML = '<i class="fas fa-video"></i> Unirse';
+            document.getElementById('btnCitaAction').innerHTML = '<i class="fas fa-video"></i> Unirse';
         }
 
-        // 5. Último Test
-        const { data: tests } = await window.supabase
-            .from('test_results')
+        // 5. ESTADO DE LA SEMANA (Pulso Semanal)
+        const { data: registros } = await window.supabase
+            .from('monitoreo_sintomas')
             .select('*')
             .eq('user_id', user.id)
             .order('fecha_realizado', { ascending: false })
             .limit(1);
 
-        if (tests && tests.length > 0) {
-            const test = tests[0];
-            renderTestResults(test);
+        const btnPulse = document.getElementById('btnPulseAction');
+        const badge = document.getElementById('pulseStatusBadge');
+        const bar = document.getElementById('dashAnsiedadBar');
+        const txt = document.getElementById('dashAnsiedadText');
+        const statBienestar = document.getElementById('statBienestar');
+
+        if (registros && registros.length > 0) {
+            const ultimo = registros[0];
+            const fechaUltimo = new Date(ultimo.fecha_realizado);
+            const hoy = new Date();
+            const diasPasados = Math.floor((hoy - fechaUltimo) / (1000 * 60 * 60 * 24));
             
-            const bienestar = Math.round(((10 - test.nivel_ansiedad) + (10 - test.nivel_estres) + test.nivel_animo) / 3 * 10);
-            document.getElementById('statBienestar').textContent = `${bienestar}%`;
-            document.getElementById('testActionText').textContent = 'Repetir test';
-            document.getElementById('testDateBadge').style.display = 'inline-block';
+            // Visualización
+            const nivel = ultimo.nivel_ansiedad || 0;
+            bar.style.width = `${Math.min(nivel * 10, 100)}%`;
+            txt.textContent = nivel <= 3 ? 'Baja' : (nivel <= 7 ? 'Moderada' : 'Alta');
+            
+            // Actualizar Tarjeta Stat "Bienestar"
+            const animo = ultimo.nivel_animo || 0;
+            statBienestar.textContent = `${animo}/10`;
+
+            if (diasPasados < 7) {
+                // BLOQUEADO
+                const diasRestantes = 7 - diasPasados;
+                btnPulse.innerHTML = `<i class="fas fa-clock"></i> Esperar ${diasRestantes} días`;
+                btnPulse.disabled = true;
+                btnPulse.style.opacity = '0.6';
+                btnPulse.style.cursor = 'not-allowed';
+                badge.textContent = 'Actualizado';
+                badge.className = 'badge info';
+                badge.style.background = '#D1FAE5';
+                badge.style.color = '#065F46';
+            } else {
+                // DISPONIBLE
+                btnPulse.innerHTML = '📝 Registrar Pulso Semanal';
+                btnPulse.disabled = false;
+                btnPulse.style.opacity = '1';
+                btnPulse.style.cursor = 'pointer';
+                badge.textContent = 'Pendiente';
+                badge.className = 'badge info';
+                badge.style.background = '#FEF3C7';
+                badge.style.color = '#92400E';
+            }
         } else {
-            document.getElementById('statBienestar').textContent = '--';
+            // NUNCA HIZO REGISTRO (Mandar a Entrevista)
+            btnPulse.innerHTML = '🚀 Iniciar Entrevista';
+            btnPulse.onclick = () => window.location.href = 'entrevista.html';
+            badge.textContent = 'Bienvenida';
+            txt.textContent = '-';
+            statBienestar.textContent = '-';
         }
     }
 
-    function renderTestResults(test) {
-        const container = document.getElementById('testResultsContainer');
-        const getLevel = (val) => val <= 3 ? 'low' : val <= 6 ? 'medium' : 'high';
-        const getTxt = (val) => val <= 3 ? 'Bajo' : val <= 6 ? 'Moderado' : 'Alto';
-        
-        container.innerHTML = `
-            <div class="test-result">
-                <div class="test-result-header">
-                    <span class="test-label">Ansiedad</span>
-                    <span class="test-score ${getLevel(test.nivel_ansiedad)}">${getTxt(test.nivel_ansiedad)} - ${test.nivel_ansiedad}/10</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill ${getLevel(test.nivel_ansiedad)}" style="width: ${test.nivel_ansiedad * 10}%"></div>
-                </div>
-            </div>
-            <div class="test-result">
-                <div class="test-result-header">
-                    <span class="test-label">Estrés</span>
-                    <span class="test-score ${getLevel(test.nivel_estres)}">${getTxt(test.nivel_estres)} - ${test.nivel_estres}/10</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill ${getLevel(test.nivel_estres)}" style="width: ${test.nivel_estres * 10}%"></div>
-                </div>
-            </div>
-            <div class="test-result" style="margin-bottom:0">
-                <div class="test-result-header">
-                    <span class="test-label">Ánimo</span>
-                    <span class="test-score ${getLevel(test.nivel_animo)}">${getTxt(test.nivel_animo)} - ${test.nivel_animo}/10</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill ${getLevel(test.nivel_animo)}" style="width: ${test.nivel_animo * 10}%"></div>
-                </div>
-            </div>
-        `;
-    }
-
-    // Funciones Globales
     async function handleLogout() {
         await window.supabase.auth.signOut();
         window.location.href = '../login.html';
     }
 
-    // Menu Móvil
     const mobileBtn = document.querySelector('.mobile-menu-btn');
     if (mobileBtn) {
         mobileBtn.addEventListener('click', () => {
@@ -585,7 +530,6 @@
         });
     }
 
-    // Iniciar
     document.addEventListener('DOMContentLoaded', loadDashboard);
   </script>
 </body>
