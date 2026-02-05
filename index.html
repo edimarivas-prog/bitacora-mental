@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    /* ... (Tus estilos CSS se mantienen igual) ... */
     :root {
       --primary: #4F6F52;
       --primary-light: #6B8A6E;
@@ -221,4 +220,81 @@
     <div class="testimonios-grid">
       <div class="testimonial">
         <p>"La entrevista de bienvenida me ayudó a enfocar lo que realmente necesitaba trabajar. Ahora estoy en terapia y me siento mucho más tranquila."</p>
-        <div
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">MC</div>
+          <div><strong>María C.</strong><br><small>Plan Intermedio</small></div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <p>"Poder llevar un registro de mi semana y compartirlo con mi psicólogo ha hecho que mis sesiones sean mucho más productivas."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">JP</div>
+          <div><strong>Jorge P.</strong><br><small>Plan Premium</small></div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <p>"Me encanta tener mi diario integrado y ver mi evolución sin etiquetas ni diagnósticos fríos. Muy humano."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">AR</div>
+          <div><strong>Ana R.</strong><br><small>Plan Básico</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-final">
+    <h2>Da el primer paso hoy</h2>
+    <p>Cuidar tu salud mental nunca fue tan accesible</p>
+    <a href="app/entrevista.html" class="btn-primary">Iniciar entrevista</a>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3><i class="fas fa-brain"></i> Bitácora Mental</h3>
+        <p>Plataforma de salud mental que conecta personas con especialistas verificados. Tu bienestar, nuestro compromiso.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Plataforma</h4>
+        <ul>
+          <li><a href="#precios">Servicios</a></li>
+          <li><a href="https://wa.me/51922483155?text=Empresas">Empresas</a></li>
+          <li><a href="https://wa.me/51922483155?text=Unirme">Únete al equipo</a></li>
+          <li><a href="login.html">Iniciar sesión</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Recursos</h4>
+        <ul>
+          <li><a href="#testimonios">Testimonios</a></li>
+          <li><a href="https://wa.me/51922483155">Centro de ayuda</a></li>
+          <li><a href="app/entrevista.html">Entrevista inicial</a></li>
+          <li><a href="https://wa.me/51922483155">Preguntas frecuentes</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Términos y condiciones</a></li>
+          <li><a href="#">Política de privacidad</a></li>
+          <li><a href="#">Aviso de cookies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p><strong>Nota:</strong> Los servicios de asesoría son proporcionados por profesionales en formación. Para psicoterapia clínica, trabajamos con psicólogos colegiados.</p>
+      <p>© 2026 Bitácora Mental. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) { target.scrollIntoView({ behavior: 'smooth' }); }
+      });
+    });
+  </script>
+</body>
+</html>
