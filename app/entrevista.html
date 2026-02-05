@@ -8,161 +8,28 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    :root {
-      --primary: #4F6F52;
-      --primary-light: #6B8A6E;
-      --accent: #F59E0B;
-      --background: #F3F6F4;
-      --white: #FFFFFF;
-      --text: #1F2933;
-      --text-soft: #6B7280;
-      --border: #E6EFE8;
-      --radius: 20px;
-    }
-
+    /* ... (Mismos estilos de siempre) ... */
+    :root { --primary: #4F6F52; --primary-light: #6B8A6E; --accent: #F59E0B; --background: #F3F6F4; --white: #FFFFFF; --text: #1F2933; --text-soft: #6B7280; --border: #E6EFE8; --radius: 20px; }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--background);
-      background-image: radial-gradient(#4F6F52 0.5px, transparent 0.5px), radial-gradient(#4F6F52 0.5px, var(--background) 0.5px);
-      background-size: 20px 20px;
-      background-position: 0 0, 10px 10px;
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 20px;
-    }
-
-    /* Card Container */
-    .container {
-      background: var(--white);
-      padding: 40px;
-      border-radius: var(--radius);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-      max-width: 550px;
-      width: 100%;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Progress Bar */
-    .progress-container {
-      margin-bottom: 30px;
-    }
-    .progress-bar-bg {
-      background: var(--border);
-      height: 6px;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: var(--primary);
-      width: 33%;
-      transition: width 0.4s ease;
-    }
-    .progress-text {
-      text-align: right;
-      font-size: 0.8rem;
-      color: var(--text-soft);
-      margin-top: 8px;
-      font-weight: 600;
-    }
-
-    /* Typography */
-    h1 {
-      font-family: 'Outfit', sans-serif;
-      color: var(--primary);
-      margin: 0 0 10px 0;
-      font-size: 1.8rem;
-      line-height: 1.2;
-    }
-    p.subtitle {
-      color: var(--text-soft);
-      font-size: 1rem;
-      margin-bottom: 30px;
-      line-height: 1.5;
-    }
-
-    /* Form Elements */
+    body { font-family: 'DM Sans', sans-serif; background: var(--background); background-image: radial-gradient(#4F6F52 0.5px, transparent 0.5px); background-size: 20px 20px; color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+    .container { background: var(--white); padding: 40px; border-radius: var(--radius); box-shadow: 0 20px 40px rgba(0,0,0,0.08); max-width: 550px; width: 100%; position: relative; overflow: hidden; }
+    .progress-container { margin-bottom: 30px; }
+    .progress-bar-bg { background: var(--border); height: 6px; border-radius: 10px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--primary); width: 33%; transition: width 0.4s ease; }
+    .progress-text { text-align: right; font-size: 0.8rem; color: var(--text-soft); margin-top: 8px; font-weight: 600; }
+    h1 { font-family: 'Outfit', sans-serif; color: var(--primary); margin: 0 0 10px 0; font-size: 1.8rem; line-height: 1.2; }
+    p.subtitle { color: var(--text-soft); font-size: 1rem; margin-bottom: 30px; line-height: 1.5; }
     .form-group { margin-bottom: 20px; }
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: var(--text);
-      font-size: 0.95rem;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 16px;
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      font-family: inherit;
-      font-size: 1rem;
-      color: var(--text);
-      background: #FAFAFA;
-      transition: all 0.3s;
-      outline: none;
-    }
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--primary);
-      background: var(--white);
-      box-shadow: 0 4px 12px rgba(79, 111, 82, 0.1);
-    }
-    textarea {
-      resize: none;
-      min-height: 120px;
-    }
-
-    /* Steps Animation */
+    label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text); font-size: 0.95rem; }
+    input, select, textarea { width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 1rem; color: var(--text); background: #FAFAFA; transition: all 0.3s; outline: none; }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); background: var(--white); box-shadow: 0 4px 12px rgba(79, 111, 82, 0.1); }
+    textarea { resize: none; min-height: 120px; }
     .step { display: none; opacity: 0; transform: translateY(10px); transition: all 0.4s ease; }
     .step.active { display: block; opacity: 1; transform: translateY(0); }
-
-    /* Buttons */
-    .btn {
-      background: var(--primary);
-      color: var(--white);
-      border: none;
-      padding: 16px 24px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 1.1rem;
-      font-weight: 600;
-      width: 100%;
-      margin-top: 10px;
-      transition: transform 0.2s, box-shadow 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
+    .btn { background: var(--primary); color: var(--white); border: none; padding: 16px 24px; border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 600; width: 100%; margin-top: 10px; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
     .btn:active { transform: scale(0.98); }
-    .btn:hover {
-      background: var(--primary-light);
-      box-shadow: 0 8px 20px rgba(79, 111, 82, 0.2);
-    }
-    .btn-secondary {
-      background: transparent;
-      color: var(--text-soft);
-      font-size: 0.9rem;
-      padding: 10px;
-      margin-top: 5px;
-    }
-
-    /* Mobile Adjustments */
-    @media (max-width: 600px) {
-      body { padding: 15px; align-items: flex-start; }
-      .container { padding: 25px; border-radius: 16px; min-height: 85vh; display: flex; flex-direction: column; }
-      .step { flex: 1; display: none; flex-direction: column; }
-      .step.active { display: flex; }
-      .btn { margin-top: auto; } /* Push button to bottom on mobile */
-      h1 { font-size: 1.6rem; }
-    }
+    .btn-secondary { background: transparent; color: var(--text-soft); font-size: 0.9rem; padding: 10px; margin-top: 5px; cursor: pointer; border: none; width: 100%; }
+    @media (max-width: 600px) { body { padding: 15px; align-items: flex-start; } .container { padding: 25px; min-height: 85vh; display: flex; flex-direction: column; } .step { flex: 1; display: none; flex-direction: column; } .step.active { display: flex; } .btn { margin-top: auto; } }
   </style>
 </head>
 <body>
@@ -176,103 +43,46 @@
     </div>
 
     <form id="intakeForm">
-      
       <div class="step active" id="step1">
         <h1>👋 ¡Hola! Empecemos por ti</h1>
-        <p class="subtitle">Para que tu experiencia sea realmente útil, necesitamos conocer algunos detalles básicos.</p>
-        
-        <div class="form-group">
-          <label><i class="far fa-calendar-alt"></i> Fecha de Nacimiento</label>
-          <input type="date" id="fechaNacimiento" required>
-        </div>
-        
-        <div class="form-group">
-          <label><i class="fas fa-venus-mars"></i> Sexo (Biología/Identidad)</label>
-          <p style="font-size: 0.8rem; color: #888; margin-bottom: 8px;">Esto nos ayuda a ajustar las recomendaciones clínicas.</p>
-          <select id="sexo" required>
-            <option value="" disabled selected>Selecciona una opción...</option>
-            <option value="Femenino">Femenino</option>
-            <option value="Masculino">Masculino</option>
-            <option value="Otro">Prefiero no decirlo / Otro</option>
-          </select>
-        </div>
-        
-        <button type="button" class="btn" onclick="nextStep(2)">
-          Continuar <i class="fas fa-arrow-right"></i>
-        </button>
+        <p class="subtitle">Cuéntanos un poco sobre ti para personalizar tu experiencia.</p>
+        <div class="form-group"><label>Fecha de Nacimiento</label><input type="date" id="fechaNacimiento" required></div>
+        <div class="form-group"><label>Sexo</label><select id="sexo" required><option value="" disabled selected>Selecciona...</option><option value="Femenino">Femenino</option><option value="Masculino">Masculino</option><option value="Otro">Otro</option></select></div>
+        <button type="button" class="btn" onclick="nextStep(2)">Continuar <i class="fas fa-arrow-right"></i></button>
       </div>
 
       <div class="step" id="step2">
-        <h1>💬 Tu espacio seguro</h1>
-        <p class="subtitle">Cuéntanos un poco sobre lo que estás viviendo. No hay respuestas incorrectas.</p>
-        
-        <div class="form-group">
-          <label>¿Qué es lo que más te pesa hoy?</label>
-          <textarea id="motivo" placeholder="Ej: Me siento muy ansioso en el trabajo, me cuesta concentrarme o simplemente quiero conocerme mejor..." required></textarea>
-        </div>
-        
-        <div class="form-group">
-          <label>¿Qué te gustaría lograr?</label>
-          <input type="text" id="expectativa" placeholder="Ej: Dormir mejor, reducir el estrés...">
-        </div>
-        
-        <button type="button" class="btn" onclick="nextStep(3)">
-          Siguiente <i class="fas fa-arrow-right"></i>
-        </button>
-        <button type="button" class="btn btn-secondary" onclick="prevStep(1)">Atrás</button>
+        <h1>💬 Tu Historia</h1>
+        <p class="subtitle">No hay respuestas incorrectas.</p>
+        <div class="form-group"><label>¿Qué te trae por aquí?</label><textarea id="motivo" placeholder="Me siento..." required></textarea></div>
+        <div class="form-group"><label>¿Qué esperas lograr?</label><input type="text" id="expectativa" placeholder="Ej: Dormir mejor..."></div>
+        <button type="button" class="btn" onclick="nextStep(3)">Siguiente <i class="fas fa-arrow-right"></i></button>
+        <button type="button" class="btn-secondary" onclick="prevStep(1)">Atrás</button>
       </div>
 
       <div class="step" id="step3">
-        <h1>🌙 Tu bienestar diario</h1>
-        <p class="subtitle">Unos últimos detalles para completar tu perfil clínico.</p>
+        <h1>🌙 Bienestar Diario</h1>
+        <p class="subtitle">Últimos detalles.</p>
+        <div class="form-group"><label>Sueño (Última semana)</label><select id="sueño" required><option value="" disabled selected>Elige...</option><option value="bien">Bien</option><option value="regular">Regular</option><option value="mal">Mal</option></select></div>
+        <div class="form-group"><label>Energía</label><select id="energia" required><option value="" disabled selected>Elige...</option><option value="alto">Alta</option><option value="medio">Media</option><option value="bajo">Baja</option></select></div>
         
-        <div class="form-group">
-          <label>¿Cómo has dormido la última semana?</label>
-          <select id="sueño" required>
-            <option value="" disabled selected>Elige una opción...</option>
-            <option value="bien">😴 Bien (7-8 horas seguidas)</option>
-            <option value="regular">😐 Regular (Me despierto a veces)</option>
-            <option value="mal">😫 Mal (Me cuesta mucho dormir)</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Nivel de energía general</label>
-          <select id="energia" required>
-            <option value="" disabled selected>Elige una opción...</option>
-            <option value="alto">⚡ Alta / Activa</option>
-            <option value="medio">🔋 Media / Normal</option>
-            <option value="bajo">🪫 Baja / Agotada</option>
-          </select>
-        </div>
-
-        <button type="submit" class="btn">
-          <i class="fas fa-check"></i> Finalizar Entrevista
-        </button>
-        <button type="button" class="btn btn-secondary" onclick="prevStep(2)">Atrás</button>
+        <button type="submit" class="btn"><i class="fas fa-check"></i> Finalizar</button>
+        <button type="button" class="btn-secondary" onclick="prevStep(2)">Atrás</button>
       </div>
-
     </form>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../js/supabase-config.js"></script>
   <script>
-    // 1. LÓGICA DE PASOS (Sin cambios, solo navegación visual)
+    // --- LÓGICA VISUAL (Pasos) ---
     function nextStep(step) {
-      const currentStepId = 'step' + (step - 1);
-      const inputs = document.getElementById(currentStepId).querySelectorAll('input, select, textarea');
+      const inputs = document.getElementById('step' + (step - 1)).querySelectorAll('input, select, textarea');
       let valid = true;
-      inputs.forEach(input => {
-        if (!input.checkValidity()) { input.reportValidity(); valid = false; }
-      });
+      inputs.forEach(i => { if (!i.checkValidity()) { i.reportValidity(); valid = false; } });
       if (valid) updateStep(step);
     }
-
     function prevStep(step) { updateStep(step); }
-
     function updateStep(step) {
       document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
       document.getElementById('step' + step).classList.add('active');
@@ -280,35 +90,31 @@
       document.getElementById('progressBar').style.width = (step / 3 * 100) + '%';
     }
 
-    // 2. GUARDADO TEMPORAL Y REDIRECCIÓN AL REGISTRO
+    // --- GUARDADO TEMPORAL ---
     document.getElementById('intakeForm').addEventListener('submit', (e) => {
       e.preventDefault();
-      
       const btn = e.target.querySelector('button[type="submit"]');
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
       btn.disabled = true;
 
-      // Recopilar datos
-      const datosEntrevista = {
-          fecha_nacimiento: document.getElementById('fechaNacimiento').value,
-          sexo: document.getElementById('sexo').value,
-          motivo_consulta: document.getElementById('motivo').value,
-          historia_clinica: {
-              expectativa: document.getElementById('expectativa').value,
-              sueno: document.getElementById('sueño').value,
-              energia: document.getElementById('energia').value,
-              fecha_entrevista: new Date().toISOString()
-          }
+      // 1. Guardar en memoria del navegador
+      const datos = {
+        fecha_nacimiento: document.getElementById('fechaNacimiento').value,
+        sexo: document.getElementById('sexo').value,
+        motivo_consulta: document.getElementById('motivo').value,
+        historia_clinica: {
+           expectativa: document.getElementById('expectativa').value,
+           sueno: document.getElementById('sueño').value,
+           energia: document.getElementById('energia').value,
+           fecha_entrevista: new Date().toISOString()
+        }
       };
+      sessionStorage.setItem('temp_entrevista', JSON.stringify(datos));
 
-      // GUARDAR EN MEMORIA DEL NAVEGADOR (SessionStorage)
-      sessionStorage.setItem('temp_entrevista', JSON.stringify(datosEntrevista));
-
-      // REDIRIGIR AL REGISTRO PARA GUARDAR DEFINITIVAMENTE
-      // Usamos setTimeout para dar sensación de procesamiento
+      // 2. Redirigir al Registro (para crear cuenta y guardar de verdad)
       setTimeout(() => {
-          window.location.href = '../registro.html'; 
-      }, 800);
+        window.location.href = '../registro.html';
+      }, 500);
     });
   </script>
 </body>
