@@ -158,7 +158,7 @@
         if (!window.sb) throw new Error("Error de conexión.");
         await window.sb.auth.signInWithOAuth({
           provider: 'google',
-          options: { redirectTo: window.location.origin + '/app/dashboard.html' }
+          options: { redirectTo: window.location.origin + '/bitacora-mental/app/dashboard.html' }
         });
       } catch (err) { alert("Error con Google."); }
     });
