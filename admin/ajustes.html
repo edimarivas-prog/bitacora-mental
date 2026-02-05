@@ -3,74 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CMS - Bitácora Mental</title>
+  <title>Editor Web - Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* ESTILOS BASE (Mismos del Admin) */
+    /* ESTILOS DEL PANEL ADMIN (Mismos de siempre) */
     :root { --sidebar-bg: #1F2933; --primary: #4F6F52; --bg: #F3F4F6; --text: #1F2933; --border: #E5E7EB; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
     
     /* SIDEBAR */
-    .sidebar { width: 260px; background: var(--sidebar-bg); color: white; padding: 24px; display: flex; flex-direction: column; }
-    .logo { font-family: 'Outfit'; font-weight: 700; color: white; font-size: 1.3rem; margin-bottom: 40px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .nav-item { padding: 12px; color: #CBD5E1; text-decoration: none; border-radius: 12px; display: flex; gap: 10px; margin-bottom: 5px; transition: 0.2s; }
+    .sidebar { width: 260px; background: var(--sidebar-bg); color: white; padding: 24px; display: flex; flex-direction: column; flex-shrink: 0; }
+    .logo { font-family: 'Outfit'; font-weight: 700; color: white; font-size: 1.3rem; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-item { padding: 12px; color: #CBD5E1; text-decoration: none; border-radius: 12px; display: flex; gap: 10px; margin-bottom: 5px; transition: 0.2s; align-items: center; }
     .nav-item:hover, .nav-item.active { background: var(--primary); color: white; }
-    .nav-title { font-size: 0.7rem; text-transform: uppercase; color: #94A3B8; margin: 20px 0 10px 10px; font-weight: 700; }
-
-    /* CONTENIDO */
-    .main { flex: 1; display: flex; flex-direction: column; }
-    .top-bar { padding: 20px 40px; background: white; border-bottom: 1px solid var(--border); }
     
-    .editor-layout { display: flex; flex: 1; overflow: hidden; }
+    /* MAIN LAYOUT */
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .top-bar { padding: 15px 30px; background: white; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
     
-    /* PESTAÑAS DEL CMS */
-    .cms-tabs { width: 220px; background: white; border-right: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; gap: 8px; }
-    .tab-btn { padding: 12px; border: none; background: transparent; text-align: left; cursor: pointer; border-radius: 8px; color: #64748B; font-weight: 500; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
-    .tab-btn:hover { background: #F1F5F9; color: var(--text); }
-    .tab-btn.active { background: #E0F2FE; color: #0369A1; font-weight: 600; }
+    .editor-container { display: flex; flex: 1; overflow: hidden; }
+    
+    /* MENU DE SECCIONES (CMS) */
+    .cms-menu { width: 240px; background: white; border-right: 1px solid var(--border); padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; }
+    .cms-btn { text-align: left; padding: 12px 15px; border: none; background: transparent; cursor: pointer; border-radius: 8px; color: #64748B; font-weight: 500; display: flex; align-items: center; gap: 10px; transition: 0.2s; font-size: 0.9rem; }
+    .cms-btn:hover { background: #F1F5F9; color: var(--text); }
+    .cms-btn.active { background: #E0F2FE; color: #0369A1; font-weight: 600; }
+    .cms-divider { font-size: 0.75rem; text-transform: uppercase; color: #94A3B8; font-weight: 700; margin: 15px 0 5px 10px; }
 
-    /* AREA DE EDICIÓN */
+    /* PANEL DE EDICIÓN */
     .editor-panel { flex: 1; padding: 40px; overflow-y: auto; background: #F8FAFC; }
-    .form-group { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
-    .form-label { display: block; font-size: 0.8rem; font-weight: 700; color: #64748B; margin-bottom: 8px; text-transform: uppercase; }
     
-    .input-field { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: #F8FAFC; }
-    .color-picker { width: 50px; height: 40px; border: none; cursor: pointer; }
+    /* INPUTS */
+    .form-card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .field-label { font-weight: 700; font-size: 0.9rem; margin-bottom: 8px; display: block; color: var(--text); }
+    .field-key { font-size: 0.75rem; color: #94A3B8; margin-bottom: 10px; font-family: monospace; display: block; }
+    
+    .input-text { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; background: #F8FAFC; }
+    .input-area { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; min-height: 80px; resize: vertical; background: #F8FAFC; }
+    .input-color { width: 50px; height: 35px; border: none; cursor: pointer; padding: 0; background: none; }
 
-    /* Order Manager (Drag simulado) */
-    .order-list { list-style: none; }
-    .order-item { background: white; padding: 15px; border: 1px solid var(--border); margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
-    .btn-move { background: #F1F5F9; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; color: var(--text); }
-    .btn-move:hover { background: #E2E8F0; }
-
-    .btn-save { padding: 8px 16px; background: var(--sidebar-bg); color: white; border: none; border-radius: 6px; cursor: pointer; float: right; margin-top: 10px; }
+    .btn-save { background: var(--sidebar-bg); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; float: right; margin-top: 10px; font-weight: 600; }
+    .btn-save:hover { background: #334155; }
+    
+    .helper-text { font-size: 0.85rem; color: #64748B; margin-top: 5px; font-style: italic; }
   </style>
 </head>
 <body>
+
   <aside class="sidebar">
     <a href="#" class="logo"><i class="fas fa-brain"></i> ADMIN PRO</a>
-    <div class="nav-title">Navegación</div>
     <a href="panel-admin.html" class="nav-item"><i class="fas fa-chart-pie"></i> Resumen</a>
-    <a href="ajustes.html" class="nav-item active"><i class="fas fa-sliders-h"></i> Ajustes CMS</a>
-    <a href="../app/dashboard.html" class="nav-item" style="margin-top:auto;"><i class="fas fa-arrow-left"></i> Volver a App</a>
+    <a href="ajustes.html" class="nav-item active"><i class="fas fa-sliders-h"></i> Editor Web</a>
+    <a href="../app/dashboard.html" class="nav-item" style="margin-top:auto;"><i class="fas fa-arrow-left"></i> Ir a la App</a>
   </aside>
 
   <main class="main">
-    <div class="top-bar"><h1>Editor del Sitio Web</h1></div>
-    
-    <div class="editor-layout">
-        <div class="cms-tabs">
-            <button class="tab-btn active" onclick="loadTab('global')"><i class="fas fa-paint-brush"></i> Estilo Global</button>
-            <button class="tab-btn" onclick="loadTab('home_layout')"><i class="fas fa-layer-group"></i> Estructura Inicio</button>
-            <button class="tab-btn" onclick="loadTab('home_content')"><i class="fas fa-font"></i> Textos Inicio</button>
-            <button class="tab-btn" onclick="loadTab('dashboard')"><i class="fas fa-columns"></i> Dashboard</button>
-            <button class="tab-btn" onclick="loadTab('banners')"><i class="fas fa-bullhorn"></i> Banners & Promos</button>
+    <div class="top-bar">
+        <h2 style="margin:0; font-family:'Outfit';">Editor de Contenidos</h2>
+        <span style="font-size:0.85rem; color:#64748B;">Tus cambios se aplican al instante.</span>
+    </div>
+
+    <div class="editor-container">
+        <div class="cms-menu">
+            <div class="cms-divider">General</div>
+            <button class="cms-btn active" onclick="loadTab('global')"><i class="fas fa-palette"></i> Marca & Colores</button>
+            <button class="cms-btn" onclick="loadTab('nav')"><i class="fas fa-compass"></i> Menú & Banner</button>
+            <button class="cms-btn" onclick="loadTab('footer')"><i class="far fa-copyright"></i> Pie de Página</button>
+
+            <div class="cms-divider">Página de Inicio</div>
+            <button class="cms-btn" onclick="loadTab('home_hero')"><i class="fas fa-star"></i> Hero (Cabecera)</button>
+            <button class="cms-btn" onclick="loadTab('home_steps')"><i class="fas fa-list-ol"></i> Cómo Funciona</button>
+            <button class="cms-btn" onclick="loadTab('home_pricing')"><i class="fas fa-tags"></i> Precios y Planes</button>
         </div>
 
         <div class="editor-panel" id="panelContainer">
-            <p style="text-align:center;">Cargando...</p>
+            <div style="text-align:center; padding:50px; color:#94A3B8;">
+                <i class="fas fa-spinner fa-spin fa-2x"></i>
+                <p>Cargando configuraciones...</p>
+            </div>
         </div>
     </div>
   </main>
@@ -78,105 +89,118 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
+    // --- DICCIONARIO HUMANO ---
+    // Esto traduce las claves técnicas a nombres amigables
+    const friendlyNames = {
+        'brand_nombre': 'Nombre de la Marca',
+        'style_primary': 'Color Principal (Botones, Logos)',
+        'style_secondary': 'Color Secundario (Detalles)',
+        'style_bg': 'Color de Fondo Página',
+        
+        'promo_active': 'Activar Banner Superior de Oferta',
+        'promo_text': 'Texto del Banner de Oferta',
+        'promo_bg': 'Color de Fondo del Banner',
+        'nav_btn_login': 'Texto Botón Login',
+        'nav_btn_cta': 'Texto Botón Acción (Navbar)',
+
+        'hero_badge': 'Etiqueta Superior (Badge)',
+        'hero_titulo': 'Título Principal Gigante',
+        'hero_subtitulo': 'Subtítulo Principal',
+        'hero_btn': 'Texto Botón Principal',
+
+        'steps_titulo': 'Título Sección "Pasos"',
+        'steps_sub': 'Descripción Sección "Pasos"',
+        'step_1_title': 'Título Paso 1',
+        'step_1_desc': 'Descripción Paso 1',
+        'step_2_title': 'Título Paso 2',
+        'step_2_desc': 'Descripción Paso 2',
+        'step_3_title': 'Título Paso 3',
+        'step_3_desc': 'Descripción Paso 3',
+
+        'price_titulo': 'Título Sección Precios',
+        'p1_nombre': 'Nombre Plan 1 (Gratis)',
+        'p1_precio': 'Precio Plan 1',
+        'p1_btn': 'Botón Plan 1',
+        'p2_nombre': 'Nombre Plan 2 (Kit)',
+        'p2_precio': 'Precio Plan 2',
+        'p2_btn': 'Botón Plan 2',
+        'p3_nombre': 'Nombre Plan 3 (Terapia)',
+        'p3_precio': 'Precio Plan 3',
+        'p3_btn': 'Botón Plan 3',
+        'price_nota': 'Nota pequeña al pie de precios',
+
+        'footer_desc': 'Descripción breve en Footer',
+        'footer_copy': 'Texto de Copyright',
+        'footer_contact_wsp': 'Enlace WhatsApp Soporte'
+    };
+
     let allConfigs = [];
-    
-    // Auth Check
+
+    // 1. INICIAR
     async function init() {
         if (!window.sb) return setTimeout(init, 100);
-        const { data } = await window.sb.from('config_interfaz').select('*');
+        // Validar sesión admin (simplificado para este ejemplo)
+        const { data } = await window.sb.from('config_interfaz').select('*').order('clave');
         allConfigs = data;
         loadTab('global');
     }
     init();
 
-    // RENDERIZADOR DE PESTAÑAS
+    // 2. CARGAR PESTAÑA
     function loadTab(section) {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        event?.currentTarget?.classList.add('active');
+        // UI Menu
+        document.querySelectorAll('.cms-btn').forEach(b => b.classList.remove('active'));
+        event?.target?.classList.add('active');
+        if(!event) document.querySelector('.cms-btn').classList.add('active');
 
         const container = document.getElementById('panelContainer');
-        
-        // 1. GESTOR DE ORDEN (ESPECIAL)
-        if (section === 'home_layout') {
-            renderLayoutManager(container);
+        const items = allConfigs.filter(c => c.seccion === section);
+
+        if(items.length === 0) {
+            container.innerHTML = `<p style="text-align:center; color:#94A3B8;">No hay opciones configurables en esta sección.</p>`;
             return;
         }
 
-        // 2. FORMULARIOS ESTÁNDAR
-        const items = allConfigs.filter(c => c.seccion === section);
-        container.innerHTML = items.map(item => `
-            <div class="form-group">
-                <label class="form-label">${item.clave}</label>
-                ${renderInput(item)}
-                <button class="btn-save" onclick="save('${item.id}', '${item.tipo}')">Guardar</button>
-                <div style="clear:both;"></div>
-            </div>
-        `).join('');
+        container.innerHTML = items.map(item => renderField(item)).join('');
     }
 
-    // HELPER DE INPUTS
-    function renderInput(item) {
-        if (item.tipo === 'color') return `<div style="display:flex; gap:10px; align-items:center;"><input type="color" id="val-${item.id}" value="${item.valor}" class="color-picker"><span style="font-family:monospace;">${item.valor}</span></div>`;
-        if (item.tipo === 'area') return `<textarea id="val-${item.id}" class="input-field" rows="3">${item.valor}</textarea>`;
-        if (item.tipo === 'boolean') return `<select id="val-${item.id}" class="input-field"><option value="true" ${item.valor==='true'?'selected':''}>Activado</option><option value="false" ${item.valor==='false'?'selected':''}>Desactivado</option></select>`;
-        return `<input type="text" id="val-${item.id}" value="${item.valor}" class="input-field">`;
-    }
-
-    // GESTOR DE ORDEN VISUAL
-    function renderLayoutManager(container) {
-        const layoutConfig = allConfigs.find(c => c.clave === 'home_layout_config');
-        if(!layoutConfig) return container.innerHTML = "Error: No se encontró configuración de layout.";
+    // 3. RENDERIZAR CAMPO
+    function renderField(item) {
+        // Buscar nombre amigable, si no existe usa la clave
+        const label = friendlyNames[item.clave] || item.clave;
         
-        const order = JSON.parse(layoutConfig.valor); // ej: ["hero", "precios"]
+        let inputHtml = '';
+        if (item.tipo === 'texto') inputHtml = `<input type="text" id="val-${item.id}" value="${item.valor}" class="input-text">`;
+        else if (item.tipo === 'area') inputHtml = `<textarea id="val-${item.id}" class="input-area">${item.valor}</textarea>`;
+        else if (item.tipo === 'color') inputHtml = `<div style="display:flex; align-items:center; gap:10px;"><input type="color" id="val-${item.id}" value="${item.valor}" class="input-color"><span style="font-family:monospace">${item.valor}</span></div>`;
+        else if (item.tipo === 'boolean') inputHtml = `<select id="val-${item.id}" class="input-text"><option value="true" ${item.valor==='true'?'selected':''}>Activado (Visible)</option><option value="false" ${item.valor==='false'?'selected':''}>Desactivado (Oculto)</option></select>`;
 
-        container.innerHTML = `
-            <div class="form-group">
-                <h3>Organizar Secciones del Home</h3>
-                <p style="color:#64748B; font-size:0.9rem; margin-bottom:15px;">Usa las flechas para subir o bajar secciones.</p>
-                <ul class="order-list" id="orderList">
-                    ${order.map((sec, index) => `
-                        <li class="order-item">
-                            <strong>${sec.toUpperCase()}</strong>
-                            <div>
-                                <button class="btn-move" onclick="moveSection(${index}, -1)">⬆</button>
-                                <button class="btn-move" onclick="moveSection(${index}, 1)">⬇</button>
-                            </div>
-                        </li>
-                    `).join('')}
-                </ul>
-                <button class="btn-save" onclick="saveOrder('${layoutConfig.id}')">Guardar Orden</button>
+        return `
+            <div class="form-card">
+                <label class="field-label">${label}</label>
+                <span class="field-key"><i class="fas fa-database"></i> ${item.clave}</span>
+                ${inputHtml}
+                <button class="btn-save" onclick="save('${item.id}')">Guardar</button>
+                <div style="clear:both"></div>
             </div>
         `;
     }
 
-    // LOGICA DE MOVIMIENTO
-    async function moveSection(index, direction) {
-        const layoutConfig = allConfigs.find(c => c.clave === 'home_layout_config');
-        let order = JSON.parse(layoutConfig.valor);
-        
-        // Swap
-        if (index + direction < 0 || index + direction >= order.length) return;
-        const temp = order[index];
-        order[index] = order[index + direction];
-        order[index + direction] = temp;
-
-        // Update local and re-render
-        layoutConfig.valor = JSON.stringify(order);
-        renderLayoutManager(document.getElementById('panelContainer'));
-    }
-
-    // GUARDAR DATA
-    async function save(id, tipo) {
+    // 4. GUARDAR
+    async function save(id) {
         const val = document.getElementById(`val-${id}`).value;
+        const btn = event.target;
+        const original = btn.textContent;
+        
+        btn.textContent = '...';
         await window.sb.from('config_interfaz').update({ valor: val }).eq('id', id);
-        alert('Guardado');
-    }
-
-    // GUARDAR ORDEN
-    async function saveOrder(id) {
-        const layoutConfig = allConfigs.find(c => c.id === id); // Ya está actualizado en memoria
-        await window.sb.from('config_interfaz').update({ valor: layoutConfig.valor }).eq('id', id);
-        alert('Orden actualizado en la web');
+        
+        btn.style.background = '#10B981';
+        btn.textContent = '¡Listo!';
+        setTimeout(() => {
+            btn.style.background = '';
+            btn.textContent = original;
+        }, 1500);
     }
   </script>
 </body>
