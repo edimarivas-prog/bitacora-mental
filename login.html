@@ -112,102 +112,96 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js"></script>
-  <script>
-    function togglePassword() {
-      const input = document.getElementById('password');
-      const icon = document.querySelector('.toggle-pass i');
-      
-      if (input.type === 'password') {
-        input.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-      } else {
-        input.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-      }
+<script src="js/supabase-config.js"></script>
+<script>
+  function togglePassword() {
+    const input = document.getElementById('password');
+    const icon = document.querySelector('.toggle-pass i');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    } else {
+      input.type = 'password';
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
     }
+  }
 
-    // --- FUNCIÓN CEREBRO: Decide a dónde va el usuario ---
-    async function checkRoleAndRedirect(userId) {
-        try {
-            // 1. Preguntamos a la base de datos: "¿Qué rol tiene este ID?"
-            const { data: profile, error } = await window.sb
-                .from('users_profile')
-                .select('rol')
-                .eq('id', userId)
-                .single();
-
-            if (error) throw error;
-
-            // 2. Activamos mensaje de bienvenida
-            sessionStorage.setItem('show_welcome_back', 'true');
-
-            // 3. Redirección según el rol encontrado
-            if (profile && profile.rol === 'admin') {
-                console.log("👑 Usuario Admin detectado");
-                window.location.href = 'admin/panel-admin.html';
-            } else if (profile && profile.rol === 'psicologo') {
-                console.log("🧠 Usuario Psicólogo detectado");
-                window.location.href = 'app/dashboard-psico.html';
-            } else {
-                console.log("👤 Usuario Paciente detectado");
-                window.location.href = 'app/dashboard.html';
-            }
-        } catch (err) {
-            console.error("Error verificando rol:", err);
-            // Si falla la verificación, por seguridad lo mandamos al dashboard normal
-            window.location.href = 'app/dashboard.html';
-        }
-    }
-
-    // Login Email
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const btn = document.getElementById('loginBtn');
-      
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
-      btn.disabled = true;
-
+  // --- FUNCIÓN CEREBRO: Decide a dónde va el usuario ---
+  async function checkRoleAndRedirect(userId) {
       try {
-        if (!window.sb) throw new Error("Error de conexión. Recarga la página.");
-        
-        // 1. Autenticación Básica (Email/Pass)
-        const { data, error } = await window.sb.auth.signInWithPassword({ email, password });
-        
-        if (error) throw error;
-        
-        // 2. Si pasa, verificamos el ROL antes de redirigir
-        await checkRoleAndRedirect(data.user.id);
+          // 1. Consultar rol
+          const { data: profile, error } = await window.sb
+              .from('users_profile')
+              .select('rol')
+              .eq('id', userId)
+              .single();
 
-      } catch (err) {
-        alert(err.message.includes("Invalid") ? "Credenciales incorrectas." : err.message);
-        btn.innerHTML = 'Iniciar Sesión';
-        btn.disabled = false;
-      }
-    });
+          if (error) throw error;
 
-    // Login Google
-    document.getElementById('googleBtn').addEventListener('click', async () => {
-      try {
-        if (!window.sb) throw new Error("Error de conexión.");
-        
-        // Nota: Google redirige inmediatamente, por lo que la verificación de rol 
-        // para Google se debe hacer en el archivo de destino (dashboard.html) 
-        // redirigiendo de vuelta si es admin.
-        sessionStorage.setItem('show_welcome_back', 'true');
+          // 2. Guardar señal de bienvenida
+          sessionStorage.setItem('show_welcome_back', 'true');
 
-        await window.sb.auth.signInWithOAuth({
-          provider: 'google',
-          options: { 
-            redirectTo: window.location.origin + '/bitacora-mental/app/dashboard.html' 
+          // 3. Redirección INTELIGENTE (Rutas corregidas)
+          if (profile && profile.rol === 'admin') {
+              console.log("👑 Admin detectado");
+              // IMPORTANTE: Ruta a la carpeta nueva
+              window.location.href = 'admin/panel-admin.html';
+          } else if (profile && profile.rol === 'psicologo') {
+              console.log("🧠 Psicólogo detectado");
+              window.location.href = 'pro/dashboard-psico.html';
+          } else {
+              console.log("👤 Paciente detectado");
+              window.location.href = 'app/dashboard.html';
           }
-        });
-      } catch (err) { alert("No se pudo conectar con Google."); }
-    });
-  </script>
+      } catch (err) {
+          console.error("Error verificando rol:", err);
+          // Si falla, por seguridad al dashboard normal
+          window.location.href = 'app/dashboard.html';
+      }
+  }
+
+  // Login Email
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const btn = document.getElementById('loginBtn');
+    
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
+    btn.disabled = true;
+
+    try {
+      if (!window.sb) throw new Error("Error de conexión.");
+      
+      const { data, error } = await window.sb.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      
+      // Verificamos rol antes de irnos
+      await checkRoleAndRedirect(data.user.id);
+
+    } catch (err) {
+      alert(err.message.includes("Invalid") ? "Credenciales incorrectas." : err.message);
+      btn.innerHTML = 'Iniciar Sesión';
+      btn.disabled = false;
+    }
+  });
+
+  // Login Google
+  document.getElementById('googleBtn').addEventListener('click', async () => {
+    try {
+      if (!window.sb) throw new Error("Error de conexión.");
+      sessionStorage.setItem('show_welcome_back', 'true');
+      
+      // Google siempre redirige al Dashboard primero.
+      // El "rebote" al admin lo hará el dashboard.html
+      await window.sb.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin + '/bitacora-mental/app/dashboard.html' }
+      });
+    } catch (err) { alert("Error con Google."); }
+  });
+</script>
 </body>
 </html>
