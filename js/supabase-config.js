@@ -1,24 +1,24 @@
 // js/supabase-config.js
 
-// Definimos las constantes con los nombres que ya tienes
-const SUPABASE_URL = 'https://wulnsvyyrfsaiartzypn.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1bG5zdnl5cmZzYWlhcnR6eXBuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNTQwNjgsImV4cCI6MjA4NTYzMDA2OH0.sa0JNGf3haLPz5poZBSMML6ydq3EJ1P84g0jpZf7Nv8';
+// 1. Verificamos si ya existe el cliente para no crearlo dos veces
+if (!window.supabaseClient) {
+    
+    // USAMOS 'var' O DIRECTAMENTE LAS CADENAS PARA EVITAR EL ERROR DE "YA DECLARADO"
+    // Reemplaza estos valores con tus credenciales reales de Supabase
+    var SUPABASE_URL = 'AQUI_TU_URL_DE_SUPABASE'; 
+    var SUPABASE_KEY = 'AQUI_TU_ANON_KEY_DE_SUPABASE';
 
-// Usamos una validación para NO declarar la variable si ya existe
-if (typeof window.supabaseClient === 'undefined') {
-    window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-}
+    // 2. Inicializamos el cliente
+    // Asegúrate de que la librería de supabase-js se haya cargado antes que este script
+    if (typeof supabase !== 'undefined') {
+        window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Marcamos que ya se inicializó
+        window.supabaseClient = true;
+        console.log("✅ Supabase inicializado correctamente.");
+    } else {
+        console.error("❌ Error: La librería de Supabase no se ha cargado todavía.");
+    }
 
-// Para que tus otros scripts no fallen, creamos un alias
-window.supabase = window.supabaseClient;
-
-// Helpers útiles
-async function getCurrentUser() {
-    const { data: { user }, error } = await window.supabase.auth.getUser();
-    return error ? null : user;
-}
-
-async function logout() {
-    await window.supabase.auth.signOut();
-    window.location.href = 'login.html';
+} else {
+    console.log("⚠️ Supabase ya estaba inicializado (script cargado dos veces).");
 }
