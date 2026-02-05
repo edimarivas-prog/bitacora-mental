@@ -60,6 +60,49 @@
     .mobile-nav { display: none; padding: 15px; background: white; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
     .menu-toggle { font-size: 1.5rem; background: none; border: none; color: var(--text); }
 
+    /* --- MODAL DE BIENVENIDA (ONBOARDING) --- */
+    .modal-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+        z-index: 1000; display: none; align-items: center; justify-content: center;
+        animation: fadeIn 0.3s ease;
+    }
+    .modal-card {
+        background: white; width: 90%; max-width: 500px; padding: 40px;
+        border-radius: 24px; text-align: center; position: relative;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        animation: slideUp 0.4s ease;
+    }
+    .modal-icon {
+        width: 80px; height: 80px; background: #E8F5E9; color: var(--primary);
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-size: 2.5rem; margin: 0 auto 20px;
+    }
+    .step-dots { display: flex; justify-content: center; gap: 8px; margin: 20px 0; }
+    .dot { width: 10px; height: 10px; background: #E2E8F0; border-radius: 50%; transition: 0.3s; }
+    .dot.active { background: var(--primary); width: 20px; border-radius: 10px; }
+    
+    .welcome-btn {
+        background: var(--primary); color: white; border: none; padding: 14px 30px;
+        border-radius: 12px; font-weight: 600; font-size: 1rem; cursor: pointer;
+        width: 100%; transition: 0.2s;
+    }
+    .welcome-btn:hover { background: #3E5A41; transform: translateY(-2px); }
+
+    /* --- TOAST DE REGRESO --- */
+    .toast {
+        position: fixed; bottom: 30px; right: 30px;
+        background: white; padding: 15px 25px; border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid var(--primary);
+        display: flex; align-items: center; gap: 15px;
+        transform: translateY(100px); opacity: 0; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 1000;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    @keyframes slideUp { from{transform:translateY(20px)} to{transform:translateY(0)} }
+
     @media (max-width: 900px) {
       .sidebar { transform: translateX(-100%); }
       .sidebar.open { transform: translateX(0); }
@@ -69,6 +112,32 @@
   </style>
 </head>
 <body>
+
+  <div id="welcomeToast" class="toast">
+    <i class="fas fa-smile-beam" style="color:var(--primary); font-size:1.5rem;"></i>
+    <div>
+        <h4 style="margin:0; font-family:'Outfit'">¡Qué bueno verte!</h4>
+        <p style="margin:0; font-size:0.9rem; color:#64748B;">Tu espacio está listo.</p>
+    </div>
+  </div>
+
+  <div id="onboardingModal" class="modal-overlay">
+    <div class="modal-card">
+        <div class="modal-icon"><i class="fas fa-hand-holding-heart"></i></div>
+        <h2 style="font-family:'Outfit'; margin-bottom:10px;">¡Hola, <span id="modalName">viajero</span>!</h2>
+        <p style="color:#64748B; line-height:1.6; margin-bottom:20px;">
+            Bienvenido a tu espacio seguro. Aquí podrás registrar tus emociones, agendar sesiones y encontrar recursos para tu bienestar.
+        </p>
+        
+        <div class="step-dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+
+        <button class="welcome-btn" onclick="closeOnboarding()">¡Comenzar mi viaje!</button>
+    </div>
+  </div>
 
   <div class="mobile-nav">
     <a href="#" class="logo" style="margin:0"><i class="fas fa-brain"></i> Bitácora</a>
@@ -164,23 +233,53 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
-    // 1. Auth Guard (Seguridad)
+    // 1. Auth Guard
     async function checkAuth() {
       if (!window.sb) { setTimeout(checkAuth, 100); return; }
       const { data: { session } } = await window.sb.auth.getSession();
       if (!session) window.location.replace('../login.html');
-      else loadDashboard(session.user);
+      else {
+          loadDashboard(session.user);
+          handleWelcome(session.user);
+      }
     }
     checkAuth();
 
-    // 2. Cargar Dashboard
+    // 2. Lógica de Bienvenida (Tour vs Toast)
+    async function handleWelcome(user) {
+        // Obtener nombre
+        const { data: profile } = await window.sb.from('users_profile').select('nombre').eq('id', user.id).single();
+        const userName = profile?.nombre?.split(' ')[0] || 'Viajero';
+
+        // Caso 1: Nuevo Registro (Tour)
+        if (sessionStorage.getItem('show_onboarding')) {
+            document.getElementById('modalName').textContent = userName;
+            document.getElementById('onboardingModal').style.display = 'flex';
+            sessionStorage.removeItem('show_onboarding'); // Limpiar bandera
+        }
+        // Caso 2: Login Recurrente (Toast)
+        else if (sessionStorage.getItem('show_welcome_back')) {
+            const toast = document.getElementById('welcomeToast');
+            toast.querySelector('h4').textContent = `¡Hola de nuevo, ${userName}!`;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+            sessionStorage.removeItem('show_welcome_back'); // Limpiar bandera
+        }
+    }
+
+    function closeOnboarding() {
+        document.getElementById('onboardingModal').style.display = 'none';
+        // Aquí podrías guardar en DB que ya vio el tutorial si quisieras que sea persistente entre dispositivos
+    }
+
+    // 3. Cargar Datos Dashboard
     async function loadDashboard(user) {
-      // Saludo y Fecha (Perú)
+      // Saludo y Fecha
       const hour = new Date().getHours();
       const saludo = hour < 12 ? 'Buenos días' : (hour < 18 ? 'Buenas tardes' : 'Buenas noches');
       const { data: profile } = await window.sb.from('users_profile').select('nombre').eq('id', user.id).single();
       
-      document.getElementById('greeting').textContent = `${saludo}, ${profile?.nombre || 'Hola'} 👋`;
+      document.getElementById('greeting').textContent = `${saludo}, ${profile?.nombre?.split(' ')[0] || 'Hola'} 👋`;
       document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
 
       // Próxima Cita
