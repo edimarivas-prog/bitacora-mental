@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrevista de Bienvenida - Bitácora Mental</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --primary: #4F6F52; --background: #F9FBFA; --dark: #1F2933; --border: #E6EFE8; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--background); color: var(--dark); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+    .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 600px; width: 100%; }
+    h1 { font-family: 'Outfit', sans-serif; color: var(--primary); margin-bottom: 10px; }
+    .step { display: none; }
+    .step.active { display: block; animation: fadeIn 0.5s; }
+    label { display: block; margin-top: 15px; font-weight: 600; margin-bottom: 5px; }
+    input, select, textarea { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; }
+    textarea { resize: vertical; min-height: 100px; }
+    .btn { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; font-size: 1rem; margin-top: 20px; width: 100%; font-weight: 600; }
+    .btn:hover { opacity: 0.9; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <form id="intakeForm">
+      <div class="step active" id="step1">
+        <h1>👋 Bienvenida/o</h1>
+        <p>Para personalizar tu experiencia y ayudar a tu futuro terapeuta, necesitamos conocerte un poco mejor.</p>
+        
+        <label>Fecha de Nacimiento</label>
+        <input type="date" id="fechaNacimiento" required>
+        
+        <label>Sexo (Biología/Identidad)</label>
+        <select id="sexo" required>
+          <option value="">Selecciona una opción...</option>
+          <option value="Femenino">Femenino</option>
+          <option value="Masculino">Masculino</option>
+          <option value="Otro">Prefiero no decirlo / Otro</option>
+        </select>
+        
+        <button type="button" class="btn" onclick="nextStep(2)">Continuar</button>
+      </div>
+
+      <div class="step" id="step2">
+        <h1>💬 Tu Historia</h1>
+        <label>¿Qué te trae por aquí hoy?</label>
+        <textarea id="motivo" placeholder="Ej: Me siento muy ansioso últimamente en el trabajo..." required></textarea>
+        
+        <label>¿Qué esperas lograr?</label>
+        <input type="text" id="expectativa" placeholder="Ej: Dormir mejor, manejar mi estrés...">
+        
+        <button type="button" class="btn" onclick="nextStep(3)">Continuar</button>
+      </div>
+
+      <div class="step" id="step3">
+        <h1>🌙 Hábitos</h1>
+        <label>¿Cómo has dormido la última semana?</label>
+        <select id="sueño">
+          <option value="bien">Bien (7-8 horas seguidas)</option>
+          <option value="regular">Regular (Me despierto a veces)</option>
+          <option value="mal">Mal (Me cuesta mucho dormir)</option>
+        </select>
+
+        <label>Nivel de energía general</label>
+        <select id="energia">
+          <option value="alto">Alto</option>
+          <option value="medio">Medio</option>
+          <option value="bajo">Bajo / Agotado</option>
+        </select>
+
+        <button type="submit" class="btn">Finalizar Entrevista</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script>
+    function nextStep(step) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step' + step).classList.add('active');
+    }
+
+    document.getElementById('intakeForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const { data: { user } } = await window.supabase.auth.getUser();
+
+      const updates = {
+        fecha_nacimiento: document.getElementById('fechaNacimiento').value,
+        sexo: document.getElementById('sexo').value,
+        motivo_consulta: document.getElementById('motivo').value,
+        historia_clinica: {
+            expectativa: document.getElementById('expectativa').value,
+            sueno: document.getElementById('sueño').value,
+            energia: document.getElementById('energia').value
+        }
+      };
+
+      // Guardar en Perfil
+      const { error } = await window.supabase.from('users_profile').update(updates).eq('id', user.id);
+      
+      if (error) alert('Error al guardar.');
+      else window.location.href = 'dashboard.html';
+    });
+  </script>
+</body>
+</html>
