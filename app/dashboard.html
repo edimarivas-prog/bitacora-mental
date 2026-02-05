@@ -233,12 +233,23 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
-    // 1. Auth Guard
+    // 1. Auth Guard & Role Check
     async function checkAuth() {
       if (!window.sb) { setTimeout(checkAuth, 100); return; }
+      
       const { data: { session } } = await window.sb.auth.getSession();
-      if (!session) window.location.replace('../login.html');
-      else {
+      
+      if (!session) {
+          window.location.replace('../login.html');
+      } else {
+          // Verificar si es Admin
+          const { data: profile } = await window.sb.from('users_profile').select('rol').eq('id', session.user.id).single();
+          
+          if (profile && profile.rol === 'admin') {
+              window.location.replace('admin.html'); // Redirigir al panel correcto
+              return;
+          }
+
           loadDashboard(session.user);
           handleWelcome(session.user);
       }
@@ -247,34 +258,26 @@
 
     // 2. Lógica de Bienvenida (Tour vs Toast)
     async function handleWelcome(user) {
-        // Obtener nombre
         const { data: profile } = await window.sb.from('users_profile').select('nombre').eq('id', user.id).single();
         const userName = profile?.nombre?.split(' ')[0] || 'Viajero';
 
-        // Caso 1: Nuevo Registro (Tour)
         if (sessionStorage.getItem('show_onboarding')) {
             document.getElementById('modalName').textContent = userName;
             document.getElementById('onboardingModal').style.display = 'flex';
-            sessionStorage.removeItem('show_onboarding'); // Limpiar bandera
-        }
-        // Caso 2: Login Recurrente (Toast)
-        else if (sessionStorage.getItem('show_welcome_back')) {
+            sessionStorage.removeItem('show_onboarding');
+        } else if (sessionStorage.getItem('show_welcome_back')) {
             const toast = document.getElementById('welcomeToast');
             toast.querySelector('h4').textContent = `¡Hola de nuevo, ${userName}!`;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 4000);
-            sessionStorage.removeItem('show_welcome_back'); // Limpiar bandera
+            sessionStorage.removeItem('show_welcome_back');
         }
     }
 
-    function closeOnboarding() {
-        document.getElementById('onboardingModal').style.display = 'none';
-        // Aquí podrías guardar en DB que ya vio el tutorial si quisieras que sea persistente entre dispositivos
-    }
+    function closeOnboarding() { document.getElementById('onboardingModal').style.display = 'none'; }
 
     // 3. Cargar Datos Dashboard
     async function loadDashboard(user) {
-      // Saludo y Fecha
       const hour = new Date().getHours();
       const saludo = hour < 12 ? 'Buenos días' : (hour < 18 ? 'Buenas tardes' : 'Buenas noches');
       const { data: profile } = await window.sb.from('users_profile').select('nombre').eq('id', user.id).single();
