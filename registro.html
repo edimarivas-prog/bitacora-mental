@@ -12,303 +12,206 @@
     :root {
       --primary: #4F6F52;
       --primary-light: #6B8A6E;
-      --secondary: #A7C4B5;
       --background: #F9FBFA;
       --dark: #1F2933;
-      --text-secondary: #6B7280;
       --border: #E6EFE8;
       --danger: #EF4444;
-      --success: #10B981;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--background); color: var(--dark); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-    h1, h2, h3 { font-family: 'Outfit', sans-serif; }
-    .auth-container { width: 100%; max-width: 1000px; background: white; border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); overflow: hidden; display: grid; grid-template-columns: 1fr 1fr; animation: fadeIn 0.5s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    .auth-form-side { padding: 60px 50px; max-height: 95vh; overflow-y: auto; }
-    .logo { display: flex; align-items: center; gap: 12px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--primary); text-decoration: none; margin-bottom: 32px; }
-    .logo i { font-size: 1.8rem; }
-    .auth-header { margin-bottom: 28px; }
-    .auth-header h1 { font-size: 2rem; margin-bottom: 8px; color: var(--dark); }
-    .auth-header p { color: var(--text-secondary); font-size: 1rem; }
-    .auth-header p a { color: var(--primary); text-decoration: none; font-weight: 600; }
-    .form-group { margin-bottom: 20px; }
-    .form-label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark); font-size: 0.95rem; }
-    .form-input { width: 100%; padding: 14px 16px; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; transition: all 0.3s; background: white; }
-    .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 111, 82, 0.1); }
-    .password-wrapper { position: relative; }
-    .toggle-password { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-secondary); cursor: pointer; }
-    .password-strength { margin-top: 8px; display: none; }
-    .password-strength.show { display: block; }
-    .strength-bar { height: 4px; background: var(--border); border-radius: 999px; overflow: hidden; margin-bottom: 6px; }
-    .strength-fill { height: 100%; transition: all 0.3s; width: 0%; }
-    .strength-fill.weak { width: 33%; background: var(--danger); }
-    .strength-fill.medium { width: 66%; background: var(--warning); }
-    .strength-fill.strong { width: 100%; background: var(--success); }
-    .btn { width: 100%; padding: 15px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; border: none; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-google { background: white; color: var(--dark); border: 2px solid var(--border); margin-top: 16px; }
-    .divider { display: flex; align-items: center; gap: 16px; margin: 24px 0; color: var(--text-secondary); font-size: 0.9rem; }
-    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-    .auth-visual-side { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); padding: 60px 50px; display: flex; flex-direction: column; justify-content: center; color: white; text-align: center; }
-    .stat { padding: 20px; background: rgba(255,255,255,0.1); border-radius: 12px; }
-    .alert { padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; display: none; align-items: center; gap: 10px; }
-    .alert.show { display: flex; }
-    .alert.error { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
-    .alert.success { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
-    .loading { pointer-events: none; opacity: 0.7; position: relative; color: transparent !important; }
-    .loading::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; border: 3px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .form-error { color: var(--danger); font-size: 0.85rem; display: none; margin-top: 4px; }
-    .form-error.show { display: block; }
-    .form-success { color: var(--success); font-size: 0.85rem; display: none; margin-top: 4px; }
-    .form-success.show { display: block; }
-    @media (max-width: 768px) {
-      .auth-container {
-        grid-template-columns: 1fr;
-        margin: 10px;
-        border-radius: 16px;
-        max-height: none;
-      }
-
-      .auth-visual-side {
-        display: none; 
-      }
-
-      .auth-form-side {
-        padding: 30px 20px;
-        max-height: none;
-        overflow-y: visible;
-      }
-
-      
-      .form-row {
-        grid-template-columns: 1fr;
-        gap: 0;
-      }
-
-      .auth-header h1 {
-        font-size: 1.6rem;
-      }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--background);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      /* Patrón de fondo sutil */
+      background-image: radial-gradient(#4F6F52 0.5px, transparent 0.5px);
+      background-size: 20px 20px;
     }
-  
+
+    .auth-card {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+      width: 100%;
+      max-width: 450px;
+      text-align: center;
+    }
+
+    .logo {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    h1 { font-family: 'Outfit', sans-serif; margin-bottom: 10px; color: var(--dark); }
+    p.subtitle { color: #6B7280; font-size: 0.95rem; margin-bottom: 30px; }
+
+    .form-group { margin-bottom: 20px; text-align: left; }
+    label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--dark); font-size: 0.9rem; }
+    
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: 0.3s;
+      outline: none;
+    }
+    input:focus { border-color: var(--primary); }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+    .btn:hover { background: var(--primary-light); }
+    .btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+    .auth-link { margin-top: 20px; font-size: 0.9rem; color: #6B7280; }
+    .auth-link a { color: var(--primary); text-decoration: none; font-weight: 600; }
+    .auth-link a:hover { text-decoration: underline; }
+
+    .error-msg {
+      background: #FEF2F2;
+      color: var(--danger);
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      display: none;
+      text-align: left;
+      border: 1px solid #FCA5A5;
+    }
   </style>
 </head>
 <body>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js"></script>
+  <div class="auth-card">
+    <a href="index.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
+    <h1>Crea tu cuenta</h1>
+    <p class="subtitle">Comienza tu camino hacia el bienestar emocional.</p>
 
-  <div class="auth-container">
-    <div class="auth-form-side">
-      <a href="index.html" class="logo">
-        <i class="fas fa-brain"></i>
-        Bitácora Mental
-      </a>
+    <div id="errorBox" class="error-msg"></div>
 
-      <div class="auth-header">
-        <h1>Crea tu cuenta</h1>
-        <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" placeholder="ejemplo@correo.com" required>
       </div>
 
-      <div class="alert error" id="errorAlert">
-        <i class="fas fa-exclamation-circle"></i>
-        <span id="errorMessage"></span>
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" placeholder="Mínimo 6 caracteres" required minlength="6">
       </div>
 
-      <div class="alert success" id="successAlert">
-        <i class="fas fa-check-circle"></i>
-        <span id="successMessage"></span>
+      <div class="form-group">
+        <label for="confirmPassword">Confirmar contraseña</label>
+        <input type="password" id="confirmPassword" placeholder="Repite tu contraseña" required>
       </div>
 
-      <form id="registerForm">
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" for="nombre">Nombre</label>
-            <input type="text" class="form-input" id="nombre" name="nombre" placeholder="María" required>
-            <div class="form-error" id="nombreError">Ingresa tu nombre</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="apellido">Apellido</label>
-            <input type="text" class="form-input" id="apellido" name="apellido" placeholder="Campos" required>
-            <div class="form-error" id="apellidoError">Ingresa tu apellido</div>
-          </div>
-        </div>
+      <button type="submit" class="btn" id="submitBtn">Crear cuenta gratis</button>
+    </form>
 
-        <div class="form-group">
-          <label class="form-label" for="email">Correo electrónico</label>
-          <input type="email" class="form-input" id="email" name="email" placeholder="tu@email.com" required>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="password">Contraseña</label>
-          <div class="password-wrapper">
-            <input type="password" class="form-input" id="password" name="password" placeholder="Mínimo 6 caracteres" required>
-            <button type="button" class="toggle-password" id="togglePassword"><i class="fas fa-eye"></i></button>
-          </div>
-          <div class="password-strength" id="passwordStrength">
-            <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
-            <div class="strength-text" id="strengthText"></div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="confirmPassword">Confirmar contraseña</label>
-          <div class="password-wrapper">
-            <input type="password" class="form-input" id="confirmPassword" name="confirmPassword" placeholder="Repite tu contraseña" required>
-            <button type="button" class="toggle-password" id="toggleConfirmPassword"><i class="fas fa-eye"></i></button>
-          </div>
-        </div>
-
-        <div class="terms-wrapper">
-          <input type="checkbox" id="terms" name="terms" required>
-          <label for="terms">Acepto los Términos y la Política de Privacidad</label>
-        </div>
-
-        <button type="submit" class="btn btn-primary" id="registerBtn" disabled>
-          <i class="fas fa-user-plus"></i> Crear cuenta
-        </button>
-
-        <div class="divider">o regístrate con</div>
-
-        <button type="button" class="btn btn-google" id="googleSignUp">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19.6 10.227c0-.709-.064-1.39-.182-2.045H10v3.868h5.382a4.6 4.6 0 01-1.996 3.018v2.51h3.232c1.891-1.742 2.982-4.305 2.982-7.35z" fill="#4285F4"/>
-            <path d="M10 20c2.7 0 4.964-.895 6.618-2.423l-3.232-2.509c-.895.6-2.04.955-3.386.955-2.605 0-4.81-1.76-5.595-4.123H1.064v2.59A9.996 9.996 0 0010 20z" fill="#34A853"/>
-            <path d="M4.405 11.9c-.2-.6-.314-1.24-.314-1.9 0-.66.114-1.3.314-1.9V5.51H1.064A9.996 9.996 0 000 10c0 1.614.386 3.14 1.064 4.49l3.34-2.59z" fill="#FBBC05"/>
-            <path d="M10 3.977c1.468 0 2.786.505 3.823 1.496l2.868-2.868C14.959.99 12.695 0 10 0 6.09 0 2.71 2.24 1.064 5.51l3.34 2.59C5.19 5.736 7.395 3.977 10 3.977z" fill="#EA4335"/>
-          </svg>
-          Continuar con Google
-        </button>
-      </form>
-    </div>
-
-    <div class="auth-visual-side">
-      <div class="visual-content">
-        <div class="visual-icon"><i class="fas fa-heart-pulse"></i></div>
-        <h2>Únete a más de 500 personas que cuidan su salud mental</h2>
-        <div class="stats">
-          <div class="stat"><div class="stat-value">500+</div><div class="stat-label">Usuarios</div></div>
-          <div class="stat"><div class="stat-value">15+</div><div class="stat-label">Especialistas</div></div>
-          <div class="stat"><div class="stat-value">95%</div><div class="stat-label">Satisfacción</div></div>
-        </div>
-      </div>
+    <div class="auth-link">
+      ¿Ya tienes cuenta? <a href="login.html">Inicia sesión aquí</a>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <script src="js/supabase-config.js"></script>
+
   <script>
-    // --- LÓGICA DE INTERFAZ ---
-    function setupPasswordToggle(toggleId, inputId) {
-      const toggle = document.getElementById(toggleId);
-      const input = document.getElementById(inputId);
-      toggle.addEventListener('click', () => {
-        const type = input.type === 'password' ? 'text' : 'password';
-        input.type = type;
-        toggle.querySelector('i').classList.toggle('fa-eye');
-        toggle.querySelector('i').classList.toggle('fa-eye-slash');
-      });
-    }
-    setupPasswordToggle('togglePassword', 'password');
-    setupPasswordToggle('toggleConfirmPassword', 'confirmPassword');
+    const form = document.getElementById('registerForm');
+    const errorBox = document.getElementById('errorBox');
+    const submitBtn = document.getElementById('submitBtn');
 
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('confirmPassword');
-    const termsCheckbox = document.getElementById('terms');
-    const registerBtn = document.getElementById('registerBtn');
-
-    passwordInput.addEventListener('input', function() {
-      const val = this.value;
-      const fill = document.getElementById('strengthFill');
-      const text = document.getElementById('strengthText');
-      document.getElementById('passwordStrength').classList.add('show');
-      if(val.length < 6) { fill.className = 'strength-fill weak'; text.textContent = 'Débil'; }
-      else if(val.length < 10) { fill.className = 'strength-fill medium'; text.textContent = 'Media'; }
-      else { fill.className = 'strength-fill strong'; text.textContent = 'Fuerte'; }
-      checkFormValidity();
-    });
-
-    function checkFormValidity() {
-      const isValid = emailInput.value.includes('@') && 
-                      passwordInput.value.length >= 6 && 
-                      passwordInput.value === confirmPasswordInput.value && 
-                      termsCheckbox.checked;
-      registerBtn.disabled = !isValid;
-    }
-
-    [emailInput, confirmPasswordInput, termsCheckbox].forEach(el => el.addEventListener('input', checkFormValidity));
-
-    // --- INTEGRACIÓN REAL CON SUPABASE ---
-    const registerForm = document.getElementById('registerForm');
-    
-    registerForm.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      registerBtn.classList.add('loading');
       
-      const email = emailInput.value;
-      const password = passwordInput.value;
-      const nombre = document.getElementById('nombre').value;
-      const apellido = document.getElementById('apellido').value;
+      // Limpiar errores previos
+      errorBox.style.display = 'none';
+      errorBox.textContent = '';
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('confirmPassword').value;
 
-      try {
-        // 1. Registro en Supabase Auth usando window.supabase de tu config
-        const { data, error } = await window.supabase.auth.signUp({
-          email: email,
-          password: password,
-          options: {
-            data: { first_name: nombre, last_name: apellido }
-          }
-        });
-
-        if (error) throw error;
-
-        if (data.user) {
-          // 2. Crear perfil en tabla 'users_profile'
-          const { error: profileError } = await window.supabase
-            .from('users_profile')
-            .insert({
-              id: data.user.id,
-              nombre: nombre,
-              apellido: apellido
-            });
-
-          if (profileError) console.error("Error al crear perfil:", profileError);
-
-          document.getElementById('successMessage').textContent = "¡Cuenta creada! Redirigiendo...";
-          document.getElementById('successAlert').classList.add('show');
-          setTimeout(() => window.location.href = 'test-inicial.html', 2000);
-        }
-      } catch (error) {
-        registerBtn.classList.remove('loading');
-        document.getElementById('errorMessage').textContent = error.message;
-        document.getElementById('errorAlert').classList.add('show');
-        setTimeout(() => document.getElementById('errorAlert').classList.remove('show'), 5000);
-      }
-    });
-
-    document.getElementById('googleSignUp').addEventListener('click', async function() {
-      if (!termsCheckbox.checked) {
-        alert("Debes aceptar los términos y condiciones");
+      // 1. Validaciones básicas
+      if (password !== confirm) {
+        showError("Las contraseñas no coinciden.");
         return;
       }
-      
-      this.classList.add('loading');
+      if (password.length < 6) {
+        showError("La contraseña debe tener al menos 6 caracteres.");
+        return;
+      }
+
+      // 2. Estado de carga
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando cuenta...';
+
       try {
-        const { error } = await window.supabase.auth.signInWithOAuth({
-          provider: 'google',
-          options: {
-            redirectTo: window.location.origin + '/bitacora-mental/app/dashboard.html'
-          }
+        // 3. Crear usuario en Supabase
+        const { data, error } = await window.supabase.auth.signUp({
+          email: email,
+          password: password
         });
+
         if (error) throw error;
-      } catch (error) {
-        this.classList.remove('loading');
-        this.innerHTML = `<i class="fab fa-google"></i> Continuar con Google`;
-        alert(error.message);
+
+        // 4. Éxito y Redirección
+        if (data.user) {
+            // REDIRECCIÓN CORREGIDA: Entra a la carpeta 'app' para ir a la entrevista
+            window.location.href = 'app/entrevista.html';
+        } else if (data.session === null && !error) {
+            // Caso: Confirmación de email requerida (si está activada en Supabase)
+            alert("Te hemos enviado un correo de confirmación. Por favor revísalo para continuar.");
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Reenviar correo';
+        }
+
+      } catch (err) {
+        console.error(err);
+        showError(translateError(err.message));
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Crear cuenta gratis';
       }
     });
+
+    function showError(msg) {
+      errorBox.textContent = msg;
+      errorBox.style.display = 'block';
+    }
+
+    function translateError(msg) {
+      if (msg.includes("already registered")) return "Este correo ya está registrado.";
+      if (msg.includes("password")) return "La contraseña es muy débil (usa letras y números).";
+      if (msg.includes("valid email")) return "El correo no es válido.";
+      return "Ocurrió un error: " + msg;
+    }
   </script>
 </body>
 </html>
