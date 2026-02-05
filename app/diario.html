@@ -2,450 +2,231 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Mi Diario - Bitácora Mental</title>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
   <style>
-    /* Estilos Base */
-    :root {
-      --primary: #4F6F52;
-      --primary-light: #6B8A6E;
-      --secondary: #A7C4B5;
-      --background: #F9FBFA;
-      --card-bg: #FFFFFF;
-      --dark: #1F2933;
-      --text-secondary: #6B7280;
-      --border: #E6EFE8;
-      --success: #10B981;
-      --warning: #F59E0B;
-      --danger: #EF4444;
-      --radius: 16px;
-      --shadow: 0 4px 20px rgba(0,0,0,0.06);
+    /* Estilos Unificados */
+    :root { --primary: #4F6F52; --bg: #F3F6F4; --white: #fff; --text: #1F2933; --border: #E6EFE8; --radius: 20px; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
+    
+    /* Layout */
+    .sidebar { width: 260px; background: var(--white); padding: 24px; border-right: 1px solid var(--border); position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s; }
+    .main { flex: 1; padding: 30px; margin-left: 260px; max-width: 100%; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+    
+    /* Diario UI */
+    .diary-container { display: flex; gap: 20px; height: 100%; }
+    .calendar-col { width: 320px; background: var(--white); border-radius: var(--radius); padding: 20px; display: flex; flex-direction: column; overflow-y: auto; }
+    .editor-col { flex: 1; background: var(--white); border-radius: var(--radius); padding: 40px; display: flex; flex-direction: column; position: relative; }
+    
+    /* Calendario Mini */
+    .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-weight: 700; color: var(--primary); }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
+    .day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 10px; cursor: pointer; font-size: 0.9rem; transition: 0.2s; position: relative; }
+    .day:hover { background: #f0f0f0; }
+    .day.active { background: var(--primary); color: white; font-weight: 600; }
+    .day.has-entry::after { content: ''; position: absolute; bottom: 4px; width: 4px; height: 4px; background: #F59E0B; border-radius: 50%; }
+    
+    /* Editor */
+    .date-display { font-family: 'Outfit'; font-size: 1.5rem; margin-bottom: 5px; color: var(--primary); }
+    .save-status { font-size: 0.8rem; color: #64748B; display: flex; align-items: center; gap: 5px; margin-bottom: 20px; height: 20px; }
+    
+    .emotions { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+    .emo-btn { border: 1px solid var(--border); background: white; padding: 8px 15px; border-radius: 20px; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+    .emo-btn:hover, .emo-btn.selected { border-color: var(--primary); background: #E8F5E9; color: var(--primary); }
+    
+    textarea { flex: 1; border: none; resize: none; font-size: 1.1rem; line-height: 1.6; outline: none; font-family: 'DM Sans', sans-serif; color: #334155; }
+    textarea::placeholder { color: #CBD5E1; font-style: italic; }
+
+    /* Mobile */
+    .mobile-header { display: none; padding: 15px; background: white; justify-content: space-between; align-items: center; }
+    @media (max-width: 900px) {
+      .sidebar { transform: translateX(-100%); position: fixed; }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; padding: 15px; height: auto; overflow: visible; }
+      .mobile-header { display: flex; }
+      .diary-container { flex-direction: column; }
+      .calendar-col { width: 100%; height: auto; }
+      .editor-col { height: 600px; }
     }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--background); color: var(--dark); line-height: 1.6; }
-    h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; font-weight: 600; }
-
-    .dashboard-container { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
-
-    /* Sidebar */
-    .sidebar { background: white; border-right: 1px solid var(--border); padding: 24px 0; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
-    .sidebar-header { padding: 0 24px 24px; border-bottom: 1px solid var(--border); }
-    .logo { display: flex; align-items: center; gap: 12px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--primary); text-decoration: none; }
-    .sidebar-nav { flex: 1; padding: 24px 0; overflow-y: auto; }
-    .nav-section { margin-bottom: 24px; }
-    .nav-section-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); padding: 0 24px 8px; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 24px; color: var(--dark); text-decoration: none; transition: all 0.2s; border-left: 3px solid transparent; }
-    .nav-item:hover { background: var(--background); color: var(--primary); }
-    .nav-item.active { background: rgba(79, 111, 82, 0.08); color: var(--primary); border-left-color: var(--primary); font-weight: 600; }
-    
-    .sidebar-footer { padding: 0 24px; border-top: 1px solid var(--border); padding-top: 20px; margin-top: auto; }
-    .user-profile { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--background); border-radius: 12px; cursor: pointer; transition: all 0.2s; }
-    .user-profile:hover { background: var(--border); }
-    .user-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1rem; }
-    .user-info { flex: 1; min-width: 0; }
-    .user-name { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .user-email { font-size: 0.75rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-    /* Main Content */
-    .main-content { padding: 32px 40px; max-width: 1600px; }
-    .page-header { margin-bottom: 24px; }
-    .page-header h1 { font-size: 2rem; margin-bottom: 8px; color: var(--dark); }
-    .page-subtitle { color: var(--text-secondary); font-size: 1rem; }
-
-    /* Layout Diario */
-    .diary-layout { display: grid; grid-template-columns: 280px 1fr 340px; gap: 24px; align-items: start; }
-
-    /* Left: Calendar */
-    .calendar-sidebar { background: white; border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); position: sticky; top: 32px; }
-    .mini-calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-weight: 600; }
-    .mini-calendar-nav button { border: none; background: var(--background); border-radius: 6px; cursor: pointer; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-    .mini-calendar-nav button:hover { background: var(--primary); color: white; }
-    .mini-calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
-    .mini-calendar-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; border-radius: 6px; cursor: pointer; transition: 0.2s; position: relative; }
-    .mini-calendar-day.header { font-weight: 600; color: var(--text-secondary); cursor: default; }
-    .mini-calendar-day:not(.header):not(.disabled):hover { background: var(--background); }
-    .mini-calendar-day.selected { background: var(--primary); color: white; font-weight: 700; }
-    .mini-calendar-day.today { border: 1px solid var(--primary); color: var(--primary); }
-    .mini-calendar-day.has-entry::after { content: ''; position: absolute; bottom: 4px; width: 4px; height: 4px; background: var(--secondary); border-radius: 50%; }
-
-    /* Center: Editor */
-    .editor-container { background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 40px; min-height: 70vh; display: flex; flex-direction: column; }
-    
-    .editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
-    .entry-date-display { font-size: 1.4rem; font-weight: 700; color: var(--dark); }
-    
-    .autosave-indicator { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.85rem; opacity: 0; transition: opacity 0.3s; }
-    .autosave-indicator.visible { opacity: 1; }
-    .autosave-indicator.saving { color: var(--warning); }
-    .autosave-indicator.saved { color: var(--success); }
-    
-    .emotion-selector { margin-bottom: 24px; }
-    .emotions-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
-    .emotion-option { padding: 10px; border: 1px solid var(--border); border-radius: 12px; text-align: center; cursor: pointer; transition: 0.2s; opacity: 0.7; }
-    .emotion-option:hover { transform: translateY(-3px); opacity: 1; border-color: var(--primary); }
-    .emotion-option.selected { opacity: 1; background: rgba(79, 111, 82, 0.1); border-color: var(--primary); transform: scale(1.05); }
-    .emotion-icon { font-size: 1.8rem; display: block; margin-bottom: 4px; }
-
-    .text-editor { flex: 1; width: 100%; border: none; outline: none; font-size: 1.1rem; line-height: 1.8; font-family: 'DM Sans', sans-serif; resize: none; color: #4B5563; }
-    .text-editor::placeholder { color: #9CA3AF; font-style: italic; }
-
-    /* Right: Tools */
-    .tools-sidebar { display: flex; flex-direction: column; gap: 24px; position: sticky; top: 32px; }
-    
-    .tools-card { background: #F0F9FF; border: 1px solid #BAE6FD; border-radius: var(--radius); padding: 24px; }
-    .tools-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; color: #0369A1; }
-    
-    .tool-item { background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; display: flex; align-items: center; gap: 10px; }
-    .tool-item:hover { border-color: #0EA5E9; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1); transform: translateX(4px); }
-    .tool-icon { font-size: 1.2rem; }
-    .tool-name { font-weight: 600; font-size: 0.9rem; color: #334155; }
-
-    .prompts-card { background: white; border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
-    .prompt-item { padding: 12px; background: var(--background); border-radius: 8px; margin-bottom: 8px; cursor: pointer; font-size: 0.9rem; transition: 0.2s; border-left: 3px solid transparent; line-height: 1.4; }
-    .prompt-item:hover { border-left-color: var(--primary); background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-    
-    /* Responsive */
-    @media (max-width: 1200px) { .diary-layout { grid-template-columns: 1fr; } .calendar-sidebar, .tools-sidebar { position: static; } .emotions-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 968px) { .dashboard-container { grid-template-columns: 1fr; } .sidebar { display: none; } }
   </style>
 </head>
 <body>
-  <div class="dashboard-container">
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
-      </div>
-      <nav class="sidebar-nav">
-        <div class="nav-section">
-          <div class="nav-section-title">Principal</div>
-          <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> <span>Dashboard</span></a>
-          <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> <span>Mis Citas</span></a>
-          <a href="especialistas.html" class="nav-item"><i class="fas fa-user-md"></i> <span>Especialistas</span></a>
-        </div>
-        <div class="nav-section">
-          <div class="nav-section-title">Mi Espacio</div>
-          <a href="diario.html" class="nav-item active"><i class="fas fa-book"></i> <span>Mi Diario</span></a>
-          <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> <span>Mi Progreso</span></a>
-          <a href="recursos.html" class="nav-item"><i class="fas fa-folder-open"></i> <span>Recursos</span></a>
-        </div>
-        <div class="nav-section">
-          <div class="nav-section-title">Cuenta</div>
-          <a href="plan.html" class="nav-item"><i class="fas fa-crown"></i> <span>Mi Plan</span></a>
-          <a href="perfil.html" class="nav-item"><i class="fas fa-user-circle"></i> <span>Perfil</span></a>
-          <a href="#" class="nav-item" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a>
-          <a href="configuracion.html" class="nav-item"><i class="fas fa-cog"></i> <span>Configuración</span></a>
-        </div>
-      </nav>
-      <div class="sidebar-footer">
-        <div class="user-profile">
-          <div class="user-avatar" id="avatarInitials">--</div>
-          <div class="user-info">
-            <div class="user-name" id="sidebarUserName">Cargando...</div>
-            <div class="user-email" id="sidebarUserEmail">...</div>
-          </div>
-        </div>
-      </div>
-    </aside>
 
-    <main class="main-content">
-      <div class="page-header">
-        <h1>Mi Diario Personal</h1>
-        <p class="page-subtitle">Un espacio seguro para soltar, reflexionar y crecer.</p>
-      </div>
-
-      <div class="diary-layout">
-        <div class="calendar-sidebar">
-          <div class="mini-calendar-header">
-            <span id="calendarMonthYear"></span>
-            <div class="mini-calendar-nav">
-              <button onclick="prevMonth()"><i class="fas fa-chevron-left"></i></button>
-              <button onclick="nextMonth()"><i class="fas fa-chevron-right"></i></button>
-            </div>
-          </div>
-          <div class="mini-calendar-grid" id="miniCalendar"></div>
-        </div>
-
-        <div class="editor-container">
-          <div class="editor-header">
-            <div class="entry-date-display" id="entryDate">Hoy</div>
-            <div class="autosave-indicator" id="saveStatus"></div>
-          </div>
-
-          <div class="emotion-selector">
-            <label style="display:block; margin-bottom:10px; font-weight:600; color:var(--text-secondary)">¿Cómo te sientes hoy?</label>
-            <div class="emotions-grid">
-              <div class="emotion-option" onclick="setEmotion('feliz')"><span class="emotion-icon">😁</span>Feliz</div>
-              <div class="emotion-option" onclick="setEmotion('calma')"><span class="emotion-icon">😌</span>Calma</div>
-              <div class="emotion-option" onclick="setEmotion('triste')"><span class="emotion-icon">😢</span>Triste</div>
-              <div class="emotion-option" onclick="setEmotion('ansioso')"><span class="emotion-icon">😰</span>Ansiedad</div>
-              <div class="emotion-option" onclick="setEmotion('enojado')"><span class="emotion-icon">😠</span>Enojo</div>
-              <div class="emotion-option" onclick="setEmotion('cansado')"><span class="emotion-icon">😴</span>Cansado</div>
-            </div>
-          </div>
-
-          <textarea class="text-editor" id="diaryContent" placeholder="Empieza a escribir aquí... (Tu progreso se guarda automáticamente)"></textarea>
-        </div>
-
-        <div class="tools-sidebar">
-          
-          <div class="tools-card">
-            <div class="tools-header">
-              <i class="fas fa-toolbox" style="font-size: 1.2rem;"></i>
-              <h3 style="font-size: 1.1rem; margin:0;" id="toolsTitle">Herramientas sugeridas</h3>
-            </div>
-            <p style="font-size: 0.85rem; color: #0369A1; margin-bottom: 12px;" id="toolsSubtitle">Basado en tu último test de bienestar.</p>
-            
-            <div id="toolsList">
-              </div>
-          </div>
-
-          <div class="prompts-card">
-            <h3 style="font-size: 1.1rem; margin-bottom: 15px;">
-              <i class="fas fa-lightbulb" style="color: var(--warning)"></i> Ideas para escribir
-            </h3>
-            <div id="promptsContainer"></div>
-            <button onclick="renderPrompts()" style="background:none; border:none; color:var(--primary); font-size:0.8rem; cursor:pointer; margin-top:10px; text-decoration:underline;">
-              <i class="fas fa-sync-alt"></i> Cambiar ideas
-            </button>
-          </div>
-        </div>
-      </div>
-    </main>
+  <div class="mobile-header">
+    <span style="font-weight:700; color:var(--primary)">Bitácora</span>
+    <button onclick="toggleMenu()" style="border:none; background:none; font-size:1.5rem;"><i class="fas fa-bars"></i></button>
   </div>
+
+  <aside class="sidebar" id="sidebar">
+    <a href="dashboard.html" style="text-decoration:none; font-family:'Outfit'; font-weight:700; color:var(--primary); font-size:1.3rem; margin-bottom:30px; display:flex; align-items:center; gap:8px;">
+      <i class="fas fa-brain"></i> Bitácora Mental
+    </a>
+    <nav style="display:flex; flex-direction:column; gap:5px;">
+      <a href="dashboard.html" style="padding:12px; color:#64748B; text-decoration:none; border-radius:12px;"><i class="fas fa-home"></i> Inicio</a>
+      <a href="diario.html" style="padding:12px; background:#E8F5E9; color:var(--primary); font-weight:600; text-decoration:none; border-radius:12px;"><i class="fas fa-book"></i> Diario</a>
+      <a href="progreso.html" style="padding:12px; color:#64748B; text-decoration:none; border-radius:12px;"><i class="fas fa-chart-line"></i> Progreso</a>
+      <a href="citas.html" style="padding:12px; color:#64748B; text-decoration:none; border-radius:12px;"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
+      <a href="recursos.html" style="padding:12px; color:#64748B; text-decoration:none; border-radius:12px;"><i class="fas fa-box-open"></i> Recursos</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="diary-container">
+      <div class="calendar-col">
+        <div class="cal-header">
+          <span id="monthLabel">Marzo 2026</span>
+          <div>
+            <button onclick="changeMonth(-1)" style="border:none; background:none; cursor:pointer;"><i class="fas fa-chevron-left"></i></button>
+            <button onclick="changeMonth(1)" style="border:none; background:none; cursor:pointer;"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+        <div class="cal-grid" id="calendarGrid"></div>
+        
+        <div style="margin-top:30px; background:#FEF3C7; padding:15px; border-radius:15px;">
+          <h4 style="margin:0 0 10px 0; color:#92400E; font-size:0.9rem;"><i class="fas fa-lightbulb"></i> Idea del día</h4>
+          <p style="margin:0; font-size:0.85rem; color:#92400E;" id="dailyPrompt">Cargando inspiración...</p>
+        </div>
+      </div>
+
+      <div class="editor-col">
+        <div class="date-display" id="displayDate">Hoy</div>
+        <div class="save-status" id="saveStatus"><i class="fas fa-check-circle"></i> Todo guardado</div>
+        
+        <div class="emotions">
+          <button class="emo-btn" onclick="setEmotion('feliz')">😁 Feliz</button>
+          <button class="emo-btn" onclick="setEmotion('calma')">😌 Calma</button>
+          <button class="emo-btn" onclick="setEmotion('triste')">😢 Triste</button>
+          <button class="emo-btn" onclick="setEmotion('ansioso')">😰 Ansioso</button>
+          <button class="emo-btn" onclick="setEmotion('enojado')">😠 Enojado</button>
+        </div>
+
+        <textarea id="editor" placeholder="¿Qué tienes en mente hoy? Escribe libremente..."></textarea>
+      </div>
+    </div>
+  </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
-
   <script>
-    // --- VARIABLES ---
     let currentDate = new Date();
     let selectedDate = new Date();
-    let currentEntryId = null;
+    let entriesCache = new Set();
+    let saveTimeout;
     let currentEmotion = null;
-    let existingDates = new Set();
-    let autoSaveTimeout;
 
-    // --- BANCO DE HERRAMIENTAS ADAPTATIVAS ---
-    const adaptiveTools = {
-        ansiedad: [
-            { name: "Técnica 5-4-3-2-1", icon: "🖐️", template: "🌱 **Técnica 5-4-3-2-1**\n\n5 cosas que veo:\n\n4 cosas que toco:\n\n3 cosas que escucho:\n\n2 cosas que huelo:\n\n1 cosa que saboreo:" },
-            { name: "Análisis de preocupación", icon: "💭", template: "💭 **Análisis**\n¿Qué me preocupa?\n\n¿Está bajo mi control? (Sí/No)\n\nSi sí: ¿Qué puedo hacer?\nSi no: ¿Cómo puedo soltarlo?" }
-        ],
-        depresion: [
-            { name: "Diario de Gratitud", icon: "🙏", template: "🙏 **Gratitud**\nHoy agradezco por:\n1. \n2. \n3. " },
-            { name: "Pequeños Logros", icon: "⭐", template: "⭐ **Logros de hoy**\nAunque sean pequeños, hoy logré:\n- " }
-        ],
-        estres: [
-            { name: "Matriz de Prioridades", icon: "📊", template: "📊 **Matriz de Eisenhower**\nUrgente e Importante (Hacer ya):\n\nImportante no Urgente (Planificar):\n" },
-            { name: "Plan de Autocuidado", icon: "🛁", template: "🛁 **Autocuidado**\n¿Qué necesito hoy para sentirme mejor?\n\nAcción concreta: " }
-        ],
-        burnout: [
-            { name: "Límites Laborales", icon: "🛑", template: "🛑 **Límites**\n¿A qué le diré que NO hoy?\n\n¿A qué hora desconecto?" }
-        ],
-        general: [
-            { name: "Escritura Libre", icon: "✍️", template: "✍️ **Escritura Libre**\nLo que venga a mi mente..." },
-            { name: "Reflexión del Día", icon: "🌙", template: "🌙 **Reflexión**\nLo mejor del día:\n\nLo que aprendí:" }
-        ]
-    };
+    async function checkAuth() {
+        if (!window.sb) { setTimeout(checkAuth, 100); return; }
+        const { data: { session } } = await window.sb.auth.getSession();
+        if (!session) window.location.replace('../login.html');
+        else initDiary(session.user);
+    }
+    checkAuth();
 
-    const allPrompts = [
-      "Hoy me sentí orgulloso cuando...", "Algo que me cuesta soltar es...", "Tres cosas por las que agradezco:",
-      "¿Qué le diría a mi yo de hace 5 años?", "Una pequeña victoria de hoy fue...", "Hoy cuidé de mí mismo al...",
-      "¿Qué necesito escuchar ahora?", "Si no tuviera miedo, hoy hubiera...", "La emoción más fuerte hoy fue...",
-      "Una meta realista para mañana..."
-    ];
-
-    // --- INIT ---
-    async function init() {
-        const { data: { user } } = await window.supabase.auth.getUser();
-        if (!user) { window.location.href = '../login.html'; return; }
-
-        // Perfil Sidebar
-        const { data: profile } = await window.supabase.from('users_profile').select('*').eq('id', user.id).single();
-        if (profile) {
-            document.getElementById('sidebarUserName').textContent = `${profile.nombre} ${profile.apellido}`;
-            document.getElementById('sidebarUserEmail').textContent = user.email;
-            document.getElementById('avatarInitials').textContent = (profile.nombre[0] + profile.apellido[0]).toUpperCase();
-        }
-
-        await loadEntryDates(user.id);
-        await determineUserNeed(user.id); // Cargar herramientas según test
+    async function initDiary(user) {
+        window.currentUser = user;
+        await loadEntriesCache();
         renderCalendar();
-        renderPrompts();
-        loadEntryForDate(new Date());
-
-        // Event listener para Auto-Save (Debounce)
-        document.getElementById('diaryContent').addEventListener('input', () => {
-            document.getElementById('saveStatus').className = 'autosave-indicator visible saving';
-            document.getElementById('saveStatus').innerHTML = '<i class="fas fa-pen"></i> Escribiendo...';
-            
-            clearTimeout(autoSaveTimeout);
-            autoSaveTimeout = setTimeout(saveEntry, 2000); // Guardar 2s después de dejar de escribir
-        });
-    }
-
-    // --- LÓGICA ADAPTATIVA ---
-    async function determineUserNeed(userId) {
-        // Buscar último test
-        const { data: tests } = await window.supabase.from('test_results').select('*').eq('user_id', userId).order('fecha_realizado', { ascending: false }).limit(1);
+        loadEntry(new Date()); // Cargar hoy
         
-        let need = 'general';
-        let title = 'Herramientas Generales';
-
-        if (tests && tests.length > 0) {
-            const t = tests[0];
-            if (t.nivel_ansiedad >= 7) { need = 'ansiedad'; title = 'Manejo de Ansiedad'; }
-            else if (t.nivel_animo <= 4) { need = 'depresion'; title = 'Mejora del Ánimo'; }
-            else if (t.nivel_estres >= 7) { need = 'estres'; title = 'Gestión del Estrés'; }
-        }
-
-        renderTools(need, title);
+        // Prompt aleatorio
+        const prompts = ["¿Qué agradeces hoy?", "Una pequeña victoria fue...", "¿Cómo cuidaste de ti?", "Siento orgullo por..."];
+        document.getElementById('dailyPrompt').textContent = prompts[Math.floor(Math.random()*prompts.length)];
     }
 
-    function renderTools(need, title) {
-        document.getElementById('toolsTitle').textContent = title;
-        const container = document.getElementById('toolsList');
-        const tools = adaptiveTools[need] || adaptiveTools['general'];
-
-        container.innerHTML = tools.map(tool => `
-            <div class="tool-item" onclick="insertTemplate(\`${tool.template}\`)">
-                <span class="tool-icon">${tool.icon}</span>
-                <span class="tool-name">${tool.name}</span>
-            </div>
-        `).join('');
+    async function loadEntriesCache() {
+        const { data } = await window.sb.from('diario_emocional').select('fecha').eq('user_id', window.currentUser.id);
+        if (data) data.forEach(e => entriesCache.add(e.fecha.split('T')[0]));
+        renderCalendar();
     }
 
-    function insertTemplate(text) {
-        const editor = document.getElementById('diaryContent');
-        editor.value += (editor.value ? '\n\n' : '') + text;
-        editor.focus();
-        editor.scrollTop = editor.scrollHeight;
-        saveEntry(); // Guardar al insertar
-    }
-
-    // --- LÓGICA DE DIARIO (IGUAL QUE ANTES) ---
-    async function loadEntryDates(userId) {
-        const { data } = await window.supabase.from('diario_emocional').select('fecha').eq('user_id', userId);
-        if (data) {
-            existingDates.clear();
-            data.forEach(entry => existingDates.add(new Date(entry.fecha).toISOString().split('T')[0]));
-            renderCalendar();
-        }
-    }
-
-    async function loadEntryForDate(date) {
-        selectedDate = date; 
-        updateHeaderDate(date);
-        const { data: { user } } = await window.supabase.auth.getUser();
-        const startOfDay = new Date(date); startOfDay.setHours(0,0,0,0);
-        const endOfDay = new Date(date); endOfDay.setHours(23,59,59,999);
-        
-        document.getElementById('diaryContent').value = "Cargando...";
-        
-        const { data } = await window.supabase.from('diario_emocional').select('*').eq('user_id', user.id)
-            .gte('fecha', startOfDay.toISOString()).lte('fecha', endOfDay.toISOString()).limit(1);
-
-        if (data && data.length > 0) {
-            currentEntryId = data[0].id;
-            document.getElementById('diaryContent').value = data[0].contenido || "";
-            setEmotionUI(data[0].emocion);
-            updateSaveStatus('Guardado', 'saved');
-        } else {
-            currentEntryId = null;
-            document.getElementById('diaryContent').value = "";
-            setEmotionUI(null);
-            updateSaveStatus('', '');
-        }
-    }
-
-    async function saveEntry() {
-        const content = document.getElementById('diaryContent').value;
-        const { data: { user } } = await window.supabase.auth.getUser();
-        
-        // Ajustar hora actual a la fecha seleccionada
-        const saveDate = new Date(selectedDate);
-        const now = new Date();
-        saveDate.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
-
-        let result;
-        if (currentEntryId) {
-            result = await window.supabase.from('diario_emocional').update({ contenido: content, emocion: currentEmotion }).eq('id', currentEntryId);
-        } else {
-            result = await window.supabase.from('diario_emocional').insert({ user_id: user.id, fecha: saveDate.toISOString(), contenido: content, emocion: currentEmotion }).select();
-            if (result.data) {
-                currentEntryId = result.data[0].id;
-                existingDates.add(saveDate.toISOString().split('T')[0]);
-                renderCalendar();
-            }
-        }
-        updateSaveStatus('Guardado', 'saved');
-    }
-
-    function setEmotion(name) { currentEmotion = name; setEmotionUI(name); saveEntry(); }
-    function setEmotionUI(name) {
-        document.querySelectorAll('.emotion-option').forEach(el => el.classList.remove('selected'));
-        if (name) {
-            const map = { 'feliz':0, 'calma':1, 'triste':2, 'ansioso':3, 'enojado':4, 'cansado':5 };
-            if (map[name] !== undefined) document.querySelectorAll('.emotion-option')[map[name]].classList.add('selected');
-        }
-    }
-
-    function updateSaveStatus(text, type) {
-        const el = document.getElementById('saveStatus');
-        el.className = `autosave-indicator visible ${type}`;
-        el.innerHTML = type === 'saving' ? text : `<i class="fas fa-check-circle"></i> ${text}`;
-    }
-
-    // --- CALENDARIO & PROMPTS ---
     function renderCalendar() {
-        const grid = document.getElementById('miniCalendar');
-        const monthYear = document.getElementById('calendarMonthYear');
-        const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-        monthYear.innerText = `${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+        const grid = document.getElementById('calendarGrid');
+        grid.innerHTML = '';
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
         
-        const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
-        const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
-        
-        let html = '';
-        ['D','L','M','M','J','V','S'].forEach(d => html += `<div class="mini-calendar-day header">${d}</div>`);
-        for(let i=0; i<firstDay; i++) html += `<div></div>`;
+        document.getElementById('monthLabel').textContent = new Date(year, month).toLocaleDateString('es-PE', { month: 'long', year: 'numeric' });
 
-        for(let i=1; i<=daysInMonth; i++) {
-            const year = currentDate.getFullYear();
-            const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-            const dayStr = String(i).padStart(2, '0');
-            
-            const isToday = i === new Date().getDate() && currentDate.getMonth() === new Date().getMonth();
-            const isSelected = i === selectedDate.getDate() && currentDate.getMonth() === selectedDate.getMonth();
-            const hasEntry = existingDates.has(`${year}-${month}-${dayStr}`);
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-            html += `<div class="mini-calendar-day ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''} ${hasEntry ? 'has-entry' : ''}" 
-                     onclick="selectDate(${i})">${i}</div>`;
+        for(let i=0; i<firstDay; i++) grid.appendChild(document.createElement('div'));
+
+        for(let d=1; d<=daysInMonth; d++) {
+            const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+            const el = document.createElement('div');
+            el.className = `day ${entriesCache.has(dateStr) ? 'has-entry' : ''}`;
+            if(selectedDate.getDate() === d && selectedDate.getMonth() === month) el.classList.add('active');
+            el.textContent = d;
+            el.onclick = () => { selectedDate = new Date(year, month, d); renderCalendar(); loadEntry(selectedDate); };
+            grid.appendChild(el);
         }
-        grid.innerHTML = html;
     }
 
-    function renderPrompts() {
-        const container = document.getElementById('promptsContainer');
-        container.innerHTML = '';
-        const shuffled = allPrompts.sort(() => 0.5 - Math.random()).slice(0, 3);
-        shuffled.forEach(p => {
-            container.innerHTML += `<div class="prompt-item" onclick="insertTemplate('${p}')">${p}</div>`;
+    async function loadEntry(date) {
+        document.getElementById('displayDate').textContent = date.toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
+        document.getElementById('editor').value = '';
+        currentEmotion = null;
+        updateEmotionUI();
+
+        const dateStr = date.toISOString().split('T')[0];
+        const { data } = await window.sb.from('diario_emocional')
+            .select('*')
+            .eq('user_id', window.currentUser.id)
+            .gte('fecha', `${dateStr}T00:00:00`)
+            .lte('fecha', `${dateStr}T23:59:59`)
+            .single();
+
+        if (data) {
+            document.getElementById('editor').value = data.contenido;
+            currentEmotion = data.emocion;
+            updateEmotionUI();
+        }
+    }
+
+    document.getElementById('editor').addEventListener('input', () => {
+        document.getElementById('saveStatus').innerHTML = '<i class="fas fa-pen"></i> Escribiendo...';
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(save, 1500);
+    });
+
+    async function save() {
+        const content = document.getElementById('editor').value;
+        const dateStr = selectedDate.toISOString(); // Timestamp completo
+        const shortDate = dateStr.split('T')[0];
+
+        // Upsert logic
+        // Buscamos si existe entrada hoy
+        const { data: existing } = await window.sb.from('diario_emocional')
+            .select('id')
+            .eq('user_id', window.currentUser.id)
+            .gte('fecha', `${shortDate}T00:00:00`)
+            .lte('fecha', `${shortDate}T23:59:59`)
+            .single();
+
+        let error;
+        if (existing) {
+            ({ error } = await window.sb.from('diario_emocional').update({ contenido: content, emocion: currentEmotion }).eq('id', existing.id));
+        } else {
+            ({ error } = await window.sb.from('diario_emocional').insert({ user_id: window.currentUser.id, contenido: content, emocion: currentEmotion, fecha: dateStr }));
+            entriesCache.add(shortDate); renderCalendar();
+        }
+
+        if(!error) document.getElementById('saveStatus').innerHTML = '<i class="fas fa-check-circle"></i> Guardado';
+    }
+
+    function setEmotion(emo) { currentEmotion = emo; updateEmotionUI(); save(); }
+    function updateEmotionUI() {
+        document.querySelectorAll('.emo-btn').forEach(b => {
+            b.classList.toggle('selected', b.textContent.toLowerCase().includes(currentEmotion || 'xyz'));
         });
     }
-
-    function selectDate(day) { selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day); loadEntryForDate(selectedDate); renderCalendar(); }
-    function prevMonth() { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); }
-    function nextMonth() { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); }
-    function updateHeaderDate(date) { document.getElementById('entryDate').textContent = date.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); }
-    async function handleLogout() { await window.supabase.auth.signOut(); window.location.href = '../login.html'; }
-
-    document.addEventListener('DOMContentLoaded', init);
+    
+    function changeMonth(delta) { currentDate.setMonth(currentDate.getMonth() + delta); renderCalendar(); }
+    function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
   </script>
 </body>
 </html>
