@@ -2,105 +2,356 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Entrevista de Bienvenida - Bitácora Mental</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
-    :root { --primary: #4F6F52; --background: #F9FBFA; --dark: #1F2933; --border: #E6EFE8; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--background); color: var(--dark); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-    .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 600px; width: 100%; }
-    h1 { font-family: 'Outfit', sans-serif; color: var(--primary); margin-bottom: 10px; }
-    .step { display: none; }
-    .step.active { display: block; animation: fadeIn 0.5s; }
-    label { display: block; margin-top: 15px; font-weight: 600; margin-bottom: 5px; }
-    input, select, textarea { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; }
-    textarea { resize: vertical; min-height: 100px; }
-    .btn { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; font-size: 1rem; margin-top: 20px; width: 100%; font-weight: 600; }
-    .btn:hover { opacity: 0.9; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    :root {
+      --primary: #4F6F52;
+      --primary-light: #6B8A6E;
+      --accent: #F59E0B;
+      --background: #F3F6F4;
+      --white: #FFFFFF;
+      --text: #1F2933;
+      --text-soft: #6B7280;
+      --border: #E6EFE8;
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--background);
+      background-image: radial-gradient(#4F6F52 0.5px, transparent 0.5px), radial-gradient(#4F6F52 0.5px, var(--background) 0.5px);
+      background-size: 20px 20px;
+      background-position: 0 0, 10px 10px;
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* Card Container */
+    .container {
+      background: var(--white);
+      padding: 40px;
+      border-radius: var(--radius);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      max-width: 550px;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+      margin-bottom: 30px;
+    }
+    .progress-bar-bg {
+      background: var(--border);
+      height: 6px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 33%;
+      transition: width 0.4s ease;
+    }
+    .progress-text {
+      text-align: right;
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      margin-top: 8px;
+      font-weight: 600;
+    }
+
+    /* Typography */
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      color: var(--primary);
+      margin: 0 0 10px 0;
+      font-size: 1.8rem;
+      line-height: 1.2;
+    }
+    p.subtitle {
+      color: var(--text-soft);
+      font-size: 1rem;
+      margin-bottom: 30px;
+      line-height: 1.5;
+    }
+
+    /* Form Elements */
+    .form-group { margin-bottom: 20px; }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 16px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 1rem;
+      color: var(--text);
+      background: #FAFAFA;
+      transition: all 0.3s;
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      background: var(--white);
+      box-shadow: 0 4px 12px rgba(79, 111, 82, 0.1);
+    }
+    textarea {
+      resize: none;
+      min-height: 120px;
+    }
+
+    /* Steps Animation */
+    .step { display: none; opacity: 0; transform: translateY(10px); transition: all 0.4s ease; }
+    .step.active { display: block; opacity: 1; transform: translateY(0); }
+
+    /* Buttons */
+    .btn {
+      background: var(--primary);
+      color: var(--white);
+      border: none;
+      padding: 16px 24px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 600;
+      width: 100%;
+      margin-top: 10px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn:hover {
+      background: var(--primary-light);
+      box-shadow: 0 8px 20px rgba(79, 111, 82, 0.2);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-soft);
+      font-size: 0.9rem;
+      padding: 10px;
+      margin-top: 5px;
+    }
+
+    /* Mobile Adjustments */
+    @media (max-width: 600px) {
+      body { padding: 15px; align-items: flex-start; }
+      .container { padding: 25px; border-radius: 16px; min-height: 85vh; display: flex; flex-direction: column; }
+      .step { flex: 1; display: none; flex-direction: column; }
+      .step.active { display: flex; }
+      .btn { margin-top: auto; } /* Push button to bottom on mobile */
+      h1 { font-size: 1.6rem; }
+    }
   </style>
 </head>
 <body>
-  <div class="card">
+
+  <div class="container">
+    <div class="progress-container">
+      <div class="progress-bar-bg">
+        <div class="progress-fill" id="progressBar"></div>
+      </div>
+      <div class="progress-text">Paso <span id="stepCount">1</span> de 3</div>
+    </div>
+
     <form id="intakeForm">
+      
       <div class="step active" id="step1">
-        <h1>👋 Bienvenida/o</h1>
-        <p>Para personalizar tu experiencia y ayudar a tu futuro terapeuta, necesitamos conocerte un poco mejor.</p>
+        <h1>👋 ¡Hola! Empecemos por ti</h1>
+        <p class="subtitle">Para que tu experiencia sea realmente útil, necesitamos conocer algunos detalles básicos.</p>
         
-        <label>Fecha de Nacimiento</label>
-        <input type="date" id="fechaNacimiento" required>
+        <div class="form-group">
+          <label><i class="far fa-calendar-alt"></i> Fecha de Nacimiento</label>
+          <input type="date" id="fechaNacimiento" required>
+        </div>
         
-        <label>Sexo (Biología/Identidad)</label>
-        <select id="sexo" required>
-          <option value="">Selecciona una opción...</option>
-          <option value="Femenino">Femenino</option>
-          <option value="Masculino">Masculino</option>
-          <option value="Otro">Prefiero no decirlo / Otro</option>
-        </select>
+        <div class="form-group">
+          <label><i class="fas fa-venus-mars"></i> Sexo (Biología/Identidad)</label>
+          <p style="font-size: 0.8rem; color: #888; margin-bottom: 8px;">Esto nos ayuda a ajustar las recomendaciones clínicas.</p>
+          <select id="sexo" required>
+            <option value="" disabled selected>Selecciona una opción...</option>
+            <option value="Femenino">Femenino</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Otro">Prefiero no decirlo / Otro</option>
+          </select>
+        </div>
         
-        <button type="button" class="btn" onclick="nextStep(2)">Continuar</button>
+        <button type="button" class="btn" onclick="nextStep(2)">
+          Continuar <i class="fas fa-arrow-right"></i>
+        </button>
       </div>
 
       <div class="step" id="step2">
-        <h1>💬 Tu Historia</h1>
-        <label>¿Qué te trae por aquí hoy?</label>
-        <textarea id="motivo" placeholder="Ej: Me siento muy ansioso últimamente en el trabajo..." required></textarea>
+        <h1>💬 Tu espacio seguro</h1>
+        <p class="subtitle">Cuéntanos un poco sobre lo que estás viviendo. No hay respuestas incorrectas.</p>
         
-        <label>¿Qué esperas lograr?</label>
-        <input type="text" id="expectativa" placeholder="Ej: Dormir mejor, manejar mi estrés...">
+        <div class="form-group">
+          <label>¿Qué es lo que más te pesa hoy?</label>
+          <textarea id="motivo" placeholder="Ej: Me siento muy ansioso en el trabajo, me cuesta concentrarme o simplemente quiero conocerme mejor..." required></textarea>
+        </div>
         
-        <button type="button" class="btn" onclick="nextStep(3)">Continuar</button>
+        <div class="form-group">
+          <label>¿Qué te gustaría lograr?</label>
+          <input type="text" id="expectativa" placeholder="Ej: Dormir mejor, reducir el estrés...">
+        </div>
+        
+        <button type="button" class="btn" onclick="nextStep(3)">
+          Siguiente <i class="fas fa-arrow-right"></i>
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="prevStep(1)">Atrás</button>
       </div>
 
       <div class="step" id="step3">
-        <h1>🌙 Hábitos</h1>
-        <label>¿Cómo has dormido la última semana?</label>
-        <select id="sueño">
-          <option value="bien">Bien (7-8 horas seguidas)</option>
-          <option value="regular">Regular (Me despierto a veces)</option>
-          <option value="mal">Mal (Me cuesta mucho dormir)</option>
-        </select>
+        <h1>🌙 Tu bienestar diario</h1>
+        <p class="subtitle">Unos últimos detalles para completar tu perfil clínico.</p>
+        
+        <div class="form-group">
+          <label>¿Cómo has dormido la última semana?</label>
+          <select id="sueño" required>
+            <option value="" disabled selected>Elige una opción...</option>
+            <option value="bien">😴 Bien (7-8 horas seguidas)</option>
+            <option value="regular">😐 Regular (Me despierto a veces)</option>
+            <option value="mal">😫 Mal (Me cuesta mucho dormir)</option>
+          </select>
+        </div>
 
-        <label>Nivel de energía general</label>
-        <select id="energia">
-          <option value="alto">Alto</option>
-          <option value="medio">Medio</option>
-          <option value="bajo">Bajo / Agotado</option>
-        </select>
+        <div class="form-group">
+          <label>Nivel de energía general</label>
+          <select id="energia" required>
+            <option value="" disabled selected>Elige una opción...</option>
+            <option value="alto">⚡ Alta / Activa</option>
+            <option value="medio">🔋 Media / Normal</option>
+            <option value="bajo">🪫 Baja / Agotada</option>
+          </select>
+        </div>
 
-        <button type="submit" class="btn">Finalizar Entrevista</button>
+        <button type="submit" class="btn">
+          <i class="fas fa-check"></i> Finalizar Entrevista
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="prevStep(2)">Atrás</button>
       </div>
+
     </form>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
+    // 1. PROTECCIÓN DE RUTA (Auth Check)
+    async function checkAuth() {
+      const { data: { session } } = await window.supabase.auth.getSession();
+      if (!session) {
+        // Guardar intención y redirigir
+        sessionStorage.setItem('redirectAfterAuth', 'entrevista.html');
+        window.location.href = 'registro.html'; 
+      }
+    }
+    checkAuth();
+
+    // 2. LÓGICA DE PASOS
     function nextStep(step) {
-      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-      document.getElementById('step' + step).classList.add('active');
+      // Validar paso anterior
+      const currentStepId = 'step' + (step - 1);
+      const inputs = document.getElementById(currentStepId).querySelectorAll('input, select, textarea');
+      let valid = true;
+      
+      inputs.forEach(input => {
+        if (!input.checkValidity()) {
+          input.reportValidity();
+          valid = false;
+        }
+      });
+
+      if (valid) {
+        updateStep(step);
+      }
     }
 
+    function prevStep(step) {
+      updateStep(step);
+    }
+
+    function updateStep(step) {
+      // Ocultar todos, mostrar actual
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step' + step).classList.add('active');
+      
+      // Actualizar Barra
+      document.getElementById('stepCount').textContent = step;
+      document.getElementById('progressBar').style.width = (step / 3 * 100) + '%';
+    }
+
+    // 3. GUARDADO DE DATOS (Con manejo de error ID null)
     document.getElementById('intakeForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const { data: { user } } = await window.supabase.auth.getUser();
-
-      const updates = {
-        fecha_nacimiento: document.getElementById('fechaNacimiento').value,
-        sexo: document.getElementById('sexo').value,
-        motivo_consulta: document.getElementById('motivo').value,
-        historia_clinica: {
-            expectativa: document.getElementById('expectativa').value,
-            sueno: document.getElementById('sueño').value,
-            energia: document.getElementById('energia').value
-        }
-      };
-
-      // Guardar en Perfil
-      const { error } = await window.supabase.from('users_profile').update(updates).eq('id', user.id);
       
-      if (error) alert('Error al guardar.');
-      else window.location.href = 'dashboard.html';
+      const btn = e.target.querySelector('button[type="submit"]');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+      btn.disabled = true;
+
+      try {
+        // Verificar usuario JUSTO ANTES de guardar
+        const { data: { user }, error: authError } = await window.supabase.auth.getUser();
+        
+        if (authError || !user) {
+          throw new Error("No se encontró sesión activa. Por favor inicia sesión de nuevo.");
+        }
+
+        const updates = {
+          fecha_nacimiento: document.getElementById('fechaNacimiento').value,
+          sexo: document.getElementById('sexo').value,
+          motivo_consulta: document.getElementById('motivo').value,
+          historia_clinica: {
+              expectativa: document.getElementById('expectativa').value,
+              sueno: document.getElementById('sueño').value,
+              energia: document.getElementById('energia').value,
+              fecha_entrevista: new Date().toISOString()
+          }
+        };
+
+        // Update en Supabase
+        const { error: dbError } = await window.supabase
+          .from('users_profile')
+          .update(updates)
+          .eq('id', user.id);
+        
+        if (dbError) throw dbError;
+
+        // Éxito
+        window.location.href = 'dashboard.html';
+
+      } catch (err) {
+        console.error('Error:', err);
+        alert('Hubo un problema: ' + err.message);
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        
+        if (err.message.includes("sesión")) {
+            window.location.href = 'login.html';
+        }
+      }
     });
   </script>
 </body>
