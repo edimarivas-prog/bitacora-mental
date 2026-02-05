@@ -116,7 +116,17 @@
   <script>
     function togglePassword() {
       const input = document.getElementById('password');
-      input.type = input.type === 'password' ? 'text' : 'password';
+      const icon = document.querySelector('.toggle-pass i');
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
     }
 
     // Login Email
@@ -131,9 +141,17 @@
 
       try {
         if (!window.sb) throw new Error("Error de conexión. Recarga la página.");
+        
         const { error } = await window.sb.auth.signInWithPassword({ email, password });
+        
         if (error) throw error;
+        
+        // --- CÓDIGO AGREGADO: Señal para el Dashboard ---
+        sessionStorage.setItem('show_welcome_back', 'true');
+        
+        // Redirigir
         window.location.href = 'app/dashboard.html';
+
       } catch (err) {
         alert(err.message.includes("Invalid") ? "Credenciales incorrectas." : err.message);
         btn.innerHTML = 'Iniciar Sesión';
@@ -145,9 +163,16 @@
     document.getElementById('googleBtn').addEventListener('click', async () => {
       try {
         if (!window.sb) throw new Error("Error de conexión.");
+        
+        // --- CÓDIGO AGREGADO: Señal para el Dashboard (Google) ---
+        sessionStorage.setItem('show_welcome_back', 'true');
+
         await window.sb.auth.signInWithOAuth({
           provider: 'google',
-          options: { redirectTo: window.location.origin + '/bitacora-mental/app/dashboard.html' }
+          options: { 
+            // Asegúrate de que esta URL coincida con la que pusiste en Supabase Auth
+            redirectTo: window.location.origin + '/bitacora-mental/app/dashboard.html' 
+          }
         });
       } catch (err) { alert("No se pudo conectar con Google."); }
     });
