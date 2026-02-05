@@ -258,13 +258,15 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
-    // 1. PROTECCIÓN DE RUTA (Auth Check)
+    // 1. PROTECCIÓN DE RUTA (Auth Check) CORREGIDA
     async function checkAuth() {
       const { data: { session } } = await window.supabase.auth.getSession();
       if (!session) {
-        // Guardar intención y redirigir
+        // Guardar intención
         sessionStorage.setItem('redirectAfterAuth', 'entrevista.html');
-        window.location.href = 'registro.html'; 
+        
+        // CORRECCIÓN: Usar '../' para ir a raíz y .replace para evitar bucle
+        window.location.replace('../registro.html'); 
       }
     }
     checkAuth();
@@ -349,7 +351,8 @@
         btn.disabled = false;
         
         if (err.message.includes("sesión")) {
-            window.location.href = 'login.html';
+            // CORRECCIÓN: Ir a login en la raíz
+            window.location.href = '../login.html';
         }
       }
     });
