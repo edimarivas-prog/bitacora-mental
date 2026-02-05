@@ -142,15 +142,21 @@
       try {
         if (!window.sb) throw new Error("Error de conexión. Recarga la página.");
         
-        const { error } = await window.sb.auth.signInWithPassword({ email, password });
-        
+        // 1. Iniciar sesión
+        const { data, error } = await window.sb.auth.signInWithPassword({ email, password });
         if (error) throw error;
         
-        // --- CÓDIGO AGREGADO: Señal para el Dashboard ---
+        // 2. Verificar Rol para redirigir
+        const { data: profile } = await window.sb.from('users_profile').select('rol').eq('id', data.user.id).single();
+        
         sessionStorage.setItem('show_welcome_back', 'true');
         
-        // Redirigir
-        window.location.href = 'app/dashboard.html';
+        // REDIRECCIÓN INTELIGENTE
+        if (profile && profile.rol === 'admin') {
+            window.location.href = 'app/admin.html';
+        } else {
+            window.location.href = 'app/dashboard.html';
+        }
 
       } catch (err) {
         alert(err.message.includes("Invalid") ? "Credenciales incorrectas." : err.message);
@@ -163,16 +169,11 @@
     document.getElementById('googleBtn').addEventListener('click', async () => {
       try {
         if (!window.sb) throw new Error("Error de conexión.");
-        
-        // --- CÓDIGO AGREGADO: Señal para el Dashboard (Google) ---
         sessionStorage.setItem('show_welcome_back', 'true');
-
+        // Google siempre redirige a una URL fija, el dashboard se encargará de redirigir al admin si es necesario
         await window.sb.auth.signInWithOAuth({
           provider: 'google',
-          options: { 
-            // Asegúrate de que esta URL coincida con la que pusiste en Supabase Auth
-            redirectTo: window.location.origin + '/bitacora-mental/app/dashboard.html' 
-          }
+          options: { redirectTo: window.location.origin + '/bitacora-mental/app/dashboard.html' }
         });
       } catch (err) { alert("No se pudo conectar con Google."); }
     });
