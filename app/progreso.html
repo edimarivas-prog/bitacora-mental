@@ -4,382 +4,116 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mi Progreso - Bitácora Mental</title>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* Estilos Base */
-    :root {
-      --primary: #4F6F52;
-      --primary-light: #6B8A6E;
-      --secondary: #A7C4B5;
-      --background: #F9FBFA;
-      --card-bg: #FFFFFF;
-      --dark: #1F2933;
-      --text-secondary: #6B7280;
-      --border: #E6EFE8;
-      --success: #10B981;
-      --warning: #F59E0B;
-      --danger: #EF4444;
-      --radius: 16px;
-      --shadow: 0 4px 20px rgba(0,0,0,0.06);
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--background); color: var(--dark); line-height: 1.6; }
-    h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; font-weight: 600; }
-
-    .dashboard-container { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
-
-    /* Sidebar */
-    .sidebar { background: white; border-right: 1px solid var(--border); padding: 24px 0; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
-    .sidebar-header { padding: 0 24px 24px; border-bottom: 1px solid var(--border); }
-    .logo { display: flex; align-items: center; gap: 12px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--primary); text-decoration: none; }
-    .sidebar-nav { flex: 1; padding: 24px 0; overflow-y: auto; }
-    .nav-section { margin-bottom: 24px; }
-    .nav-section-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); padding: 0 24px 8px; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 24px; color: var(--dark); text-decoration: none; transition: all 0.2s; border-left: 3px solid transparent; }
-    .nav-item:hover { background: var(--background); color: var(--primary); }
-    .nav-item.active { background: rgba(79, 111, 82, 0.08); color: var(--primary); border-left-color: var(--primary); font-weight: 600; }
+    /* Estilos Base (Iguales) */
+    :root { --primary: #4F6F52; --bg: #F3F6F4; --white: #fff; --text: #1F2933; --border: #E6EFE8; --radius: 20px; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); margin: 0; display: flex; }
+    .sidebar { width: 260px; background: white; padding: 24px; border-right: 1px solid var(--border); position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; }
+    .main { flex: 1; padding: 30px; margin-left: 260px; }
     
-    .sidebar-footer { padding: 0 24px; border-top: 1px solid var(--border); padding-top: 20px; margin-top: auto; }
-    .user-profile { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--background); border-radius: 12px; cursor: pointer; transition: all 0.2s; }
-    .user-profile:hover { background: var(--border); }
-    .user-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1rem; }
-    .user-info { flex: 1; min-width: 0; }
-    .user-name { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .user-email { font-size: 0.75rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-    /* Main Content */
-    .main-content { padding: 32px 40px; max-width: 1400px; }
-    .page-header { margin-bottom: 32px; display:flex; justify-content:space-between; align-items:flex-end; }
-    .page-header h1 { font-size: 2rem; margin-bottom: 8px; color: var(--dark); }
-    .page-subtitle { color: var(--text-secondary); font-size: 1rem; }
-
-    /* Charts Grid */
-    .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 24px; margin-bottom: 32px; }
-    .chart-card { background: white; border-radius: 16px; padding: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
-    .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-    .chart-title { font-size: 1.2rem; font-weight: 600; }
-    .chart-subtitle { color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px; }
-    .chart-container { position: relative; height: 300px; }
-
-    /* Insights Grid */
-    .insights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 32px; }
-    .insight-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border-left: 4px solid var(--primary); }
-    .insight-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(79, 111, 82, 0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 1.3rem; }
-    .insight-title { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
-    .insight-text { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; }
-
-    /* Button */
-    .btn { padding: 12px 24px; border-radius: 10px; font-weight: 600; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; text-decoration: none; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-primary:hover { background: var(--primary-light); transform: translateY(-2px); }
-
-    @media (max-width: 968px) {
-      .dashboard-container { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
-      .main-content { padding: 20px; }
-      .charts-grid { grid-template-columns: 1fr; }
-      .page-header { flex-direction:column; align-items:flex-start; gap:20px; }
-    }
+    .grid-charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
+    .chart-card { background: white; padding: 25px; border-radius: var(--radius); box-shadow: 0 4px 20px rgba(0,0,0,0.04); height: 350px; }
+    .insight-card { background: linear-gradient(135deg, var(--primary), #3E5A41); color: white; padding: 25px; border-radius: var(--radius); margin-bottom: 20px; display: flex; align-items: center; gap: 20px; }
+    
+    @media (max-width: 900px) { .sidebar { display: none; } .main { margin-left: 0; padding: 20px; } }
   </style>
 </head>
 <body>
-  <div class="dashboard-container">
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
-      </div>
-      <nav class="sidebar-nav">
-        <div class="nav-section">
-          <div class="nav-section-title">Principal</div>
-          <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> <span>Dashboard</span></a>
-          <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> <span>Mis Citas</span></a>
-          <a href="especialistas.html" class="nav-item"><i class="fas fa-user-md"></i> <span>Especialistas</span></a>
-        </div>
-        <div class="nav-section">
-          <div class="nav-section-title">Mi Espacio</div>
-          <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> <span>Mi Diario</span></a>
-          <a href="progreso.html" class="nav-item active"><i class="fas fa-chart-line"></i> <span>Mi Progreso</span></a>
-          <a href="recursos.html" class="nav-item"><i class="fas fa-folder-open"></i> <span>Recursos</span></a>
-        </div>
-        <div class="nav-section">
-          <div class="nav-section-title">Cuenta</div>
-          <a href="plan.html" class="nav-item"><i class="fas fa-crown"></i> <span>Mi Plan</span></a>
-          <a href="perfil.html" class="nav-item"><i class="fas fa-user-circle"></i> <span>Perfil</span></a>
-          <a href="#" class="nav-item" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a>
-          <a href="configuracion.html" class="nav-item"><i class="fas fa-cog"></i> <span>Configuración</span></a>
-        </div>
-      </nav>
-      <div class="sidebar-footer">
-        <div class="user-profile">
-          <div class="user-avatar" id="avatarInitials">--</div>
-          <div class="user-info">
-            <div class="user-name" id="sidebarUserName">Cargando...</div>
-            <div class="user-email" id="sidebarUserEmail">...</div>
-          </div>
-        </div>
-      </div>
-    </aside>
+  <aside class="sidebar">
+    <a href="dashboard.html" style="font-family:'Outfit'; font-weight:700; color:var(--primary); font-size:1.3rem; margin-bottom:30px; text-decoration:none;"><i class="fas fa-brain"></i> Bitácora</a>
+    <nav style="display:flex; flex-direction:column; gap:5px;">
+        <a href="dashboard.html" style="padding:12px; color:#64748B; text-decoration:none;"><i class="fas fa-home"></i> Inicio</a>
+        <a href="diario.html" style="padding:12px; color:#64748B; text-decoration:none;"><i class="fas fa-book"></i> Diario</a>
+        <a href="progreso.html" style="padding:12px; background:#E8F5E9; color:var(--primary); font-weight:600; text-decoration:none; border-radius:12px;"><i class="fas fa-chart-line"></i> Progreso</a>
+        <a href="citas.html" style="padding:12px; color:#64748B; text-decoration:none;"><i class="fas fa-calendar-alt"></i> Citas</a>
+        <a href="recursos.html" style="padding:12px; color:#64748B; text-decoration:none;"><i class="fas fa-box-open"></i> Recursos</a>
+    </nav>
+  </aside>
 
-    <main class="main-content">
-      <div class="page-header">
-        <div>
-            <h1>Mi Progreso</h1>
-            <p class="page-subtitle">Mapa de intensidad de síntomas y constancia</p>
-        </div>
-        <button class="btn btn-primary" onclick="alert('Funcionalidad en desarrollo: Pronto podrás descargar un PDF con tus métricas para llevar a consulta.')">
-            <i class="fas fa-file-medical"></i> Generar Reporte para Sesión
-        </button>
-      </div>
+  <main class="main">
+    <h1 style="font-family:'Outfit'; margin-bottom:20px;">Tu Evolución</h1>
 
-      <div class="insights-grid">
-        <div class="insight-card">
-          <div class="insight-icon"><i class="fas fa-trophy"></i></div>
-          <div class="insight-title">Tu Constancia</div>
-          <div class="insight-text" id="insightRacha">Calculando...</div>
-        </div>
-        <div class="insight-card">
-          <div class="insight-icon"><i class="fas fa-lightbulb"></i></div>
-          <div class="insight-title">Tu Ritmo</div>
-          <div class="insight-text" id="insightPattern">Analizando cuándo escribes...</div>
-        </div>
-        <div class="insight-card">
-          <div class="insight-icon"><i class="fas fa-heart"></i></div>
-          <div class="insight-title">Estado Clínico</div>
-          <div class="insight-text" id="insightTrend">Revisando tus últimos registros...</div>
-        </div>
+    <div class="insight-card">
+      <i class="fas fa-trophy" style="font-size:2.5rem; opacity:0.8;"></i>
+      <div>
+        <h3 style="margin:0 0 5px 0;">¡Vas por buen camino!</h3>
+        <p style="margin:0; opacity:0.9;" id="insightText">Analizando tus datos...</p>
       </div>
+    </div>
 
-      <div class="charts-grid">
-        <div class="chart-card">
-          <div class="chart-header">
-            <div>
-              <div class="chart-title">Intensidad de Síntomas</div>
-              <div class="chart-subtitle">Evolución de tus reportes semanales</div>
-            </div>
-          </div>
-          <div class="chart-container">
-            <canvas id="testsChart"></canvas>
-          </div>
-        </div>
-
-        <div class="chart-card">
-          <div class="chart-header">
-            <div>
-              <div class="chart-title">Momentos de Escritura</div>
-              <div class="chart-subtitle">Tus días preferidos para expresarte</div>
-            </div>
-          </div>
-          <div class="chart-container">
-            <canvas id="diaryActivityChart"></canvas>
-          </div>
-        </div>
+    <div class="grid-charts">
+      <div class="chart-card">
+        <h4 style="margin:0 0 15px 0; color:var(--primary);">Estado de Ánimo (Últimos 30 días)</h4>
+        <canvas id="moodChart"></canvas>
       </div>
-    </main>
-  </div>
+      <div class="chart-card">
+        <h4 style="margin:0 0 15px 0; color:var(--primary);">Frecuencia de Diario</h4>
+        <canvas id="journalChart"></canvas>
+      </div>
+    </div>
+  </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
-
   <script>
-    Chart.defaults.font.family = "'DM Sans', sans-serif";
-    Chart.defaults.color = '#6B7280';
-    let testsChart, diaryChart;
-
-    async function init() {
-        const { data: { user } } = await window.supabase.auth.getUser();
-        if (!user) { window.location.href = '../login.html'; return; }
-
-        const { data: profile } = await window.supabase.from('users_profile').select('*').eq('id', user.id).single();
-        if (profile) {
-            document.getElementById('sidebarUserName').textContent = `${profile.nombre} ${profile.apellido}`;
-            document.getElementById('sidebarUserEmail').textContent = user.email;
-            document.getElementById('avatarInitials').textContent = (profile.nombre[0] + profile.apellido[0]).toUpperCase();
-        }
-
-        loadProgressData(user.id);
+    async function checkAuth() {
+        if (!window.sb) { setTimeout(checkAuth, 100); return; }
+        const { data: { session } } = await window.sb.auth.getSession();
+        if (!session) window.location.replace('../login.html');
+        else loadData(session.user);
     }
+    checkAuth();
 
-    async function loadProgressData(userId) {
-        // 1. Cargar Registros Clínicos (Tabla NUEVA: monitoreo_sintomas)
-        const { data: tests } = await window.supabase
-            .from('monitoreo_sintomas')
-            .select('*')
-            .eq('user_id', userId)
+    async function loadData(user) {
+        // 1. Datos de Pulso (Ánimo)
+        const { data: pulses } = await window.sb.from('monitoreo_sintomas')
+            .select('fecha_realizado, nivel_animo')
+            .eq('user_id', user.id)
             .order('fecha_realizado', { ascending: true });
 
-        if (tests && tests.length > 0) {
-            updateTestChart(tests);
-            analyzeTrend(tests);
-        } else {
-            document.getElementById('insightTrend').textContent = "Realiza tu entrevista de bienvenida para ver tu evolución aquí.";
-        }
-
-        // 2. Cargar Diario
-        const { data: entries } = await window.supabase
-            .from('diario_emocional')
-            .select('fecha')
-            .eq('user_id', userId);
-
-        if (entries && entries.length > 0) {
-            const today = new Date();
-            today.setHours(23, 59, 59, 999);
-            const validEntries = entries.filter(e => new Date(e.fecha) <= today);
-
-            updateDiaryChart(validEntries);
-            calculateInsights(validEntries);
-        } else {
-            document.getElementById('insightRacha').textContent = "Empieza a escribir en tu diario para generar tu racha.";
-            document.getElementById('insightPattern').textContent = "Pronto descubrirás qué días sueles escribir más.";
-        }
-    }
-
-    // --- GRÁFICOS ---
-
-    function updateTestChart(tests) {
-        const ctx = document.getElementById('testsChart').getContext('2d');
-        
-        // Etiquetas Clínicas (No numéricas)
-        const yLabels = { 0: 'Nulo', 2: 'Leve', 4: 'Bajo', 6: 'Moderado', 8: 'Alto', 10: 'Severo' };
-
-        testsChart = new Chart(ctx, {
+        const moodCtx = document.getElementById('moodChart').getContext('2d');
+        new Chart(moodCtx, {
             type: 'line',
             data: {
-                labels: tests.map(t => new Date(t.fecha_realizado).toLocaleDateString('es-ES', {day: '2-digit', month: 'short'})),
-                datasets: [
-                    { label: 'Ánimo', data: tests.map(t => t.nivel_animo), borderColor: '#10B981', backgroundColor: '#10B981', tension: 0.4, pointRadius: 4 },
-                    { label: 'Ansiedad', data: tests.map(t => t.nivel_ansiedad), borderColor: '#EF4444', backgroundColor: '#EF4444', tension: 0.4, pointRadius: 4 }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        min: 0, max: 10,
-                        ticks: {
-                            callback: function(value) { return yLabels[value] || ''; },
-                            stepSize: 2
-                        },
-                        grid: { color: '#F3F4F6' }
-                    },
-                    x: { grid: { display: false } }
-                },
-                plugins: { legend: { position: 'bottom' } }
-            }
-        });
-    }
-
-    function updateDiaryChart(entries) {
-        const ctx = document.getElementById('diaryActivityChart').getContext('2d');
-        const dayCounts = [0, 0, 0, 0, 0, 0, 0];
-        
-        entries.forEach(e => {
-            const date = new Date(e.fecha); 
-            const dayIndex = date.getDay(); 
-            dayCounts[dayIndex]++;
-        });
-
-        const labels = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-        const data = [...dayCounts.slice(1), dayCounts[0]];
-
-        diaryChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
+                labels: pulses?.map(p => new Date(p.fecha_realizado).toLocaleDateString('es-PE', {day:'2-digit', month:'short'})) || [],
                 datasets: [{
-                    label: 'Entradas',
-                    data: data,
-                    backgroundColor: '#4F6F52',
-                    borderRadius: 6,
-                    barThickness: 20
+                    label: 'Ánimo (0-10)',
+                    data: pulses?.map(p => p.nivel_animo) || [],
+                    borderColor: '#4F6F52',
+                    backgroundColor: 'rgba(79, 111, 82, 0.1)',
+                    fill: true,
+                    tension: 0.4
                 }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { display: false } },
-                    x: { grid: { display: false } }
-                },
-                plugins: { legend: { display: false } }
-            }
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 10 } } }
+        });
+
+        // 2. Datos de Diario (Consistencia)
+        const { data: entries } = await window.sb.from('diario_emocional').select('fecha').eq('user_id', user.id);
+        const count = entries?.length || 0;
+        document.getElementById('insightText').textContent = count > 0 
+            ? `Has escrito ${count} veces en tu diario. La constancia es clave.` 
+            : "Empieza a escribir en tu diario para ver tus estadísticas aquí.";
+
+        // Gráfico de barras simple (Días de la semana)
+        const journalCtx = document.getElementById('journalChart').getContext('2d');
+        new Chart(journalCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Total Entradas'],
+                datasets: [{
+                    label: 'Entradas',
+                    data: [count],
+                    backgroundColor: '#F59E0B',
+                    borderRadius: 10
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
         });
     }
-
-    // --- INSIGHTS ---
-
-    function calculateInsights(entries) {
-        const uniqueDates = new Set(entries.map(e => e.fecha.split('T')[0]));
-        const sortedDates = Array.from(uniqueDates).sort().reverse();
-
-        let streak = 0;
-        if (sortedDates.length > 0) {
-            const today = new Date().toISOString().split('T')[0];
-            const yesterdayDate = new Date(); yesterdayDate.setDate(yesterdayDate.getDate() - 1);
-            const yesterday = yesterdayDate.toISOString().split('T')[0];
-
-            if (sortedDates[0] === today || sortedDates[0] === yesterday) {
-                streak = 1;
-                let checkDate = new Date(sortedDates[0]);
-                for (let i = 1; i < sortedDates.length; i++) {
-                    checkDate.setDate(checkDate.getDate() - 1);
-                    if (sortedDates[i] === checkDate.toISOString().split('T')[0]) streak++;
-                    else break;
-                }
-            }
-        }
-        
-        const streakMsg = streak > 1 
-            ? `¡Llevas ${streak} días seguidos escribiendo! Esa constancia ayuda a tu terapia.` 
-            : (streak === 1 ? "Has empezado una racha hoy. ¡Mantén el hábito!" : "Retoma tu escritura para dar más contexto a tu psicólogo.");
-        
-        document.getElementById('insightRacha').textContent = streakMsg;
-
-        // Patrón de Día
-        const dayCounts = [0, 0, 0, 0, 0, 0, 0];
-        entries.forEach(e => dayCounts[new Date(e.fecha).getDay()]++);
-        const maxVal = Math.max(...dayCounts);
-        const maxDayIndex = dayCounts.indexOf(maxVal);
-        const dayNames = ["Domingos", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábados"];
-        
-        if (entries.length < 3) {
-            document.getElementById('insightPattern').textContent = "Escribe más días para detectar tus momentos de reflexión.";
-        } else {
-            document.getElementById('insightPattern').textContent = `Sueles reflexionar más los ${dayNames[maxDayIndex]}.`;
-        }
-    }
-
-    function analyzeTrend(tests) {
-        if (tests.length < 2) {
-            document.getElementById('insightTrend').textContent = "Necesitamos al menos dos reportes para ver tu evolución.";
-            return;
-        }
-
-        const last = tests[tests.length - 1];
-        const prev = tests[tests.length - 2];
-
-        let msg = "";
-        if (last.nivel_animo > prev.nivel_animo) {
-            msg = "Tu ánimo reportado ha mejorado. ¡Sigue así!";
-        } else if (last.nivel_ansiedad < prev.nivel_ansiedad) {
-            msg = "Reportas menos síntomas de ansiedad que la semana pasada.";
-        } else {
-            msg = "Tus síntomas se mantienen estables o han aumentado levemente. Coméntalo en sesión.";
-        }
-        document.getElementById('insightTrend').textContent = msg;
-    }
-
-    async function handleLogout() {
-        await window.supabase.auth.signOut();
-        window.location.href = '../login.html';
-    }
-
-    document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
