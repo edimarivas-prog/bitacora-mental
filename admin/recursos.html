@@ -3,131 +3,249 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión de Recursos - Admin</title>
+  <title>Recursos - Admin Bitácora</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root { --primary: #1F2933; --accent: #4F6F52; --bg: #F3F4F6; --white: #FFFFFF; --text: #1F2933; --border: #E5E7EB; --radius: 16px; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
-    .sidebar { width: 260px; background: var(--primary); color: white; padding: 24px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
-    .logo { font-family: 'Outfit'; font-weight: 700; color: white; font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 10px; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    /* Estilos Admin Unificados */
+    :root { 
+      --sidebar-bg: #1F2933; 
+      --sidebar-text: #94A3B8;
+      --primary: #4F6F52; 
+      --bg: #F3F4F6; 
+      --white: #FFFFFF; 
+      --text: #1F2933; 
+      --border: #E5E7EB; 
+      --radius: 20px; 
+      --danger: #EF4444; 
+      --success: #10B981; 
+      --warning: #F59E0B;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+    
+    /* --- SIDEBAR --- */
+    .sidebar { width: 260px; background: var(--sidebar-bg); color: white; padding: 24px; position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; }
+    .logo { font-family: 'Outfit'; font-weight: 700; color: white; font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 10px; margin-bottom: 40px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 12px; }
+    
+    .nav-section { margin-bottom: 25px; }
+    .nav-title { font-size: 0.7rem; text-transform: uppercase; color: var(--sidebar-text); font-weight: 700; padding-left: 12px; margin-bottom: 8px; letter-spacing: 1px; }
+    
     .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: #CBD5E1; text-decoration: none; border-radius: 12px; transition: 0.2s; font-size: 0.95rem; }
-    .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; }
-    .nav-item.active { border-left: 3px solid var(--accent); }
-    .main { flex: 1; padding: 30px 40px; overflow-y: auto; }
+    .nav-item:hover, .nav-item.active { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(79, 111, 82, 0.4); }
+    .nav-item i { width: 20px; text-align: center; }
     
-    .card { background: white; padding: 25px; border-radius: var(--radius); box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 30px; }
+    /* --- MAIN CONTENT --- */
+    .main { flex: 1; padding: 30px 40px; margin-left: 260px; max-width: 100%; }
+    
+    /* --- CARD & FORM --- */
+    .card { background: white; padding: 30px; border-radius: var(--radius); box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 30px; border: 1px solid transparent; }
+    
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: #64748B; }
-    input, select, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 0.95rem; outline: none; }
-    .btn { padding: 12px 24px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
-    .btn-primary { background: var(--accent); color: white; }
-    .btn-danger { background: #FEE2E2; color: #DC2626; }
     
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th { text-align: left; padding: 15px; color: #64748B; font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid var(--border); }
-    td { padding: 15px; border-bottom: 1px solid #F3F4F6; font-size: 0.95rem; }
-    .type-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+    label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 8px; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; }
+    input, select, textarea { width: 100%; padding: 12px 15px; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 0.95rem; outline: none; background: #F8FAFC; transition: 0.2s; }
+    input:focus, select:focus { background: white; border-color: var(--primary); }
+    
+    .btn { padding: 12px 24px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.95rem; }
+    .btn-primary { background: var(--sidebar-bg); color: white; }
+    .btn-primary:hover { background: #334155; }
+    
+    /* --- TABLE --- */
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th { text-align: left; padding: 15px; color: #64748B; font-size: 0.75rem; text-transform: uppercase; border-bottom: 1px solid var(--border); font-weight: 700; background: #F8FAFC; }
+    td { padding: 15px; border-bottom: 1px solid #F1F5F9; font-size: 0.95rem; vertical-align: middle; }
+    
+    .type-badge { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; }
+    .badge-audio { background: #E0F2FE; color: #0369A1; }
+    .badge-pdf { background: #FFEDD5; color: #C2410C; }
+    .badge-video { background: #FCE7F3; color: #DB2777; }
+    .badge-lectura { background: #F3E8FF; color: #7E22CE; }
+
+    .btn-mini { padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; border: 1px solid var(--border); background: white; cursor: pointer; color: var(--text); }
+    .btn-mini:hover { background: #F1F5F9; }
+    .btn-delete { color: var(--danger); border-color: #FECACA; }
+    .btn-delete:hover { background: #FEF2F2; }
+
+    @media (max-width: 900px) { .sidebar { display: none; } .main { margin-left: 0; padding: 20px; } .form-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
+
   <aside class="sidebar">
     <a href="panel-admin.html" class="logo"><i class="fas fa-brain"></i> ADMIN PRO</a>
-    <nav>
-      <a href="panel-admin.html" class="nav-item"><i class="fas fa-chart-pie"></i> Dashboard</a>
+    
+    <div class="nav-section">
+      <div class="nav-title">PANEL DE CONTROL</div>
+      <a href="panel-admin.html" class="nav-item"><i class="fas fa-chart-pie"></i> Resumen</a>
+      <a href="monitoreo.html" class="nav-item"><i class="fas fa-desktop"></i> Monitoreo</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-title">GESTIÓN</div>
       <a href="verificacion.html" class="nav-item"><i class="fas fa-user-check"></i> Verificación</a>
-      <a href="gestion-usuarios.html" class="nav-item"><i class="fas fa-users-cog"></i> Usuarios</a>
+      <a href="gestion-usuarios.html" class="nav-item"><i class="fas fa-users"></i> Usuarios</a>
       <a href="recursos.html" class="nav-item active"><i class="fas fa-folder-open"></i> Recursos</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-title">CONFIGURACIÓN</div>
       <a href="ajustes.html" class="nav-item"><i class="fas fa-sliders-h"></i> Ajustes Web</a>
-    </nav>
+    </div>
+
+    <div style="margin-top:auto;">
+      <a href="../app/dashboard.html" class="nav-item"><i class="fas fa-arrow-left"></i> Volver a App</a>
+    </div>
   </aside>
 
   <main class="main">
-    <h1>Biblioteca de Recursos</h1>
+    <div style="margin-bottom:30px;">
+        <h1 style="font-family:'Outfit'; margin:0 0 5px 0;">Biblioteca de Recursos</h1>
+        <p style="color:#64748B;">Gestiona el contenido de bienestar visible para los pacientes.</p>
+    </div>
     
     <div class="card">
-      <h3 style="margin-top:0;">Agregar Nuevo Recurso</h3>
+      <h3 style="margin-top:0; font-family:'Outfit'; margin-bottom:20px; color:var(--text);"><i class="fas fa-plus-circle" style="color:var(--primary)"></i> Publicar Nuevo Contenido</h3>
       <form id="resourceForm" class="form-grid">
         <div>
-          <label>Título</label>
-          <input type="text" id="titulo" required placeholder="Ej: Respiración Guiada">
+          <label>Título del Recurso</label>
+          <input type="text" id="titulo" required placeholder="Ej: Meditación para dormir...">
         </div>
         <div>
-          <label>Tipo</label>
+          <label>Tipo de Contenido</label>
           <select id="tipo">
-            <option value="audio">Audio (MP3 / Spotify)</option>
-            <option value="pdf">PDF / Guía</option>
-            <option value="video">Video (YouTube / Vimeo)</option>
-            <option value="lectura">Lectura Corta</option>
+            <option value="audio">🎧 Audio (Spotify / MP3)</option>
+            <option value="pdf">📄 Documento PDF</option>
+            <option value="video">🎥 Video (YouTube / Vimeo)</option>
+            <option value="lectura">📖 Lectura Corta</option>
           </select>
         </div>
-        <div style="grid-column: span 2;">
-          <label>URL del Recurso</label>
+        <div style="grid-column: 1 / -1;">
+          <label>Enlace Directo (URL)</label>
           <input type="url" id="url" required placeholder="https://...">
+          <small style="color:#94A3B8; margin-top:5px; display:block;">Pega aquí el enlace donde está alojado el archivo.</small>
         </div>
         <div>
           <label>Categoría</label>
-          <input type="text" id="categoria" placeholder="Ej: Ansiedad, Sueño">
+          <input type="text" id="categoria" placeholder="Ej: Ansiedad, Sueño, Estrés...">
         </div>
         <div style="display: flex; align-items: flex-end;">
-          <button type="submit" class="btn btn-primary" style="width: 100%;">Publicar Recurso</button>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">
+            <i class="fas fa-cloud-upload-alt"></i> Publicar Ahora
+          </button>
         </div>
       </form>
     </div>
 
-    <div class="card">
-      <h3 style="margin-top:0;">Recursos Publicados</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Título</th>
-            <th>Tipo</th>
-            <th>Categoría</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="resourcesList"></tbody>
-      </table>
+    <div class="card" style="padding:0; overflow:hidden;">
+      <div style="padding:20px 30px; border-bottom:1px solid var(--border); background:#F8FAFC;">
+          <h3 style="margin:0; font-family:'Outfit'; font-size:1.1rem;">Contenido Activo</h3>
+      </div>
+      
+      <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th style="padding-left:30px;">Recurso</th>
+                <th>Tipo</th>
+                <th>Categoría</th>
+                <th>Enlace</th>
+                <th style="padding-right:30px; text-align:right;">Acciones</th>
+            </tr>
+            </thead>
+            <tbody id="resourcesList">
+                <tr><td colspan="5" style="text-align:center; padding:30px; color:#94A3B8;">Cargando biblioteca...</td></tr>
+            </tbody>
+        </table>
+      </div>
     </div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
+    // 1. Auth Guard
+    async function checkAdmin() {
+        if (!window.sb) return setTimeout(checkAdmin, 100);
+        const { data: { session } } = await window.sb.auth.getSession();
+        if (!session) window.location.href = '../login.html';
+        const { data: profile } = await window.sb.from('users_profile').select('rol').eq('id', session.user.id).single();
+        if (profile.rol !== 'admin') window.location.href = '../app/dashboard.html';
+        else loadResources();
+    }
+    checkAdmin();
+
+    // 2. Cargar Recursos
     async function loadResources() {
-      const { data } = await window.sb.from('recursos').select('*').order('fecha_publicacion', { ascending: false });
+      const { data, error } = await window.sb.from('recursos').select('*').order('fecha_publicacion', { ascending: false });
+      
       const tbody = document.getElementById('resourcesList');
-      tbody.innerHTML = data.map(r => `
+      
+      if (!data || data.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:40px; color:#94A3B8;">No hay recursos publicados aún.</td></tr>`;
+          return;
+      }
+
+      tbody.innerHTML = data.map(r => {
+        let badgeClass = 'badge-lectura';
+        let icon = 'fa-book';
+        if(r.tipo === 'audio') { badgeClass = 'badge-audio'; icon = 'fa-headphones'; }
+        if(r.tipo === 'pdf') { badgeClass = 'badge-pdf'; icon = 'fa-file-pdf'; }
+        if(r.tipo === 'video') { badgeClass = 'badge-video'; icon = 'fa-video'; }
+
+        return `
         <tr>
-          <td><strong>${r.titulo}</strong></td>
-          <td><span class="type-badge" style="background:#E0F2FE; color:#0369A1">${r.tipo}</span></td>
-          <td>${r.categoria || '--'}</td>
-          <td>
-            <button class="btn btn-danger" onclick="deleteResource('${r.id}')" style="padding: 5px 12px; font-size: 0.8rem;">Eliminar</button>
+          <td style="padding-left:30px;">
+            <div style="font-weight:600; color:var(--text);">${r.titulo}</div>
+            <div style="font-size:0.75rem; color:#94A3B8;">${new Date(r.fecha_publicacion).toLocaleDateString()}</div>
+          </td>
+          <td><span class="type-badge ${badgeClass}"><i class="fas ${icon}"></i> ${r.tipo}</span></td>
+          <td>${r.categoria || '<span style="color:#CBD5E1">--</span>'}</td>
+          <td><a href="${r.url}" target="_blank" style="color:var(--primary); text-decoration:none; font-weight:500; font-size:0.85rem;"><i class="fas fa-external-link-alt"></i> Abrir</a></td>
+          <td style="padding-right:30px; text-align:right;">
+            <button class="btn-mini btn-delete" onclick="deleteResource('${r.id}')" title="Eliminar">
+                <i class="fas fa-trash-alt"></i>
+            </button>
           </td>
         </tr>
-      `).join('');
+      `}).join('');
     }
 
+    // 3. Crear Recurso
     document.getElementById('resourceForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      const btn = e.target.querySelector('button');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publicando...';
+      btn.disabled = true;
+
       const nuevo = {
         titulo: document.getElementById('titulo').value,
         tipo: document.getElementById('tipo').value,
         url: document.getElementById('url').value,
         categoria: document.getElementById('categoria').value
       };
-      await window.sb.from('recursos').insert(nuevo);
-      location.reload();
+
+      const { error } = await window.sb.from('recursos').insert(nuevo);
+
+      if(error) {
+          alert("Error: " + error.message);
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+      } else {
+          location.reload(); // Recargar para ver el nuevo item
+      }
     });
 
+    // 4. Eliminar
     async function deleteResource(id) {
-      if(confirm('¿Seguro?')) {
+      if(confirm('¿Seguro que deseas eliminar este recurso de la biblioteca?')) {
         await window.sb.from('recursos').delete().eq('id', id);
         loadResources();
       }
     }
-    loadResources();
   </script>
 </body>
 </html>
