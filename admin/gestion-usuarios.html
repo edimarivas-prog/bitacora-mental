@@ -7,49 +7,67 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Estilos Admin Base */
-    :root { --primary: #1F2933; --accent: #4F6F52; --bg: #F3F4F6; --white: #FFFFFF; --text: #1F2933; --border: #E5E7EB; --radius: 16px; --danger: #EF4444; --success: #10B981; }
-    * { box-sizing: border-box; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
+    /* Estilos Admin Unificados */
+    :root { 
+      --sidebar-bg: #1F2933; 
+      --sidebar-text: #94A3B8;
+      --primary: #4F6F52; 
+      --bg: #F3F4F6; 
+      --white: #FFFFFF; 
+      --text: #1F2933; 
+      --border: #E5E7EB; 
+      --radius: 20px; 
+      --danger: #EF4444; 
+      --success: #10B981; 
+      --warning: #F59E0B;
+    }
     
-    .sidebar { width: 260px; background: var(--primary); color: white; padding: 24px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
-    .logo { font-family: 'Outfit'; font-weight: 700; color: white; font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 10px; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    .nav-title { font-size: 0.7rem; text-transform: uppercase; color: #94A3B8; font-weight: 700; padding-left: 12px; margin-bottom: 8px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+    
+    /* --- SIDEBAR --- */
+    .sidebar { width: 260px; background: var(--sidebar-bg); color: white; padding: 24px; position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; }
+    .logo { font-family: 'Outfit'; font-weight: 700; color: white; font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 10px; margin-bottom: 40px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 12px; }
+    
+    .nav-section { margin-bottom: 25px; }
+    .nav-title { font-size: 0.7rem; text-transform: uppercase; color: var(--sidebar-text); font-weight: 700; padding-left: 12px; margin-bottom: 8px; letter-spacing: 1px; }
+    
     .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: #CBD5E1; text-decoration: none; border-radius: 12px; transition: 0.2s; font-size: 0.95rem; }
-    .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; }
-    .nav-item.active { border-left: 3px solid var(--accent); }
+    .nav-item:hover, .nav-item.active { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(79, 111, 82, 0.4); }
+    .nav-item i { width: 20px; text-align: center; }
     
-    .main { flex: 1; padding: 30px 40px; overflow-y: auto; }
-    
-    /* Herramientas de Tabla */
-    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: white; padding: 15px; border-radius: var(--radius); box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-    .search-box { position: relative; width: 300px; }
-    .search-box input { width: 100%; padding: 10px 10px 10px 40px; border: 1px solid var(--border); border-radius: 8px; outline: none; }
-    .search-box i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #9CA3AF; }
+    /* --- MAIN CONTENT --- */
+    .main { flex: 1; padding: 30px 40px; margin-left: 260px; max-width: 100%; }
 
-    /* Tabla */
-    .table-card { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+    /* --- TABLE TOOLS --- */
+    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: white; padding: 15px; border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+    .search-box { position: relative; width: 300px; }
+    .search-box input { width: 100%; padding: 12px 12px 12px 40px; border: 1px solid var(--border); border-radius: 10px; outline: none; font-family: inherit; }
+    .search-box i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #9CA3AF; }
+
+    /* --- TABLA --- */
+    .table-card { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
     table { width: 100%; border-collapse: collapse; }
-    th { text-align: left; padding: 18px; color: #64748B; font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid var(--border); background: #F9FAFB; }
-    td { padding: 18px; border-bottom: 1px solid #F3F4F6; vertical-align: middle; }
+    th { text-align: left; padding: 18px; color: #64748B; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); background: #F8FAFC; font-weight: 700; }
+    td { padding: 18px; border-bottom: 1px solid #F1F5F9; vertical-align: middle; }
     
     .user-cell { display: flex; align-items: center; gap: 12px; }
-    .avatar { width: 40px; height: 40px; background: #E0E7FF; color: #3730A3; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    .avatar { width: 40px; height: 40px; background: #F1F5F9; color: #64748B; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
     
     .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
-    .badge-paciente { background: #E0F2FE; color: #0284C7; }
-    .badge-psicologo { background: #DCFCE7; color: #166534; }
-    .badge-admin { background: #FEF3C7; color: #92400E; }
+    .badge-paciente { background: #E0F2FE; color: #0369A1; }
+    .badge-psicologo { background: #DCFCE7; color: #15803D; }
+    .badge-admin { background: #FEF3C7; color: #B45309; }
 
-    .status-active { color: var(--success); font-weight: 600; display: flex; align-items: center; gap: 5px; }
-    .status-suspended { color: var(--danger); font-weight: 600; display: flex; align-items: center; gap: 5px; background: #FEF2F2; padding: 4px 8px; border-radius: 8px; width: fit-content; }
+    .status-active { color: var(--success); font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
+    .status-suspended { color: var(--danger); font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; background: #FEF2F2; padding: 4px 10px; border-radius: 8px; width: fit-content; }
 
-    .btn-action { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: white; cursor: pointer; transition: 0.2s; font-size: 0.85rem; }
-    .btn-action:hover { background: #F3F4F6; }
+    .btn-action { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); background: white; cursor: pointer; transition: 0.2s; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; font-weight: 500; }
+    .btn-action:hover { background: #F8FAFC; border-color: #CBD5E1; }
     .btn-ban { color: var(--danger); border-color: #FECACA; }
     .btn-ban:hover { background: #FEF2F2; }
     
-    @media (max-width: 900px) { .sidebar { display: none; } }
+    @media (max-width: 900px) { .sidebar { display: none; } .main { margin-left: 0; padding: 20px; } }
   </style>
 </head>
 <body>
@@ -58,19 +76,20 @@
     <a href="panel-admin.html" class="logo"><i class="fas fa-brain"></i> ADMIN PRO</a>
     
     <div class="nav-section">
-        <div class="nav-title">Resumen</div>
-        <a href="panel-admin.html" class="nav-item"><i class="fas fa-chart-pie"></i> Dashboard</a>
+        <div class="nav-title">PANEL DE CONTROL</div>
+        <a href="panel-admin.html" class="nav-item"><i class="fas fa-chart-pie"></i> Resumen</a>
         <a href="monitoreo.html" class="nav-item"><i class="fas fa-desktop"></i> Monitoreo</a>
     </div>
 
     <div class="nav-section">
-        <div class="nav-title">Gestión</div>
+        <div class="nav-title">GESTIÓN</div>
         <a href="verificacion.html" class="nav-item"><i class="fas fa-user-check"></i> Verificación</a>
-        <a href="gestion-usuarios.html" class="nav-item active"><i class="fas fa-users-cog"></i> Usuarios</a>
+        <a href="gestion-usuarios.html" class="nav-item active"><i class="fas fa-users"></i> Usuarios</a>
+        <a href="recursos.html" class="nav-item"><i class="fas fa-folder-open"></i> Recursos</a>
     </div>
     
     <div class="nav-section">
-        <div class="nav-title">Sistema</div>
+        <div class="nav-title">CONFIGURACIÓN</div>
         <a href="ajustes.html" class="nav-item"><i class="fas fa-sliders-h"></i> Ajustes Web</a>
     </div>
 
@@ -80,15 +99,18 @@
   </aside>
 
   <main class="main">
-    <h1 style="font-family:'Outfit'; margin-bottom:20px;">Directorio de Usuarios</h1>
+    <div style="margin-bottom:30px;">
+        <h1 style="font-family:'Outfit'; margin:0 0 5px 0;">Directorio de Usuarios</h1>
+        <p style="color:#64748B;">Administra, busca y modera las cuentas registradas.</p>
+    </div>
 
     <div class="toolbar">
         <div class="search-box">
             <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="Buscar por nombre o correo..." onkeyup="filterUsers()">
+            <input type="text" id="searchInput" placeholder="Buscar por nombre, correo o rol..." onkeyup="filterUsers()">
         </div>
         <div style="font-size:0.9rem; color:#64748B;">
-            Total: <strong id="totalCount">0</strong>
+            Total Registros: <strong id="totalCount" style="color:var(--text)">0</strong>
         </div>
     </div>
 
@@ -99,12 +121,12 @@
                     <th>Usuario</th>
                     <th>Rol</th>
                     <th>Estado</th>
-                    <th>Registro</th>
+                    <th>Fecha Registro</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody id="usersTableBody">
-                <tr><td colspan="5" style="text-align:center; padding:30px;">Cargando usuarios...</td></tr>
+                <tr><td colspan="5" style="text-align:center; padding:40px; color:#94A3B8;"><i class="fas fa-spinner fa-spin"></i> Cargando base de datos...</td></tr>
             </tbody>
         </table>
     </div>
@@ -120,7 +142,6 @@
         if (!window.sb) return setTimeout(checkAdmin, 100);
         const { data: { session } } = await window.sb.auth.getSession();
         if (!session) window.location.href = '../login.html';
-        
         const { data: profile } = await window.sb.from('users_profile').select('rol').eq('id', session.user.id).single();
         if (profile.rol !== 'admin') window.location.href = '../app/dashboard.html';
         else loadUsers();
@@ -129,11 +150,6 @@
 
     // 2. Cargar Usuarios
     async function loadUsers() {
-        // Obtenemos email haciendo join o (en este caso simple) desde users_profile si guardaste el email,
-        // o asumimos que users_profile tiene los datos principales.
-        // Nota: Por privacidad, Supabase no expone auth.users directamente a JS cliente fácilmente sin función Edge.
-        // Asumiremos que 'users_profile' es  nuestra fuente de verdad.
-        
         const { data, error } = await window.sb
             .from('users_profile')
             .select('*')
@@ -150,7 +166,7 @@
         const tbody = document.getElementById('usersTableBody');
         
         if (users.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px;">No se encontraron usuarios.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:40px; color:#94A3B8;">No se encontraron usuarios.</td></tr>`;
             return;
         }
 
@@ -160,8 +176,8 @@
                     <div class="user-cell">
                         <div class="avatar">${(u.nombre || 'U').charAt(0)}</div>
                         <div>
-                            <div style="font-weight:600;">${u.nombre || 'Sin Nombre'}</div>
-                            <div style="font-size:0.8rem; color:#64748B;">ID: ${u.id.slice(0,8)}...</div>
+                            <div style="font-weight:600; font-size:0.95rem;">${u.nombre || 'Sin Nombre'}</div>
+                            <div style="font-size:0.8rem; color:#94A3B8;">${u.email || 'ID: ' + u.id.slice(0,6)}</div>
                         </div>
                     </div>
                 </td>
@@ -176,34 +192,35 @@
                 <td>
                     ${u.rol !== 'admin' ? `
                         <button class="btn-action ${u.esta_suspendido ? '' : 'btn-ban'}" onclick="toggleBan('${u.id}', ${u.esta_suspendido})">
-                            ${u.esta_suspendido ? '✅ Reactivar' : '🚫 Suspender'}
+                            ${u.esta_suspendido ? '<i class="fas fa-undo"></i> Reactivar' : '<i class="fas fa-ban"></i> Suspender'}
                         </button>
-                    ` : '<span style="color:#9CA3AF; font-size:0.8rem;">Protegido</span>'}
+                    ` : '<span style="color:#CBD5E1; font-size:0.8rem; font-style:italic;">Protegido</span>'}
                 </td>
             </tr>
         `).join('');
     }
 
-    // 3. Lógica de Suspensión
+    // 3. Suspender/Reactivar
     async function toggleBan(uid, isBanned) {
         const action = isBanned ? "reactivar" : "SUSPENDER";
-        if(!confirm(`¿Estás seguro de que deseas ${action} a este usuario?`)) return;
+        if(!confirm(`¿Confirmas que deseas ${action} a este usuario?`)) return;
 
         const { error } = await window.sb
             .from('users_profile')
             .update({ esta_suspendido: !isBanned })
             .eq('id', uid);
 
-        if(error) alert("Error al actualizar: " + error.message);
+        if(error) alert("Error: " + error.message);
         else loadUsers();
     }
 
-    // 4. Filtro de Búsqueda
+    // 4. Búsqueda
     function filterUsers() {
         const term = document.getElementById('searchInput').value.toLowerCase();
         const filtered = allUsers.filter(u => 
             (u.nombre && u.nombre.toLowerCase().includes(term)) || 
-            (u.rol && u.rol.toLowerCase().includes(term))
+            (u.rol && u.rol.toLowerCase().includes(term)) ||
+            (u.email && u.email.toLowerCase().includes(term))
         );
         renderTable(filtered);
     }
