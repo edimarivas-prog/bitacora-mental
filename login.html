@@ -129,24 +129,36 @@
       }
     }
 
-    // --- FUNCIÓN INTELIGENTE DE REDIRECCIÓN ---
+    // --- FUNCIÓN CEREBRO: Decide a dónde va el usuario ---
     async function checkRoleAndRedirect(userId) {
-        // 1. Consultamos el rol en la base de datos
-        const { data: profile } = await window.sb
-            .from('users_profile')
-            .select('rol')
-            .eq('id', userId)
-            .single();
+        try {
+            // 1. Preguntamos a la base de datos: "¿Qué rol tiene este ID?"
+            const { data: profile, error } = await window.sb
+                .from('users_profile')
+                .select('rol')
+                .eq('id', userId)
+                .single();
 
-        // 2. Guardamos la señal de bienvenida
-        sessionStorage.setItem('show_welcome_back', 'true');
+            if (error) throw error;
 
-        // 3. Decidimos a dónde ir
-        if (profile && profile.rol === 'admin') {
-            console.log("Usuario es Admin. Redirigiendo al panel...");
-            window.location.href = 'app/admin.html';
-        } else {
-            console.log("Usuario es Paciente. Redirigiendo al dashboard...");
+            // 2. Activamos mensaje de bienvenida
+            sessionStorage.setItem('show_welcome_back', 'true');
+
+            // 3. Redirección según el rol encontrado
+            if (profile && profile.rol === 'admin') {
+                console.log("👑 Usuario Admin detectado");
+                // Asegúrate de tener creado el archivo 'app/admin.html'
+                window.location.href = 'app/admin.html';
+            } else if (profile && profile.rol === 'psicologo') {
+                console.log("🧠 Usuario Psicólogo detectado");
+                window.location.href = 'app/dashboard-psico.html';
+            } else {
+                console.log("👤 Usuario Paciente detectado");
+                window.location.href = 'app/dashboard.html';
+            }
+        } catch (err) {
+            console.error("Error verificando rol:", err);
+            // Si falla la verificación, por seguridad lo mandamos al dashboard normal
             window.location.href = 'app/dashboard.html';
         }
     }
@@ -158,18 +170,18 @@
       const password = document.getElementById('password').value;
       const btn = document.getElementById('loginBtn');
       
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
       btn.disabled = true;
 
       try {
         if (!window.sb) throw new Error("Error de conexión. Recarga la página.");
         
-        // Autenticar
+        // 1. Autenticación Básica (Email/Pass)
         const { data, error } = await window.sb.auth.signInWithPassword({ email, password });
         
         if (error) throw error;
         
-        // ¡AQUÍ ESTÁ LA CLAVE! Llamamos a la función que verifica el rol
+        // 2. Si pasa, verificamos el ROL antes de redirigir
         await checkRoleAndRedirect(data.user.id);
 
       } catch (err) {
@@ -184,8 +196,9 @@
       try {
         if (!window.sb) throw new Error("Error de conexión.");
         
-        // En Google no podemos chequear el rol aquí porque redirige inmediatamente.
-        // La verificación de admin para Google se hace en el 'dashboard.html' (el "rebote").
+        // Nota: Google redirige inmediatamente, por lo que la verificación de rol 
+        // para Google se debe hacer en el archivo de destino (dashboard.html) 
+        // redirigiendo de vuelta si es admin.
         sessionStorage.setItem('show_welcome_back', 'true');
 
         await window.sb.auth.signInWithOAuth({
