@@ -23,14 +23,18 @@
       --radius: 16px;
       --shadow: 0 4px 20px rgba(0,0,0,0.06);
       --promo-bg: #F59E0B;
+      
+      /* Fuentes dinámicas */
+      --font-titles: 'Outfit', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--background); color: var(--dark); line-height: 1.6; }
-    h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; font-weight: 600; }
+    body { font-family: var(--font-body); background: var(--background); color: var(--dark); line-height: 1.6; }
+    h1, h2, h3, h4 { font-family: var(--font-titles); font-weight: 600; }
     html { scroll-behavior: smooth; }
 
-    /* BANNER PROMO (Oculto por defecto, se activa desde Admin) */
+    /* BANNER PROMO */
     #promoBanner {
         background: var(--promo-bg);
         color: var(--dark);
@@ -43,7 +47,7 @@
 
     /* Navbar */
     .navbar { position: sticky; top: 0; background: rgba(249, 251, 250, 0.95); backdrop-filter: blur(10px); padding: 15px 8%; display: flex; justify-content: space-between; align-items: center; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
-    .logo { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--primary); display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo { font-family: var(--font-titles); font-weight: 700; font-size: 1.4rem; color: var(--primary); display: flex; align-items: center; gap: 10px; text-decoration: none; }
     .nav-links { display: flex; gap: 25px; align-items: center; }
     .nav-links a { text-decoration: none; color: var(--dark); font-weight: 500; transition: color 0.3s; }
     .nav-links a:hover { color: var(--primary); }
@@ -137,7 +141,7 @@
   <nav class="navbar">
     <a href="/" class="logo"><i class="fas fa-brain"></i> <span id="brandName" data-key="brand_nombre">Bitácora Mental</span></a>
     <div class="nav-links">
-      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#como-funciona" data-key="nav_link_1">Cómo funciona</a>
       <a href="#precios">Precios</a>
       <a href="#testimonios">Testimonios</a>
       <a href="login.html" class="nav-login" data-key="nav_btn_login">Iniciar sesión</a>
@@ -147,13 +151,11 @@
 
   <a href="https://wa.me/51922483155" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
 
-  <section class="hero">
+  <section class="hero" data-section="h">
     <div class="hero-content">
-      <span class="hero-badge" data-key="hero_badge"><i class="fas fa-heart"></i> Más de 500 personas ya dieron el primer paso</span>
-      
-      <h1 data-key="hero_titulo">Tu salud mental,<br>a un click de distancia</h1>
-      <p data-key="hero_subtitulo">Conecta con especialistas verificados, realiza tu seguimiento clínico y accede a recursos personalizados. Todo en un solo lugar.</p>
-      
+      <span class="hero-badge" data-key="h_badge"><i class="fas fa-heart"></i> Más de 500 personas ya dieron el primer paso</span>
+      <h1 data-key="h_titulo">Tu salud mental,<br>a un click de distancia</h1>
+      <p data-key="h_subtitulo">Conecta con especialistas verificados, realiza tu seguimiento clínico y accede a recursos personalizados. Todo en un solo lugar.</p>
       <div class="hero-actions">
         <a href="app/entrevista.html" class="btn-primary">
             <i class="fas fa-comments"></i> <span data-key="hero_btn">Iniciar entrevista de bienvenida</span>
@@ -162,7 +164,7 @@
     </div>
   </section>
 
-  <section class="como-funciona" id="como-funciona">
+  <section class="como-funciona" id="como-funciona" data-section="steps">
     <div class="section-header">
       <h2 data-key="steps_titulo">Así de simple funciona</h2>
       <p data-key="steps_sub">En 3 pasos estarás conectado con el apoyo que necesitas</p>
@@ -186,9 +188,9 @@
     </div>
   </section>
 
-  <section class="precios" id="precios">
+  <section class="precios" id="precios" data-section="p">
     <div class="section-header">
-      <h2 data-key="price_titulo">Niveles de apoyo para cada necesidad</h2>
+      <h2 data-key="p_titulo">Niveles de apoyo para cada necesidad</h2>
       <p>Elige el plan que mejor se adapte a ti. Sin compromisos.</p>
     </div>
     <div class="planes-grid">
@@ -201,136 +203,14 @@
           <li><i class="fas fa-check"></i> Diario emocional</li>
           <li><i class="fas fa-check"></i> Monitoreo de síntomas básico</li>
         </ul>
-        <a href="registro.html" class="plan-btn" data-key="p1_btn">Comenzar gratis</a>
+        <a href="registro.html" class="plan-btn">Comenzar gratis</a>
       </div>
-
-      <div class="plan-card">
-        <div class="plan-badge">Popular</div>
-        <h3 data-key="p2_nombre">Kit Emocional</h3>
-        <div class="plan-precio"><span class="precio">S/ <span data-key="p2_precio">19</span></span><span class="periodo">pago único</span></div>
-        <ul class="plan-features">
-          <li><i class="fas fa-check"></i> Audios de relajación</li>
-          <li><i class="fas fa-check"></i> 5 workbooks especializados</li>
-          <li><i class="fas fa-check"></i> Guía de técnicas de respiración</li>
-        </ul>
-        <a href="registro.html" class="plan-btn" data-key="p2_btn">Obtener kit</a>
       </div>
-
-      <div class="plan-card plan-destacado">
-        <div class="plan-badge badge-recomendado">Recomendado</div>
-        <h3 data-key="p3_nombre">Acompañamiento</h3>
-        <div class="plan-precio"><span class="precio">S/ <span data-key="p3_precio">165</span></span><span class="periodo">/ mes</span></div>
-        <ul class="plan-features">
-          <li><i class="fas fa-check"></i> 2 sesiones mensuales (50 min)</li>
-          <li><i class="fas fa-check"></i> Asesoría con psicólogos en formación</li>
-          <li><i class="fas fa-check"></i> Seguimiento personalizado</li>
-        </ul>
-        <a href="registro.html" class="plan-btn btn-destacado" data-key="p3_btn">Empezar ahora</a>
-      </div>
-
-      <div class="plan-card">
-        <div class="plan-badge">Premium</div>
-        <h3 data-key="p4_nombre">Atención prioritaria</h3>
-        <div class="plan-precio"><span class="precio">S/ <span data-key="p4_precio">300</span></span><span class="periodo">/ mes</span></div>
-        <ul class="plan-features">
-          <li><i class="fas fa-check"></i> 4 sesiones mensuales</li>
-          <li><i class="fas fa-check"></i> Psicólogos colegiados senior</li>
-          <li><i class="fas fa-check"></i> Prioridad en agendamiento</li>
-        </ul>
-        <a href="registro.html" class="plan-btn" data-key="p4_btn">Seleccionar</a>
-      </div>
-    </div>
-    
-    <div class="precios-nota">
-      <p data-key="price_nota"><strong>Nota:</strong> Los planes de asesoría incluyen sesiones con profesionales en formación supervisados. Para psicoterapia clínica, trabajamos con psicólogos colegiados experimentados.</p>
-    </div>
   </section>
 
-  <section class="testimonios" id="testimonios">
-    <div class="section-header">
-      <h2 data-key="testi_titulo">Historias que nos inspiran</h2>
-      <p>Personas reales que transformaron su bienestar con Bitácora Mental</p>
-    </div>
-    <div class="testimonios-grid">
-      <div class="testimonial">
-        <p class="testimonial-text">"<span data-key="testi_1_txt">La entrevista de bienvenida me ayudó a enfocar lo que realmente necesitaba trabajar. Ahora estoy en terapia y me siento mucho más tranquila.</span>"</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">MC</div>
-          <div><strong data-key="testi_1_autor">María C.</strong><br><small>Plan Intermedio</small></div>
-        </div>
-      </div>
-      <div class="testimonial">
-        <p class="testimonial-text">"<span data-key="testi_2_txt">Poder llevar un registro de mi semana y compartirlo con mi psicólogo ha hecho que mis sesiones sean mucho más productivas.</span>"</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">JP</div>
-          <div><strong data-key="testi_2_autor">Jorge P.</strong><br><small>Plan Premium</small></div>
-        </div>
-      </div>
-      <div class="testimonial">
-        <p class="testimonial-text">"<span data-key="testi_3_txt">Me encanta tener mi diario integrado y ver mi evolución sin etiquetas ni diagnósticos fríos. Muy humano.</span>"</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">AR</div>
-          <div><strong data-key="testi_3_autor">Ana R.</strong><br><small>Plan Básico</small></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="cta-final">
-    <h2 data-key="cta_final_titulo">Da el primer paso hoy</h2>
-    <p>Cuidar tu salud mental nunca fue tan accesible</p>
-    <a href="app/entrevista.html" class="btn-primary" data-key="cta_final_btn">Iniciar entrevista</a>
-  </section>
-
-  <footer class="footer">
-    <div class="footer-content">
-      <div class="footer-brand">
-        <h3><i class="fas fa-brain"></i> <span data-key="brand_nombre">Bitácora Mental</span></h3>
-        <p data-key="footer_desc">Plataforma de salud mental que conecta personas con especialistas verificados. Tu bienestar, nuestro compromiso.</p>
-      </div>
-      <div class="footer-links">
-        <h4>Plataforma</h4>
-        <ul>
-          <li><a href="#precios">Servicios</a></li>
-          <li><a href="https://wa.me/51922483155?text=Empresas">Empresas</a></li>
-          <li><a href="https://wa.me/51922483155?text=Unirme">Únete al equipo</a></li>
-          <li><a href="login.html">Iniciar sesión</a></li>
-        </ul>
-      </div>
-      <div class="footer-links">
-        <h4>Recursos</h4>
-        <ul>
-          <li><a href="#testimonios">Testimonios</a></li>
-          <li><a href="https://wa.me/51922483155">Centro de ayuda</a></li>
-          <li><a href="app/entrevista.html">Entrevista inicial</a></li>
-        </ul>
-      </div>
-      <div class="footer-links">
-        <h4>Legal</h4>
-        <ul>
-          <li><a href="#">Términos y condiciones</a></li>
-          <li><a href="#">Política de privacidad</a></li>
-          <li><a href="#">Aviso de cookies</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p><strong>Nota:</strong> Los servicios de asesoría son proporcionados por profesionales en formación.</p>
-      <p data-key="footer_copy">© 2026 Bitácora Mental. Todos los derechos reservados.</p>
-    </div>
-  </footer>
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
   <script>
-    // 1. Smooth Scroll Original
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) target.scrollIntoView({ behavior: 'smooth' });
-      });
-    });
-
-    // 2. MOTOR DE PERSONALIZACIÓN TOTAL
     document.addEventListener('DOMContentLoaded', async () => {
         if (!window.sb) return;
 
@@ -341,28 +221,31 @@
             const val = c.valor;
             const meta = c.metadata || {};
 
-            // A. Variables Globales (Colores y Fuentes)
-            if(c.clave === 'style_primary') document.documentElement.style.setProperty('--primary', val);
-            if(c.clave === 'style_bg') document.documentElement.style.setProperty('--background', val);
-            if(c.clave === 'g_font_titles') document.documentElement.style.setProperty('--font-titles', val);
+            // 1. Estilos Globales
+            if(c.clave === 'g_primary_color') document.documentElement.style.setProperty('--primary', val);
+            if(c.clave === 'g_bg_color') document.documentElement.style.setProperty('--background', val);
+            if(c.clave === 'g_font_titles') document.documentElement.style.setProperty('--font-titles', val + ', sans-serif');
+            if(c.clave === 'g_font_body') document.documentElement.style.setProperty('--font-body', val + ', sans-serif');
 
-            // B. Visibilidad de Secciones (Control Shopify)
+            // 2. Visibilidad de Secciones
             if(c.clave.endsWith('_visibilidad')) {
-                const section = document.querySelector(`[data-section="${c.clave.split('_')[0]}"]`);
+                const sectionName = c.clave.replace('_visibilidad', '');
+                const section = document.querySelector(`[data-section="${sectionName}"]`);
                 if(section) section.style.display = (val === 'true') ? 'block' : 'none';
             }
 
-            // C. Inyección de Texto y Estilo Individual (Tamaño, Negrita, Color)
+            // 3. Contenido y Estilos Individuales
             document.querySelectorAll(`[data-key="${c.clave}"]`).forEach(el => {
-                // Aplicar Contenido
+                // Actualizar Texto (si no tiene iconos internos que proteger)
                 if(!el.querySelector('i')) {
                     el.innerHTML = val.replace(/\n/g, '<br>');
                 } else {
-                    const txtNode = Array.from(el.childNodes).find(n => n.nodeType === 3);
-                    if(txtNode) txtNode.textContent = val;
+                    // Si tiene icono, buscamos el texto y lo cambiamos
+                    const textNode = Array.from(el.childNodes).find(n => n.nodeType === 3 && n.textContent.trim() !== "");
+                    if(textNode) textNode.textContent = val;
                 }
 
-                // APLICAR "SHOPIFY METADATA"
+                // APLICAR METADATOS (Shopify Style)
                 if(meta.size) el.style.fontSize = meta.size + "rem";
                 if(meta.weight) el.style.fontWeight = meta.weight;
                 if(meta.color) el.style.color = meta.color;
