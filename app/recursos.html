@@ -7,42 +7,56 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Estilos Maestros (Copiar mismos de los anteriores) */
+    /* Estilos Maestros (Dashboard Paciente) */
     :root { --primary: #4F6F52; --primary-light: #E8F5E9; --accent: #F59E0B; --bg: #F9FBFA; --white: #FFFFFF; --text: #1F2933; --text-soft: #64748B; --border: #E6EFE8; --radius: 20px; }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
+    
+    /* Sidebar */
     .sidebar { width: 260px; background: var(--white); padding: 24px; border-right: 1px solid var(--border); position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s; }
     .logo { font-family: 'Outfit'; font-weight: 700; color: var(--primary); font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 8px; margin-bottom: 30px; }
+    
     .nav-section { margin-bottom: 20px; }
     .nav-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-soft); letter-spacing: 1px; margin-bottom: 10px; padding-left: 10px; font-weight: 700; }
     .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-soft); text-decoration: none; border-radius: 12px; font-weight: 500; transition: 0.2s; }
     .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
     .nav-item.active { font-weight: 600; }
-    .main { flex: 1; padding: 30px; margin-left: 260px; max-width: 100%; }
+    
+    /* Main Content */
+    .main { flex: 1; padding: 30px 40px; margin-left: 260px; max-width: 100%; }
     .mobile-nav { display: none; padding: 15px; background: white; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
     .menu-toggle { font-size: 1.5rem; background: none; border: none; color: var(--text); }
     @media (max-width: 900px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main { margin-left: 0; padding: 20px; } .mobile-nav { display: flex; } }
 
     /* Estilos Recursos */
     .search-box { position: relative; margin-bottom: 24px; }
-    .search-input { width: 100%; padding: 16px 16px 16px 50px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 1rem; outline: none; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+    .search-input { width: 100%; padding: 16px 16px 16px 50px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 1rem; outline: none; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: 0.3s; }
+    .search-input:focus { border-color: var(--primary); box-shadow: 0 4px 20px rgba(79, 111, 82, 0.1); }
     .search-icon { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-soft); }
     
-    .filters { display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 5px; }
-    .filter-pill { padding: 8px 16px; background: white; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; white-space: nowrap; transition: 0.2s; font-size: 0.9rem; }
+    .filters { display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 5px; -webkit-overflow-scrolling: touch; }
+    .filter-pill { padding: 8px 16px; background: white; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; white-space: nowrap; transition: 0.2s; font-size: 0.9rem; color: var(--text-soft); }
+    .filter-pill:hover { border-color: var(--primary); color: var(--primary); }
     .filter-pill.active { background: var(--primary); color: white; border-color: var(--primary); }
     
     .res-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
-    .res-card { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.04); transition: transform 0.2s; cursor: pointer; border: 1px solid transparent; }
+    
+    .res-card { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.04); transition: transform 0.2s; cursor: pointer; border: 1px solid transparent; display: flex; flex-direction: column; height: 100%; }
     .res-card:hover { transform: translateY(-5px); border-color: var(--primary-light); }
+    
     .res-thumb { height: 160px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 3rem; position: relative; }
-    .res-type-badge { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.6); color: white; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; text-transform: uppercase; font-weight: 600; }
-    .res-content { padding: 20px; }
-    .res-title { font-family: 'Outfit'; font-weight: 600; font-size: 1.1rem; margin: 0 0 8px 0; }
-    .res-desc { color: var(--text-soft); font-size: 0.9rem; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .res-type-badge { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.9); color: var(--text); padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; text-transform: uppercase; font-weight: 700; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    
+    .res-content { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+    .res-cat { font-size: 0.75rem; text-transform: uppercase; color: var(--accent); font-weight: 700; letter-spacing: 0.5px; margin-bottom: 5px; }
+    .res-title { font-family: 'Outfit'; font-weight: 600; font-size: 1.1rem; margin: 0 0 8px 0; line-height: 1.4; }
+    .res-desc { color: var(--text-soft); font-size: 0.9rem; margin: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    
+    .loading-state { grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-soft); }
   </style>
 </head>
 <body>
+
   <div class="mobile-nav">
     <a href="#" class="logo" style="margin:0"><i class="fas fa-brain"></i> Bitácora</a>
     <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
@@ -50,18 +64,21 @@
 
   <aside class="sidebar" id="sidebar">
     <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
+    
     <div class="nav-section">
       <div class="nav-title">Principal</div>
       <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
       <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
       <a href="especialistas.html" class="nav-item"><i class="fas fa-user-md"></i> Especialistas</a>
     </div>
+
     <div class="nav-section">
       <div class="nav-title">Tu Espacio</div>
       <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> Diario</a>
       <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> Progreso</a>
       <a href="recursos.html" class="nav-item active"><i class="fas fa-box-open"></i> Recursos</a>
     </div>
+
     <div class="nav-section">
       <div class="nav-title">Cuenta</div>
       <a href="plan.html" class="nav-item"><i class="fas fa-crown"></i> Mi Plan</a>
@@ -73,42 +90,25 @@
 
   <main class="main">
     <h1 style="font-family:'Outfit'; margin-bottom:10px;">Biblioteca de Bienestar</h1>
-    <p style="color:var(--text-soft); margin-bottom:30px;">Herramientas curadas para tu crecimiento personal.</p>
+    <p style="color:var(--text-soft); margin-bottom:30px;">Herramientas seleccionadas para tu crecimiento personal.</p>
 
     <div class="search-box">
       <i class="fas fa-search search-icon"></i>
-      <input type="text" class="search-input" placeholder="Buscar audios, guías o lecturas...">
+      <input type="text" id="searchInput" class="search-input" placeholder="Buscar audios, guías o lecturas...">
     </div>
 
-    <div class="filters">
-      <div class="filter-pill active">Todos</div>
-      <div class="filter-pill">Ansiedad</div>
-      <div class="filter-pill">Sueño</div>
-      <div class="filter-pill">Autoestima</div>
-      <div class="filter-pill">Mindfulness</div>
+    <div class="filters" id="categoryFilters">
+      <div class="filter-pill active" onclick="filterByCat('todos', this)">Todos</div>
+      <div class="filter-pill" onclick="filterByCat('ansiedad', this)">Ansiedad</div>
+      <div class="filter-pill" onclick="filterByCat('sueño', this)">Sueño</div>
+      <div class="filter-pill" onclick="filterByCat('meditacion', this)">Meditación</div>
+      <div class="filter-pill" onclick="filterByCat('lectura', this)">Lectura</div>
     </div>
 
-    <div class="res-grid">
-      <div class="res-card">
-        <div class="res-thumb">
-          <i class="fas fa-headphones"></i>
-          <div class="res-type-badge">Audio</div>
-        </div>
-        <div class="res-content">
-          <h3 class="res-title">Respiración 4-7-8</h3>
-          <p class="res-desc">Técnica rápida para calmar el sistema nervioso en momentos de estrés agudo.</p>
-        </div>
-      </div>
-
-      <div class="res-card">
-        <div class="res-thumb" style="background:#E0F2FE; color:#0284C7">
-          <i class="fas fa-book-open"></i>
-          <div class="res-type-badge">Guía</div>
-        </div>
-        <div class="res-content">
-          <h3 class="res-title">Entendiendo mis Emociones</h3>
-          <p class="res-desc">Guía PDF para identificar y etiquetar lo que sientes correctamente.</p>
-        </div>
+    <div class="res-grid" id="resourcesGrid">
+      <div class="loading-state">
+        <i class="fas fa-spinner fa-spin fa-2x"></i>
+        <p style="margin-top:10px;">Cargando biblioteca...</p>
       </div>
     </div>
   </main>
@@ -116,9 +116,99 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
+    let allResources = [];
+
+    // 1. Auth Guard
+    async function checkAuth() {
+        if (!window.sb) { setTimeout(checkAuth, 100); return; }
+        const { data: { session } } = await window.sb.auth.getSession();
+        if (!session) window.location.replace('../login.html');
+        else loadLibrary();
+    }
+    checkAuth();
+
+    // 2. Cargar Recursos desde Supabase
+    async function loadLibrary() {
+        const { data, error } = await window.sb
+            .from('recursos')
+            .select('*')
+            .order('fecha_publicacion', { ascending: false });
+
+        if (error) {
+            document.getElementById('resourcesGrid').innerHTML = '<p>Error cargando recursos.</p>';
+            return;
+        }
+
+        allResources = data;
+        renderResources(allResources);
+    }
+
+    // 3. Renderizar Tarjetas
+    function renderResources(list) {
+        const grid = document.getElementById('resourcesGrid');
+        
+        if (list.length === 0) {
+            grid.innerHTML = '<div class="loading-state"><i class="far fa-folder-open fa-2x"></i><p>No encontramos recursos con ese criterio.</p></div>';
+            return;
+        }
+
+        grid.innerHTML = list.map(r => {
+            // Determinar Icono y Color según tipo
+            let icon = 'fa-file-alt';
+            let colorClass = '#E0F2FE'; // Azul default
+            let iconColor = '#0369A1';
+
+            if (r.tipo === 'audio') { icon = 'fa-headphones'; colorClass = '#FEF3C7'; iconColor = '#D97706'; } // Amarillo
+            else if (r.tipo === 'video') { icon = 'fa-play-circle'; colorClass = '#FCE7F3'; iconColor = '#DB2777'; } // Rosa
+            else if (r.tipo === 'pdf') { icon = 'fa-file-pdf'; colorClass = '#FFEDD5'; iconColor = '#C2410C'; } // Naranja
+
+            return `
+            <div class="res-card" onclick="window.open('${r.url}', '_blank')">
+                <div class="res-thumb" style="background:${colorClass}; color:${iconColor}">
+                    <i class="fas ${icon}"></i>
+                    <div class="res-type-badge">${r.tipo}</div>
+                </div>
+                <div class="res-content">
+                    <div class="res-cat">${r.categoria || 'General'}</div>
+                    <h3 class="res-title">${r.titulo}</h3>
+                    <p class="res-desc">${r.descripcion || 'Sin descripción disponible.'}</p>
+                </div>
+            </div>
+            `;
+        }).join('');
+    }
+
+    // 4. Lógica de Filtros
+    function filterByCat(category, element) {
+        // Estilos visuales
+        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+        element.classList.add('active');
+
+        // Filtrado de datos
+        if (category === 'todos') {
+            renderResources(allResources);
+        } else {
+            // Filtro flexible (busca que la categoría incluya el texto)
+            const filtered = allResources.filter(r => 
+                (r.categoria && r.categoria.toLowerCase().includes(category)) ||
+                (r.tipo && r.tipo.toLowerCase() === category)
+            );
+            renderResources(filtered);
+        }
+    }
+
+    // 5. Búsqueda en tiempo real
+    document.getElementById('searchInput').addEventListener('keyup', (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = allResources.filter(r => 
+            r.titulo.toLowerCase().includes(term) || 
+            (r.descripcion && r.descripcion.toLowerCase().includes(term))
+        );
+        renderResources(filtered);
+    });
+
     function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
     async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
-    // Aquí iría la lógica de carga de recursos desde Supabase
   </script>
 </body>
 </html>
