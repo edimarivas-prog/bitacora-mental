@@ -132,7 +132,7 @@
         // Obtenemos email haciendo join o (en este caso simple) desde users_profile si guardaste el email,
         // o asumimos que users_profile tiene los datos principales.
         // Nota: Por privacidad, Supabase no expone auth.users directamente a JS cliente fácilmente sin función Edge.
-        // Asumiremos que 'users_profile' es nuestra fuente de verdad.
+        // Asumiremos que 'users_profile' es  nuestra fuente de verdad.
         
         const { data, error } = await window.sb
             .from('users_profile')
