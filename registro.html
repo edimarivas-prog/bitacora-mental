@@ -140,6 +140,7 @@
             await window.sb.from('users_profile').update(JSON.parse(temp)).eq('id', data.user.id);
             sessionStorage.removeItem('temp_entrevista');
           }
+          sessionStorage.setItem('show_onboarding', 'true');
           window.location.href = 'app/dashboard.html';
         } else {
           alert("Revisa tu correo para confirmar.");
