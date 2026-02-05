@@ -1,0 +1,25 @@
+<main class="main">
+  <h1>Nuestros Especialistas</h1>
+  <div id="grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:20px; margin-top:30px;">
+    </div>
+</main>
+
+<script>
+  // ... (Configuración Supabase igual) ...
+  async function loadDocs() {
+    const { data } = await window.sb.from('psicologos').select('*').eq('estado', 'activo');
+    const grid = document.getElementById('grid');
+    grid.innerHTML = data.map(d => `
+        <div style="background:white; padding:20px; border-radius:20px; box-shadow:0 4px 15px rgba(0,0,0,0.05); text-align:center;">
+            <div style="width:80px; height:80px; background:#E8F5E9; border-radius:50%; margin:0 auto 15px; display:flex; align-items:center; justify-content:center; font-size:2rem; color:#4F6F52; font-weight:700;">
+                ${d.nombre_completo.charAt(0)}
+            </div>
+            <h3 style="margin:0 0 5px 0;">${d.nombre_completo}</h3>
+            <p style="color:#64748B; font-size:0.9rem; margin-bottom:15px;">${d.especialidades?.join(', ') || 'Psicología General'}</p>
+            <p style="font-weight:700; color:#4F6F52;">S/ ${d.tarifa_sesion}</p>
+            <a href="agendar.html" class="btn" style="background:#4F6F52; color:white; padding:10px 20px; border-radius:10px; text-decoration:none; display:block; margin-top:10px;">Agendar</a>
+        </div>
+    `).join('');
+  }
+  // Llamar loadDocs() en init
+</script>
