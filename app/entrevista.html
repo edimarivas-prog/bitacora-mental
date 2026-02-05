@@ -257,71 +257,39 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
   <script>
-    // 1. PROTECCIÓN DE RUTA (Auth Check) CORREGIDA
-    async function checkAuth() {
-      const { data: { session } } = await window.supabase.auth.getSession();
-      if (!session) {
-        // Guardar intención
-        sessionStorage.setItem('redirectAfterAuth', 'entrevista.html');
-        
-        // CORRECCIÓN: Usar '../' para ir a raíz y .replace para evitar bucle
-        window.location.replace('../registro.html'); 
-      }
-    }
-    checkAuth();
-
-    // 2. LÓGICA DE PASOS
+    // 1. LÓGICA DE PASOS (Sin cambios, solo navegación visual)
     function nextStep(step) {
-      // Validar paso anterior
       const currentStepId = 'step' + (step - 1);
       const inputs = document.getElementById(currentStepId).querySelectorAll('input, select, textarea');
       let valid = true;
-      
       inputs.forEach(input => {
-        if (!input.checkValidity()) {
-          input.reportValidity();
-          valid = false;
-        }
+        if (!input.checkValidity()) { input.reportValidity(); valid = false; }
       });
-
-      if (valid) {
-        updateStep(step);
-      }
+      if (valid) updateStep(step);
     }
 
-    function prevStep(step) {
-      updateStep(step);
-    }
+    function prevStep(step) { updateStep(step); }
 
     function updateStep(step) {
-      // Ocultar todos, mostrar actual
       document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
       document.getElementById('step' + step).classList.add('active');
-      
-      // Actualizar Barra
       document.getElementById('stepCount').textContent = step;
       document.getElementById('progressBar').style.width = (step / 3 * 100) + '%';
     }
 
-    // 3. GUARDADO DE DATOS (Con manejo de error ID null)
-    document.getElementById('intakeForm').addEventListener('submit', async (e) => {
+    // 2. GUARDADO TEMPORAL Y REDIRECCIÓN AL REGISTRO
+    document.getElementById('intakeForm').addEventListener('submit', (e) => {
       e.preventDefault();
       
       const btn = e.target.querySelector('button[type="submit"]');
-      const originalText = btn.innerHTML;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
       btn.disabled = true;
 
-      try {
-        // Verificar usuario JUSTO ANTES de guardar
-        const { data: { user }, error: authError } = await window.supabase.auth.getUser();
-        
-        if (authError || !user) {
-          throw new Error("No se encontró sesión activa. Por favor inicia sesión de nuevo.");
-        }
-
-        const updates = {
+      // Recopilar datos
+      const datosEntrevista = {
           fecha_nacimiento: document.getElementById('fechaNacimiento').value,
           sexo: document.getElementById('sexo').value,
           motivo_consulta: document.getElementById('motivo').value,
@@ -331,30 +299,16 @@
               energia: document.getElementById('energia').value,
               fecha_entrevista: new Date().toISOString()
           }
-        };
+      };
 
-        // Update en Supabase
-        const { error: dbError } = await window.supabase
-          .from('users_profile')
-          .update(updates)
-          .eq('id', user.id);
-        
-        if (dbError) throw dbError;
+      // GUARDAR EN MEMORIA DEL NAVEGADOR (SessionStorage)
+      sessionStorage.setItem('temp_entrevista', JSON.stringify(datosEntrevista));
 
-        // Éxito
-        window.location.href = 'dashboard.html';
-
-      } catch (err) {
-        console.error('Error:', err);
-        alert('Hubo un problema: ' + err.message);
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-        
-        if (err.message.includes("sesión")) {
-            // CORRECCIÓN: Ir a login en la raíz
-            window.location.href = '../login.html';
-        }
-      }
+      // REDIRIGIR AL REGISTRO PARA GUARDAR DEFINITIVAMENTE
+      // Usamos setTimeout para dar sensación de procesamiento
+      setTimeout(() => {
+          window.location.href = '../registro.html'; 
+      }, 800);
     });
   </script>
 </body>
