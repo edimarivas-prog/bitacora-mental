@@ -9,101 +9,23 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    :root {
-      --primary: #4F6F52;
-      --primary-light: #6B8A6E;
-      --background: #F9FBFA;
-      --dark: #1F2933;
-      --border: #E6EFE8;
-      --danger: #EF4444;
-    }
-
+    :root { --primary: #4F6F52; --primary-light: #6B8A6E; --background: #F9FBFA; --dark: #1F2933; --border: #E6EFE8; --danger: #EF4444; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--background);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 20px;
-      /* Patrón de fondo sutil */
-      background-image: radial-gradient(#4F6F52 0.5px, transparent 0.5px);
-      background-size: 20px 20px;
-    }
-
-    .auth-card {
-      background: white;
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-      width: 100%;
-      max-width: 450px;
-      text-align: center;
-    }
-
-    .logo {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 1.5rem;
-      color: var(--primary);
-      margin-bottom: 10px;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-    }
-
+    body { font-family: 'DM Sans', sans-serif; background: var(--background); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; background-image: radial-gradient(#4F6F52 0.5px, transparent 0.5px); background-size: 20px 20px; }
+    .auth-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); width: 100%; max-width: 450px; text-align: center; }
+    .logo { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--primary); margin-bottom: 10px; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
     h1 { font-family: 'Outfit', sans-serif; margin-bottom: 10px; color: var(--dark); }
     p.subtitle { color: #6B7280; font-size: 0.95rem; margin-bottom: 30px; }
-
     .form-group { margin-bottom: 20px; text-align: left; }
     label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--dark); font-size: 0.9rem; }
-    
-    input {
-      width: 100%;
-      padding: 14px;
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      font-size: 1rem;
-      font-family: inherit;
-      transition: 0.3s;
-      outline: none;
-    }
+    input { width: 100%; padding: 14px; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; font-family: inherit; transition: 0.3s; outline: none; }
     input:focus { border-color: var(--primary); }
-
-    .btn {
-      width: 100%;
-      padding: 14px;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.3s;
-      margin-top: 10px;
-    }
+    .btn { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: 0.3s; margin-top: 10px; }
     .btn:hover { background: var(--primary-light); }
     .btn:disabled { opacity: 0.7; cursor: not-allowed; }
-
     .auth-link { margin-top: 20px; font-size: 0.9rem; color: #6B7280; }
     .auth-link a { color: var(--primary); text-decoration: none; font-weight: 600; }
-    .auth-link a:hover { text-decoration: underline; }
-
-    .error-msg {
-      background: #FEF2F2;
-      color: var(--danger);
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      margin-bottom: 20px;
-      display: none;
-      text-align: left;
-      border: 1px solid #FCA5A5;
-    }
+    .error-msg { background: #FEF2F2; color: var(--danger); padding: 12px; border-radius: 8px; font-size: 0.9rem; margin-bottom: 20px; display: none; text-align: left; border: 1px solid #FCA5A5; }
   </style>
 </head>
 <body>
@@ -118,17 +40,17 @@
     <form id="registerForm">
       <div class="form-group">
         <label for="email">Correo electrónico</label>
-        <input type="email" id="email" placeholder="ejemplo@correo.com" required>
+        <input type="email" id="email" placeholder="ejemplo@correo.com" required autocomplete="email">
       </div>
 
       <div class="form-group">
         <label for="password">Contraseña</label>
-        <input type="password" id="password" placeholder="Mínimo 6 caracteres" required minlength="6">
+        <input type="password" id="password" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password">
       </div>
 
       <div class="form-group">
         <label for="confirmPassword">Confirmar contraseña</label>
-        <input type="password" id="confirmPassword" placeholder="Repite tu contraseña" required>
+        <input type="password" id="confirmPassword" placeholder="Repite tu contraseña" required autocomplete="new-password">
       </div>
 
       <button type="submit" class="btn" id="submitBtn">Crear cuenta gratis</button>
@@ -140,13 +62,6 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
-  <script src="js/supabase-config.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
 
   <script>
@@ -154,11 +69,11 @@
     const errorBox = document.getElementById('errorBox');
     const submitBtn = document.getElementById('submitBtn');
 
-    // Verificar si viene de la entrevista
+    // Revisar si viene de Entrevista
     document.addEventListener('DOMContentLoaded', () => {
         if (sessionStorage.getItem('temp_entrevista')) {
             document.querySelector('h1').textContent = "Guarda tu perfil clínico";
-            document.querySelector('.subtitle').textContent = "Crea tu cuenta para no perder los datos de tu entrevista.";
+            document.querySelector('.subtitle').textContent = "Crea tu cuenta para guardar los datos de tu entrevista.";
         }
     });
 
@@ -177,8 +92,8 @@
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando cuenta...';
 
       try {
-        // 🛑 CORRECCIÓN AQUÍ: Usamos 'window.sb' en lugar de 'window.supabase'
-        if (!window.sb) throw new Error("No hay conexión con la base de datos.");
+        // VERIFICACIÓN CRÍTICA: Usamos window.sb
+        if (!window.sb) throw new Error("Error de conexión: Recarga la página.");
 
         const { data, error } = await window.sb.auth.signUp({
           email: email, password: password
@@ -187,27 +102,19 @@
         if (error) throw error;
 
         if (data.user) {
-            // 2. ¿HAY ENTREVISTA PENDIENTE?
+            // Lógica de rescate de entrevista
             const tempEntrevista = sessionStorage.getItem('temp_entrevista');
             
             if (tempEntrevista) {
                 const datos = JSON.parse(tempEntrevista);
-                
-                // 🛑 CORRECCIÓN AQUÍ TAMBIÉN: 'window.sb'
-                const { error: profileError } = await window.sb
-                    .from('users_profile')
-                    .update(datos)
-                    .eq('id', data.user.id);
-                
-                if (!profileError) {
-                    sessionStorage.removeItem('temp_entrevista');
-                    window.location.href = 'app/dashboard.html';
-                    return;
-                }
+                // Usamos window.sb aquí también
+                await window.sb.from('users_profile').update(datos).eq('id', data.user.id);
+                sessionStorage.removeItem('temp_entrevista');
+                window.location.href = 'app/dashboard.html';
+            } else {
+                // Si no hay entrevista, lo mandamos a hacerla
+                window.location.href = 'app/entrevista.html';
             }
-
-            // Redirección normal
-            window.location.href = tempEntrevista ? 'app/dashboard.html' : 'app/entrevista.html';
 
         } else if (data.session === null && !error) {
             alert("Te hemos enviado un correo de confirmación.");
