@@ -233,32 +233,47 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
-    // 1. Auth Guard & Role Check
+    // 1. Auth Guard & Redirección Inteligente (El "Portero")
     async function checkAuth() {
+      // Esperamos a que Supabase cargue
       if (!window.sb) { setTimeout(checkAuth, 100); return; }
       
       const { data: { session } } = await window.sb.auth.getSession();
       
       if (!session) {
+          // Si no hay sesión, mandamos al login
           window.location.replace('../login.html');
       } else {
-          // Verificar si es Admin
-          const { data: profile } = await window.sb.from('users_profile').select('rol').eq('id', session.user.id).single();
+          // --- AQUÍ ESTÁ LA SOLUCIÓN ---
+          // Consultamos el rol del usuario que acaba de llegar
+          const { data: profile } = await window.sb
+              .from('users_profile')
+              .select('rol')
+              .eq('id', session.user.id)
+              .single();
           
-        if (profile && profile.rol === 'admin') {
-            window.location.replace('../admin/panel-admin.html'); 
-            return;
-        }
-
+          // Si es ADMIN, lo redirigimos a su carpeta inmediatamente
+          if (profile && profile.rol === 'admin') {
+              console.log("Admin detectado en zona de pacientes. Redirigiendo...");
+              window.location.replace('../admin/panel-admin.html'); 
+              return; // Detenemos la carga del dashboard de pacientes
           }
 
+          // Si es PSICÓLOGO, lo mandamos a su panel
+          if (profile && profile.rol === 'psicologo') {
+             window.location.replace('../pro/dashboard-psico.html');
+             return;
+          }
+          // -----------------------------
+
+          // Si es PACIENTE, dejamos que cargue la página normal
           loadDashboard(session.user);
           handleWelcome(session.user);
       }
     }
     checkAuth();
 
-    // 2. Lógica de Bienvenida (Tour vs Toast)
+    // 2. Lógica de Bienvenida
     async function handleWelcome(user) {
         const { data: profile } = await window.sb.from('users_profile').select('nombre').eq('id', user.id).single();
         const userName = profile?.nombre?.split(' ')[0] || 'Viajero';
@@ -278,7 +293,7 @@
 
     function closeOnboarding() { document.getElementById('onboardingModal').style.display = 'none'; }
 
-    // 3. Cargar Datos Dashboard
+    // 3. Cargar Datos Dashboard (Solo para pacientes)
     async function loadDashboard(user) {
       const hour = new Date().getHours();
       const saludo = hour < 12 ? 'Buenos días' : (hour < 18 ? 'Buenas tardes' : 'Buenas noches');
@@ -287,7 +302,7 @@
       document.getElementById('greeting').textContent = `${saludo}, ${profile?.nombre?.split(' ')[0] || 'Hola'} 👋`;
       document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
 
-      // Próxima Cita
+      // Cargar citas y pulso...
       const { data: citas } = await window.sb.from('citas')
         .select('fecha_hora, psicologos(nombre_completo)')
         .eq('paciente_id', user.id)
@@ -301,7 +316,6 @@
         document.getElementById('nextCitaSub').textContent = `Con ${citas[0].psicologos.nombre_completo}`;
       }
 
-      // Pulso Semanal
       const { data: pulsos } = await window.sb.from('monitoreo_sintomas').select('*').eq('user_id', user.id).order('fecha_realizado', {ascending:false}).limit(1);
       if (pulsos && pulsos.length > 0) {
         const nivel = pulsos[0].nivel_ansiedad || 5;
