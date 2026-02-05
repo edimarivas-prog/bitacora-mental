@@ -9,7 +9,7 @@
   
   <style>
     /* Estilos base iguales a Login para coherencia */
-    :root { --primary: #4F6F52; --bg: #F9FBFA; --text: #1F2933; --border: #E6EFE8; --strength-weak: #EF4444; --strength-med: #F59E0B; --strength-strong: #10B981; }
+    :root { --primary: #4F6F52; --bg: #F9FBFA; --text: #1F2933; --border: #E6EFE8; --strength-weak: #EF4444; --strength-med: #F59E0B; --strength-strong: #10B981; --danger: #EF4444; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
     
@@ -18,6 +18,25 @@
     .logo { color: var(--primary); font-family: 'Outfit'; font-weight: 700; font-size: 1.4rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; }
     h1 { font-family: 'Outfit'; font-size: 1.8rem; color: var(--text); margin-bottom: 8px; }
     p.subtitle { color: #64748B; margin-bottom: 30px; font-size: 0.95rem; }
+    
+    /* Caja de Error Mejorada */
+    .error-msg {
+      background: #FEF2F2;
+      color: #B91C1C;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      display: none;
+      text-align: left;
+      border-left: 4px solid var(--danger);
+      animation: shake 0.4s ease-in-out;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
     
     .input-wrapper { position: relative; margin-bottom: 15px; text-align: left; }
     input { width: 100%; padding: 14px 16px; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; outline: none; transition: 0.3s; font-family: inherit; }
@@ -48,6 +67,8 @@
     <a href="index.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
     <h1 id="regTitle">Crea tu cuenta</h1>
     <p class="subtitle" id="regSubtitle">Únete a nuestra comunidad de bienestar.</p>
+
+    <div id="errorBox" class="error-msg"></div>
 
     <button id="googleBtn" class="btn btn-google">
       <img src="https://www.svgrepo.com/show/475656/google-color.svg" width="20"> Registrarse con Google
@@ -87,11 +108,18 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
   <script>
-    // UX: Detectar Entrevista
-    if (sessionStorage.getItem('temp_entrevista')) {
-      document.getElementById('regTitle').textContent = "Guarda tu perfil";
-      document.getElementById('regSubtitle').textContent = "Crea una cuenta para no perder tus resultados.";
-    }
+    const errorBox = document.getElementById('errorBox');
+
+    // 1. Limpieza inicial: Si entra al registro, cerramos cualquier sesión previa para evitar conflictos
+    document.addEventListener('DOMContentLoaded', async () => {
+        if(window.sb) await window.sb.auth.signOut();
+        
+        // UX: Detectar Entrevista
+        if (sessionStorage.getItem('temp_entrevista')) {
+          document.getElementById('regTitle').textContent = "Guarda tu perfil";
+          document.getElementById('regSubtitle').textContent = "Crea una cuenta para no perder tus resultados.";
+        }
+    });
 
     // Funciones UX
     function togglePass(id) {
@@ -114,27 +142,41 @@
       else { bar.style.width = '100%'; bar.style.background = '#10B981'; txt.textContent = 'Fuerte'; }
     }
 
-    // Registro
+    // --- REGISTRO CON EMAIL ---
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      errorBox.style.display = 'none';
+
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
       const confirm = document.getElementById('confirm').value;
       
-      if (password !== confirm) return alert("Las contraseñas no coinciden.");
-      if (!document.getElementById('termsCheck').checked) return alert("Debes aceptar los términos.");
+      if (password !== confirm) return showError("Las contraseñas no coinciden.");
+      if (!document.getElementById('termsCheck').checked) return showError("Debes aceptar los términos.");
 
       const btn = document.getElementById('submitBtn');
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando...';
       btn.disabled = true;
 
       try {
-        if (!window.sb) throw new Error("Error de conexión.");
+        if (!window.sb) throw new Error("Error de conexión. Recarga la página.");
+        
+        // Intentamos registrar
         const { data, error } = await window.sb.auth.signUp({ email, password });
+        
         if (error) throw error;
 
         // Rescate de entrevista
         if (data.user) {
+          // OJO: Si auth.signUp retorna usuario pero NO sesión (data.session es null),
+          // significa que requiere confirmación de correo.
+          if (!data.session) {
+             alert("Registro exitoso. Por favor revisa tu correo para confirmar tu cuenta.");
+             // No redirigimos al dashboard, lo dejamos aquí o lo mandamos al login
+             window.location.href = 'login.html'; 
+             return;
+          }
+
           const temp = sessionStorage.getItem('temp_entrevista');
           if (temp) {
             await window.sb.from('users_profile').update(JSON.parse(temp)).eq('id', data.user.id);
@@ -143,31 +185,49 @@
           // Señal para mostrar el Tour de Bienvenida
           sessionStorage.setItem('show_onboarding', 'true');
           window.location.href = 'app/dashboard.html';
-        } else {
-          alert("Revisa tu correo para confirmar.");
-          btn.disabled = false;
         }
+
       } catch (err) {
-        alert("Error: " + err.message);
+        console.error(err);
+        showError(translateError(err.message));
         btn.innerHTML = 'Crear cuenta gratis';
         btn.disabled = false;
       }
     });
 
-    // Google
+    // --- REGISTRO CON GOOGLE ---
     document.getElementById('googleBtn').addEventListener('click', async () => {
       try {
         if (!window.sb) throw new Error("Error de conexión.");
         
-        // --- CÓDIGO AGREGADO: Señal para activar el Tour si se registra con Google ---
         sessionStorage.setItem('show_onboarding', 'true');
 
+        // Nota: Google maneja el "ya registrado" internamente logueando al usuario.
+        // Si quieres bloquearlo estrictamente es complejo, pero el comportamiento estándar
+        // es permitir el acceso.
         await window.sb.auth.signInWithOAuth({
           provider: 'google',
           options: { redirectTo: window.location.origin + '/bitacora-mental/app/dashboard.html' }
         });
-      } catch (err) { alert("Error con Google."); }
+      } catch (err) { showError("Error con Google."); }
     });
+
+    // --- MANEJO DE ERRORES ---
+    function showError(msg) {
+      // Usamos innerHTML para permitir enlaces
+      errorBox.innerHTML = msg;
+      errorBox.style.display = 'block';
+    }
+
+    function translateError(msg) {
+      // Detección específica de usuario existente
+      if (msg.includes("already registered") || msg.includes("User already registered")) {
+          return `⚠️ Este correo ya está registrado. <br><a href="login.html" style="color:#B91C1C; font-weight:700; text-decoration:underline; margin-top:5px; display:block;">Inicia sesión aquí</a>`;
+      }
+      if (msg.includes("weak_password")) return "La contraseña es muy débil.";
+      if (msg.includes("valid email")) return "Ingresa un correo válido.";
+      return "Ocurrió un error: " + msg;
+    }
   </script>
 </body>
 </html>
