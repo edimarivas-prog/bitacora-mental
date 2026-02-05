@@ -4,86 +4,158 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Dashboard - Bitácora Mental</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    /* Diseño Unificado "Soft & Human" */
-    :root { --primary: #4F6F52; --bg: #F3F6F4; --white: #fff; --text: #1F2933; --border: #E6EFE8; --radius: 20px; }
+    :root {
+      --primary: #4F6F52; --primary-light: #E8F5E9; --accent: #F59E0B;
+      --bg: #F9FBFA; --white: #FFFFFF; --text: #1F2933; --text-soft: #64748B;
+      --border: #E6EFE8; --radius: 20px;
+    }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; display: flex; min-height: 100vh; }
     
-    /* Sidebar Desktop */
-    .sidebar { width: 260px; background: var(--white); padding: 24px; display: flex; flex-direction: column; border-right: 1px solid var(--border); position: fixed; height: 100%; top: 0; z-index: 100; transition: transform 0.3s; }
-    .logo { font-family: 'Outfit'; font-weight: 700; color: var(--primary); font-size: 1.3rem; text-decoration: none; margin-bottom: 40px; display: flex; align-items: center; gap: 8px; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 14px; color: #64748B; text-decoration: none; border-radius: 12px; margin-bottom: 4px; font-weight: 500; transition: 0.2s; }
-    .nav-item:hover, .nav-item.active { background: #E8F5E9; color: var(--primary); }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
+    
+    /* Sidebar */
+    .sidebar { width: 260px; background: var(--white); padding: 24px; border-right: 1px solid var(--border); position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s; }
+    .logo { font-family: 'Outfit'; font-weight: 700; color: var(--primary); font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 8px; margin-bottom: 30px; }
+    
+    .nav-section { margin-bottom: 20px; }
+    .nav-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-soft); letter-spacing: 1px; margin-bottom: 10px; padding-left: 10px; font-weight: 700; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-soft); text-decoration: none; border-radius: 12px; font-weight: 500; transition: 0.2s; }
+    .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
     .nav-item.active { font-weight: 600; }
     
     /* Main Content */
     .main { flex: 1; padding: 30px; margin-left: 260px; max-width: 100%; }
-    h1 { font-family: 'Outfit'; font-size: 1.8rem; margin: 0 0 5px 0; }
-    p.subtitle { color: #64748B; margin-bottom: 30px; }
     
-    /* Cards */
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-    .card { background: var(--white); border-radius: var(--radius); padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); transition: transform 0.2s; }
-    .card:hover { transform: translateY(-2px); }
-    .card-title { font-family: 'Outfit'; font-weight: 600; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; color: var(--primary); }
+    .header { margin-bottom: 30px; }
+    .header h1 { font-family: 'Outfit'; font-size: 2rem; margin: 0 0 5px 0; }
+    .subtitle { color: var(--text-soft); font-size: 1rem; }
+    
+    /* Grid Layout */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 24px; }
+    
+    .card { background: var(--white); padding: 24px; border-radius: var(--radius); box-shadow: 0 4px 20px rgba(0,0,0,0.04); transition: transform 0.2s; border: 1px solid transparent; }
+    .card:hover { transform: translateY(-3px); border-color: var(--primary-light); }
+    
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .card-title { font-family: 'Outfit'; font-weight: 600; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; }
+    .icon-box { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+    
+    /* Widgets Específicos */
+    .pulse-card { border-left: 4px solid var(--accent); }
+    .pulse-bar { height: 8px; background: #F1F5F9; border-radius: 4px; margin-top: 10px; overflow: hidden; }
+    .pulse-fill { height: 100%; background: var(--accent); width: 0%; transition: width 1s; }
+    
+    .appointment-card { background: linear-gradient(135deg, var(--primary), #3E5A41); color: white; }
+    .appointment-card .subtitle { color: rgba(255,255,255,0.8); }
+    
+    .quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .action-btn { background: var(--bg); padding: 15px; border-radius: 15px; text-align: center; text-decoration: none; color: var(--text); font-weight: 600; font-size: 0.9rem; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .action-btn:hover { background: var(--white); box-shadow: 0 4px 15px rgba(0,0,0,0.05); color: var(--primary); }
     
     /* Mobile */
-    .mobile-header { display: none; padding: 15px; background: var(--white); align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .menu-btn { font-size: 1.5rem; color: var(--text); background: none; border: none; cursor: pointer; }
-    
-    @media (max-width: 800px) {
+    .mobile-nav { display: none; padding: 15px; background: white; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .menu-toggle { font-size: 1.5rem; background: none; border: none; color: var(--text); }
+
+    @media (max-width: 900px) {
       .sidebar { transform: translateX(-100%); }
       .sidebar.open { transform: translateX(0); }
       .main { margin-left: 0; padding: 20px; }
-      .mobile-header { display: flex; }
+      .mobile-nav { display: flex; }
     }
   </style>
 </head>
 <body>
 
-  <div class="mobile-header">
+  <div class="mobile-nav">
     <a href="#" class="logo" style="margin:0"><i class="fas fa-brain"></i> Bitácora</a>
-    <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
   </div>
 
   <aside class="sidebar" id="sidebar">
     <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
-    <nav>
+    
+    <div class="nav-section">
+      <div class="nav-title">Principal</div>
       <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i> Inicio</a>
       <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
+      <a href="especialistas.html" class="nav-item"><i class="fas fa-user-md"></i> Especialistas</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-title">Tu Espacio</div>
       <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> Diario</a>
       <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> Progreso</a>
       <a href="recursos.html" class="nav-item"><i class="fas fa-box-open"></i> Recursos</a>
-      <div style="flex:1"></div>
-      <a href="perfil.html" class="nav-item"><i class="fas fa-user-circle"></i> Mi Perfil</a>
-      <a href="#" onclick="logout()" class="nav-item" style="color: #EF4444;"><i class="fas fa-sign-out-alt"></i> Salir</a>
-    </nav>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-title">Cuenta</div>
+      <a href="plan.html" class="nav-item"><i class="fas fa-crown"></i> Mi Plan</a>
+      <a href="configuracion.html" class="nav-item"><i class="fas fa-cog"></i> Configuración</a>
+      <a href="perfil.html" class="nav-item"><i class="fas fa-user-circle"></i> Perfil</a>
+      <a href="#" onclick="logout()" class="nav-item" style="color:#EF4444"><i class="fas fa-sign-out-alt"></i> Salir</a>
+    </div>
   </aside>
 
   <main class="main">
-    <h1 id="greeting">Hola...</h1>
-    <p class="subtitle" id="dateDisplay">Cargando fecha...</p>
+    <div class="header">
+      <h1 id="greeting">Cargando...</h1>
+      <p class="subtitle" id="currentDate">...</p>
+    </div>
+
+    <div class="grid">
+      <div class="card appointment-card">
+        <div class="card-header">
+          <div class="card-title" style="color:white"><i class="fas fa-video"></i> Próxima Sesión</div>
+        </div>
+        <h2 id="nextCitaTitle" style="font-size:1.5rem; margin-bottom:5px;">Sin citas agendadas</h2>
+        <p class="subtitle" id="nextCitaSub" style="color:rgba(255,255,255,0.8); margin-bottom:20px;">Agenda tu primera sesión hoy.</p>
+        <a href="agendar.html" style="background:white; color:var(--primary); padding:10px 20px; border-radius:10px; text-decoration:none; font-weight:600; display:inline-block;">
+          <i class="fas fa-plus"></i> Agendar ahora
+        </a>
+      </div>
+
+      <div class="card pulse-card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-heartbeat" style="color:var(--accent)"></i> Pulso Semanal</div>
+          <span id="pulseBadge" style="font-size:0.8rem; background:#FEF3C7; color:#92400E; padding:4px 8px; border-radius:10px;">Pendiente</span>
+        </div>
+        <p style="font-size:0.9rem; color:#666;">¿Cómo te sientes esta semana?</p>
+        <div class="pulse-bar"><div class="pulse-fill" id="pulseBar"></div></div>
+        <div style="margin-top:15px; text-align:right;">
+          <a href="pulso.html" style="color:var(--primary); font-weight:600; text-decoration:none; font-size:0.9rem;">Registrar <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
 
     <div class="grid">
       <div class="card">
-        <div class="card-title"><i class="fas fa-heartbeat"></i> Pulso Semanal</div>
-        <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">
-          ¿Cómo te sientes hoy? Registra tu estado para que tu terapeuta pueda ayudarte mejor.
-        </p>
-        <button id="btnPulse" class="nav-item active" style="width:100%; justify-content:center; cursor:pointer; border:none;" onclick="location.href='pulso.html'">
-          <i class="fas fa-plus"></i> Registrar ahora
-        </button>
+        <div class="card-title">🚀 Acceso Rápido</div>
+        <div class="quick-actions">
+          <a href="diario.html" class="action-btn">
+            <i class="fas fa-pencil-alt" style="font-size:1.5rem; color:var(--primary)"></i>
+            <span>Escribir en Diario</span>
+          </a>
+          <a href="recursos.html" class="action-btn">
+            <i class="fas fa-headphones" style="font-size:1.5rem; color:#3B82F6"></i>
+            <span>Audio de Calma</span>
+          </a>
+        </div>
       </div>
 
       <div class="card">
-        <div class="card-title"><i class="fas fa-video"></i> Próxima Sesión</div>
-        <div id="nextSessionInfo">
-          <p style="color:#666;">No tienes citas agendadas.</p>
-          <a href="agendar.html" style="color:var(--primary); font-weight:600; text-decoration:none;">Agendar una cita &rarr;</a>
+        <div class="card-title">✨ Para ti hoy</div>
+        <div style="display:flex; gap:15px; align-items:center; margin-top:15px;">
+          <div class="icon-box" style="background:#E0F2FE; color:#0284C7"><i class="fas fa-file-pdf"></i></div>
+          <div>
+            <h4 style="margin:0; font-size:1rem;">Guía de Ansiedad</h4>
+            <p style="margin:0; font-size:0.85rem; color:#64748B;">Lectura de 5 min</p>
+          </div>
+          <a href="recursos.html" style="margin-left:auto; color:var(--primary);"><i class="fas fa-chevron-right"></i></a>
         </div>
       </div>
     </div>
@@ -92,47 +164,50 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
-    // 1. SEGURIDAD: Auth Guard
+    // 1. Auth Guard (Seguridad)
     async function checkAuth() {
-        if (!window.sb) { setTimeout(checkAuth, 100); return; }
-        const { data: { session } } = await window.sb.auth.getSession();
-        if (!session) window.location.replace('../login.html'); // Expulsar a raíz
-        else loadData(session.user);
+      if (!window.sb) { setTimeout(checkAuth, 100); return; }
+      const { data: { session } } = await window.sb.auth.getSession();
+      if (!session) window.location.replace('../login.html');
+      else loadDashboard(session.user);
     }
     checkAuth();
 
-    // 2. Cargar Datos
-    async function loadData(user) {
-        // Saludo Humano
-        const hour = new Date().getHours();
-        const saludo = hour < 12 ? 'Buenos días' : (hour < 18 ? 'Buenas tardes' : 'Buenas noches');
-        
-        const { data: profile } = await window.sb.from('users_profile').select('nombre').eq('id', user.id).single();
-        document.getElementById('greeting').textContent = `${saludo}, ${profile?.nombre || 'viajero'} 👋`;
+    // 2. Cargar Dashboard
+    async function loadDashboard(user) {
+      // Saludo y Fecha (Perú)
+      const hour = new Date().getHours();
+      const saludo = hour < 12 ? 'Buenos días' : (hour < 18 ? 'Buenas tardes' : 'Buenas noches');
+      const { data: profile } = await window.sb.from('users_profile').select('nombre').eq('id', user.id).single();
+      
+      document.getElementById('greeting').textContent = `${saludo}, ${profile?.nombre || 'Hola'} 👋`;
+      document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
 
-        // Fecha Perú
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Lima' };
-        document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('es-PE', options);
+      // Próxima Cita
+      const { data: citas } = await window.sb.from('citas')
+        .select('fecha_hora, psicologos(nombre_completo)')
+        .eq('paciente_id', user.id)
+        .eq('estado', 'agendada')
+        .gte('fecha_hora', new Date().toISOString())
+        .order('fecha_hora', {ascending: true}).limit(1);
 
-        // Lógica de Pulso (Bloqueo 7 días)
-        const { data: pulses } = await window.sb.from('monitoreo_sintomas').select('fecha_realizado').eq('user_id', user.id).order('fecha_realizado', {ascending:false}).limit(1);
-        
-        if (pulses && pulses.length > 0) {
-            const lastDate = new Date(pulses[0].fecha_realizado);
-            const diff = new Date() - lastDate;
-            const days = diff / (1000 * 60 * 60 * 24);
-            
-            if (days < 7) {
-                const btn = document.getElementById('btnPulse');
-                btn.innerHTML = `<i class="fas fa-check"></i> Todo listo por hoy`;
-                btn.style.background = '#E8F5E9';
-                btn.style.color = '#4F6F52';
-                btn.onclick = null;
-            }
-        }
+      if (citas && citas.length > 0) {
+        const fecha = new Date(citas[0].fecha_hora);
+        document.getElementById('nextCitaTitle').textContent = fecha.toLocaleDateString('es-PE', { weekday: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
+        document.getElementById('nextCitaSub').textContent = `Con ${citas[0].psicologos.nombre_completo}`;
+      }
+
+      // Pulso Semanal
+      const { data: pulsos } = await window.sb.from('monitoreo_sintomas').select('*').eq('user_id', user.id).order('fecha_realizado', {ascending:false}).limit(1);
+      if (pulsos && pulsos.length > 0) {
+        const nivel = pulsos[0].nivel_ansiedad || 5;
+        document.getElementById('pulseBar').style.width = `${nivel * 10}%`;
+        document.getElementById('pulseBadge').textContent = "Actualizado";
+        document.getElementById('pulseBadge').style.background = "#D1FAE5";
+        document.getElementById('pulseBadge').style.color = "#065F46";
+      }
     }
 
-    // UI Mobile
     function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
     async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
   </script>
