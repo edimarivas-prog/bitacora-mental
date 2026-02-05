@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitoreo - Admin Bitácora</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    /* Estilos Admin Base */
+    :root { --primary: #1F2933; --accent: #4F6F52; --bg: #F3F4F6; --white: #FFFFFF; --text: #1F2933; --border: #E5E7EB; --radius: 16px; --success: #10B981; --danger: #EF4444; }
+    * { box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
+    
+    .sidebar { width: 260px; background: var(--primary); color: white; padding: 24px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
+    .logo { font-family: 'Outfit'; font-weight: 700; color: white; font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 10px; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: #CBD5E1; text-decoration: none; border-radius: 12px; transition: 0.2s; font-size: 0.95rem; }
+    .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; }
+    .nav-item.active { border-left: 3px solid var(--accent); }
+    
+    .main { flex: 1; padding: 30px 40px; overflow-y: auto; }
+
+    /* --- Status Cards --- */
+    .status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+    .status-card { background: white; padding: 20px; border-radius: var(--radius); display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+    .status-indicator { width: 12px; height: 12px; border-radius: 50%; background: #CBD5E1; box-shadow: 0 0 0 4px #F1F5F9; }
+    .status-live { background: #10B981; box-shadow: 0 0 0 4px #D1FAE5; animation: pulse 2s infinite; }
+    
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0px rgba(16, 185, 129, 0.4); } 100% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } }
+
+    /* --- Charts & Logs --- */
+    .monitor-split { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+    
+    .monitor-panel { background: white; border-radius: var(--radius); padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .panel-title { font-family: 'Outfit'; font-weight: 600; font-size: 1.1rem; }
+
+    /* Terminal de Logs */
+    .terminal { background: #1E1E1E; color: #D4D4D4; font-family: 'Courier New', monospace; padding: 15px; border-radius: 12px; height: 400px; overflow-y: auto; font-size: 0.85rem; display: flex; flex-direction: column; gap: 8px; border: 1px solid #333; }
+    .log-entry { display: flex; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 4px; }
+    .log-time { color: #569CD6; min-width: 70px; }
+    .log-action { color: #CE9178; }
+    .log-detail { color: #D4D4D4; }
+    
+    /* Iconos especiales */
+    .type-reg { color: #4ADE80; } /* Verde para registros */
+    .type-cita { color: #A78BFA; } /* Morado para citas */
+    .type-error { color: #F87171; } /* Rojo para errores */
+
+    @media (max-width: 1000px) { .monitor-split { grid-template-columns: 1fr; } .status-grid { grid-template-columns: 1fr; } .sidebar { display: none; } }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <a href="panel-admin.html" class="logo"><i class="fas fa-brain"></i> ADMIN PRO</a>
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+        <a href="panel-admin.html" class="nav-item"><i class="fas fa-chart-pie"></i> Dashboard</a>
+        <a href="monitoreo.html" class="nav-item active"><i class="fas fa-desktop"></i> Monitoreo</a>
+        <a href="verificacion.html" class="nav-item"><i class="fas fa-user-check"></i> Verificación</a>
+        <a href="gestion-usuarios.html" class="nav-item"><i class="fas fa-users-cog"></i> Usuarios</a>
+        <a href="recursos.html" class="nav-item"><i class="fas fa-folder-open"></i> Recursos</a>
+        <a href="ajustes.html" class="nav-item"><i class="fas fa-sliders-h"></i> Ajustes Web</a>
+    </div>
+    <div style="margin-top:auto;">
+        <a href="../app/dashboard.html" class="nav-item"><i class="fas fa-arrow-left"></i> Volver a App</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <h1 style="font-family:'Outfit'; margin-bottom:20px;">Centro de Operaciones</h1>
+
+    <div class="status-grid">
+        <div class="status-card">
+            <div class="status-indicator status-live" id="dbStatus"></div>
+            <div>
+                <div style="font-weight:700;">Base de Datos</div>
+                <div style="font-size:0.85rem; color:#64748B;">Conexión Supabase: <span id="latencyText">Calculando...</span></div>
+            </div>
+        </div>
+        <div class="status-card">
+            <div style="background:#E0F2FE; color:#0369A1; padding:10px; border-radius:8px;"><i class="fas fa-server"></i></div>
+            <div>
+                <div style="font-weight:700;">Almacenamiento</div>
+                <div style="font-size:0.85rem; color:#64748B;">Estado: Operativo</div>
+            </div>
+        </div>
+        <div class="status-card">
+            <div style="background:#DCFCE7; color:#15803D; padding:10px; border-radius:8px;"><i class="fas fa-shield-alt"></i></div>
+            <div>
+                <div style="font-weight:700;">Seguridad</div>
+                <div style="font-size:0.85rem; color:#64748B;">Sin amenazas detectadas</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="monitor-split">
+        <div class="monitor-panel">
+            <div class="panel-header">
+                <div class="panel-title">Pulso Emocional Global</div>
+                <select style="border:none; color:#64748B;"><option>Últimos 30 días</option></select>
+            </div>
+            <p style="font-size:0.9rem; color:#64748B; margin-top:-10px; margin-bottom:20px;">
+                Promedio del nivel de ansiedad reportado por todos los pacientes.
+            </p>
+            <div style="height:300px; width:100%;">
+                <canvas id="moodChart"></canvas>
+            </div>
+        </div>
+
+        <div class="monitor-panel">
+            <div class="panel-header">
+                <div class="panel-title">Log de Actividad en Vivo</div>
+                <div style="font-size:0.8rem; background:#333; color:#4ADE80; padding:2px 8px; border-radius:4px;">LIVE</div>
+            </div>
+            <div class="terminal" id="activityLog">
+                <div class="log-entry"><span class="log-time">--:--</span><span class="log-detail">Iniciando monitor...</span></div>
+            </div>
+        </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script>
+    // 1. Auth Guard
+    async function checkAdmin() {
+        if (!window.sb) return setTimeout(checkAdmin, 100);
+        const { data: { session } } = await window.sb.auth.getSession();
+        if (!session) window.location.href = '../login.html';
+        const { data: profile } = await window.sb.from('users_profile').select('rol').eq('id', session.user.id).single();
+        if (profile.rol !== 'admin') window.location.href = '../app/dashboard.html';
+        else startMonitoring();
+    }
+    checkAdmin();
+
+    async function startMonitoring() {
+        checkLatency();
+        loadGlobalMood();
+        loadActivityFeed();
+        
+        // Refrescar logs cada 30 segundos
+        setInterval(loadActivityFeed, 30000);
+    }
+
+    // A. Latencia (Ping a Supabase)
+    async function checkLatency() {
+        const start = Date.now();
+        await window.sb.from('users_profile').select('count', { count: 'exact', head: true });
+        const end = Date.now();
+        const latency = end - start;
+        
+        document.getElementById('latencyText').textContent = `${latency}ms`;
+        const indicator = document.getElementById('dbStatus');
+        
+        if(latency < 300) indicator.style.background = '#10B981'; // Verde
+        else if(latency < 800) indicator.style.background = '#F59E0B'; // Amarillo
+        else indicator.style.background = '#EF4444'; // Rojo
+    }
+
+    // B. Gráfico de Pulso Global
+    async function loadGlobalMood() {
+        // Obtenemos los registros de ánimo de todos los usuarios
+        const { data: logs } = await window.sb
+            .from('monitoreo_sintomas')
+            .select('fecha_realizado, nivel_ansiedad')
+            .order('fecha_realizado', { ascending: true });
+
+        if(!logs || logs.length === 0) return;
+
+        // Procesar datos (Agrupar por día)
+        const grouped = {};
+        logs.forEach(log => {
+            const date = new Date(log.fecha_realizado).toLocaleDateString();
+            if(!grouped[date]) grouped[date] = { sum: 0, count: 0 };
+            grouped[date].sum += (log.nivel_ansiedad || 0);
+            grouped[date].count++;
+        });
+
+        const labels = Object.keys(grouped);
+        const values = Object.values(grouped).map(obj => (obj.sum / obj.count).toFixed(1));
+
+        // Renderizar Chart
+        const ctx = document.getElementById('moodChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Nivel Promedio de Ansiedad (0-10)',
+                    data: values,
+                    borderColor: '#F59E0B',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true, max: 10 } }
+            }
+        });
+    }
+
+    // C. Feed de Actividad (Simulado con datos reales)
+    async function loadActivityFeed() {
+        // 1. Obtener últimos usuarios
+        const { data: users } = await window.sb.from('users_profile').select('nombre, created_at, rol').order('created_at', {ascending:false}).limit(5);
+        // 2. Obtener últimas citas
+        const { data: citas } = await window.sb.from('citas').select('created_at, estado').order('created_at', {ascending:false}).limit(5);
+
+        // Mezclar y ordenar
+        let activities = [];
+        
+        if(users) users.forEach(u => activities.push({
+            type: 'registro',
+            time: new Date(u.created_at),
+            text: `Nuevo ${u.rol}: ${u.nombre}`
+        }));
+
+        if(citas) citas.forEach(c => activities.push({
+            type: 'cita',
+            time: new Date(c.created_at),
+            text: `Cita agendada (Estado: ${c.estado})`
+        }));
+
+        // Ordenar por fecha (más reciente primero)
+        activities.sort((a, b) => b.time - a.time);
+
+        // Renderizar en Terminal
+        const terminal = document.getElementById('activityLog');
+        terminal.innerHTML = activities.map(act => {
+            const timeStr = act.time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            let typeClass = act.type === 'registro' ? 'type-reg' : 'type-cita';
+            let icon = act.type === 'registro' ? '[USER]' : '[CITA]';
+            
+            return `
+            <div class="log-entry">
+                <span class="log-time">${timeStr}</span>
+                <span class="log-action ${typeClass}">${icon}</span>
+                <span class="log-detail">${act.text}</span>
+            </div>`;
+        }).join('') + '<div class="log-entry"><span class="log-time">--:--</span><span class="log-detail">Esperando nuevos eventos...</span></div>';
+    }
+  </script>
+</body>
+</html>
