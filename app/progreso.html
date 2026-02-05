@@ -54,7 +54,7 @@
 
     /* Main Content */
     .main-content { padding: 32px 40px; max-width: 1400px; }
-    .page-header { margin-bottom: 32px; }
+    .page-header { margin-bottom: 32px; display:flex; justify-content:space-between; align-items:flex-end; }
     .page-header h1 { font-size: 2rem; margin-bottom: 8px; color: var(--dark); }
     .page-subtitle { color: var(--text-secondary); font-size: 1rem; }
 
@@ -73,11 +73,17 @@
     .insight-title { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
     .insight-text { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; }
 
+    /* Button */
+    .btn { padding: 12px 24px; border-radius: 10px; font-weight: 600; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-light); transform: translateY(-2px); }
+
     @media (max-width: 968px) {
       .dashboard-container { grid-template-columns: 1fr; }
       .sidebar { display: none; }
       .main-content { padding: 20px; }
       .charts-grid { grid-template-columns: 1fr; }
+      .page-header { flex-direction:column; align-items:flex-start; gap:20px; }
     }
   </style>
 </head>
@@ -121,8 +127,13 @@
 
     <main class="main-content">
       <div class="page-header">
-        <h1>Mi Progreso</h1>
-        <p class="page-subtitle">Visualiza tu evolución y celebra tus logros</p>
+        <div>
+            <h1>Mi Progreso</h1>
+            <p class="page-subtitle">Mapa de intensidad de síntomas y constancia</p>
+        </div>
+        <button class="btn btn-primary" onclick="alert('Funcionalidad en desarrollo: Pronto podrás descargar un PDF con tus métricas para llevar a consulta.')">
+            <i class="fas fa-file-medical"></i> Generar Reporte para Sesión
+        </button>
       </div>
 
       <div class="insights-grid">
@@ -138,8 +149,8 @@
         </div>
         <div class="insight-card">
           <div class="insight-icon"><i class="fas fa-heart"></i></div>
-          <div class="insight-title">Estado Emocional</div>
-          <div class="insight-text" id="insightTrend">Revisando tus últimos tests...</div>
+          <div class="insight-title">Estado Clínico</div>
+          <div class="insight-text" id="insightTrend">Revisando tus últimos registros...</div>
         </div>
       </div>
 
@@ -147,8 +158,8 @@
         <div class="chart-card">
           <div class="chart-header">
             <div>
-              <div class="chart-title">Evolución Emocional</div>
-              <div class="chart-subtitle">Cómo te has sentido en tus evaluaciones</div>
+              <div class="chart-title">Intensidad de Síntomas</div>
+              <div class="chart-subtitle">Evolución de tus reportes semanales</div>
             </div>
           </div>
           <div class="chart-container">
@@ -194,28 +205,27 @@
     }
 
     async function loadProgressData(userId) {
-        // 1. Cargar Tests
+        // 1. Cargar Registros Clínicos (Tabla NUEVA: monitoreo_sintomas)
         const { data: tests } = await window.supabase
-            .from('test_results')
+            .from('monitoreo_sintomas')
             .select('*')
             .eq('user_id', userId)
-            .order('fecha_realizado', { ascending: true }); // Orden cronológico para gráfico
+            .order('fecha_realizado', { ascending: true });
 
         if (tests && tests.length > 0) {
             updateTestChart(tests);
             analyzeTrend(tests);
         } else {
-            document.getElementById('insightTrend').textContent = "Realiza tu primer test para ver tu evolución emocional aquí.";
+            document.getElementById('insightTrend').textContent = "Realiza tu entrevista de bienvenida para ver tu evolución aquí.";
         }
 
-        // 2. Cargar Diario (Para Racha y Patrones)
+        // 2. Cargar Diario
         const { data: entries } = await window.supabase
             .from('diario_emocional')
             .select('fecha')
             .eq('user_id', userId);
 
         if (entries && entries.length > 0) {
-            // Filtrar fechas futuras (Protección de datos)
             const today = new Date();
             today.setHours(23, 59, 59, 999);
             const validEntries = entries.filter(e => new Date(e.fecha) <= today);
@@ -233,8 +243,8 @@
     function updateTestChart(tests) {
         const ctx = document.getElementById('testsChart').getContext('2d');
         
-        // Configuración "Humana" del eje Y
-        const yLabels = { 0: '', 2: 'Crítico', 4: 'Bajo', 6: 'Moderado', 8: 'Bueno', 10: 'Excelente' };
+        // Etiquetas Clínicas (No numéricas)
+        const yLabels = { 0: 'Nulo', 2: 'Leve', 4: 'Bajo', 6: 'Moderado', 8: 'Alto', 10: 'Severo' };
 
         testsChart = new Chart(ctx, {
             type: 'line',
@@ -266,17 +276,14 @@
 
     function updateDiaryChart(entries) {
         const ctx = document.getElementById('diaryActivityChart').getContext('2d');
-        const dayCounts = [0, 0, 0, 0, 0, 0, 0]; // Dom-Sáb
+        const dayCounts = [0, 0, 0, 0, 0, 0, 0];
         
-        // Agrupar por día de la semana
         entries.forEach(e => {
-            // Usamos UTC o local pero consistente
             const date = new Date(e.fecha); 
             const dayIndex = date.getDay(); 
             dayCounts[dayIndex]++;
         });
 
-        // Mover Domingo al final (Lunes=0 ... Domingo=6 visualmente)
         const labels = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
         const data = [...dayCounts.slice(1), dayCounts[0]];
 
@@ -285,7 +292,7 @@
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Momentos de escritura',
+                    label: 'Entradas',
                     data: data,
                     backgroundColor: '#4F6F52',
                     borderRadius: 6,
@@ -304,13 +311,11 @@
         });
     }
 
-    // --- INSIGHTS INTELIGENTES ---
+    // --- INSIGHTS ---
 
     function calculateInsights(entries) {
-        // 1. Racha Real (Días consecutivos únicos)
-        // Convertimos a Set de fechas string YYYY-MM-DD para eliminar duplicados del mismo día
         const uniqueDates = new Set(entries.map(e => e.fecha.split('T')[0]));
-        const sortedDates = Array.from(uniqueDates).sort().reverse(); // Hoy hacia atrás
+        const sortedDates = Array.from(uniqueDates).sort().reverse();
 
         let streak = 0;
         if (sortedDates.length > 0) {
@@ -318,62 +323,53 @@
             const yesterdayDate = new Date(); yesterdayDate.setDate(yesterdayDate.getDate() - 1);
             const yesterday = yesterdayDate.toISOString().split('T')[0];
 
-            // Si escribió hoy o ayer, la racha está viva
             if (sortedDates[0] === today || sortedDates[0] === yesterday) {
                 streak = 1;
                 let checkDate = new Date(sortedDates[0]);
-                
                 for (let i = 1; i < sortedDates.length; i++) {
                     checkDate.setDate(checkDate.getDate() - 1);
-                    if (sortedDates[i] === checkDate.toISOString().split('T')[0]) {
-                        streak++;
-                    } else {
-                        break;
-                    }
+                    if (sortedDates[i] === checkDate.toISOString().split('T')[0]) streak++;
+                    else break;
                 }
             }
         }
         
         const streakMsg = streak > 1 
-            ? `¡Llevas ${streak} días seguidos escribiendo! Esa constancia es clave.` 
-            : (streak === 1 ? "Has empezado una racha hoy. ¡Vuelve mañana para mantenerla!" : "Hace días que no escribes. Hoy es un buen día para retomar.");
+            ? `¡Llevas ${streak} días seguidos escribiendo! Esa constancia ayuda a tu terapia.` 
+            : (streak === 1 ? "Has empezado una racha hoy. ¡Mantén el hábito!" : "Retoma tu escritura para dar más contexto a tu psicólogo.");
         
         document.getElementById('insightRacha').textContent = streakMsg;
 
-        // 2. Patrón de Día Preferido
+        // Patrón de Día
         const dayCounts = [0, 0, 0, 0, 0, 0, 0];
         entries.forEach(e => dayCounts[new Date(e.fecha).getDay()]++);
-        
         const maxVal = Math.max(...dayCounts);
         const maxDayIndex = dayCounts.indexOf(maxVal);
         const dayNames = ["Domingos", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábados"];
         
         if (entries.length < 3) {
-            document.getElementById('insightPattern').textContent = "Aún estamos aprendiendo tus hábitos. Escribe un poco más para ver patrones.";
+            document.getElementById('insightPattern').textContent = "Escribe más días para detectar tus momentos de reflexión.";
         } else {
-            document.getElementById('insightPattern').textContent = `Parece que los ${dayNames[maxDayIndex]} son tu momento de mayor reflexión.`;
+            document.getElementById('insightPattern').textContent = `Sueles reflexionar más los ${dayNames[maxDayIndex]}.`;
         }
     }
 
     function analyzeTrend(tests) {
         if (tests.length < 2) {
-            document.getElementById('insightTrend').textContent = "Necesitamos al menos dos evaluaciones para decirte cómo has avanzado.";
+            document.getElementById('insightTrend').textContent = "Necesitamos al menos dos reportes para ver tu evolución.";
             return;
         }
 
-        // Comparar último vs penúltimo
         const last = tests[tests.length - 1];
         const prev = tests[tests.length - 2];
 
         let msg = "";
         if (last.nivel_animo > prev.nivel_animo) {
-            msg = "¡Tu ánimo ha mejorado desde la última vez! Sigue cuidando de ti.";
+            msg = "Tu ánimo reportado ha mejorado. ¡Sigue así!";
         } else if (last.nivel_ansiedad < prev.nivel_ansiedad) {
-            msg = "Has logrado reducir tu ansiedad comparado con el test anterior. ¡Gran trabajo!";
-        } else if (Math.abs(last.nivel_animo - prev.nivel_animo) <= 1) {
-            msg = "Tu bienestar se mantiene estable. La estabilidad también es un logro.";
+            msg = "Reportas menos síntomas de ansiedad que la semana pasada.";
         } else {
-            msg = "Parece que ha sido una semana difícil. Recuerda ser amable contigo mismo.";
+            msg = "Tus síntomas se mantienen estables o han aumentado levemente. Coméntalo en sesión.";
         }
         document.getElementById('insightTrend').textContent = msg;
     }
