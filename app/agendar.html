@@ -277,10 +277,65 @@
     }
 
     // 3. RENDERIZAR CALENDARIO INTELIGENTE
+   // Reemplaza ESTA función en app/agendar.html
     function renderCalendar() {
         const grid = document.getElementById('calendarDays');
         const label = document.getElementById('monthLabel');
         grid.innerHTML = '';
+
+        const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+        days.forEach(d => grid.innerHTML += `<div class="day-name">${d}</div>`);
+
+        const year = currentMonth.getFullYear();
+        const month = currentMonth.getMonth();
+        label.textContent = currentMonth.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        
+        // --- NUEVA LÓGICA: LÍMITE DE 1 MES ---
+        const maxDate = new Date();
+        maxDate.setDate(today.getDate() + 30); // Límite: 30 días desde hoy
+        maxDate.setHours(23,59,59,999);
+        // -------------------------------------
+
+        for (let i = 0; i < firstDay; i++) grid.innerHTML += `<div class="day-cell empty"></div>`;
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dateStr = `${year}-${(month+1).toString().padStart(2,'0')}-${day.toString().padStart(2,'0')}`;
+            const cellDate = new Date(dateStr + 'T00:00:00');
+            
+            let dayOfWeekDB = cellDate.getDay(); 
+            if(dayOfWeekDB === 0) dayOfWeekDB = 7;
+
+            const cell = document.createElement('div');
+            cell.className = 'day-cell';
+            cell.textContent = day;
+
+            // VALIDACIONES DE DISPONIBILIDAD
+            const isPast = cellDate < today;
+            const isTooFar = cellDate > maxDate; // ¿Se pasa de 30 días?
+            const isScheduled = docSchedule.includes(dayOfWeekDB);
+
+            if (isPast) {
+                cell.classList.add('disabled'); // Pasado
+            } else if (isTooFar) {
+                cell.classList.add('disabled'); // Futuro lejano
+                cell.style.opacity = '0.3'; 
+                cell.title = "Solo puedes reservar con 30 días de anticipación";
+            } else if (isScheduled) {
+                cell.classList.add('available');
+                cell.onclick = () => selectDate(dateStr, cell);
+            } else {
+                cell.classList.add('disabled'); // Doctor no trabaja
+                cell.style.opacity = '0.5';
+            }
+
+            grid.appendChild(cell);
+        }
+    }
 
         // Encabezados
         const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
