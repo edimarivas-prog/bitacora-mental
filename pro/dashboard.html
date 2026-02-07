@@ -250,44 +250,90 @@
     }
     init();
 
-    // 2. Cargar Citas (Simulado para Demo Visual)
-    async function loadCitas(userId) {
-        // Aquí iría la consulta real a la tabla 'citas'
-        const container = document.getElementById('citasContainer');
-        
-        // Simulación visual
+   // 2. Cargar Citas (REAL - Conectado a Base de Datos)
+async function loadCitas(userId) {
+    const container = document.getElementById('citasContainer');
+    container.innerHTML = '<p style="text-align:center; color:#94A3B8; padding:20px;"><i class="fas fa-spinner fa-spin"></i> Cargando agenda...</p>';
+
+    // A. Obtener fecha de hoy para no mostrar citas viejas
+    const today = new Date().toISOString().split('T')[0]; 
+
+    // B. Consulta a Supabase
+    const { data: citas, error } = await window.sb
+        .from('citas')
+        .select(`
+            *,
+            paciente:paciente_id ( nombre )
+        `)
+        .eq('psicologo_id', userId)
+        .neq('estado', 'cancelada') // Ocultar canceladas
+        .gte('fecha_hora', today)   // Solo hoy y futuro
+        .order('fecha_hora', { ascending: true })
+        .limit(5); // Mostrar solo las próximas 5
+
+    if (error) {
+        console.error("Error cargando citas:", error);
+        container.innerHTML = '<p style="color:#EF4444; text-align:center;">Error al cargar datos.</p>';
+        return;
+    }
+
+    // C. Si no hay citas
+    if (!citas || citas.length === 0) {
         container.innerHTML = `
-            <div style="display:flex; gap:15px; padding:15px; border:1px solid #F1F5F9; border-radius:12px; margin-bottom:10px; align-items:center;">
-                <div style="text-align:center; min-width:50px;">
-                    <div style="font-weight:700; font-size:1.1rem;">10:00</div>
-                    <div style="font-size:0.8rem; color:#94A3B8;">AM</div>
-                </div>
-                <div style="height:30px; width:2px; background:#F1F5F9;"></div>
-                <div>
-                    <div style="font-weight:600;">Sesión Inicial</div>
-                    <div style="font-size:0.85rem; color:#64748B;"><i class="far fa-user"></i> María Lopez</div>
-                </div>
-                <div style="margin-left:auto;">
-                    <span style="background:#DCFCE7; color:#166534; padding:4px 10px; border-radius:20px; font-size:0.75rem; font-weight:700;">Confirmada</span>
+            <div style="text-align:center; padding:30px; border:1px dashed #CBD5E1; border-radius:12px; color:#64748B;">
+                <i class="far fa-calendar-times" style="font-size:1.5rem; margin-bottom:10px;"></i>
+                <p>No tienes citas próximas.</p>
+            </div>`;
+        return;
+    }
+
+    // D. Renderizar Citas Reales
+    container.innerHTML = citas.map(c => {
+        // Formato de Hora
+        const dateObj = new Date(c.fecha_hora);
+        const hora = dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}); // Ej: 10:00 AM
+        const fecha = dateObj.toLocaleDateString([], {day: 'numeric', month: 'short'});   // Ej: 12 Feb
+
+        // Colores según estado
+        let badgeColor = '#FEF3C7'; // Amarillo (Pendiente)
+        let textColor = '#B45309';
+        if(c.estado === 'confirmada') { badgeColor = '#DCFCE7'; textColor = '#166534'; }
+        
+        // Nombre seguro (por si el paciente se borró)
+        const nombrePaciente = c.paciente ? c.paciente.nombre : 'Usuario Desconocido';
+
+        return `
+        <div style="display:flex; gap:15px; padding:15px; border:1px solid #F1F5F9; border-radius:12px; margin-bottom:10px; align-items:center; background:white; transition:transform 0.2s;">
+            
+            <div style="text-align:center; min-width:60px;">
+                <div style="font-weight:700; font-size:1.1rem; color:var(--text); line-height:1;">${hora}</div>
+                <div style="font-size:0.75rem; color:#94A3B8; margin-top:4px;">${fecha}</div>
+            </div>
+            
+            <div style="height:35px; width:2px; background:#F1F5F9;"></div>
+            
+            <div style="flex:1;">
+                <div style="font-weight:700; font-size:0.95rem; color:var(--text);">Sesión Terapéutica</div>
+                <div style="font-size:0.85rem; color:#64748B; margin-top:2px;">
+                    <i class="far fa-user"></i> ${nombrePaciente}
                 </div>
             </div>
             
-            <div style="display:flex; gap:15px; padding:15px; border:1px solid #F1F5F9; border-radius:12px; align-items:center;">
-                <div style="text-align:center; min-width:50px;">
-                    <div style="font-weight:700; font-size:1.1rem;">03:00</div>
-                    <div style="font-size:0.8rem; color:#94A3B8;">PM</div>
-                </div>
-                <div style="height:30px; width:2px; background:#F1F5F9;"></div>
-                <div>
-                    <div style="font-weight:600;">Seguimiento</div>
-                    <div style="font-size:0.85rem; color:#64748B;"><i class="far fa-user"></i> Pedro G.</div>
-                </div>
-                <div style="margin-left:auto;">
-                    <span style="background:#FEF3C7; color:#B45309; padding:4px 10px; border-radius:20px; font-size:0.75rem; font-weight:700;">Pendiente</span>
-                </div>
+            <div style="text-align:right; display:flex; flex-direction:column; gap:5px; align-items:flex-end;">
+                <span style="background:${badgeColor}; color:${textColor}; padding:4px 10px; border-radius:20px; font-size:0.7rem; font-weight:700; text-transform:uppercase;">
+                    ${c.estado}
+                </span>
+                
+                ${c.link_reunion ? `
+                <a href="sesion-live.html?room=${c.link_reunion}&patient=${nombrePaciente}" 
+                   style="text-decoration:none; color:var(--primary); font-size:0.8rem; font-weight:600; display:flex; align-items:center; gap:5px;">
+                   <i class="fas fa-video"></i> Entrar
+                </a>` : ''}
             </div>
+        </div>
         `;
-    }
+    }).join('');
+}
 
     // 3. Menú Móvil
     function toggleMenu() {
