@@ -152,7 +152,46 @@
             return;
         }
 
-        list.innerHTML = citas.map(c => {
+        list.innerHTML = list.innerHTML = citas.map(c => {
+        const date = new Date(c.fecha_hora);
+        const nombreDoc = c.psicologo ? c.psicologo.nombre : 'Especialista';
+        
+        // --- CORRECCIÓN DE HORA Y FECHA ---
+        // Usamos 'timeZone: UTC' para que muestre la hora exacta de la base de datos sin restarle 5 horas.
+        const fechaVisual = date.toLocaleDateString('es-PE', {
+            weekday: 'long', 
+            day: 'numeric', 
+            month: 'long', 
+            timeZone: 'UTC' 
+        });
+        
+        const horaVisual = date.toLocaleTimeString('es-PE', {
+            hour: '2-digit', 
+            minute: '2-digit', 
+            hour12: true, 
+            timeZone: 'UTC' 
+        });
+        // ----------------------------------
+
+        const jitsiLink = `../pro/sesion-live.html?room=${c.link_reunion}&patient=${userName}`;
+
+        return `
+        <div class="cita-card">
+            <div class="cita-info">
+                <h3>${nombreDoc}</h3>
+                <div class="cita-meta">
+                    <span><i class="far fa-calendar"></i> ${fechaVisual}</span>
+                    <span><i class="far fa-clock"></i> ${horaVisual}</span>
+                    
+                    <span style="background:${c.estado === 'confirmada' ? '#DCFCE7' : '#FEF3C7'}; color:${c.estado === 'confirmada' ? '#166534' : '#B45309'}; padding:2px 8px; border-radius:10px; font-size:0.75rem; text-transform:uppercase; font-weight:700;">${c.estado}</span>
+                </div>
+            </div>
+            <div class="cita-actions">
+                <button class="btn-cancel" onclick="cancelCita('${c.id}')">Cancelar</button>
+                <a href="${jitsiLink}" class="btn-join"><i class="fas fa-video"></i> Unirse</a>
+            </div>
+        </div>`;
+    }).join('');(c => {
             const date = new Date(c.fecha_hora);
             const nombreDoc = c.psicologo ? c.psicologo.nombre : 'Especialista';
             
