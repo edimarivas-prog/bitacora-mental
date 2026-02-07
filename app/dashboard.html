@@ -286,8 +286,8 @@
     now.setHours(now.getHours() - 2); 
 
     // AQUÍ ESTABA EL ERROR:
-    // 1. Usamos 'psicologo:psicologo_id' para apuntar a users_profile
-    // 2. Buscamos estado 'pendiente' o 'confirmada' (NO 'agendada')
+    // 1. Usamos 'psicologo:psicologo_id' para apuntar a users_profile (Correcto)
+    // 2. Buscamos estado diferente a 'cancelada' (Correcto)
     const { data: citas, error } = await window.sb
         .from('citas')
         .select(`
@@ -321,19 +321,12 @@
         document.getElementById('citaTime').textContent = dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         
         // Link Correcto
-        document.getElementById('citaLink').href = `../pro/sesion-live.html?room=${nextCita.link_reunion}&patient=${profile?.nombre}`;
+        // Se añade el nombre del paciente para que aparezca en la videollamada
+        const nombrePaciente = profile?.nombre?.split(' ')[0] || 'Paciente';
+        document.getElementById('citaLink').href = `../pro/sesion-live.html?room=${nextCita.link_reunion}&patient=${nombrePaciente}`;
         
-        // Estado visual
-        const statusBadge = document.createElement('span');
-        statusBadge.textContent = nextCita.estado;
-        statusBadge.style.cssText = "font-size:0.7rem; padding:2px 8px; border-radius:10px; margin-left:10px; text-transform:uppercase; font-weight:bold;";
-        
-        if(nextCita.estado === 'pendiente') {
-            statusBadge.style.background = '#FEF3C7'; statusBadge.style.color = '#B45309';
-        } else {
-            statusBadge.style.background = '#DCFCE7'; statusBadge.style.color = '#166534';
-        }
-        // (Opcional) Agregar el badge al DOM si tienes donde ponerlo
+        // Estado visual (Opcional)
+        console.log("Estado de la cita:", nextCita.estado);
         
     } else {
         // Mostrar Vacío
