@@ -158,6 +158,25 @@
                 </div>
                 <small style="color:#94A3B8;">Máximo 5 etiquetas.</small>
             </div>
+
+            <div style="margin-top:20px; padding-top:20px; border-top:1px solid #F1F5F9;">
+                <h4 style="margin-bottom:15px; font-family:'Outfit'; color:var(--primary);">Configuración de Consulta</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Precio por Sesión (S/)</label>
+                        <input type="number" id="precio" class="form-input" placeholder="80">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Duración (minutos)</label>
+                        <select id="duracion" class="form-input">
+                            <option value="45">45 min</option>
+                            <option value="50">50 min</option>
+                            <option value="60">60 min</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
         </div>
     </div>
   </main>
@@ -191,7 +210,11 @@
         document.getElementById('cmp').value = profile.cmp || '';
         document.getElementById('bio').value = profile.bio || '';
         
-        // Avatar (Si tienes una columna avatar_url, úsala aquí. Usamos un placeholder si no)
+        // CAMPOS NUEVOS (PRECIO Y DURACIÓN)
+        document.getElementById('precio').value = profile.precio_consulta || 80;
+        document.getElementById('duracion').value = profile.duracion_sesion || 50;
+
+        // Avatar
         if(profile.avatar_url) {
             document.getElementById('avatarUrl').value = profile.avatar_url;
             document.getElementById('previewAvatar').src = profile.avatar_url;
@@ -220,7 +243,6 @@
     });
 
     function renderTags() {
-        // Limpiar (menos el input)
         Array.from(tagsContainer.children).forEach(child => {
             if (!child.classList.contains('tag-input')) tagsContainer.removeChild(child);
         });
@@ -256,8 +278,10 @@
             cmp: document.getElementById('cmp').value,
             bio: document.getElementById('bio').value,
             especialidades: specialties,
-            // Simulación de avatar URL (en producción usarías Storage)
-            avatar_url: document.getElementById('avatarUrl').value
+            avatar_url: document.getElementById('avatarUrl').value,
+            // NUEVOS CAMPOS
+            precio_consulta: document.getElementById('precio').value,
+            duracion_sesion: document.getElementById('duracion').value
         };
 
         const { error } = await window.sb
