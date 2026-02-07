@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Expediente Clínico - Bitácora Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root { --sidebar-bg: #1F2933; --primary: #4F6F52; --bg: #F3F4F6; --text: #1F2933; --border: #E5E7EB; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); display: flex; min-height: 100vh; }
+
+    /* LAYOUT */
+    .sidebar { width: 260px; background: var(--sidebar-bg); color: white; padding: 24px; position: fixed; height: 100%; top: 0; }
+    .main { flex: 1; padding: 30px 40px; margin-left: 260px; max-width: 1600px; }
+    
+    /* HEADER PACIENTE */
+    .patient-header { background: white; padding: 25px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 25px; border-left: 5px solid var(--primary); }
+    .ph-info { display: flex; align-items: center; gap: 20px; }
+    .ph-avatar { width: 70px; height: 70px; background: #E0F2FE; color: #0369A1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; }
+    
+    /* GRID PRINCIPAL */
+    .clinical-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
+
+    /* TARJETAS */
+    .card { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border); margin-bottom: 25px; }
+    .card-title { font-family: 'Outfit'; font-weight: 700; font-size: 1.1rem; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+
+    /* NOTAS CLÍNICAS (ESTILO SOAP) */
+    .soap-box { background: #FFFBEB; border: 1px solid #FCD34D; padding: 20px; border-radius: 12px; margin-bottom: 15px; }
+    .soap-label { font-size: 0.75rem; font-weight: 700; color: #B45309; text-transform: uppercase; margin-bottom: 5px; display: block; }
+    .soap-textarea { width: 100%; background: transparent; border: none; font-family: 'DM Sans'; font-size: 0.95rem; resize: none; outline: none; min-height: 60px; }
+    
+    /* HISTORIAL */
+    .timeline-item { display: flex; gap: 15px; padding-bottom: 20px; border-left: 2px solid #E2E8F0; padding-left: 20px; position: relative; }
+    .timeline-item::before { content: ''; width: 12px; height: 12px; background: white; border: 2px solid var(--primary); border-radius: 50%; position: absolute; left: -7px; top: 0; }
+    .t-date { font-size: 0.8rem; color: #64748B; font-weight: 700; }
+    .t-content { background: #F8FAFC; padding: 10px; border-radius: 8px; margin-top: 5px; font-size: 0.9rem; }
+
+    /* BOTONES */
+    .btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; }
+    .btn-primary { background: var(--sidebar-bg); color: white; }
+    .btn-save { background: #10B981; color: white; width: 100%; margin-top: 10px; }
+    .btn-danger { background: #FEE2E2; color: #991B1B; }
+
+    @media (max-width: 1000px) { .clinical-grid { grid-template-columns: 1fr; } .sidebar { display:none; } .main { margin-left:0; } }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div style="font-family:'Outfit'; font-weight:700; font-size:1.3rem; margin-bottom:30px;"><i class="fas fa-user-md"></i> BITÁCORA PRO</div>
+    <a href="pacientes.html" style="color:#CBD5E1; text-decoration:none; display:flex; gap:10px; align-items:center;"><i class="fas fa-arrow-left"></i> Volver a Lista</a>
+  </aside>
+
+  <main class="main">
+    <div class="patient-header">
+        <div class="ph-info">
+            <div class="ph-avatar" id="pAvatar">--</div>
+            <div>
+                <h1 style="font-family:'Outfit'; font-size:1.5rem; margin:0;" id="pName">Cargando...</h1>
+                <p style="color:#64748B; font-size:0.9rem;">Paciente desde: <span id="pDate">--/--/----</span></p>
+            </div>
+        </div>
+        <div style="text-align:right;">
+            <span style="display:block; font-size:0.8rem; color:#64748B; margin-bottom:5px;">PRÓXIMA SESIÓN</span>
+            <strong style="font-size:1.1rem; color:var(--primary);" id="nextSession">Sin agendar</strong>
+        </div>
+    </div>
+
+    <div class="clinical-grid">
+        
+        <div>
+            <div class="card">
+                <div class="card-title">
+                    <span><i class="fas fa-chart-line"></i> Evolución Clínica</span>
+                    <select style="padding:5px; border-radius:5px; border:1px solid #E2E8F0;">
+                        <option>Últimos 30 días</option>
+                        <option>Últimos 3 meses</option>
+                    </select>
+                </div>
+                <div style="height: 300px;">
+                    <canvas id="evolutionChart"></canvas>
+                </div>
+                <div style="margin-top:15px; font-size:0.85rem; color:#64748B; text-align:center;">
+                    <i class="fas fa-info-circle"></i> Datos basados en los registros diarios de bitácora del paciente.
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Historial de Sesiones</div>
+                <div id="timelineContainer">
+                    <p style="color:#94A3B8;">Cargando historial...</p>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="card" style="border-top: 4px solid #F59E0B;">
+                <div class="card-title">
+                    <span><i class="fas fa-lock"></i> Notas Privadas</span>
+                    <i class="fas fa-eye-slash" title="Solo visible para ti" style="color:#F59E0B; cursor:help;"></i>
+                </div>
+                <p style="font-size:0.85rem; color:#64748B; margin-bottom:15px;">
+                    Estas notas están encriptadas y el paciente NO tiene acceso a ellas. Usa el formato SOAP.
+                </p>
+
+                <div class="soap-box">
+                    <label class="soap-label">S - Subjetivo (Lo que dice el paciente)</label>
+                    <textarea class="soap-textarea" id="noteS" placeholder="Ej: 'Me sentí muy ansioso ayer...'"></textarea>
+                </div>
+                <div class="soap-box">
+                    <label class="soap-label">O - Objetivo (Lo que observas)</label>
+                    <textarea class="soap-textarea" id="noteO" placeholder="Ej: Paciente inquieto, evita contacto visual..."></textarea>
+                </div>
+                <div class="soap-box">
+                    <label class="soap-label">A - Análisis (Tu evaluación)</label>
+                    <textarea class="soap-textarea" id="noteA" placeholder="Ej: Posible recaída por estrés laboral..."></textarea>
+                </div>
+                <div class="soap-box">
+                    <label class="soap-label">P - Plan (Próximos pasos)</label>
+                    <textarea class="soap-textarea" id="noteP" placeholder="Ej: Aplicar técnicas de respiración diafragmática..."></textarea>
+                </div>
+
+                <button class="btn btn-save" onclick="saveNotes()"><i class="fas fa-save"></i> Guardar en Expediente</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Acciones Rápidas</div>
+                <div style="display:grid; gap:10px;">
+                    <button class="btn btn-primary" onclick="window.location.href='sesion-live.html'"><i class="fas fa-video"></i> Iniciar Videollamada</button>
+                    <button class="btn" style="background:#F1F5F9;" onclick="alert('Función: Generar PDF del historial clínico.')"><i class="fas fa-file-pdf"></i> Descargar Reporte</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script>
+    // Obtener ID del paciente de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const patientId = urlParams.get('id');
+
+    let chartInstance = null;
+
+    async function init() {
+        if (!window.sb) return setTimeout(init, 100);
+        if (!patientId) return alert("Error: No se especificó paciente");
+
+        // 1. Cargar Datos Básicos
+        loadProfile();
+        // 2. Cargar Gráficos
+        loadCharts();
+        // 3. Cargar Historial
+        loadHistory();
+    }
+    init();
+
+    // --- CARGAR PERFIL ---
+    async function loadProfile() {
+        const { data: p } = await window.sb.from('users_profile').select('*').eq('id', patientId).single();
+        if(p) {
+            document.getElementById('pName').textContent = p.nombre;
+            document.getElementById('pAvatar').textContent = p.nombre.charAt(0);
+            document.getElementById('pDate').textContent = new Date(p.created_at).toLocaleDateString();
+        }
+    }
+
+    // --- CARGAR GRÁFICOS (CHART.JS) ---
+    async function loadCharts() {
+        // Traer últimos 30 registros de monitoreo
+        const { data: logs } = await window.sb
+            .from('monitoreo_sintomas')
+            .select('nivel_ansiedad, nivel_animo, created_at')
+            .eq('usuario_id', patientId)
+            .order('created_at', { ascending: true })
+            .limit(30);
+
+        if(!logs || logs.length === 0) return;
+
+        const labels = logs.map(l => new Date(l.created_at).toLocaleDateString(undefined, {day:'numeric', month:'short'}));
+        const dataAnsiedad = logs.map(l => l.nivel_ansiedad);
+        const dataAnimo = logs.map(l => l.nivel_animo);
+
+        const ctx = document.getElementById('evolutionChart').getContext('2d');
+        
+        if(chartInstance) chartInstance.destroy();
+
+        chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Ansiedad',
+                        data: dataAnsiedad,
+                        borderColor: '#EF4444', // Rojo
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Ánimo',
+                        data: dataAnimo,
+                        borderColor: '#10B981', // Verde
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { min: 0, max: 10 }
+                },
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    }
+
+    // --- GUARDAR NOTAS SOAP ---
+    async function saveNotes() {
+        const btn = document.querySelector('.btn-save');
+        btn.textContent = 'Guardando...';
+
+        const { data: session } = await window.sb.auth.getSession();
+        
+        // Concatenamos el SOAP en un solo texto JSON para guardarlo
+        const noteContent = JSON.stringify({
+            S: document.getElementById('noteS').value,
+            O: document.getElementById('noteO').value,
+            A: document.getElementById('noteA').value,
+            P: document.getElementById('noteP').value
+        });
+
+        const { error } = await window.sb.from('notas_clinicas').insert({
+            paciente_id: patientId,
+            psicologo_id: session.session.user.id,
+            contenido: noteContent,
+            tipo: 'SOAP'
+        });
+
+        if(!error) {
+            btn.textContent = '¡Nota Guardada!';
+            btn.style.background = '#059669';
+            // Limpiar campos
+            document.querySelectorAll('.soap-textarea').forEach(t => t.value = '');
+            // Recargar historial
+            loadHistory();
+            setTimeout(() => { 
+                btn.innerHTML = '<i class="fas fa-save"></i> Guardar en Expediente'; 
+                btn.style.background = '#10B981';
+            }, 2000);
+        } else {
+            alert('Error al guardar nota');
+        }
+    }
+
+    // --- CARGAR HISTORIAL (NOTAS PREVIAS) ---
+    async function loadHistory() {
+        const { data: notes } = await window.sb
+            .from('notas_clinicas')
+            .select('*')
+            .eq('paciente_id', patientId)
+            .order('fecha', { ascending: false });
+
+        const container = document.getElementById('timelineContainer');
+        
+        if(!notes || notes.length === 0) {
+            container.innerHTML = '<p style="font-size:0.9rem; color:#94A3B8;">No hay notas registradas.</p>';
+            return;
+        }
+
+        container.innerHTML = notes.map(n => {
+            let content = '';
+            try {
+                // Intentar parsear JSON SOAP
+                const soap = JSON.parse(n.contenido);
+                content = `<strong>S:</strong> ${soap.S.substring(0,30)}... <br><strong>A:</strong> ${soap.A.substring(0,30)}...`;
+            } catch(e) {
+                content = n.contenido; // Texto plano si falla
+            }
+
+            return `
+            <div class="timeline-item">
+                <div>
+                    <div class="t-date">${new Date(n.fecha).toLocaleDateString()} - ${new Date(n.fecha).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+                    <div class="t-content">${content}</div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+  </script>
+</body>
+</html>
