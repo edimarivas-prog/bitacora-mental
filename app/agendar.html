@@ -1,81 +1,291 @@
-<main class="main">
-  <h1>Agendar Sesión</h1>
-  <div class="card">
-    <div style="margin-bottom: 20px;">
-        <label style="display:block; font-weight:600; margin-bottom:8px;">Selecciona una fecha</label>
-        <input type="date" id="datePicker" class="nav-item" style="width:100%; border:1px solid #ccc;">
-    </div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Agendar Cita - Bitácora Mental</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root { --primary: #4F6F52; --bg: #F9FBFA; --text: #1F2933; --border: #E6EFE8; --accent: #F59E0B; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; padding: 40px 20px; min-height: 100vh; }
     
-    <div id="slots" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap:10px;">
+    .booking-card { background: white; width: 100%; max-width: 500px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); overflow: hidden; position: relative; }
+    
+    /* Header */
+    .card-header { background: var(--primary); padding: 30px; text-align: center; color: white; }
+    .card-header h1 { font-family: 'Outfit'; font-size: 1.5rem; margin-bottom: 5px; }
+    .card-header p { opacity: 0.9; font-size: 0.9rem; }
+
+    /* Content */
+    .card-body { padding: 30px; }
+
+    .form-step { margin-bottom: 25px; }
+    .step-label { font-weight: 700; font-size: 0.9rem; margin-bottom: 10px; display: block; color: var(--text); }
+    
+    /* Inputs */
+    .input-box { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 1rem; transition: 0.3s; background: #F8FAFC; }
+    .input-box:focus { border-color: var(--primary); outline: none; background: white; }
+
+    /* Grid de Horarios */
+    .slots-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; margin-top: 15px; }
+    .time-slot { padding: 10px; border: 1px solid var(--border); border-radius: 10px; text-align: center; cursor: pointer; transition: 0.2s; font-weight: 500; font-size: 0.9rem; background: white; }
+    .time-slot:hover { border-color: var(--primary); color: var(--primary); }
+    .time-slot.selected { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.05); }
+    .time-slot.disabled { background: #F1F5F9; color: #CBD5E1; cursor: not-allowed; border: 1px solid transparent; }
+
+    /* Botón */
+    .btn-submit { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.3s; margin-top: 20px; }
+    .btn-submit:disabled { background: #CBD5E1; cursor: not-allowed; }
+    .btn-submit:hover:not(:disabled) { background: #3E5842; transform: translateY(-2px); }
+
+    .back-btn { display: block; text-align: center; margin-top: 20px; color: #94A3B8; text-decoration: none; font-size: 0.9rem; }
+    .back-btn:hover { color: var(--primary); }
+
+    /* Feedback visual */
+    .price-tag { display: inline-block; background: var(--accent); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-left: 10px; vertical-align: middle; }
+  </style>
+</head>
+<body>
+
+  <div class="booking-card">
+    <div class="card-header">
+        <h1>Reservar Sesión</h1>
+        <p>Tu bienestar empieza con este paso.</p>
+    </div>
+
+    <div class="card-body">
+        
+        <div class="form-step">
+            <label class="step-label">1. Elige tu Especialista</label>
+            <select id="psicoSelect" class="input-box" onchange="resetCalendar()">
+                <option value="">Cargando doctores...</option>
+            </select>
         </div>
+
+        <div class="form-step" id="stepDate" style="opacity:0.5; pointer-events:none;">
+            <label class="step-label">2. ¿Qué día prefieres?</label>
+            <input type="date" id="dateInput" class="input-box" onchange="loadSlots()">
+        </div>
+
+        <div class="form-step" id="stepTime" style="display:none;">
+            <label class="step-label">3. Horarios Disponibles</label>
+            <div id="slotsGrid" class="slots-container">
+                </div>
+            <p id="msgSlots" style="color:#64748B; font-size:0.85rem; margin-top:10px; text-align:center;"></p>
+        </div>
+
+        <button id="btnBook" class="btn-submit" onclick="confirmBooking()" disabled>
+            Confirmar Reserva
+        </button>
+        
+        <a href="dashboard.html" class="back-btn">Cancelar y Volver</a>
+    </div>
   </div>
-</main>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/supabase-config.js"></script>
-<script>
-    // Configuración Perú
-    const PERU_OFFSET = -5; 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script>
+    let selectedSlot = null;
+    let selectedPrice = 0;
 
-    async function checkAuth() {
-        if (!window.sb) { setTimeout(checkAuth, 100); return; }
-        const { data: { session } } = await window.sb.auth.getSession();
-        if (!session) window.location.replace('../login.html');
-        initPicker();
-    }
-    checkAuth();
-
-    function initPicker() {
-        const input = document.getElementById('datePicker');
+    // 1. INICIALIZAR
+    async function init() {
+        if (!window.sb) return setTimeout(init, 100);
         
-        // 1. Restricción: No fechas pasadas (Usando hora Perú)
-        const now = new Date();
-        // Ajuste manual a hora Perú si el usuario está en otra zona
-        const peruTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (3600000 * PERU_OFFSET));
-        
-        const yyyy = peruTime.getFullYear();
-        const mm = String(peruTime.getMonth() + 1).padStart(2, '0');
-        const dd = String(peruTime.getDate()).padStart(2, '0');
-        
-        input.min = `${yyyy}-${mm}-${dd}`;
-        
-        input.addEventListener('change', loadSlots);
-    }
+        // Fecha mínima: Hoy
+        document.getElementById('dateInput').min = new Date().toISOString().split('T')[0];
 
-    async function loadSlots() {
-        const dateVal = document.getElementById('datePicker').value;
-        if (!dateVal) return;
+        // Cargar Psicólogos
+        const { data: psicos } = await window.sb
+            .from('users_profile')
+            .select('id, nombre, precio_consulta')
+            .eq('rol', 'psicologo');
 
-        const container = document.getElementById('slots');
-        container.innerHTML = 'Cargando...';
-
-        // Horarios fijos (Ejemplo)
-        const hours = ['09:00', '10:00', '11:00', '15:00', '16:00', '17:00'];
+        const select = document.getElementById('psicoSelect');
+        select.innerHTML = '<option value="">-- Selecciona --</option>';
         
-        container.innerHTML = hours.map(time => `
-            <button onclick="book('${dateVal}', '${time}')" 
-                    style="padding:10px; border-radius:10px; border:1px solid #ddd; background:white; cursor:pointer;">
-                ${time}
-            </button>
-        `).join('');
-    }
-
-    async function book(date, time) {
-        if(!confirm(`¿Confirmar cita para el ${date} a las ${time}?`)) return;
-        
-        const { data: { user } } = await window.sb.auth.getUser();
-        
-        // Guardar en Supabase (Tabla citas)
-        const { error } = await window.sb.from('citas').insert({
-            paciente_id: user.id,
-            fecha_hora: `${date}T${time}:00`, // Formato ISO simple
-            estado: 'agendada'
-        });
-
-        if (error) alert("Error: " + error.message);
-        else {
-            alert("¡Cita agendada!");
-            window.location.href = 'citas.html';
+        if (psicos && psicos.length > 0) {
+            psicos.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                // Guardamos el precio en un atributo data
+                opt.dataset.price = p.precio_consulta || 80; 
+                opt.textContent = `${p.nombre} (S/ ${p.precio_consulta || 80})`;
+                select.appendChild(opt);
+            });
+            // Habilitar fecha
+            document.getElementById('stepDate').style.opacity = '1';
+            document.getElementById('stepDate').style.pointerEvents = 'all';
+        } else {
+            select.innerHTML = '<option value="">No hay especialistas disponibles</option>';
         }
     }
-</script>
+    init();
+
+    // Resetear si cambia el doctor
+    function resetCalendar() {
+        document.getElementById('dateInput').value = '';
+        document.getElementById('stepTime').style.display = 'none';
+        selectedSlot = null;
+        updateButton();
+    }
+
+    // 2. BUSCAR HORARIOS (CORE)
+    async function loadSlots() {
+        const dateVal = document.getElementById('dateInput').value;
+        const psicoId = document.getElementById('psicoSelect').value;
+        
+        if (!dateVal || !psicoId) return;
+
+        const container = document.getElementById('slotsGrid');
+        const msg = document.getElementById('msgSlots');
+        
+        // Mostrar carga
+        document.getElementById('stepTime').style.display = 'block';
+        container.innerHTML = '<p style="grid-column:1/-1; text-align:center;"><i class="fas fa-spinner fa-spin"></i> Verificando agenda...</p>';
+        msg.textContent = '';
+
+        // Calcular día de la semana (Lunes=1 ... Domingo=7)
+        // new Date().getDay() devuelve Domingo=0, Lunes=1...
+        const d = new Date(dateVal + 'T00:00:00'); // Forzar hora local
+        let dayOfWeek = d.getDay(); 
+        if(dayOfWeek === 0) dayOfWeek = 7; // Ajuste para tu DB (si usas 1-7)
+
+        // A. Consultar Horario Base
+        const { data: config } = await window.sb
+            .from('horarios_profesionales')
+            .select('franjas, activo')
+            .eq('psicologo_id', psicoId)
+            .eq('dia_semana', dayOfWeek)
+            .single();
+
+        // B. Consultar Bloqueos (Excepciones)
+        const { data: blocks } = await window.sb
+            .from('bloqueos_agenda')
+            .select('*')
+            .eq('psicologo_id', psicoId)
+            .lte('fecha_inicio', dateVal + 'T23:59:59')
+            .gte('fecha_fin', dateVal + 'T00:00:00');
+
+        // Validaciones iniciales
+        if (blocks && blocks.length > 0) {
+            container.innerHTML = '';
+            msg.textContent = "El especialista tiene el día bloqueado.";
+            return;
+        }
+        if (!config || !config.activo || !config.franjas) {
+            container.innerHTML = '';
+            msg.textContent = "El especialista no atiende este día.";
+            return;
+        }
+
+        // C. Consultar Citas YA Ocupadas
+        const { data: citas } = await window.sb
+            .from('citas')
+            .select('fecha_hora')
+            .eq('psicologo_id', psicoId)
+            .gte('fecha_hora', dateVal + 'T00:00:00')
+            .lte('fecha_hora', dateVal + 'T23:59:59')
+            .neq('estado', 'cancelada');
+
+        const occupied = citas.map(c => c.fecha_hora.split('T')[1].substring(0,5)); // ["09:00", "10:00"]
+
+        // D. Generar Botones
+        let html = '';
+        let count = 0;
+
+        config.franjas.forEach(f => {
+            let start = parseInt(f.start.split(':')[0]);
+            let end = parseInt(f.end.split(':')[0]);
+
+            for (let h = start; h < end; h++) {
+                const timeStr = h.toString().padStart(2, '0') + ':00';
+                
+                if (occupied.includes(timeStr)) {
+                    html += `<div class="time-slot disabled" title="Ocupado">${timeStr}</div>`;
+                } else {
+                    html += `<div class="time-slot" onclick="selectSlot('${timeStr}', this)">${timeStr}</div>`;
+                    count++;
+                }
+            }
+        });
+
+        container.innerHTML = html;
+        if(count === 0) msg.textContent = "No quedan cupos libres hoy.";
+    }
+
+    function selectSlot(time, el) {
+        // Remover clase selected de todos
+        document.querySelectorAll('.time-slot').forEach(div => div.classList.remove('selected'));
+        // Activar el actual
+        if(!el.classList.contains('disabled')) {
+            el.classList.add('selected');
+            selectedSlot = time;
+            updateButton();
+        }
+    }
+
+    function updateButton() {
+        const btn = document.getElementById('btnBook');
+        if(selectedSlot) {
+            btn.disabled = false;
+            btn.textContent = `Confirmar para las ${selectedSlot}`;
+        } else {
+            btn.disabled = true;
+            btn.textContent = "Confirmar Reserva";
+        }
+    }
+
+    // 3. GUARDAR RESERVA
+    async function confirmBooking() {
+        const btn = document.getElementById('btnBook');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Agendando...';
+        btn.disabled = true;
+
+        try {
+            const { data: { user } } = await window.sb.auth.getUser();
+            const psicoId = document.getElementById('psicoSelect').value;
+            const dateVal = document.getElementById('dateInput').value;
+            const finalDate = `${dateVal}T${selectedSlot}:00`;
+
+            // Calcular montos
+            const select = document.getElementById('psicoSelect');
+            const price = parseFloat(select.options[select.selectedIndex].dataset.price);
+            const comision = price * 0.20; // 20% para la plataforma
+
+            // A. Crear Cita
+            const { error: err1 } = await window.sb.from('citas').insert({
+                paciente_id: user.id,
+                psicologo_id: psicoId,
+                fecha_hora: finalDate,
+                estado: 'pendiente',
+                link_reunion: 'Sala-' + Date.now().toString().substring(8) // ID único corto
+            });
+            if(err1) throw err1;
+
+            // B. Crear Registro Financiero (Pendiente)
+            const { error: err2 } = await window.sb.from('finanzas_wallet').insert({
+                psicologo_id: psicoId,
+                concepto: 'Sesión Terapéutica',
+                monto_total: price,
+                comision: comision,
+                monto_neto: (price - comision),
+                estado: 'pendiente'
+            });
+
+            // C. Éxito
+            alert("¡Cita reservada con éxito!");
+            window.location.href = 'dashboard.html';
+
+        } catch (e) {
+            alert("Error: " + e.message);
+            btn.disabled = false;
+            btn.textContent = "Intentar de nuevo";
+        }
+    }
+  </script>
+</body>
+</html>
