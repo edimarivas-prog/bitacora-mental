@@ -2,134 +2,156 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Agenda Flexible - Bitácora Pro</title>
+  <title>Mi Agenda Visual - Bitácora Pro</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    /* Estilos Base (Mismos del Dashboard) */
-    :root { --sidebar-bg: #1F2933; --primary: #4F6F52; --bg: #F3F4F6; --text: #1F2933; --border: #E5E7EB; --danger: #EF4444; }
+    /* --- ESTILOS BASE --- */
+    :root { --sidebar-bg: #1F2933; --primary: #4F6F52; --primary-light: #E8F5E9; --bg: #F3F4F6; --text: #1F2933; --border: #E5E7EB; --danger: #EF4444; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); display: flex; min-height: 100vh; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); display: flex; min-height: 100vh; color: var(--text); }
 
-    /* Sidebar y Main */
+    /* Sidebar */
     .sidebar { width: 260px; background: var(--sidebar-bg); color: white; padding: 24px; position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 10; }
-    .main { flex: 1; padding: 30px 40px; margin-left: 260px; }
+    .main { flex: 1; padding: 30px; margin-left: 260px; height: 100vh; overflow-y: auto; }
     .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: #CBD5E1; text-decoration: none; border-radius: 12px; transition: 0.2s; }
     .nav-item:hover, .nav-item.active { background: var(--primary); color: white; }
     .logo { font-family: 'Outfit'; font-weight: 700; color: white; font-size: 1.3rem; margin-bottom: 40px; display: block; text-decoration: none; }
 
-    /* Tabs */
-    .tabs { display: flex; gap: 20px; border-bottom: 1px solid var(--border); margin-bottom: 30px; }
-    .tab { padding: 10px 20px; cursor: pointer; border-bottom: 3px solid transparent; font-weight: 600; color: #64748B; }
-    .tab.active { border-color: var(--primary); color: var(--primary); }
-    .view-section { display: none; }
-    .view-section.active { display: block; animation: fadeIn 0.3s; }
-
-    /* --- ESTILOS DE HORARIO FLEXIBLE --- */
-    .config-card { background: white; padding: 30px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    /* --- LAYOUT DE AGENDA VISUAL --- */
+    .agenda-container { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; height: calc(100vh - 100px); }
     
-    .day-container { border-bottom: 1px solid #F1F5F9; padding: 20px 0; }
-    .day-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-    .day-name { font-family: 'Outfit'; font-weight: 700; font-size: 1.1rem; width: 120px; }
+    /* Panel Izquierdo: CALENDARIO */
+    .calendar-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); display: flex; flex-direction: column; }
     
-    /* Bloques de Tiempo */
-    .slots-wrapper { padding-left: 50px; }
-    .time-slot { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-    .time-input { padding: 8px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; background: #F8FAFC; }
+    .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .cal-month-title { font-family: 'Outfit'; font-size: 1.5rem; font-weight: 700; text-transform: capitalize; }
+    .btn-nav { background: #F1F5F9; border: none; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; transition: 0.2s; color: var(--text); }
+    .btn-nav:hover { background: var(--primary); color: white; }
+
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; flex: 1; }
+    .day-label { text-align: center; color: #94A3B8; font-weight: 700; font-size: 0.8rem; margin-bottom: 10px; text-transform: uppercase; }
     
-    .btn-icon { background: #FEE2E2; color: var(--danger); border: none; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .btn-icon:hover { background: #FCA5A5; }
+    /* Celdas del Calendario */
+    .day-cell { 
+        border: 1px solid var(--border); border-radius: 12px; padding: 10px; 
+        cursor: pointer; position: relative; transition: 0.2s; display: flex; flex-direction: column; justify-content: space-between;
+        min-height: 80px;
+    }
+    .day-cell:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-color: var(--primary); }
+    .day-cell.empty { background: transparent; border: none; cursor: default; }
+    .day-cell.selected { border: 2px solid var(--primary); background: var(--primary-light); }
     
-    .btn-add { background: transparent; border: 1px dashed var(--primary); color: var(--primary); padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; }
-    .btn-add:hover { background: #F0FDF4; }
+    /* Estados del Día */
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+    .day-cell.available { background: white; }
+    .day-cell.available .day-number { color: var(--text); font-weight: 700; }
+    .day-cell.available::after { content: 'Disponible'; font-size: 0.7rem; color: #166534; background: #DCFCE7; padding: 2px 6px; border-radius: 4px; margin-top: auto; align-self: flex-start; }
+    
+    .day-cell.blocked { background: #F9FAFB; opacity: 0.8; }
+    .day-cell.blocked .day-number { color: #94A3B8; text-decoration: line-through; }
+    .day-cell.blocked::after { content: 'Bloqueado'; font-size: 0.7rem; color: #991B1B; background: #FEE2E2; padding: 2px 6px; border-radius: 4px; margin-top: auto; align-self: flex-start; }
 
-    /* Switch */
-    .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #CBD5E1; transition: .4s; border-radius: 34px; }
-    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-    input:checked + .slider { background-color: var(--primary); }
-    input:checked + .slider:before { transform: translateX(20px); }
+    /* Panel Derecho: DETALLE DEL DÍA */
+    .detail-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); display: flex; flex-direction: column; }
+    
+    .detail-header { border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 20px; }
+    .detail-date { font-family: 'Outfit'; font-size: 1.5rem; color: var(--primary); margin-bottom: 5px; text-transform: capitalize; }
+    .detail-status { font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+    
+    .slots-list { flex: 1; overflow-y: auto; }
+    .slot-item { background: #F8FAFC; padding: 12px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; font-weight: 500; }
+    
+    /* Botones de Acción */
+    .action-area { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border); }
+    .btn-toggle-block { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1rem; }
+    
+    .btn-block-day { background: #FEE2E2; color: #DC2626; }
+    .btn-block-day:hover { background: #FECACA; }
+    
+    .btn-unblock-day { background: #DCFCE7; color: #166534; }
+    .btn-unblock-day:hover { background: #BBF7D0; }
 
-    /* --- BLOQUEOS --- */
-    .block-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; align-items: end; background: #FFF7ED; padding: 20px; border-radius: 12px; border: 1px solid #FFEDD5; margin-bottom: 20px; }
-    .blocked-list { display: flex; flex-direction: column; gap: 10px; }
-    .blocked-item { background: white; padding: 15px; border-radius: 10px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .btn-edit-base { background: transparent; border: 1px solid var(--text-soft); color: var(--text-soft); padding: 8px 15px; border-radius: 8px; font-size: 0.85rem; cursor: pointer; margin-top: 10px; width: 100%; }
 
-    .btn-save { background: var(--sidebar-bg); color: white; border: none; padding: 12px 30px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 20px; }
-    .btn-save:hover { background: #374151; }
+    /* Modal Simple para editar base */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; }
+    .modal.active { display: flex; }
+    .modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 500px; }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    @media(max-width: 900px) { .sidebar { display: none; } .main { margin-left: 0; padding: 20px; } .block-form { grid-template-columns: 1fr; } .slots-wrapper { padding-left: 0; margin-top: 10px; } }
+    @media(max-width: 1000px) { .agenda-container { grid-template-columns: 1fr; } .sidebar { display: none; } .main { margin-left: 0; padding: 20px; height: auto; } }
   </style>
 </head>
 <body>
 
   <aside class="sidebar">
     <a href="#" class="logo"><i class="fas fa-user-md"></i> BITÁCORA PRO</a>
-    <div style="font-size:0.7rem; color:#94A3B8; font-weight:700; padding-left:12px; margin-bottom:10px;">CONSULTORIO</div>
     <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Resumen</a>
-    <a href="agenda.html" class="nav-item active"><i class="far fa-calendar-alt"></i> Agenda Flexible</a>
+    <a href="agenda.html" class="nav-item active"><i class="far fa-calendar-alt"></i> Mi Agenda</a>
     <a href="pacientes.html" class="nav-item"><i class="fas fa-users"></i> Mis Pacientes</a>
-    <div style="font-size:0.7rem; color:#94A3B8; font-weight:700; padding-left:12px; margin-bottom:10px; margin-top:20px;">GESTIÓN</div>
-    <a href="billetera.html" class="nav-item"><i class="fas fa-wallet"></i> Billetera</a>
-    <a href="perfil.html" class="nav-item"><i class="fas fa-id-card"></i> Mi Perfil</a>
     <div style="margin-top:auto;"><a href="#" onclick="logout()" class="nav-item" style="color:#EF4444;">Salir</a></div>
   </aside>
 
   <main class="main">
-    <h1 style="font-family:'Outfit'; margin-bottom:30px;">Gestión de Disponibilidad</h1>
-
-    <div class="tabs">
-        <div class="tab active" onclick="switchTab('semanal')">Horario Semanal</div>
-        <div class="tab" onclick="switchTab('bloqueos')">Bloquear Fechas (Emergencias)</div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h1 style="font-family:'Outfit'; margin:0;">Calendario de Disponibilidad</h1>
+        <button class="btn-edit-base" onclick="alert('Aquí podrías editar tu rutina Lunes-Viernes general')"><i class="fas fa-cog"></i> Configurar Rutina Base</button>
     </div>
 
-    <div id="view-semanal" class="view-section active">
-        <div class="config-card">
-            <div style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; padding:15px; border-radius:10px; margin-bottom:20px; font-size:0.9rem;">
-                <i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Puedes agregar múltiples turnos por día. Ejemplo: Mañana (09:00 - 12:00) y Tarde (15:00 - 19:00).
+    <div class="agenda-container">
+        
+        <div class="calendar-card">
+            <div class="cal-header">
+                <button class="btn-nav" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                <div class="cal-month-title" id="monthLabel">--</div>
+                <button class="btn-nav" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            
+            <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:10px; margin-bottom:10px;">
+                <div class="day-label">Dom</div><div class="day-label">Lun</div><div class="day-label">Mar</div>
+                <div class="day-label">Mié</div><div class="day-label">Jue</div><div class="day-label">Vie</div>
+                <div class="day-label">Sáb</div>
             </div>
 
-            <div id="daysList">
-                <p style="text-align:center; padding:20px;">Cargando configuración...</p>
-            </div>
-
-            <button class="btn-save" onclick="saveWeeklySchedule()"><i class="fas fa-save"></i> Guardar Rutina Semanal</button>
-        </div>
-    </div>
-
-    <div id="view-bloqueos" class="view-section">
-        <div class="config-card">
-            <h3>Bloqueo de Días y Horas</h3>
-            <p style="color:#64748B; font-size:0.9rem; margin-bottom:20px;">Utiliza esta sección para vacaciones, emergencias o días feriados en los que no trabajarás.</p>
-
-            <div class="block-form">
-                <div>
-                    <label style="display:block; font-size:0.8rem; font-weight:700; margin-bottom:5px;">Desde</label>
-                    <input type="datetime-local" id="blockStart" class="time-input" style="width:100%">
-                </div>
-                <div>
-                    <label style="display:block; font-size:0.8rem; font-weight:700; margin-bottom:5px;">Hasta</label>
-                    <input type="datetime-local" id="blockEnd" class="time-input" style="width:100%">
-                </div>
-                <button class="btn-save" style="margin:0; background:#EF4444;" onclick="addBlockException()">Bloquear Agenda</button>
-            </div>
-
-            <h4 style="margin-bottom:15px;">Días Bloqueados Actuales</h4>
-            <div class="blocked-list" id="blockedList">
+            <div class="cal-grid" id="calendarGrid">
                 </div>
         </div>
-    </div>
 
+        <div class="detail-card">
+            <div id="loadingDetail" style="text-align:center; padding:50px; color:#94A3B8;">
+                <i class="fas fa-mouse-pointer"></i><br>Selecciona un día en el calendario
+            </div>
+
+            <div id="dayDetail" style="display:none; flex-direction:column; height:100%;">
+                <div class="detail-header">
+                    <h2 class="detail-date" id="selectedDateLabel">--</h2>
+                    <div id="statusBadge"></div>
+                </div>
+
+                <h4 style="margin-bottom:15px; color:#64748B;">Horarios para este día:</h4>
+                <div class="slots-list" id="slotsContainer">
+                    </div>
+
+                <div class="action-area">
+                    <button id="btnToggleBlock" class="btn-toggle-block" onclick="toggleDateBlock()">
+                        </button>
+                    <p style="font-size:0.8rem; color:#94A3B8; text-align:center; margin-top:10px;">
+                        Esto bloqueará/desbloqueará solo este día específico.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
-    const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-    let weeklyConfig = []; // Almacena el estado actual en memoria
+    let currentMonth = new Date();
+    let weeklyConfig = []; // Rutina base (Lunes si, Martes no...)
+    let blockedDates = []; // Excepciones (Fechas específicas bloqueadas)
+    let selectedDateStr = null; // Fecha seleccionada actualmente YYYY-MM-DD
 
     // 1. INICIAR
     async function init() {
@@ -137,168 +159,186 @@
         const { data: { session } } = await window.sb.auth.getSession();
         if (!session) window.location.href = '../login.html';
 
-        loadWeeklySchedule(session.user.id);
-        loadExceptions(session.user.id);
+        await loadData(session.user.id);
+        renderCalendar();
     }
     init();
 
-    // --- LÓGICA DE HORARIO SEMANAL ---
-
-    async function loadWeeklySchedule(userId) {
-        const { data } = await window.sb.from('horarios_profesionales').select('*').eq('psicologo_id', userId).order('dia_semana');
-        
-        // Inicializar estructura si no existe
-        weeklyConfig = Array(7).fill(null).map((_, i) => {
-            const existing = data ? data.find(d => d.dia_semana === (i + 1)) : null; // DB usa 1=Lunes
-            return {
-                id: existing?.id,
-                dayIndex: i + 1,
-                active: existing ? existing.activo : false,
-                slots: existing?.franjas?.length > 0 ? existing.franjas : [{ start: '09:00', end: '18:00' }]
-            };
-        });
-
-        renderWeekly();
-    }
-
-    function renderWeekly() {
-        const container = document.getElementById('daysList');
-        container.innerHTML = weeklyConfig.map((day, idx) => `
-            <div class="day-container" style="opacity: ${day.active ? '1' : '0.5'}">
-                <div class="day-header">
-                    <div style="display:flex; align-items:center; gap:15px;">
-                        <label class="switch">
-                            <input type="checkbox" ${day.active ? 'checked' : ''} onchange="toggleDay(${idx})">
-                            <span class="slider"></span>
-                        </label>
-                        <span class="day-name">${days[idx]}</span>
-                    </div>
-                    ${day.active ? `<button class="btn-add" onclick="addSlot(${idx})"><i class="fas fa-plus"></i> Turno</button>` : ''}
-                </div>
-
-                <div class="slots-wrapper" id="slots-${idx}">
-                    ${day.active ? day.slots.map((slot, sIdx) => `
-                        <div class="time-slot">
-                            <input type="time" class="time-input" value="${slot.start}" onchange="updateSlot(${idx}, ${sIdx}, 'start', this.value)">
-                            <span style="font-weight:700; color:#CBD5E1;">—</span>
-                            <input type="time" class="time-input" value="${slot.end}" onchange="updateSlot(${idx}, ${sIdx}, 'end', this.value)">
-                            ${day.slots.length > 1 ? `<button class="btn-icon" onclick="removeSlot(${idx}, ${sIdx})"><i class="fas fa-trash"></i></button>` : ''}
-                        </div>
-                    `).join('') : '<span style="font-size:0.9rem; color:#94A3B8;">No disponible este día</span>'}
-                </div>
-            </div>
-        `).join('');
-    }
-
-    // Manipulación de Estado Local
-    window.toggleDay = (idx) => {
-        weeklyConfig[idx].active = !weeklyConfig[idx].active;
-        renderWeekly();
-    }
-    window.addSlot = (idx) => {
-        weeklyConfig[idx].slots.push({ start: '14:00', end: '18:00' });
-        renderWeekly();
-    }
-    window.removeSlot = (dayIdx, slotIdx) => {
-        weeklyConfig[dayIdx].slots.splice(slotIdx, 1);
-        renderWeekly();
-    }
-    window.updateSlot = (dayIdx, slotIdx, field, val) => {
-        weeklyConfig[dayIdx].slots[slotIdx][field] = val;
-    }
-
-    // Guardar en DB
-    async function saveWeeklySchedule() {
-        const btn = document.querySelector('.btn-save');
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
-        
-        const { data: { user } } = await window.sb.auth.getUser();
-        
-        const updates = weeklyConfig.map(day => ({
-            psicologo_id: user.id,
-            dia_semana: day.dayIndex,
-            activo: day.active,
-            franjas: day.slots // JSONB Array
-        }));
-
-        const { error } = await window.sb.from('horarios_profesionales').upsert(updates, { onConflict: 'psicologo_id, dia_semana' });
-
-        if(!error) {
-            btn.style.background = '#10B981';
-            btn.innerHTML = '<i class="fas fa-check"></i> Horario Actualizado';
-            setTimeout(() => { btn.style.background = ''; btn.innerHTML = '<i class="fas fa-save"></i> Guardar Rutina Semanal'; }, 2000);
-        } else {
-            alert('Error al guardar: ' + error.message);
-        }
-    }
-
-    // --- LÓGICA DE BLOQUEOS (EXCEPCIONES) ---
-
-    async function loadExceptions(userId) {
-        const { data } = await window.sb.from('bloqueos_agenda')
+    // 2. CARGAR DATOS (Rutina Base + Bloqueos)
+    async function loadData(userId) {
+        // A. Rutina Semanal (Lunes=1 ... Domingo=7)
+        const { data: schedule } = await window.sb
+            .from('horarios_profesionales')
             .select('*')
             .eq('psicologo_id', userId)
-            .gte('fecha_fin', new Date().toISOString()) // Solo futuros
-            .order('fecha_inicio');
-        
-        renderExceptions(data || []);
+            .eq('activo', true);
+        weeklyConfig = schedule || [];
+
+        // B. Bloqueos de Fechas Específicas
+        // Truco: Traemos los bloqueos del mes actual +/- 1 mes para no cargar todo el historial
+        const { data: blocks } = await window.sb
+            .from('bloqueos_agenda')
+            .select('*')
+            .eq('psicologo_id', userId);
+        blockedDates = blocks || [];
     }
 
-    function renderExceptions(list) {
-        const container = document.getElementById('blockedList');
-        if(list.length === 0) {
-            container.innerHTML = '<p style="text-align:center; color:#94A3B8;">No tienes días bloqueados.</p>';
-            return;
+    // 3. RENDERIZAR CALENDARIO
+    function renderCalendar() {
+        const grid = document.getElementById('calendarGrid');
+        const label = document.getElementById('monthLabel');
+        grid.innerHTML = '';
+
+        const year = currentMonth.getFullYear();
+        const month = currentMonth.getMonth();
+        label.textContent = currentMonth.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+
+        const firstDay = new Date(year, month, 1).getDay(); // 0=Dom
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        // Celdas vacías
+        for (let i = 0; i < firstDay; i++) {
+            grid.innerHTML += `<div class="day-cell empty"></div>`;
         }
-        
-        container.innerHTML = list.map(item => `
-            <div class="blocked-item">
-                <div>
-                    <strong style="color:#EF4444;"><i class="fas fa-ban"></i> No disponible</strong><br>
-                    <span style="font-size:0.9rem;">Desde: ${new Date(item.fecha_inicio).toLocaleString()}</span><br>
-                    <span style="font-size:0.9rem;">Hasta: ${new Date(item.fecha_fin).toLocaleString()}</span>
-                </div>
-                <button class="btn-icon" onclick="deleteException('${item.id}')"><i class="fas fa-trash"></i></button>
-            </div>
-        `).join('');
+
+        // Días
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dateStr = `${year}-${(month+1).toString().padStart(2,'0')}-${day.toString().padStart(2,'0')}`;
+            const cellDate = new Date(dateStr + 'T00:00:00'); // Forzar local
+
+            // Determinar estado
+            // 1. ¿Está bloqueado manualmente?
+            const isBlocked = blockedDates.some(b => {
+                const start = b.fecha_inicio.split('T')[0];
+                const end = b.fecha_fin.split('T')[0];
+                return dateStr >= start && dateStr <= end;
+            });
+
+            // 2. ¿Es día laboral según rutina base?
+            // JS getDay(): Dom=0, Lun=1. DB: Lun=1...Dom=7 (Ajuste necesario si tu DB es ISO)
+            let dayOfWeek = cellDate.getDay(); 
+            if(dayOfWeek === 0) dayOfWeek = 7; // Ajuste para DB
+
+            const config = weeklyConfig.find(w => w.dia_semana === dayOfWeek);
+            const isWorkDay = config ? true : false;
+
+            // Decidir clase CSS
+            let cssClass = 'day-cell';
+            if (isBlocked) {
+                cssClass += ' blocked';
+            } else if (isWorkDay) {
+                cssClass += ' available';
+            } else {
+                cssClass += ' empty'; // No trabaja este día de la semana
+            }
+
+            // Crear Celda
+            const cell = document.createElement('div');
+            cell.className = cssClass;
+            cell.innerHTML = `<span class="day-number">${day}</span>`;
+            
+            if (isWorkDay || isBlocked) {
+                cell.onclick = () => selectDate(dateStr, isBlocked, config, cell);
+            } else {
+                cell.style.opacity = '0.3';
+                cell.style.cursor = 'default';
+            }
+
+            if(selectedDateStr === dateStr) cell.classList.add('selected');
+
+            grid.appendChild(cell);
+        }
     }
 
-    async function addBlockException() {
-        const start = document.getElementById('blockStart').value;
-        const end = document.getElementById('blockEnd').value;
+    // 4. SELECCIONAR DÍA (Panel Derecho)
+    function selectDate(dateStr, isBlocked, config, cellElement) {
+        selectedDateStr = dateStr;
         
-        if(!start || !end) return alert("Selecciona fecha inicio y fin.");
-        if(new Date(start) >= new Date(end)) return alert("La fecha fin debe ser después del inicio.");
+        // Visual Select
+        document.querySelectorAll('.day-cell').forEach(c => c.classList.remove('selected'));
+        if(cellElement) cellElement.classList.add('selected');
+
+        document.getElementById('loadingDetail').style.display = 'none';
+        document.getElementById('dayDetail').style.display = 'flex';
+
+        // Render Panel
+        const dateObj = new Date(dateStr + 'T00:00:00');
+        document.getElementById('selectedDateLabel').textContent = dateObj.toLocaleDateString('es-ES', {weekday: 'long', day:'numeric', month:'long'});
+
+        const badge = document.getElementById('statusBadge');
+        const slotsDiv = document.getElementById('slotsContainer');
+        const btn = document.getElementById('btnToggleBlock');
+
+        if (isBlocked) {
+            // ESTADO: BLOQUEADO
+            badge.innerHTML = '<span style="color:#DC2626; background:#FEE2E2; padding:5px 10px; border-radius:10px;">🔴 No disponible</span>';
+            slotsDiv.innerHTML = '<p style="color:#94A3B8; font-style:italic;">Has marcado este día como no laborable.</p>';
+            
+            btn.className = 'btn-toggle-block btn-unblock-day';
+            btn.innerHTML = '<i class="fas fa-check"></i> Habilitar este día';
+        } else {
+            // ESTADO: DISPONIBLE
+            badge.innerHTML = '<span style="color:#166534; background:#DCFCE7; padding:5px 10px; border-radius:10px;">🟢 Disponible</span>';
+            
+            // Mostrar horas de la rutina base
+            if(config && config.franjas) {
+                slotsDiv.innerHTML = config.franjas.map(f => `
+                    <div class="slot-item">
+                        <i class="far fa-clock" style="color:var(--primary)"></i>
+                        ${f.start} - ${f.end}
+                    </div>
+                `).join('');
+            } else {
+                slotsDiv.innerHTML = '<p>Sin horarios configurados.</p>';
+            }
+
+            btn.className = 'btn-toggle-block btn-block-day';
+            btn.innerHTML = '<i class="fas fa-ban"></i> Bloquear este día';
+        }
+    }
+
+    // 5. ACCIÓN: BLOQUEAR / DESBLOQUEAR
+    async function toggleDateBlock() {
+        if(!selectedDateStr) return;
+        const btn = document.getElementById('btnToggleBlock');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
 
         const { data: { user } } = await window.sb.auth.getUser();
-        
-        await window.sb.from('bloqueos_agenda').insert({
-            psicologo_id: user.id,
-            fecha_inicio: start,
-            fecha_fin: end,
-            motivo: 'Usuario definió bloqueo'
+
+        // Buscar si ya está bloqueado
+        const existingBlock = blockedDates.find(b => {
+            const start = b.fecha_inicio.split('T')[0];
+            return start === selectedDateStr;
         });
 
-        loadExceptions(user.id);
-        // Limpiar inputs
-        document.getElementById('blockStart').value = '';
-        document.getElementById('blockEnd').value = '';
-    }
-
-    async function deleteException(id) {
-        if(confirm("¿Desbloquear estas fechas?")) {
-            await window.sb.from('bloqueos_agenda').delete().eq('id', id);
-            const { data: { user } } = await window.sb.auth.getUser();
-            loadExceptions(user.id);
+        if (existingBlock) {
+            // DESBLOQUEAR (Borrar de DB)
+            await window.sb.from('bloqueos_agenda').delete().eq('id', existingBlock.id);
+        } else {
+            // BLOQUEAR (Insertar en DB)
+            await window.sb.from('bloqueos_agenda').insert({
+                psicologo_id: user.id,
+                fecha_inicio: selectedDateStr + 'T00:00:00',
+                fecha_fin: selectedDateStr + 'T23:59:59',
+                motivo: 'Bloqueo manual desde calendario'
+            });
         }
+
+        // Recargar y refrescar UI
+        await loadData(user.id);
+        renderCalendar();
+        
+        // Simular click de nuevo para actualizar panel derecho
+        const day = new Date(selectedDateStr + 'T00:00:00').getDay() || 7;
+        const config = weeklyConfig.find(w => w.dia_semana === day);
+        const isBlocked = !existingBlock; // Invertimos lógica porque acabamos de cambiarlo
+        
+        selectDate(selectedDateStr, isBlocked, config, null);
     }
 
-    // Utilidades
-    function switchTab(tab) {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-        event.currentTarget.classList.add('active');
-        document.getElementById(`view-${tab}`).classList.add('active');
+    function changeMonth(delta) {
+        currentMonth.setMonth(currentMonth.getMonth() + delta);
+        renderCalendar();
     }
 
     async function logout() {
