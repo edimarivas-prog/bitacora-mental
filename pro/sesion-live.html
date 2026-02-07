@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sesión en Vivo - Consultorio Virtual</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src='https://meet.jit.si/external_api.js'></script>
+
+  <style>
+    :root { --primary: #4F6F52; --bg: #1F2933; --text: #F8FAFC; --panel-bg: #2D3748; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+    /* HEADER DE SESIÓN */
+    .session-header { height: 60px; background: #111827; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; border-bottom: 1px solid #374151; }
+    .brand { font-family: 'Outfit'; font-weight: 700; color: #10B981; display: flex; align-items: center; gap: 10px; }
+    
+    .timer-box { background: #374151; padding: 5px 15px; border-radius: 20px; font-family: monospace; font-size: 1.2rem; font-weight: 700; color: #FCD34D; display: flex; align-items: center; gap: 8px; }
+    .timer-dot { width: 8px; height: 8px; background: #EF4444; border-radius: 50%; animation: blink 1s infinite; }
+
+    .btn-exit { background: #EF4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; font-size: 0.9rem; }
+    .btn-exit:hover { background: #DC2626; }
+
+    /* LAYOUT PRINCIPAL */
+    .session-layout { flex: 1; display: grid; grid-template-columns: 1fr 350px; height: calc(100vh - 60px); }
+
+    /* ÁREA DE VIDEO (Jitsi) */
+    #meet { width: 100%; height: 100%; background: black; }
+
+    /* PANEL LATERAL DE HERRAMIENTAS */
+    .tools-panel { background: var(--panel-bg); border-left: 1px solid #4A5568; display: flex; flex-direction: column; padding: 20px; overflow-y: auto; }
+    
+    .panel-section { margin-bottom: 25px; }
+    .panel-title { font-size: 0.85rem; text-transform: uppercase; color: #A0AEC0; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px; }
+
+    /* Info Paciente */
+    .patient-info { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; }
+    .p-avatar { width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    
+    /* Notas Rápidas */
+    .notes-area { width: 100%; height: 200px; background: #1A202C; border: 1px solid #4A5568; border-radius: 8px; color: white; padding: 15px; font-family: inherit; resize: none; outline: none; line-height: 1.5; }
+    .notes-area:focus { border-color: var(--primary); }
+
+    .btn-save-note { width: 100%; background: var(--primary); color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+    .btn-save-note:hover { background: #3E5842; }
+
+    /* Script de Guía (Teleprompter) */
+    .script-box { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; font-size: 0.9rem; color: #CBD5E1; max-height: 150px; overflow-y: auto; }
+    .script-title { font-weight: 700; color: #10B981; margin-bottom: 5px; }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    @media (max-width: 900px) {
+        .session-layout { grid-template-columns: 1fr; grid-template-rows: 1fr 200px; }
+        .tools-panel { border-left: none; border-top: 1px solid #4A5568; padding: 10px; }
+        .notes-area { height: 100px; }
+        .brand span { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="session-header">
+    <div class="brand">
+        <i class="fas fa-video"></i> <span>CONSULTORIO VIRTUAL</span>
+    </div>
+    
+    <div class="timer-box">
+        <div class="timer-dot"></div>
+        <span id="timer">00:00</span>
+    </div>
+
+    <button onclick="endSession()" class="btn-exit"><i class="fas fa-phone-slash"></i> Finalizar</button>
+  </header>
+
+  <div class="session-layout">
+    
+    <div id="meet"></div>
+
+    <aside class="tools-panel">
+        
+        <div class="panel-section">
+            <div class="panel-title">Paciente en Línea</div>
+            <div class="patient-info">
+                <div class="p-avatar" id="pAvatar">--</div>
+                <div>
+                    <strong style="display:block;" id="pName">Esperando...</strong>
+                    <span style="font-size:0.8rem; color:#A0AEC0;" id="pReason">Consulta General</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-section" style="flex:1;">
+            <div class="panel-title">Notas de Sesión (Privadas)</div>
+            <textarea class="notes-area" id="sessionNotes" placeholder="Escribe aquí tus observaciones clave... (No visible para el paciente)"></textarea>
+            <button class="btn-save-note" onclick="saveNotes()"><i class="fas fa-save"></i> Guardar Borrador</button>
+            <small style="display:block; margin-top:5px; color:#718096; font-size:0.75rem;">* Se guardan en el expediente automáticamente al finalizar.</small>
+        </div>
+
+        <div class="panel-section">
+            <div class="panel-title">Guía Rápida</div>
+            <div class="script-box">
+                <div class="script-title">Cierre de Sesión</div>
+                <p>1. Resumir puntos clave.<br>2. Validar emociones.<br>3. Asignar tarea (Bitácora).<br>4. Confirmar próxima cita.</p>
+            </div>
+        </div>
+
+    </aside>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script>
+    let api = null;
+    let seconds = 0;
+    let timerInterval;
+
+    // Obtener parámetros de la URL (Ej: ?room=SalaSecreta123&patient=Juan)
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomName = urlParams.get('room') || 'Bitacora_Demo_' + Math.floor(Math.random() * 1000);
+    const patientName = urlParams.get('patient') || 'Paciente Invitado';
+
+    // 1. INICIAR VIDEOLLAMADA
+    window.onload = () => {
+        // Datos simulados (En producción vienen de Supabase)
+        document.getElementById('pName').textContent = patientName;
+        document.getElementById('pAvatar').textContent = patientName.charAt(0);
+
+        startTimer();
+        initJitsi();
+    };
+
+    function initJitsi() {
+        const domain = 'meet.jit.si';
+        const options = {
+            roomName: roomName,
+            width: '100%',
+            height: '100%',
+            parentNode: document.querySelector('#meet'),
+            lang: 'es',
+            configOverwrite: { 
+                startWithAudioMuted: false, 
+                startWithVideoMuted: false,
+                prejoinPageEnabled: false // Entrar directo
+            },
+            interfaceConfigOverwrite: {
+                TOOLBAR_BUTTONS: [
+                    'microphone', 'camera', 'desktop', 'fullscreen',
+                    'fodeviceselection', 'hangup', 'chat', 'raisehand',
+                    'videoquality', 'filmstrip', 'tileview'
+                ],
+                SHOW_JITSI_WATERMARK: false
+            },
+            userInfo: {
+                displayName: 'Psicólogo (Bitácora Mental)'
+            }
+        };
+        api = new JitsiMeetExternalAPI(domain, options);
+        
+        // Evento cuando alguien cuelga
+        api.addEventListeners({
+            videoConferenceLeft: function () {
+                endSession();
+            }
+        });
+    }
+
+    // 2. CRONÓMETRO
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            seconds++;
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            document.getElementById('timer').textContent = 
+                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            
+            // Alerta visual a los 50 mins
+            if(mins >= 50) document.querySelector('.timer-box').style.color = '#EF4444';
+        }, 1000);
+    }
+
+    // 3. GUARDAR NOTAS
+    async function saveNotes() {
+        const note = document.getElementById('sessionNotes').value;
+        if(!note) return alert("Escribe algo primero.");
+        
+        const btn = document.querySelector('.btn-save-note');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+        // Aquí conectarías con Supabase 'notas_clinicas'
+        // await window.sb.from('notas_clinicas').insert(...)
+        
+        // Simulación
+        setTimeout(() => {
+            btn.innerHTML = '<i class="fas fa-check"></i> Guardado';
+            btn.style.background = '#10B981';
+            setTimeout(() => { 
+                btn.innerHTML = '<i class="fas fa-save"></i> Guardar Borrador'; 
+                btn.style.background = '';
+            }, 2000);
+        }, 800);
+    }
+
+    // 4. FINALIZAR SESIÓN
+    function endSession() {
+        if(confirm("¿Finalizar sesión y volver al dashboard?")) {
+            if(api) api.dispose();
+            clearInterval(timerInterval);
+            // Redirigir al expediente para completar notas finales
+            window.location.href = 'dashboard.html'; 
+        }
+    }
+  </script>
+</body>
+</html>
