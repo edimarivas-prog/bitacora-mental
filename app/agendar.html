@@ -314,7 +314,8 @@
                 psicologo_id: psicoId,
                 fecha_hora: finalDate,
                 estado: 'pendiente',
-                link_reunion: 'Sala-' + Date.now().toString().substring(8)
+                link_reunion: 'Sala-' + Date.now().toString().substring(8),
+                costo: price
             });
             if(err1) throw err1;
 
