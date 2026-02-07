@@ -2,158 +2,190 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Mi Agenda Visual - Bitácora Pro</title>
+  <title>Agenda Profesional - Bitácora</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    /* --- ESTILOS BASE --- */
-    :root { --sidebar-bg: #1F2933; --primary: #4F6F52; --primary-light: #E8F5E9; --bg: #F3F4F6; --text: #1F2933; --border: #E5E7EB; --danger: #EF4444; }
+    /* --- ESTILOS MAESTROS --- */
+    :root { --sidebar-bg: #1F2933; --primary: #4F6F52; --bg: #F3F4F6; --text: #1F2933; --border: #E5E7EB; --white: #FFFFFF; --danger: #EF4444; --success: #10B981; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); display: flex; min-height: 100vh; color: var(--text); }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
 
-    /* Sidebar */
-    .sidebar { width: 260px; background: var(--sidebar-bg); color: white; padding: 24px; position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 10; }
-    .main { flex: 1; padding: 30px; margin-left: 260px; height: 100vh; overflow-y: auto; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: #CBD5E1; text-decoration: none; border-radius: 12px; transition: 0.2s; }
+    /* SIDEBAR COMPLETO */
+    .sidebar { width: 260px; background: var(--sidebar-bg); color: white; padding: 24px; position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s ease; }
+    .logo { font-family: 'Outfit'; font-weight: 700; color: white; font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 10px; margin-bottom: 40px; }
+    .nav-title { font-size: 0.7rem; text-transform: uppercase; color: #94A3B8; font-weight: 700; padding-left: 12px; margin-bottom: 8px; margin-top: 20px; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: #CBD5E1; text-decoration: none; border-radius: 12px; transition: 0.2s; font-size: 0.95rem; }
     .nav-item:hover, .nav-item.active { background: var(--primary); color: white; }
-    .logo { font-family: 'Outfit'; font-weight: 700; color: white; font-size: 1.3rem; margin-bottom: 40px; display: block; text-decoration: none; }
+    
+    /* MAIN */
+    .main { flex: 1; padding: 30px; margin-left: 260px; height: 100vh; overflow-y: auto; }
 
-    /* --- LAYOUT DE AGENDA VISUAL --- */
-    .agenda-container { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; height: calc(100vh - 100px); }
-    
-    /* Panel Izquierdo: CALENDARIO */
-    .calendar-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); display: flex; flex-direction: column; }
-    
-    .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .cal-month-title { font-family: 'Outfit'; font-size: 1.5rem; font-weight: 700; text-transform: capitalize; }
-    .btn-nav { background: #F1F5F9; border: none; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; transition: 0.2s; color: var(--text); }
-    .btn-nav:hover { background: var(--primary); color: white; }
+    /* HEADER */
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+    .page-title { font-family: 'Outfit'; font-size: 1.8rem; margin: 0; }
+    .btn-config { background: white; border: 1px solid var(--border); padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+    .btn-config:hover { border-color: var(--primary); color: var(--primary); }
 
-    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; flex: 1; }
-    .day-label { text-align: center; color: #94A3B8; font-weight: 700; font-size: 0.8rem; margin-bottom: 10px; text-transform: uppercase; }
-    
-    /* Celdas del Calendario */
-    .day-cell { 
-        border: 1px solid var(--border); border-radius: 12px; padding: 10px; 
-        cursor: pointer; position: relative; transition: 0.2s; display: flex; flex-direction: column; justify-content: space-between;
-        min-height: 80px;
-    }
-    .day-cell:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-color: var(--primary); }
-    .day-cell.empty { background: transparent; border: none; cursor: default; }
-    .day-cell.selected { border: 2px solid var(--primary); background: var(--primary-light); }
-    
-    /* Estados del Día */
-    .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; }
-    .day-cell.available { background: white; }
-    .day-cell.available .day-number { color: var(--text); font-weight: 700; }
-    .day-cell.available::after { content: 'Disponible'; font-size: 0.7rem; color: #166534; background: #DCFCE7; padding: 2px 6px; border-radius: 4px; margin-top: auto; align-self: flex-start; }
-    
-    .day-cell.blocked { background: #F9FAFB; opacity: 0.8; }
-    .day-cell.blocked .day-number { color: #94A3B8; text-decoration: line-through; }
-    .day-cell.blocked::after { content: 'Bloqueado'; font-size: 0.7rem; color: #991B1B; background: #FEE2E2; padding: 2px 6px; border-radius: 4px; margin-top: auto; align-self: flex-start; }
+    /* LAYOUT AGENDA */
+    .agenda-grid { display: grid; grid-template-columns: 3fr 1fr; gap: 25px; height: calc(100vh - 120px); }
 
-    /* Panel Derecho: DETALLE DEL DÍA */
-    .detail-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); display: flex; flex-direction: column; }
+    /* CALENDARIO (Izquierda) */
+    .calendar-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-direction: column; }
     
-    .detail-header { border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 20px; }
-    .detail-date { font-family: 'Outfit'; font-size: 1.5rem; color: var(--primary); margin-bottom: 5px; text-transform: capitalize; }
-    .detail-status { font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
-    
-    .slots-list { flex: 1; overflow-y: auto; }
-    .slot-item { background: #F8FAFC; padding: 12px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; font-weight: 500; }
-    
-    /* Botones de Acción */
-    .action-area { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border); }
-    .btn-toggle-block { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1rem; }
-    
-    .btn-block-day { background: #FEE2E2; color: #DC2626; }
-    .btn-block-day:hover { background: #FECACA; }
-    
-    .btn-unblock-day { background: #DCFCE7; color: #166534; }
-    .btn-unblock-day:hover { background: #BBF7D0; }
+    .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .cal-month { font-family: 'Outfit'; font-size: 1.4rem; font-weight: 700; text-transform: capitalize; }
+    .btn-nav-cal { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+    .btn-nav-cal:hover { background: var(--bg); }
 
-    .btn-edit-base { background: transparent; border: 1px solid var(--text-soft); color: var(--text-soft); padding: 8px 15px; border-radius: 8px; font-size: 0.85rem; cursor: pointer; margin-top: 10px; width: 100%; }
+    .cal-days-header { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin-bottom: 10px; text-align: center; font-weight: 700; color: #94A3B8; font-size: 0.8rem; }
+    .cal-days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; flex: 1; }
 
-    /* Modal Simple para editar base */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; }
-    .modal.active { display: flex; }
-    .modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 500px; }
+    /* Celdas del día */
+    .day-cell { border: 1px solid var(--border); border-radius: 12px; padding: 10px; min-height: 80px; cursor: pointer; transition: 0.2s; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+    .day-cell:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    .day-cell.empty { border: none; background: transparent; cursor: default; }
+    .day-cell.selected { border: 2px solid var(--primary); background: #F0FDF4; }
+    
+    /* Estados visuales */
+    .day-cell.workday { background: white; }
+    .day-cell.workday .day-num { font-weight: 700; color: var(--text); }
+    .day-cell.workday::after { content: 'Disponible'; font-size: 0.65rem; background: #DCFCE7; color: #166534; padding: 2px 6px; border-radius: 4px; align-self: flex-start; }
 
-    @media(max-width: 1000px) { .agenda-container { grid-template-columns: 1fr; } .sidebar { display: none; } .main { margin-left: 0; padding: 20px; height: auto; } }
+    .day-cell.blocked { background: #FEF2F2; opacity: 0.9; }
+    .day-cell.blocked .day-num { color: var(--danger); text-decoration: line-through; }
+    .day-cell.blocked::after { content: 'Bloqueado'; font-size: 0.65rem; background: #FECACA; color: #991B1B; padding: 2px 6px; border-radius: 4px; align-self: flex-start; }
+
+    .day-cell.off { background: #F8FAFC; opacity: 0.5; cursor: not-allowed; }
+
+    /* PANEL DETALLE (Derecha) */
+    .detail-panel { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-direction: column; }
+    
+    .detail-date { font-family: 'Outfit'; font-size: 1.2rem; font-weight: 700; margin-bottom: 5px; color: var(--primary); text-transform: capitalize; }
+    .detail-status { margin-bottom: 20px; font-size: 0.9rem; font-weight: 600; }
+    
+    .btn-action { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+    .btn-block { background: #FEE2E2; color: #DC2626; }
+    .btn-block:hover { background: #FECACA; }
+    .btn-unlock { background: #DCFCE7; color: #166534; }
+    .btn-unlock:hover { background: #BBF7D0; }
+
+    /* MODAL CONFIGURACIÓN BASE */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; display: none; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+    .modal-card { background: white; width: 90%; max-width: 600px; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
+    
+    .config-row { display: grid; grid-template-columns: 120px 1fr 1fr; gap: 15px; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #F1F5F9; }
+    .switch { position: relative; display: inline-block; width: 40px; height: 20px; margin-right: 10px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider { background-color: var(--primary); }
+    input:checked + .slider:before { transform: translateX(20px); }
+
+    .time-input { padding: 8px; border: 1px solid var(--border); border-radius: 8px; width: 100%; }
+    .btn-save-config { width: 100%; background: var(--sidebar-bg); color: white; padding: 15px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; margin-top: 20px; }
+
+    @media (max-width: 900px) { .sidebar { display: none; } .main { margin-left: 0; padding: 15px; } .agenda-grid { grid-template-columns: 1fr; height: auto; } }
   </style>
 </head>
 <body>
 
   <aside class="sidebar">
     <a href="#" class="logo"><i class="fas fa-user-md"></i> BITÁCORA PRO</a>
+    
+    <div class="nav-title">CONSULTORIO</div>
     <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Resumen</a>
     <a href="agenda.html" class="nav-item active"><i class="far fa-calendar-alt"></i> Mi Agenda</a>
     <a href="pacientes.html" class="nav-item"><i class="fas fa-users"></i> Mis Pacientes</a>
-    <div style="margin-top:auto;"><a href="#" onclick="logout()" class="nav-item" style="color:#EF4444;">Salir</a></div>
+    
+    <div class="nav-title">GESTIÓN</div>
+    <a href="billetera.html" class="nav-item"><i class="fas fa-wallet"></i> Billetera</a>
+    <a href="perfil.html" class="nav-item"><i class="fas fa-id-card"></i> Mi Perfil</a>
+    
+    <div style="margin-top:auto;">
+        <a href="#" onclick="logout()" class="nav-item" style="color:var(--danger);"><i class="fas fa-sign-out-alt"></i> Salir</a>
+    </div>
   </aside>
 
   <main class="main">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-        <h1 style="font-family:'Outfit'; margin:0;">Calendario de Disponibilidad</h1>
-        <button class="btn-edit-base" onclick="alert('Aquí podrías editar tu rutina Lunes-Viernes general')"><i class="fas fa-cog"></i> Configurar Rutina Base</button>
+    <div class="page-header">
+        <h1 class="page-title">Calendario Mensual</h1>
+        <button class="btn-config" onclick="openConfigModal()">
+            <i class="fas fa-sliders-h"></i> Configurar Rutina Base
+        </button>
     </div>
 
-    <div class="agenda-container">
-        
+    <div class="agenda-grid">
         <div class="calendar-card">
-            <div class="cal-header">
-                <button class="btn-nav" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
-                <div class="cal-month-title" id="monthLabel">--</div>
-                <button class="btn-nav" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+            <div class="cal-nav">
+                <button class="btn-nav-cal" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                <div class="cal-month" id="monthLabel">--</div>
+                <button class="btn-nav-cal" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
             </div>
             
-            <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:10px; margin-bottom:10px;">
-                <div class="day-label">Dom</div><div class="day-label">Lun</div><div class="day-label">Mar</div>
-                <div class="day-label">Mié</div><div class="day-label">Jue</div><div class="day-label">Vie</div>
-                <div class="day-label">Sáb</div>
+            <div class="cal-days-header">
+                <div>DOM</div><div>LUN</div><div>MAR</div><div>MIÉ</div><div>JUE</div><div>VIE</div><div>SÁB</div>
             </div>
-
-            <div class="cal-grid" id="calendarGrid">
-                </div>
+            
+            <div class="cal-days-grid" id="calendarGrid">
+                <p style="grid-column:1/-1; text-align:center;">Cargando calendario...</p>
+            </div>
         </div>
 
-        <div class="detail-card">
-            <div id="loadingDetail" style="text-align:center; padding:50px; color:#94A3B8;">
-                <i class="fas fa-mouse-pointer"></i><br>Selecciona un día en el calendario
+        <div class="detail-panel">
+            <div id="emptyDetail" style="text-align:center; color:#94A3B8; margin-top:50px;">
+                <i class="far fa-hand-pointer fa-2x"></i><br><br>Selecciona un día
             </div>
 
             <div id="dayDetail" style="display:none; flex-direction:column; height:100%;">
-                <div class="detail-header">
-                    <h2 class="detail-date" id="selectedDateLabel">--</h2>
-                    <div id="statusBadge"></div>
-                </div>
-
-                <h4 style="margin-bottom:15px; color:#64748B;">Horarios para este día:</h4>
-                <div class="slots-list" id="slotsContainer">
+                <div class="detail-date" id="selDateLabel">--</div>
+                <div class="detail-status" id="selStatus"></div>
+                
+                <div style="flex:1;">
+                    <p style="font-size:0.9rem; color:#64748B; margin-bottom:10px;">Horario estándar:</p>
+                    <div id="selHours" style="background:#F8FAFC; padding:10px; border-radius:10px; font-weight:500; font-size:0.9rem;">
+                        --
                     </div>
-
-                <div class="action-area">
-                    <button id="btnToggleBlock" class="btn-toggle-block" onclick="toggleDateBlock()">
-                        </button>
-                    <p style="font-size:0.8rem; color:#94A3B8; text-align:center; margin-top:10px;">
-                        Esto bloqueará/desbloqueará solo este día específico.
-                    </p>
                 </div>
+
+                <button id="btnToggleBlock" class="btn-action" onclick="toggleBlockDay()">
+                    </button>
             </div>
         </div>
     </div>
   </main>
 
+  <div class="modal-overlay" id="configModal">
+    <div class="modal-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 style="font-family:'Outfit'; margin:0;">Configurar Rutina Base</h2>
+            <button onclick="closeConfigModal()" style="border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        <p style="color:#64748B; font-size:0.9rem; margin-bottom:20px;">Define qué días trabajas normalmente y en qué horario.</p>
+
+        <div id="configRows">
+            </div>
+
+        <button class="btn-save-config" onclick="saveRoutineConfig()">
+            <i class="fas fa-save"></i> Guardar Rutina
+        </button>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
     let currentMonth = new Date();
-    let weeklyConfig = []; // Rutina base (Lunes si, Martes no...)
-    let blockedDates = []; // Excepciones (Fechas específicas bloqueadas)
-    let selectedDateStr = null; // Fecha seleccionada actualmente YYYY-MM-DD
+    let weeklyConfig = []; // Rutina base traída de DB
+    let blockedDates = []; // Bloqueos traídos de DB
+    let selectedDateStr = null; // Fecha seleccionada YYYY-MM-DD
+    
+    // Nombres días para el modal
+    const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
-    // 1. INICIAR
+    // 1. INICIALIZAR
     async function init() {
         if (!window.sb) return setTimeout(init, 100);
         const { data: { session } } = await window.sb.auth.getSession();
@@ -164,22 +196,14 @@
     }
     init();
 
-    // 2. CARGAR DATOS (Rutina Base + Bloqueos)
+    // 2. CARGAR DATOS
     async function loadData(userId) {
-        // A. Rutina Semanal (Lunes=1 ... Domingo=7)
-        const { data: schedule } = await window.sb
-            .from('horarios_profesionales')
-            .select('*')
-            .eq('psicologo_id', userId)
-            .eq('activo', true);
-        weeklyConfig = schedule || [];
+        // Rutina Base
+        const { data: routine } = await window.sb.from('horarios_profesionales').select('*').eq('psicologo_id', userId).eq('activo', true);
+        weeklyConfig = routine || [];
 
-        // B. Bloqueos de Fechas Específicas
-        // Truco: Traemos los bloqueos del mes actual +/- 1 mes para no cargar todo el historial
-        const { data: blocks } = await window.sb
-            .from('bloqueos_agenda')
-            .select('*')
-            .eq('psicologo_id', userId);
+        // Bloqueos (Futuros y pasados recientes)
+        const { data: blocks } = await window.sb.from('bloqueos_agenda').select('*').eq('psicologo_id', userId);
         blockedDates = blocks || [];
     }
 
@@ -201,150 +225,213 @@
             grid.innerHTML += `<div class="day-cell empty"></div>`;
         }
 
-        // Días
+        // Días reales
         for (let day = 1; day <= daysInMonth; day++) {
             const dateStr = `${year}-${(month+1).toString().padStart(2,'0')}-${day.toString().padStart(2,'0')}`;
-            const cellDate = new Date(dateStr + 'T00:00:00'); // Forzar local
-
-            // Determinar estado
-            // 1. ¿Está bloqueado manualmente?
-            const isBlocked = blockedDates.some(b => {
-                const start = b.fecha_inicio.split('T')[0];
-                const end = b.fecha_fin.split('T')[0];
-                return dateStr >= start && dateStr <= end;
-            });
-
-            // 2. ¿Es día laboral según rutina base?
-            // JS getDay(): Dom=0, Lun=1. DB: Lun=1...Dom=7 (Ajuste necesario si tu DB es ISO)
+            const cellDate = new Date(dateStr + 'T00:00:00'); // Forzar hora local
+            
+            // Determinar día semana (Dom=0, Lun=1...Sáb=6) - OJO: Supabase DB suele usar 1=Lun...7=Dom, ajustar según tu DB.
+            // Para simplificar, usaremos el estándar JS (0-6) y mapearemos al guardar.
             let dayOfWeek = cellDate.getDay(); 
-            if(dayOfWeek === 0) dayOfWeek = 7; // Ajuste para DB
+            // Ajuste para DB (si tu DB usa Lun=1...Dom=7)
+            let dbDayOfWeek = dayOfWeek === 0 ? 7 : dayOfWeek; 
 
-            const config = weeklyConfig.find(w => w.dia_semana === dayOfWeek);
-            const isWorkDay = config ? true : false;
+            // ¿Está en Rutina Base?
+            const routine = weeklyConfig.find(r => r.dia_semana === dbDayOfWeek);
+            const isWorkDay = !!routine;
 
-            // Decidir clase CSS
-            let cssClass = 'day-cell';
-            if (isBlocked) {
-                cssClass += ' blocked';
-            } else if (isWorkDay) {
-                cssClass += ' available';
-            } else {
-                cssClass += ' empty'; // No trabaja este día de la semana
-            }
+            // ¿Está Bloqueado Manualmente?
+            const block = blockedDates.find(b => {
+                const bStart = b.fecha_inicio.split('T')[0];
+                return bStart === dateStr;
+            });
+            const isBlocked = !!block;
 
             // Crear Celda
             const cell = document.createElement('div');
-            cell.className = cssClass;
-            cell.innerHTML = `<span class="day-number">${day}</span>`;
-            
-            if (isWorkDay || isBlocked) {
-                cell.onclick = () => selectDate(dateStr, isBlocked, config, cell);
+            cell.className = 'day-cell';
+            cell.innerHTML = `<span class="day-num">${day}</span>`;
+
+            if (isBlocked) {
+                cell.classList.add('blocked');
+                cell.onclick = () => selectDate(dateStr, 'blocked', routine);
+            } else if (isWorkDay) {
+                cell.classList.add('workday');
+                cell.onclick = () => selectDate(dateStr, 'available', routine);
             } else {
-                cell.style.opacity = '0.3';
-                cell.style.cursor = 'default';
+                cell.classList.add('off'); // Día libre (ej: Sábado/Domingo)
+                // Opcional: permitir click para habilitar excepción de trabajo extra
             }
 
             if(selectedDateStr === dateStr) cell.classList.add('selected');
-
             grid.appendChild(cell);
         }
     }
 
     // 4. SELECCIONAR DÍA (Panel Derecho)
-    function selectDate(dateStr, isBlocked, config, cellElement) {
+    function selectDate(dateStr, type, routine) {
         selectedDateStr = dateStr;
         
-        // Visual Select
+        // Actualizar UI Calendario
         document.querySelectorAll('.day-cell').forEach(c => c.classList.remove('selected'));
-        if(cellElement) cellElement.classList.add('selected');
+        // (Nota: para añadir la clase 'selected' visualmente necesitaríamos referencia al elemento clickeado, pero al volver a renderizar se pierde. Simplificamos repintando o buscando por texto)
+        renderCalendar(); // Refresca para mostrar selección
 
-        document.getElementById('loadingDetail').style.display = 'none';
-        document.getElementById('dayDetail').style.display = 'flex';
+        // Mostrar Panel Detalle
+        document.getElementById('emptyDetail').style.display = 'none';
+        const detail = document.getElementById('dayDetail');
+        detail.style.display = 'flex';
 
-        // Render Panel
-        const dateObj = new Date(dateStr + 'T00:00:00');
-        document.getElementById('selectedDateLabel').textContent = dateObj.toLocaleDateString('es-ES', {weekday: 'long', day:'numeric', month:'long'});
+        // Llenar Datos Panel
+        const d = new Date(dateStr + 'T00:00:00');
+        document.getElementById('selDateLabel').textContent = d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
 
-        const badge = document.getElementById('statusBadge');
-        const slotsDiv = document.getElementById('slotsContainer');
+        const statusEl = document.getElementById('selStatus');
+        const hoursEl = document.getElementById('selHours');
         const btn = document.getElementById('btnToggleBlock');
 
-        if (isBlocked) {
-            // ESTADO: BLOQUEADO
-            badge.innerHTML = '<span style="color:#DC2626; background:#FEE2E2; padding:5px 10px; border-radius:10px;">🔴 No disponible</span>';
-            slotsDiv.innerHTML = '<p style="color:#94A3B8; font-style:italic;">Has marcado este día como no laborable.</p>';
-            
-            btn.className = 'btn-toggle-block btn-unblock-day';
+        if (type === 'blocked') {
+            statusEl.innerHTML = '<span style="color:#DC2626;">🔴 Día marcado como NO disponible</span>';
+            hoursEl.innerHTML = 'Sin atención.';
+            btn.className = 'btn-action btn-unlock';
             btn.innerHTML = '<i class="fas fa-check"></i> Habilitar este día';
+            btn.onclick = () => removeBlock(dateStr);
         } else {
-            // ESTADO: DISPONIBLE
-            badge.innerHTML = '<span style="color:#166534; background:#DCFCE7; padding:5px 10px; border-radius:10px;">🟢 Disponible</span>';
-            
-            // Mostrar horas de la rutina base
-            if(config && config.franjas) {
-                slotsDiv.innerHTML = config.franjas.map(f => `
-                    <div class="slot-item">
-                        <i class="far fa-clock" style="color:var(--primary)"></i>
-                        ${f.start} - ${f.end}
-                    </div>
-                `).join('');
+            statusEl.innerHTML = '<span style="color:#166534;">🟢 Día Disponible</span>';
+            // Mostrar horas
+            if(routine && routine.franjas) {
+                hoursEl.innerHTML = routine.franjas.map(f => `${f.start} - ${f.end}`).join('<br>');
             } else {
-                slotsDiv.innerHTML = '<p>Sin horarios configurados.</p>';
+                hoursEl.innerHTML = 'Horario estándar';
             }
-
-            btn.className = 'btn-toggle-block btn-block-day';
+            
+            btn.className = 'btn-action btn-block';
             btn.innerHTML = '<i class="fas fa-ban"></i> Bloquear este día';
+            btn.onclick = () => addBlock(dateStr);
         }
     }
 
-    // 5. ACCIÓN: BLOQUEAR / DESBLOQUEAR
-    async function toggleDateBlock() {
-        if(!selectedDateStr) return;
-        const btn = document.getElementById('btnToggleBlock');
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
-
+    // 5. ACCIONES DE BLOQUEO
+    async function addBlock(dateStr) {
         const { data: { user } } = await window.sb.auth.getUser();
-
-        // Buscar si ya está bloqueado
-        const existingBlock = blockedDates.find(b => {
-            const start = b.fecha_inicio.split('T')[0];
-            return start === selectedDateStr;
+        
+        await window.sb.from('bloqueos_agenda').insert({
+            psicologo_id: user.id,
+            fecha_inicio: dateStr + 'T00:00:00',
+            fecha_fin: dateStr + 'T23:59:59',
+            motivo: 'Bloqueo manual'
         });
 
-        if (existingBlock) {
-            // DESBLOQUEAR (Borrar de DB)
-            await window.sb.from('bloqueos_agenda').delete().eq('id', existingBlock.id);
-        } else {
-            // BLOQUEAR (Insertar en DB)
-            await window.sb.from('bloqueos_agenda').insert({
-                psicologo_id: user.id,
-                fecha_inicio: selectedDateStr + 'T00:00:00',
-                fecha_fin: selectedDateStr + 'T23:59:59',
-                motivo: 'Bloqueo manual desde calendario'
-            });
-        }
-
-        // Recargar y refrescar UI
+        // Recargar
         await loadData(user.id);
         renderCalendar();
-        
-        // Simular click de nuevo para actualizar panel derecho
-        const day = new Date(selectedDateStr + 'T00:00:00').getDay() || 7;
-        const config = weeklyConfig.find(w => w.dia_semana === day);
-        const isBlocked = !existingBlock; // Invertimos lógica porque acabamos de cambiarlo
-        
-        selectDate(selectedDateStr, isBlocked, config, null);
+        // Simular re-selección
+        selectDate(dateStr, 'blocked', null);
     }
 
-    function changeMonth(delta) {
-        currentMonth.setMonth(currentMonth.getMonth() + delta);
+    async function removeBlock(dateStr) {
+        const { data: { user } } = await window.sb.auth.getUser();
+        
+        // Buscar el ID del bloqueo
+        const block = blockedDates.find(b => b.fecha_inicio.startsWith(dateStr));
+        if(block) {
+            await window.sb.from('bloqueos_agenda').delete().eq('id', block.id);
+        }
+
+        await loadData(user.id);
+        renderCalendar();
+        // Simular re-selección (recuperamos rutina original)
+        const d = new Date(dateStr + 'T00:00:00');
+        let dbDay = d.getDay() === 0 ? 7 : d.getDay();
+        const routine = weeklyConfig.find(r => r.dia_semana === dbDay);
+        selectDate(dateStr, 'available', routine);
+    }
+
+    // 6. MODAL DE RUTINA BASE (Funcionalidad Nueva)
+    function openConfigModal() {
+        document.getElementById('configModal').style.display = 'flex';
+        renderConfigRows();
+    }
+    
+    function closeConfigModal() {
+        document.getElementById('configModal').style.display = 'none';
+    }
+
+    function renderConfigRows() {
+        const container = document.getElementById('configRows');
+        container.innerHTML = '';
+
+        // Generar filas Lun(1) a Dom(7)
+        // Ojo: En el array 'dayNames', Lun es index 1.
+        for(let i=1; i<=7; i++) {
+            // Ajuste índice array (Dom está al principio o final según gusto, usaremos 1=Lun...6=Sab, 7=Dom)
+            // Array names: 0=Dom, 1=Lun...
+            let nameIdx = i === 7 ? 0 : i; 
+            
+            const existing = weeklyConfig.find(w => w.dia_semana === i);
+            const isActive = !!existing;
+            const startT = existing?.franjas?.[0]?.start || '09:00';
+            const endT = existing?.franjas?.[0]?.end || '18:00';
+
+            container.innerHTML += `
+            <div class="config-row">
+                <div style="font-weight:600;">${dayNames[nameIdx]}</div>
+                <div>
+                    <label class="switch">
+                        <input type="checkbox" id="check-${i}" ${isActive ? 'checked' : ''}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div style="display:flex; gap:5px;">
+                    <input type="time" class="time-input" id="start-${i}" value="${startT}">
+                    <input type="time" class="time-input" id="end-${i}" value="${endT}">
+                </div>
+            </div>`;
+        }
+    }
+
+    async function saveRoutineConfig() {
+        const btn = document.querySelector('.btn-save-config');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+        
+        const { data: { user } } = await window.sb.auth.getUser();
+        const newConfig = [];
+
+        for(let i=1; i<=7; i++) {
+            const isActive = document.getElementById(`check-${i}`).checked;
+            if(isActive) {
+                newConfig.push({
+                    psicologo_id: user.id,
+                    dia_semana: i,
+                    activo: true,
+                    franjas: [{
+                        start: document.getElementById(`start-${i}`).value,
+                        end: document.getElementById(`end-${i}`).value
+                    }]
+                });
+            }
+        }
+
+        // 1. Borrar configuración vieja (Estrategia simple: borrar todo y reinsertar activos)
+        // Nota: Mejor usar Upsert o borrar inactivos, pero delete/insert es más limpio para MVP
+        await window.sb.from('horarios_profesionales').delete().eq('psicologo_id', user.id);
+        
+        if(newConfig.length > 0) {
+            await window.sb.from('horarios_profesionales').insert(newConfig);
+        }
+
+        await loadData(user.id);
+        renderCalendar();
+        closeConfigModal();
+        btn.innerHTML = '<i class="fas fa-save"></i> Guardar Rutina';
+    }
+
+    function changeMonth(d) {
+        currentMonth.setMonth(currentMonth.getMonth() + d);
         renderCalendar();
     }
-
-    async function logout() {
-        await window.sb.auth.signOut();
-        window.location.href = '../login.html';
-    }
+    
+    async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
   </script>
 </body>
 </html>
