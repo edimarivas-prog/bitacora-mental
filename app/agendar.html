@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    /* --- ESTILOS MAESTROS (Idénticos al Dashboard) --- */
+    /* --- ESTILOS MAESTROS --- */
     :root { --primary: #4F6F52; --primary-light: #E8F5E9; --accent: #F59E0B; --bg: #F9FBFA; --white: #FFFFFF; --text: #1F2933; --text-soft: #64748B; --border: #E6EFE8; --radius: 20px; }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
@@ -39,23 +39,20 @@
         .mobile-nav { display: flex; } 
     }
 
-    /* --- ESTILOS ESPECÍFICOS DE AGENDAR --- */
-    
-    /* Pasos */
+    /* --- ESTILOS DE RESERVA --- */
     .step-section { display: none; animation: fadeIn 0.4s ease; }
     .step-section.active { display: block; }
 
-    /* GRID DE DOCTORES */
-    .doctors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+    /* Grid Doctores */
+    .doctors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
     
-    .doc-card { background: white; border-radius: 20px; padding: 25px; border: 1px solid var(--border); transition: 0.3s; display: flex; flex-direction: column; height: 100%; position: relative; overflow: hidden; }
+    .doc-card { background: white; border-radius: 20px; padding: 25px; border: 1px solid var(--border); transition: 0.3s; display: flex; flex-direction: column; height: 100%; }
     .doc-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-color: var(--primary); }
     
     .doc-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
     .doc-avatar { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-light); }
     .doc-info h3 { margin: 0; font-family: 'Outfit'; font-size: 1.2rem; color: var(--text); }
     .doc-headline { font-size: 0.9rem; color: var(--primary); font-weight: 500; margin-top: 2px; }
-    
     .doc-bio { font-size: 0.9rem; color: var(--text-soft); line-height: 1.5; margin-bottom: 20px; flex-grow: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     
     .tags-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
@@ -63,10 +60,10 @@
 
     .doc-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 15px; margin-top: auto; }
     .price-tag { font-weight: 700; font-size: 1.1rem; color: var(--text); }
-    .btn-select { background: var(--primary); color: white; padding: 8px 20px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; text-decoration: none; }
+    .btn-select { background: var(--primary); color: white; padding: 8px 20px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
     .btn-select:hover { background: #3E5A41; }
 
-    /* CALENDARIO */
+    /* Calendario */
     .calendar-container { background: white; padding: 30px; border-radius: 20px; border: 1px solid var(--border); max-width: 800px; margin: 0 auto; }
     .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .btn-nav-cal { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text); width: 40px; height: 40px; border-radius: 50%; transition: 0.2s; }
@@ -77,14 +74,13 @@
     
     .day-cell { height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 12px; cursor: pointer; font-size: 0.95rem; transition: 0.2s; border: 1px solid transparent; }
     
-    /* Estados del Calendario */
     .day-cell.empty { background: transparent; cursor: default; }
-    .day-cell.disabled { color: #CBD5E1; cursor: not-allowed; }
-    .day-cell.available { background: #DCFCE7; color: #166534; font-weight: 700; border: 1px solid #86EFAC; } /* Días Disponibles */
+    .day-cell.disabled { color: #CBD5E1; cursor: not-allowed; opacity: 0.5; }
+    .day-cell.available { background: #DCFCE7; color: #166534; font-weight: 700; border: 1px solid #86EFAC; }
     .day-cell.available:hover { background: #22C55E; color: white; transform: scale(1.1); }
     .day-cell.selected { background: var(--primary) !important; color: white !important; transform: scale(1.1); box-shadow: 0 4px 10px rgba(79, 111, 82, 0.3); }
 
-    /* HORARIOS */
+    /* Horarios */
     .slots-section { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; display: none; }
     .slots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; margin-top: 15px; }
     .time-btn { padding: 10px; border: 1px solid var(--border); border-radius: 10px; background: white; cursor: pointer; text-align: center; transition: 0.2s; }
@@ -181,11 +177,13 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
+    let allDoctors = []; // Almacén global para evitar errores de sintaxis
     let selectedDoc = null;
     let currentMonth = new Date();
     let selectedDate = null;
     let selectedTime = null;
-    let docSchedule = []; // Días que trabaja (1=Lun, 2=Mar...)
+    let docSchedule = []; // Días activos (1, 3, 5)
+    let docBlocks = [];   // Bloqueos
 
     function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
     async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
@@ -194,7 +192,7 @@
     async function init() {
         if (!window.sb) return setTimeout(init, 100);
 
-        const { data: doctors } = await window.sb
+        const { data: doctors, error } = await window.sb
             .from('users_profile')
             .select('*')
             .eq('rol', 'psicologo');
@@ -203,8 +201,9 @@
         document.getElementById('loadingDocs').style.display = 'none';
 
         if(doctors && doctors.length > 0) {
-            grid.innerHTML = doctors.map(doc => {
-                // Generar etiquetas de especialidades
+            allDoctors = doctors; // Guardar en memoria
+            
+            grid.innerHTML = doctors.map((doc, index) => {
                 let tagsHtml = '';
                 if(doc.especialidades && doc.especialidades.length > 0) {
                     tagsHtml = doc.especialidades.slice(0, 3).map(tag => `<span class="tag">${tag}</span>`).join('');
@@ -212,6 +211,7 @@
                     tagsHtml = `<span class="tag">Psicología General</span>`;
                 }
 
+                // SOLUCIÓN ERROR SINTAXIS: Usamos el índice, no el objeto JSON string
                 return `
                 <div class="doc-card">
                     <div class="doc-header">
@@ -221,18 +221,13 @@
                             <div class="doc-headline">${doc.headline || 'Especialista en Salud Mental'}</div>
                         </div>
                     </div>
-                    
                     <div class="doc-bio">
-                        ${doc.bio || 'Sin biografía disponible. Profesional verificado por Bitácora Mental.'}
+                        ${doc.bio || 'Sin biografía disponible. Profesional verificado.'}
                     </div>
-
-                    <div class="tags-container">
-                        ${tagsHtml}
-                    </div>
-
+                    <div class="tags-container">${tagsHtml}</div>
                     <div class="doc-footer">
                         <span class="price-tag">S/ ${doc.precio_consulta || 80}</span>
-                        <button class="btn-select" onclick='preSelectDoc(${JSON.stringify(doc).replace(/'/g, "&#39;")})'>
+                        <button class="btn-select" onclick="selectDocByIndex(${index})">
                             Ver Agenda
                         </button>
                     </div>
@@ -245,19 +240,26 @@
     init();
 
     // 2. SELECCIONAR DOCTOR
-    async function preSelectDoc(doc) {
-        selectedDoc = doc;
-        document.getElementById('calDocName').textContent = `Agenda de ${doc.nombre}`;
+    async function selectDocByIndex(index) {
+        selectedDoc = allDoctors[index];
+        document.getElementById('calDocName').textContent = `Agenda de ${selectedDoc.nombre}`;
         
-        // Obtener días que trabaja (Lunes, Martes...) para pintar el calendario
+        // Cargar Horario Base
         const { data: schedule } = await window.sb
             .from('horarios_profesionales')
             .select('dia_semana')
-            .eq('psicologo_id', doc.id)
+            .eq('psicologo_id', selectedDoc.id)
             .eq('activo', true);
-
-        // Guardamos los días activos (Ej: [1, 3, 5])
         docSchedule = schedule ? schedule.map(s => s.dia_semana) : [];
+
+        // Cargar Bloqueos (Rango)
+        const today = new Date();
+        const { data: blocks } = await window.sb
+            .from('bloqueos_agenda')
+            .select('fecha_inicio, fecha_fin')
+            .eq('psicologo_id', selectedDoc.id)
+            .gte('fecha_fin', today.toISOString());
+        docBlocks = blocks || [];
 
         document.getElementById('step1').classList.remove('active');
         document.getElementById('step2').classList.add('active');
@@ -276,8 +278,7 @@
         document.getElementById('slotsSection').style.display = 'none';
     }
 
-    // 3. RENDERIZAR CALENDARIO INTELIGENTE
-   // Reemplaza ESTA función en app/agendar.html
+    // 3. RENDERIZAR CALENDARIO (Con Lógica de 30 Días + Bloqueos)
     function renderCalendar() {
         const grid = document.getElementById('calendarDays');
         const label = document.getElementById('monthLabel');
@@ -295,11 +296,10 @@
         const today = new Date();
         today.setHours(0,0,0,0);
         
-        // --- NUEVA LÓGICA: LÍMITE DE 1 MES ---
+        // Límite: 30 días
         const maxDate = new Date();
-        maxDate.setDate(today.getDate() + 30); // Límite: 30 días desde hoy
+        maxDate.setDate(today.getDate() + 30);
         maxDate.setHours(23,59,59,999);
-        // -------------------------------------
 
         for (let i = 0; i < firstDay; i++) grid.innerHTML += `<div class="day-cell empty"></div>`;
 
@@ -314,70 +314,33 @@
             cell.className = 'day-cell';
             cell.textContent = day;
 
-            // VALIDACIONES DE DISPONIBILIDAD
+            // --- VALIDACIONES ---
             const isPast = cellDate < today;
-            const isTooFar = cellDate > maxDate; // ¿Se pasa de 30 días?
-            const isScheduled = docSchedule.includes(dayOfWeekDB);
+            const isTooFar = cellDate > maxDate; 
+            const isBaseDay = docSchedule.includes(dayOfWeekDB);
+            
+            // Chequeo de Bloqueos por Rango
+            const isBlockedRange = docBlocks.some(b => {
+                const start = new Date(b.fecha_inicio); start.setHours(0,0,0,0);
+                const end = new Date(b.fecha_fin); end.setHours(23,59,59,999);
+                return cellDate >= start && cellDate <= end;
+            });
 
             if (isPast) {
-                cell.classList.add('disabled'); // Pasado
-            } else if (isTooFar) {
-                cell.classList.add('disabled'); // Futuro lejano
-                cell.style.opacity = '0.3'; 
-                cell.title = "Solo puedes reservar con 30 días de anticipación";
-            } else if (isScheduled) {
-                cell.classList.add('available');
-                cell.onclick = () => selectDate(dateStr, cell);
-            } else {
-                cell.classList.add('disabled'); // Doctor no trabaja
-                cell.style.opacity = '0.5';
-            }
-
-            grid.appendChild(cell);
-        }
-    }
-
-        // Encabezados
-        const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-        days.forEach(d => grid.innerHTML += `<div class="day-name">${d}</div>`);
-
-        const year = currentMonth.getFullYear();
-        const month = currentMonth.getMonth();
-        label.textContent = currentMonth.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
-
-        const firstDay = new Date(year, month, 1).getDay();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const today = new Date();
-        today.setHours(0,0,0,0);
-
-        // Espacios vacíos
-        for (let i = 0; i < firstDay; i++) {
-            grid.innerHTML += `<div class="day-cell empty"></div>`;
-        }
-
-        // Días
-        for (let day = 1; day <= daysInMonth; day++) {
-            const dateStr = `${year}-${(month+1).toString().padStart(2,'0')}-${day.toString().padStart(2,'0')}`;
-            const cellDate = new Date(dateStr + 'T00:00:00');
-            
-            // Ajuste de día semana para coincidir con DB (Dom=0 en JS, en DB depende, asumimos JS std)
-            // Si en tu DB Lunes=1 y Dom=7, hacemos ajuste:
-            let dayOfWeekDB = cellDate.getDay(); 
-            if(dayOfWeekDB === 0) dayOfWeekDB = 7;
-
-            const cell = document.createElement('div');
-            cell.className = 'day-cell';
-            cell.textContent = day;
-
-            // Lógica de Disponibilidad
-            if (cellDate < today) {
                 cell.classList.add('disabled');
-            } else if (docSchedule.includes(dayOfWeekDB)) {
-                // ¡AQUÍ ESTÁ LA MAGIA! Si el doctor trabaja este día, se pone VERDE
+            } else if (isTooFar) {
+                cell.classList.add('disabled');
+                cell.style.opacity = '0.3';
+                cell.title = "Solo reservas a 30 días vista";
+            } else if (isBlockedRange) {
+                cell.classList.add('disabled'); // Bloqueo especial
+                cell.style.backgroundColor = '#FEF2F2'; 
+                cell.title = "No disponible por el especialista";
+            } else if (isBaseDay) {
                 cell.classList.add('available');
                 cell.onclick = () => selectDate(dateStr, cell);
             } else {
-                cell.classList.add('disabled'); // El doctor no trabaja este día
+                cell.classList.add('disabled'); // No trabaja ese día
                 cell.style.opacity = '0.5';
             }
 
@@ -390,11 +353,10 @@
         renderCalendar();
     }
 
-    // 4. SELECCIONAR FECHA Y CARGAR HORAS
+    // 4. SELECCIONAR FECHA Y HORAS
     function selectDate(dateStr, cellEl) {
         document.querySelectorAll('.day-cell').forEach(c => c.classList.remove('selected'));
         cellEl.classList.add('selected');
-        
         selectedDate = dateStr;
         loadSlots(dateStr);
     }
@@ -409,18 +371,16 @@
         msg.textContent = '';
         document.getElementById('btnConfirm').disabled = true;
 
-        // Calcular día semana
         const d = new Date(dateVal + 'T00:00:00');
-        let dayOfWeek = d.getDay(); 
-        if(dayOfWeek === 0) dayOfWeek = 7;
+        let dayOfWeek = d.getDay(); if(dayOfWeek === 0) dayOfWeek = 7;
 
-        // A. Configuración Doctor
+        // Horario Base
         const { data: config } = await window.sb.from('horarios_profesionales')
             .select('franjas')
             .eq('psicologo_id', selectedDoc.id)
             .eq('dia_semana', dayOfWeek).single();
 
-        // B. Citas Ocupadas
+        // Citas Ocupadas
         const { data: citas } = await window.sb.from('citas')
             .select('fecha_hora')
             .eq('psicologo_id', selectedDoc.id)
@@ -430,7 +390,6 @@
 
         const occupied = citas.map(c => c.fecha_hora.split('T')[1].substring(0,5));
 
-        // Renderizar Botones
         let html = '';
         if(config && config.franjas) {
             config.franjas.forEach(f => {
@@ -447,23 +406,22 @@
             });
         }
         grid.innerHTML = html || 'No hay horarios.';
-        if(!html) msg.textContent = "Lo sentimos, ya está todo lleno este día.";
+        if(!html) msg.textContent = "Sin cupos disponibles.";
     }
 
     function selectTime(time, el) {
         document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
         el.classList.add('selected');
         selectedTime = time;
-        
         const btn = document.getElementById('btnConfirm');
         btn.disabled = false;
-        btn.textContent = `Confirmar para el ${selectedDate.split('-')[2]} a las ${selectedTime}`;
+        btn.textContent = `Confirmar Reserva (${selectedTime})`;
     }
 
     // 5. CONFIRMAR
     async function confirmBooking() {
         const btn = document.getElementById('btnConfirm');
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Agendando...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
         btn.disabled = true;
 
         try {
@@ -471,7 +429,8 @@
             const finalDate = `${selectedDate}T${selectedTime}:00`;
             const price = parseFloat(selectedDoc.precio_consulta || 80);
 
-            await window.sb.from('citas').insert({
+            // Cita
+            const { error } = await window.sb.from('citas').insert({
                 paciente_id: user.id,
                 psicologo_id: selectedDoc.id,
                 fecha_hora: finalDate,
@@ -479,8 +438,9 @@
                 link_reunion: 'Sala-' + Date.now().toString().substring(8),
                 costo: price
             });
-            
-            // Finanzas (Opcional, si usas la tabla)
+            if(error) throw error;
+
+            // Finanzas
             await window.sb.from('finanzas_wallet').insert({
                 psicologo_id: selectedDoc.id,
                 concepto: 'Sesión Terapéutica',
@@ -490,13 +450,13 @@
                 estado: 'pendiente'
             });
 
-            alert("¡Cita reservada con éxito!");
+            alert("¡Reserva exitosa!");
             window.location.href = 'dashboard.html';
 
         } catch (e) {
             alert("Error: " + e.message);
             btn.disabled = false;
-            btn.textContent = "Intentar de nuevo";
+            btn.textContent = "Reintentar";
         }
     }
   </script>
