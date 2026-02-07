@@ -3,192 +3,289 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reservar Cita - Bitácora Mental</title>
+  <title>Agendar Cita - Bitácora Mental</title>
   
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    :root { --primary: #4F6F52; --primary-light: #E8F5E9; --accent: #F59E0B; --bg: #F9FBFA; --text: #1F2933; --border: #E6EFE8; --white: #FFFFFF; }
-    * { box-sizing: border-box; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; min-height: 100vh; }
-
-    /* Contenedor Principal */
-    .booking-wrapper { max-width: 900px; margin: 0 auto; background: white; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); overflow: hidden; }
+    /* --- ESTILOS MAESTROS (Idénticos al Dashboard) --- */
+    :root { --primary: #4F6F52; --primary-light: #E8F5E9; --accent: #F59E0B; --bg: #F9FBFA; --white: #FFFFFF; --text: #1F2933; --text-soft: #64748B; --border: #E6EFE8; --radius: 20px; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
-    /* Header */
-    .booking-header { background: var(--primary); padding: 30px; text-align: center; color: white; position: relative; }
-    .back-btn { position: absolute; left: 20px; top: 30px; color: white; text-decoration: none; font-size: 1.2rem; }
-    .booking-header h1 { margin: 0; font-family: 'Outfit'; font-size: 1.8rem; }
-    .booking-header p { opacity: 0.9; margin-top: 5px; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
+    
+    /* Sidebar */
+    .sidebar { width: 260px; background: var(--white); padding: 24px; border-right: 1px solid var(--border); position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s; }
+    .logo { font-family: 'Outfit'; font-weight: 700; color: var(--primary); font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 8px; margin-bottom: 30px; }
+    
+    .nav-section { margin-bottom: 20px; }
+    .nav-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-soft); letter-spacing: 1px; margin-bottom: 10px; padding-left: 10px; font-weight: 700; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-soft); text-decoration: none; border-radius: 12px; font-weight: 500; transition: 0.2s; }
+    .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
+    .nav-item.active { font-weight: 600; }
+    
+    /* Main Content */
+    .main { flex: 1; padding: 30px; margin-left: 260px; max-width: 100%; }
+    
+    /* Mobile Nav */
+    .mobile-nav { display: none; padding: 15px; background: white; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .menu-toggle { font-size: 1.5rem; background: none; border: none; color: var(--text); }
+    
+    @media (max-width: 900px) { 
+        .sidebar { transform: translateX(-100%); } 
+        .sidebar.open { transform: translateX(0); } 
+        .main { margin-left: 0; padding: 20px; } 
+        .mobile-nav { display: flex; } 
+    }
 
+    /* --- ESTILOS ESPECÍFICOS DE AGENDAR --- */
+    
     /* Pasos */
-    .step-container { padding: 30px; display: none; animation: fadeIn 0.4s ease; }
-    .step-container.active { display: block; }
-    
-    .step-title { font-family: 'Outfit'; font-size: 1.4rem; color: var(--primary); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-    .step-number { background: var(--primary-light); color: var(--primary); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+    .step-section { display: none; animation: fadeIn 0.4s ease; }
+    .step-section.active { display: block; }
 
-    /* --- PASO 1: TARJETAS DE PSICÓLOGOS --- */
-    .psico-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
-    .psico-card { border: 1px solid var(--border); border-radius: 16px; padding: 20px; text-align: center; transition: 0.3s; cursor: pointer; position: relative; overflow: hidden; }
-    .psico-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-    .psico-card.selected { border: 2px solid var(--primary); background: var(--primary-light); }
+    /* GRID DE DOCTORES */
+    .doctors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
     
-    .psico-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-    .psico-name { font-weight: 700; color: var(--text); font-size: 1.1rem; margin-bottom: 5px; }
-    .psico-role { font-size: 0.85rem; color: #64748B; margin-bottom: 15px; }
-    .psico-price { background: var(--accent); color: white; display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
-    .btn-select-psico { margin-top: 15px; width: 100%; padding: 10px; border: 1px solid var(--primary); background: white; color: var(--primary); border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-    .psico-card:hover .btn-select-psico { background: var(--primary); color: white; }
+    .doc-card { background: white; border-radius: 20px; padding: 25px; border: 1px solid var(--border); transition: 0.3s; display: flex; flex-direction: column; height: 100%; position: relative; overflow: hidden; }
+    .doc-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-color: var(--primary); }
+    
+    .doc-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+    .doc-avatar { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-light); }
+    .doc-info h3 { margin: 0; font-family: 'Outfit'; font-size: 1.2rem; color: var(--text); }
+    .doc-headline { font-size: 0.9rem; color: var(--primary); font-weight: 500; margin-top: 2px; }
+    
+    .doc-bio { font-size: 0.9rem; color: var(--text-soft); line-height: 1.5; margin-bottom: 20px; flex-grow: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    
+    .tags-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .tag { background: #F1F5F9; color: #475569; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; }
 
-    /* --- PASO 2: CALENDARIO VISUAL --- */
-    .calendar-wrapper { border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
-    .month-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .month-label { font-weight: 700; font-size: 1.2rem; text-transform: capitalize; }
-    .btn-month { background: none; border: none; font-size: 1.2rem; color: var(--text); cursor: pointer; }
+    .doc-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 15px; margin-top: auto; }
+    .price-tag { font-weight: 700; font-size: 1.1rem; color: var(--text); }
+    .btn-select { background: var(--primary); color: white; padding: 8px 20px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; text-decoration: none; }
+    .btn-select:hover { background: #3E5A41; }
+
+    /* CALENDARIO */
+    .calendar-container { background: white; padding: 30px; border-radius: 20px; border: 1px solid var(--border); max-width: 800px; margin: 0 auto; }
+    .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .btn-nav-cal { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text); width: 40px; height: 40px; border-radius: 50%; transition: 0.2s; }
+    .btn-nav-cal:hover { background: #F1F5F9; }
     
-    .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
-    .day-name { font-size: 0.8rem; color: #94A3B8; font-weight: 600; padding-bottom: 10px; }
-    .day-cell { padding: 10px; border-radius: 10px; cursor: pointer; font-size: 0.95rem; transition: 0.2s; border: 1px solid transparent; }
-    .day-cell:hover:not(.empty):not(.disabled) { background: #F1F5F9; }
-    .day-cell.selected { background: var(--primary); color: white; font-weight: 700; }
-    .day-cell.today { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+    .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; text-align: center; }
+    .day-name { font-size: 0.8rem; font-weight: 700; color: #94A3B8; margin-bottom: 10px; }
+    
+    .day-cell { height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 12px; cursor: pointer; font-size: 0.95rem; transition: 0.2s; border: 1px solid transparent; }
+    
+    /* Estados del Calendario */
+    .day-cell.empty { background: transparent; cursor: default; }
     .day-cell.disabled { color: #CBD5E1; cursor: not-allowed; }
-    .day-cell.available { background: #DCFCE7; color: #166534; font-weight: 600; } /* Días con turnos */
+    .day-cell.available { background: #DCFCE7; color: #166534; font-weight: 700; border: 1px solid #86EFAC; } /* Días Disponibles */
+    .day-cell.available:hover { background: #22C55E; color: white; transform: scale(1.1); }
+    .day-cell.selected { background: var(--primary) !important; color: white !important; transform: scale(1.1); box-shadow: 0 4px 10px rgba(79, 111, 82, 0.3); }
 
-    /* --- PASO 3: HORARIOS --- */
-    .slots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; margin-top: 20px; }
-    .slot-btn { padding: 12px; border: 1px solid var(--border); border-radius: 10px; text-align: center; cursor: pointer; background: white; transition: 0.2s; }
-    .slot-btn:hover { border-color: var(--primary); color: var(--primary); }
-    .slot-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
-    .slot-btn.disabled { background: #F1F5F9; color: #CBD5E1; pointer-events: none; }
+    /* HORARIOS */
+    .slots-section { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; display: none; }
+    .slots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; margin-top: 15px; }
+    .time-btn { padding: 10px; border: 1px solid var(--border); border-radius: 10px; background: white; cursor: pointer; text-align: center; transition: 0.2s; }
+    .time-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .time-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
+    .time-btn.disabled { background: #F1F5F9; color: #CBD5E1; pointer-events: none; }
 
-    /* Botón Confirmar */
-    .btn-confirm { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1.1rem; cursor: pointer; margin-top: 30px; transition: 0.3s; }
+    .btn-confirm { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1.1rem; margin-top: 20px; cursor: pointer; transition: 0.2s; }
     .btn-confirm:disabled { background: #CBD5E1; cursor: not-allowed; }
-    .btn-confirm:hover:not(:disabled) { background: #3E5A41; transform: translateY(-2px); }
 
     @keyframes fadeIn { from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)} }
   </style>
 </head>
 <body>
 
-  <div class="booking-wrapper">
-    <div class="booking-header">
-        <a href="dashboard.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
-        <h1>Nueva Reserva</h1>
-        <p>Tu bienestar en manos expertas</p>
-    </div>
+  <div class="mobile-nav">
+    <a href="#" class="logo" style="margin:0"><i class="fas fa-brain"></i> Bitácora</a>
+    <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+  </div>
 
-    <div id="step1" class="step-container active">
-        <div class="step-title"><span class="step-number">1</span> Elige a tu especialista</div>
-        <div id="psicoList" class="psico-grid">
-            <p style="text-align:center; width:100%; color:#94A3B8;">Cargando especialistas...</p>
+  <aside class="sidebar" id="sidebar">
+    <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
+    <div class="nav-section">
+      <div class="nav-title">Principal</div>
+      <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
+      <a href="citas.html" class="nav-item active"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
+      <a href="especialistas.html" class="nav-item"><i class="fas fa-user-md"></i> Especialistas</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-title">Tu Espacio</div>
+      <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> Diario</a>
+      <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> Progreso</a>
+      <a href="recursos.html" class="nav-item"><i class="fas fa-box-open"></i> Recursos</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-title">Cuenta</div>
+      <a href="plan.html" class="nav-item"><i class="fas fa-crown"></i> Mi Plan</a>
+      <a href="configuracion.html" class="nav-item"><i class="fas fa-cog"></i> Configuración</a>
+      <a href="perfil.html" class="nav-item"><i class="fas fa-user-circle"></i> Perfil</a>
+      <a href="#" onclick="logout()" class="nav-item" style="color:#EF4444"><i class="fas fa-sign-out-alt"></i> Salir</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    
+    <div id="step1" class="step-section active">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+            <h1 style="font-family:'Outfit'; margin:0;">Elige a tu Especialista</h1>
+            <a href="dashboard.html" style="color:var(--text-soft); text-decoration:none;"><i class="fas fa-times"></i> Cancelar</a>
         </div>
+
+        <div id="loadingDocs" style="text-align:center; padding:40px; color:var(--text-soft);">
+            <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Buscando especialistas disponibles...
+        </div>
+
+        <div id="doctorsGrid" class="doctors-grid">
+            </div>
     </div>
 
-    <div id="step2" class="step-container">
-        <button onclick="goBackToStep1()" style="background:none; border:none; color:#64748B; cursor:pointer; margin-bottom:15px; display:flex; align-items:center; gap:5px;">
+    <div id="step2" class="step-section">
+        <button onclick="backToStep1()" style="background:none; border:none; color:var(--text-soft); cursor:pointer; margin-bottom:20px; font-size:1rem; display:flex; align-items:center; gap:5px;">
             <i class="fas fa-arrow-left"></i> Volver a especialistas
         </button>
-        
-        <div class="step-title"><span class="step-number">2</span> Selecciona fecha y hora</div>
-        
-        <div class="calendar-wrapper">
-            <div class="month-header">
-                <button class="btn-month" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
-                <div class="month-label" id="monthLabel">--</div>
-                <button class="btn-month" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+
+        <div class="calendar-container">
+            <div style="text-align:center; margin-bottom:20px;">
+                <h2 style="margin:0; font-family:'Outfit';" id="calDocName">Agenda de ...</h2>
+                <p style="color:var(--text-soft); font-size:0.9rem;">Selecciona un día resaltado en verde</p>
             </div>
-            <div class="days-grid" id="calendarGrid">
+
+            <div class="calendar-header">
+                <button class="btn-nav-cal" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                <h3 id="monthLabel" style="margin:0; font-family:'Outfit'; text-transform:capitalize;">--</h3>
+                <button class="btn-nav-cal" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+            </div>
+
+            <div class="days-grid" id="calendarDays">
                 </div>
-        </div>
 
-        <div id="timeSection" style="display:none; margin-top:30px; border-top:1px solid var(--border); padding-top:20px;">
-            <h3 style="font-family:'Outfit'; margin-bottom:15px;">Horarios disponibles para el <span id="selectedDateLabel" style="color:var(--primary)"></span></h3>
-            <div id="slotsGrid" class="slots-grid"></div>
-            <p id="msgSlots" style="color:#64748B; font-size:0.9rem; margin-top:10px;"></p>
+            <div id="slotsSection" class="slots-section">
+                <h4 style="margin:0 0 10px 0;">Horarios disponibles:</h4>
+                <div id="slotsGrid" class="slots-grid"></div>
+                <p id="msgSlots" style="font-size:0.9rem; color:var(--text-soft); margin-top:10px;"></p>
+                
+                <button id="btnConfirm" class="btn-confirm" onclick="confirmBooking()" disabled>
+                    Confirmar Reserva
+                </button>
+            </div>
         </div>
-
-        <button id="btnBook" class="btn-confirm" onclick="confirmBooking()" disabled>Confirmar Reserva</button>
     </div>
 
-  </div>
+  </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
-    let selectedPsico = null; // { id, nombre, precio, duracion }
+    let selectedDoc = null;
+    let currentMonth = new Date();
     let selectedDate = null;
     let selectedTime = null;
-    let currentMonth = new Date(); // Para navegar en el calendario
-    
-    // 1. CARGAR PSICÓLOGOS (Visual)
+    let docSchedule = []; // Días que trabaja (1=Lun, 2=Mar...)
+
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+    async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
+
+    // 1. CARGAR DOCTORES
     async function init() {
         if (!window.sb) return setTimeout(init, 100);
-        
-        const { data: psicos } = await window.sb
+
+        const { data: doctors } = await window.sb
             .from('users_profile')
             .select('*')
             .eq('rol', 'psicologo');
 
-        const container = document.getElementById('psicoList');
-        container.innerHTML = '';
+        const grid = document.getElementById('doctorsGrid');
+        document.getElementById('loadingDocs').style.display = 'none';
 
-        if (psicos && psicos.length > 0) {
-            psicos.forEach(p => {
-                // Crear Tarjeta
-                const card = document.createElement('div');
-                card.className = 'psico-card';
-                card.innerHTML = `
-                    <img src="${p.avatar_url || 'https://via.placeholder.com/150'}" class="psico-avatar">
-                    <div class="psico-name">${p.nombre}</div>
-                    <div class="psico-role">${p.headline || 'Psicólogo Clínico'}</div>
-                    <div class="psico-price">S/ ${p.precio_consulta || 80} / Sesión</div>
-                    <button class="btn-select-psico">Ver Disponibilidad</button>
-                `;
-                card.onclick = () => selectPsico(p);
-                container.appendChild(card);
-            });
+        if(doctors && doctors.length > 0) {
+            grid.innerHTML = doctors.map(doc => {
+                // Generar etiquetas de especialidades
+                let tagsHtml = '';
+                if(doc.especialidades && doc.especialidades.length > 0) {
+                    tagsHtml = doc.especialidades.slice(0, 3).map(tag => `<span class="tag">${tag}</span>`).join('');
+                } else {
+                    tagsHtml = `<span class="tag">Psicología General</span>`;
+                }
+
+                return `
+                <div class="doc-card">
+                    <div class="doc-header">
+                        <img src="${doc.avatar_url || 'https://via.placeholder.com/150'}" class="doc-avatar">
+                        <div class="doc-info">
+                            <h3>${doc.nombre}</h3>
+                            <div class="doc-headline">${doc.headline || 'Especialista en Salud Mental'}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="doc-bio">
+                        ${doc.bio || 'Sin biografía disponible. Profesional verificado por Bitácora Mental.'}
+                    </div>
+
+                    <div class="tags-container">
+                        ${tagsHtml}
+                    </div>
+
+                    <div class="doc-footer">
+                        <span class="price-tag">S/ ${doc.precio_consulta || 80}</span>
+                        <button class="btn-select" onclick='preSelectDoc(${JSON.stringify(doc).replace(/'/g, "&#39;")})'>
+                            Ver Agenda
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
         } else {
-            container.innerHTML = '<p>No hay especialistas disponibles.</p>';
+            grid.innerHTML = '<p>No se encontraron especialistas.</p>';
         }
     }
     init();
 
-    // 2. SELECCIONAR PSICÓLOGO Y PASAR AL PASO 2
-    function selectPsico(psico) {
-        selectedPsico = psico;
-        // Animación simple
+    // 2. SELECCIONAR DOCTOR
+    async function preSelectDoc(doc) {
+        selectedDoc = doc;
+        document.getElementById('calDocName').textContent = `Agenda de ${doc.nombre}`;
+        
+        // Obtener días que trabaja (Lunes, Martes...) para pintar el calendario
+        const { data: schedule } = await window.sb
+            .from('horarios_profesionales')
+            .select('dia_semana')
+            .eq('psicologo_id', doc.id)
+            .eq('activo', true);
+
+        // Guardamos los días activos (Ej: [1, 3, 5])
+        docSchedule = schedule ? schedule.map(s => s.dia_semana) : [];
+
         document.getElementById('step1').classList.remove('active');
         document.getElementById('step2').classList.add('active');
-        
-        // Renderizar Calendario del mes actual
         renderCalendar();
     }
 
-    function goBackToStep1() {
+    function backToStep1() {
         document.getElementById('step2').classList.remove('active');
         document.getElementById('step1').classList.add('active');
-        selectedPsico = null;
-        selectedDate = null;
-        selectedTime = null;
-        document.getElementById('timeSection').style.display = 'none';
-        document.getElementById('btnBook').disabled = true;
+        resetSelection();
     }
 
-    // 3. LÓGICA DEL CALENDARIO VISUAL
+    function resetSelection() {
+        selectedDate = null;
+        selectedTime = null;
+        document.getElementById('slotsSection').style.display = 'none';
+    }
+
+    // 3. RENDERIZAR CALENDARIO INTELIGENTE
     function renderCalendar() {
-        const grid = document.getElementById('calendarGrid');
+        const grid = document.getElementById('calendarDays');
         const label = document.getElementById('monthLabel');
         grid.innerHTML = '';
 
-        // Nombres de días
+        // Encabezados
         const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
         days.forEach(d => grid.innerHTML += `<div class="day-name">${d}</div>`);
 
-        // Datos del mes
         const year = currentMonth.getFullYear();
         const month = currentMonth.getMonth();
         label.textContent = currentMonth.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
@@ -196,36 +293,39 @@
         const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         const today = new Date();
+        today.setHours(0,0,0,0);
 
-        // Celdas vacías antes del día 1
+        // Espacios vacíos
         for (let i = 0; i < firstDay; i++) {
             grid.innerHTML += `<div class="day-cell empty"></div>`;
         }
 
-        // Días del mes
+        // Días
         for (let day = 1; day <= daysInMonth; day++) {
             const dateStr = `${year}-${(month+1).toString().padStart(2,'0')}-${day.toString().padStart(2,'0')}`;
-            const cellDate = new Date(dateStr + 'T00:00:00'); // Forzar local
+            const cellDate = new Date(dateStr + 'T00:00:00');
             
+            // Ajuste de día semana para coincidir con DB (Dom=0 en JS, en DB depende, asumimos JS std)
+            // Si en tu DB Lunes=1 y Dom=7, hacemos ajuste:
+            let dayOfWeekDB = cellDate.getDay(); 
+            if(dayOfWeekDB === 0) dayOfWeekDB = 7;
+
             const cell = document.createElement('div');
             cell.className = 'day-cell';
             cell.textContent = day;
 
-            // Bloquear días pasados
-            const isPast = cellDate < new Date(today.setHours(0,0,0,0));
-            if (isPast) {
+            // Lógica de Disponibilidad
+            if (cellDate < today) {
                 cell.classList.add('disabled');
-            } else {
-                // Si es hoy
-                if(day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-                    cell.classList.add('today');
-                }
-                // Click para seleccionar
+            } else if (docSchedule.includes(dayOfWeekDB)) {
+                // ¡AQUÍ ESTÁ LA MAGIA! Si el doctor trabaja este día, se pone VERDE
+                cell.classList.add('available');
                 cell.onclick = () => selectDate(dateStr, cell);
-                
-                // (Opcional) Aquí podrías llamar a una función async para ver si el doctor atiende este día
-                // y ponerle la clase .available. Para mantenerlo simple, lo dejamos activo.
+            } else {
+                cell.classList.add('disabled'); // El doctor no trabaja este día
+                cell.style.opacity = '0.5';
             }
+
             grid.appendChild(cell);
         }
     }
@@ -235,133 +335,113 @@
         renderCalendar();
     }
 
-    function selectDate(dateStr, cell) {
-        // Estilos visuales
+    // 4. SELECCIONAR FECHA Y CARGAR HORAS
+    function selectDate(dateStr, cellEl) {
         document.querySelectorAll('.day-cell').forEach(c => c.classList.remove('selected'));
-        cell.classList.add('selected');
-
-        selectedDate = dateStr;
-        document.getElementById('selectedDateLabel').textContent = new Date(dateStr + 'T00:00:00').toLocaleDateString();
+        cellEl.classList.add('selected');
         
-        // Cargar Horarios
+        selectedDate = dateStr;
         loadSlots(dateStr);
     }
 
-    // 4. CARGAR HORARIOS (Lógica original adaptada)
     async function loadSlots(dateVal) {
-        const container = document.getElementById('slotsGrid');
+        const section = document.getElementById('slotsSection');
+        const grid = document.getElementById('slotsGrid');
         const msg = document.getElementById('msgSlots');
-        const timeSection = document.getElementById('timeSection');
         
-        timeSection.style.display = 'block';
-        container.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+        section.style.display = 'block';
+        grid.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
         msg.textContent = '';
-        selectedTime = null;
-        document.getElementById('btnBook').disabled = true;
+        document.getElementById('btnConfirm').disabled = true;
 
+        // Calcular día semana
         const d = new Date(dateVal + 'T00:00:00');
         let dayOfWeek = d.getDay(); 
-        if(dayOfWeek === 0) dayOfWeek = 7; // Dom=7 para DB
+        if(dayOfWeek === 0) dayOfWeek = 7;
 
-        // A. Consultar Horario
+        // A. Configuración Doctor
         const { data: config } = await window.sb.from('horarios_profesionales')
-            .select('franjas, activo')
-            .eq('psicologo_id', selectedPsico.id)
+            .select('franjas')
+            .eq('psicologo_id', selectedDoc.id)
             .eq('dia_semana', dayOfWeek).single();
 
-        // B. Bloqueos
-        const { data: blocks } = await window.sb.from('bloqueos_agenda')
-            .select('*')
-            .eq('psicologo_id', selectedPsico.id)
-            .lte('fecha_inicio', dateVal + 'T23:59:59')
-            .gte('fecha_fin', dateVal + 'T00:00:00');
-
-        if ((blocks && blocks.length > 0) || (!config || !config.activo)) {
-            container.innerHTML = '';
-            msg.textContent = "El especialista no atiende este día.";
-            return;
-        }
-
-        // C. Ocupados
+        // B. Citas Ocupadas
         const { data: citas } = await window.sb.from('citas')
             .select('fecha_hora')
-            .eq('psicologo_id', selectedPsico.id)
+            .eq('psicologo_id', selectedDoc.id)
             .gte('fecha_hora', dateVal + 'T00:00:00')
             .lte('fecha_hora', dateVal + 'T23:59:59')
             .neq('estado', 'cancelada');
 
         const occupied = citas.map(c => c.fecha_hora.split('T')[1].substring(0,5));
 
+        // Renderizar Botones
         let html = '';
-        let count = 0;
-
-        config.franjas.forEach(f => {
-            let start = parseInt(f.start.split(':')[0]);
-            let end = parseInt(f.end.split(':')[0]);
-            for (let h = start; h < end; h++) {
-                const timeStr = h.toString().padStart(2, '0') + ':00';
-                if (occupied.includes(timeStr)) {
-                    html += `<div class="slot-btn disabled">${timeStr}</div>`;
-                } else {
-                    html += `<div class="slot-btn" onclick="selectSlot('${timeStr}', this)">${timeStr}</div>`;
-                    count++;
+        if(config && config.franjas) {
+            config.franjas.forEach(f => {
+                let start = parseInt(f.start.split(':')[0]);
+                let end = parseInt(f.end.split(':')[0]);
+                for(let h=start; h<end; h++) {
+                    const timeStr = h.toString().padStart(2,'0') + ':00';
+                    if(occupied.includes(timeStr)) {
+                        html += `<div class="time-btn disabled">${timeStr}</div>`;
+                    } else {
+                        html += `<div class="time-btn" onclick="selectTime('${timeStr}', this)">${timeStr}</div>`;
+                    }
                 }
-            }
-        });
-
-        container.innerHTML = html;
-        if(count === 0) msg.textContent = "No hay cupos disponibles.";
+            });
+        }
+        grid.innerHTML = html || 'No hay horarios.';
+        if(!html) msg.textContent = "Lo sentimos, ya está todo lleno este día.";
     }
 
-    function selectSlot(time, el) {
-        document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
+    function selectTime(time, el) {
+        document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
         el.classList.add('selected');
         selectedTime = time;
         
-        const btn = document.getElementById('btnBook');
+        const btn = document.getElementById('btnConfirm');
         btn.disabled = false;
-        btn.textContent = `Confirmar Reserva (${selectedTime})`;
+        btn.textContent = `Confirmar para el ${selectedDate.split('-')[2]} a las ${selectedTime}`;
     }
 
-    // 5. GUARDAR RESERVA
+    // 5. CONFIRMAR
     async function confirmBooking() {
-        const btn = document.getElementById('btnBook');
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+        const btn = document.getElementById('btnConfirm');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Agendando...';
         btn.disabled = true;
 
         try {
             const { data: { user } } = await window.sb.auth.getUser();
             const finalDate = `${selectedDate}T${selectedTime}:00`;
-            const price = parseFloat(selectedPsico.precio_consulta || 80);
-            const comision = price * 0.20;
+            const price = parseFloat(selectedDoc.precio_consulta || 80);
 
-            // Insertar Cita
-            const { error } = await window.sb.from('citas').insert({
+            await window.sb.from('citas').insert({
                 paciente_id: user.id,
-                psicologo_id: selectedPsico.id,
+                psicologo_id: selectedDoc.id,
                 fecha_hora: finalDate,
                 estado: 'pendiente',
                 link_reunion: 'Sala-' + Date.now().toString().substring(8),
                 costo: price
             });
-            if(error) throw error;
-
-            // Insertar Finanzas
+            
+            // Finanzas (Opcional, si usas la tabla)
             await window.sb.from('finanzas_wallet').insert({
-                psicologo_id: selectedPsico.id,
+                psicologo_id: selectedDoc.id,
                 concepto: 'Sesión Terapéutica',
                 monto_total: price,
-                comision: comision,
-                monto_neto: (price - comision),
+                comision: price*0.2,
+                monto_neto: price*0.8,
                 estado: 'pendiente'
             });
 
-            alert("¡Reserva exitosa! Te esperamos.");
+            alert("¡Cita reservada con éxito!");
             window.location.href = 'dashboard.html';
 
         } catch (e) {
             alert("Error: " + e.message);
             btn.disabled = false;
+            btn.textContent = "Intentar de nuevo";
         }
     }
   </script>
