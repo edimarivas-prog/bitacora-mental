@@ -244,7 +244,6 @@
           // Si no hay sesión, mandamos al login
           window.location.replace('../login.html');
       } else {
-          // --- AQUÍ ESTÁ LA SOLUCIÓN ---
           // Consultamos el rol del usuario que acaba de llegar
           const { data: profile } = await window.sb
               .from('users_profile')
@@ -303,18 +302,42 @@
       document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
 
       // Cargar citas y pulso...
-      const { data: citas } = await window.sb.from('citas')
-        .select('fecha_hora, psicologos(nombre_completo)')
-        .eq('paciente_id', user.id)
-        .eq('estado', 'agendada')
+      async function loadDashboardData(userId) {
+    // 1. Cargar Próxima Cita
+    const { data: citas, error } = await window.sb
+        .from('citas')
+        .select(`
+            *,
+            psicologo:psicologo_id ( nombre, avatar_url )
+        `)
+        .eq('paciente_id', userId)
+        .neq('estado', 'cancelada')
         .gte('fecha_hora', new Date().toISOString())
-        .order('fecha_hora', {ascending: true}).limit(1);
+        .order('fecha_hora', { ascending: true })
+        .limit(1);
 
-      if (citas && citas.length > 0) {
-        const fecha = new Date(citas[0].fecha_hora);
-        document.getElementById('nextCitaTitle').textContent = fecha.toLocaleDateString('es-PE', { weekday: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
-        document.getElementById('nextCitaSub').textContent = `Con ${citas[0].psicologos.nombre_completo}`;
-      }
+    const nextCita = citas && citas.length > 0 ? citas[0] : null;
+
+    if (nextCita) {
+        const date = new Date(nextCita.fecha_hora);
+        // Mostrar tarjeta llena
+        document.getElementById('nextCitaCard').style.display = 'flex';
+        document.getElementById('emptyCita').style.display = 'none';
+        
+        // Llenar datos (usando 'psicologo' que viene de users_profile)
+        // Nota: Si 'psicologo' viene null, ponemos 'Especialista'
+        const nombreDoc = nextCita.psicologo ? nextCita.psicologo.nombre : 'Especialista';
+        
+        document.getElementById('docName').textContent = nombreDoc;
+        document.getElementById('citaDate').textContent = date.toLocaleDateString();
+        document.getElementById('citaTime').textContent = date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        document.getElementById('citaLink').href = `../pro/sesion-live.html?room=${nextCita.link_reunion}`;
+    } else {
+        // Mostrar vacío
+        document.getElementById('nextCitaCard').style.display = 'none';
+        document.getElementById('emptyCita').style.display = 'block';
+    }
+}
 
       const { data: pulsos } = await window.sb.from('monitoreo_sintomas').select('*').eq('user_id', user.id).order('fecha_realizado', {ascending:false}).limit(1);
       if (pulsos && pulsos.length > 0) {
