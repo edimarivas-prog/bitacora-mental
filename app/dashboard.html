@@ -292,13 +292,15 @@
 
     function closeOnboarding() { document.getElementById('onboardingModal').style.display = 'none'; }
 
-    // 3. Cargar Datos Dashboard (PACIENTE)
+    // 3. Cargar Datos Dashboard (PACIENTE - CORREGIDO)
 async function loadDashboard(user) {
+    console.log("🔄 Cargando dashboard para:", user.email);
+
     // A. Saludo y Fecha
     const hour = new Date().getHours();
     const saludo = hour < 12 ? 'Buenos días' : (hour < 18 ? 'Buenas tardes' : 'Buenas noches');
     
-    // Obtener perfil para el nombre
+    // Obtener perfil (Nombre)
     const { data: profile } = await window.sb
         .from('users_profile')
         .select('nombre')
@@ -306,59 +308,75 @@ async function loadDashboard(user) {
         .single();
     
     const nombrePila = profile?.nombre?.split(' ')[0] || 'Hola';
-    document.getElementById('greeting').textContent = `${saludo}, ${nombrePila} 👋`;
-    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
+    const greetEl = document.getElementById('greeting');
+    if(greetEl) greetEl.textContent = `${saludo}, ${nombrePila} 👋`;
+    
+    const dateEl = document.getElementById('currentDate');
+    if(dateEl) dateEl.textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
 
-    // B. Cargar Próxima Cita (Integrado directamente)
+    // B. Cargar Próxima Cita (SOLUCIÓN ZONA HORARIA)
+    // Obtenemos la fecha/hora local en formato ISO pero respetando tu zona horaria local
+    const now = new Date();
+    // Restamos 5 horas (o el offset local) para asegurarnos de no ocultar citas del día
+    now.setHours(now.getHours() - 1); 
+    const fechaFiltro = now.toISOString();
+
+    console.log("📅 Buscando citas posteriores a:", fechaFiltro);
+
     const { data: citas, error } = await window.sb
         .from('citas')
         .select(`
             *,
             psicologo:psicologo_id ( nombre, avatar_url )
         `)
-        .eq('paciente_id', user.id) // Usamos user.id directo
+        .eq('paciente_id', user.id)
         .neq('estado', 'cancelada')
-        .gte('fecha_hora', new Date().toISOString()) // Solo citas futuras
+        .gte('fecha_hora', fechaFiltro) // Usamos el filtro corregido
         .order('fecha_hora', { ascending: true })
         .limit(1);
 
+    if (error) {
+        console.error("❌ Error cargando citas:", error);
+        return;
+    }
+
+    console.log("✅ Citas encontradas:", citas);
+
     const nextCita = citas && citas.length > 0 ? citas[0] : null;
 
-    // C. Renderizar en el HTML
-    if (nextCita) {
-        const date = new Date(nextCita.fecha_hora);
+    // Elementos del DOM
+    const cardEl = document.getElementById('nextCitaCard');
+    const emptyEl = document.getElementById('emptyCita');
 
-        // Mostrar tarjeta y ocultar "vacío"
-        document.getElementById('nextCitaCard').style.display = 'flex';
-        document.getElementById('emptyCita').style.display = 'none';
+    // C. Renderizar
+    if (nextCita) {
+        if(cardEl) cardEl.style.display = 'flex';
+        if(emptyEl) emptyEl.style.display = 'none';
+        
+        const dateObj = new Date(nextCita.fecha_hora); // JS convierte automáticamente a hora local
         
         // Datos del Doctor
         const nombreDoc = nextCita.psicologo ? nextCita.psicologo.nombre : 'Especialista';
         
-        document.getElementById('docName').textContent = nombreDoc;
-        document.getElementById('citaDate').textContent = date.toLocaleDateString();
-        document.getElementById('citaTime').textContent = date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        const docNameEl = document.getElementById('docName');
+        if(docNameEl) docNameEl.textContent = nombreDoc;
+
+        const citaDateEl = document.getElementById('citaDate');
+        if(citaDateEl) citaDateEl.textContent = dateObj.toLocaleDateString();
+
+        const citaTimeEl = document.getElementById('citaTime');
+        if(citaTimeEl) citaTimeEl.textContent = dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         
-        // Link a la Videollamada
-        // Nota: Le pasamos también el nombre del paciente para que aparezca bien en Jitsi
-        document.getElementById('citaLink').href = `../pro/sesion-live.html?room=${nextCita.link_reunion}&patient=${nombrePila}`;
+        // Link Videollamada
+        const linkEl = document.getElementById('citaLink');
+        if(linkEl) linkEl.href = `../pro/sesion-live.html?room=${nextCita.link_reunion}&patient=${nombrePila}`;
         
     } else {
         // Mostrar estado vacío
-        document.getElementById('nextCitaCard').style.display = 'none';
-        document.getElementById('emptyCita').style.display = 'block';
+        if(cardEl) cardEl.style.display = 'none';
+        if(emptyEl) emptyEl.style.display = 'block';
     }
 }
-
-      const { data: pulsos } = await window.sb.from('monitoreo_sintomas').select('*').eq('user_id', user.id).order('fecha_realizado', {ascending:false}).limit(1);
-      if (pulsos && pulsos.length > 0) {
-        const nivel = pulsos[0].nivel_ansiedad || 5;
-        document.getElementById('pulseBar').style.width = `${nivel * 10}%`;
-        document.getElementById('pulseBadge').textContent = "Actualizado";
-        document.getElementById('pulseBadge').style.background = "#D1FAE5";
-        document.getElementById('pulseBadge').style.color = "#065F46";
-      }
-    }
 
     function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
     async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
