@@ -231,155 +231,124 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../js/supabase-config.js"></script>
-  <script>
-    // 1. Auth Guard & Redirección Inteligente (El "Portero")
-    async function checkAuth() {
-      // Esperamos a que Supabase cargue
-      if (!window.sb) { setTimeout(checkAuth, 100); return; }
-      
-      const { data: { session } } = await window.sb.auth.getSession();
-      
-      if (!session) {
-          // Si no hay sesión, mandamos al login
-          window.location.replace('../login.html');
-      } else {
-          // Consultamos el rol del usuario que acaba de llegar
-          const { data: profile } = await window.sb
-              .from('users_profile')
-              .select('rol')
-              .eq('id', session.user.id)
-              .single();
-          
-          // Si es ADMIN, lo redirigimos a su carpeta inmediatamente
-          if (profile && profile.rol === 'admin') {
-              console.log("Admin detectado en zona de pacientes. Redirigiendo...");
-              window.location.replace('../admin/panel-admin.html'); 
-              return; // Detenemos la carga del dashboard de pacientes
-          }
+<script src="../js/supabase-config.js"></script>
+<script>
+  async function initDashboard() {
+    if (!window.sb) return setTimeout(initDashboard, 100);
 
-          // Si es PSICÓLOGO, lo mandamos a su panel
-          if (profile && profile.rol === 'psicologo') {
-             window.location.replace('../pro/dashboard.html');
-             return;
-          }
-          // -----------------------------
-
-          // Si es PACIENTE, dejamos que cargue la página normal
-          loadDashboard(session.user);
-          handleWelcome(session.user);
-      }
+    // 1. Verificar Sesión
+    const { data: { session } } = await window.sb.auth.getSession();
+    if (!session) {
+        window.location.href = '../login.html';
+        return;
     }
-    checkAuth();
 
-    // 2. Lógica de Bienvenida
-    async function handleWelcome(user) {
-        const { data: profile } = await window.sb.from('users_profile').select('nombre').eq('id', user.id).single();
-        const userName = profile?.nombre?.split(' ')[0] || 'Viajero';
+    const user = session.user;
 
-        if (sessionStorage.getItem('show_onboarding')) {
-            document.getElementById('modalName').textContent = userName;
-            document.getElementById('onboardingModal').style.display = 'flex';
-            sessionStorage.removeItem('show_onboarding');
-        } else if (sessionStorage.getItem('show_welcome_back')) {
-            const toast = document.getElementById('welcomeToast');
-            toast.querySelector('h4').textContent = `¡Hola de nuevo, ${userName}!`;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 4000);
-            sessionStorage.removeItem('show_welcome_back');
+    // 2. Guardia de Seguridad (Redirección por Rol)
+    const { data: profile } = await window.sb
+        .from('users_profile')
+        .select('rol, nombre')
+        .eq('id', user.id)
+        .single();
+
+    if (profile) {
+        if(profile.rol === 'psicologo') {
+            window.location.href = '../pro/dashboard.html';
+            return;
+        } else if (profile.rol === 'admin') {
+            window.location.href = '../admin/panel-admin.html';
+            return;
         }
     }
 
-    function closeOnboarding() { document.getElementById('onboardingModal').style.display = 'none'; }
+    // 3. Cargar Datos del Paciente
+    loadGreeting(profile?.nombre);
+    loadNextAppointment(user.id);
+  }
 
-    // 3. Cargar Datos Dashboard (PACIENTE - CORREGIDO)
-async function loadDashboard(user) {
-    console.log("🔄 Cargando dashboard para:", user.email);
-
-    // A. Saludo y Fecha
+  // A. Saludo
+  function loadGreeting(nombreCompleto) {
     const hour = new Date().getHours();
     const saludo = hour < 12 ? 'Buenos días' : (hour < 18 ? 'Buenas tardes' : 'Buenas noches');
+    const nombre = nombreCompleto?.split(' ')[0] || 'Hola';
     
-    // Obtener perfil (Nombre)
-    const { data: profile } = await window.sb
-        .from('users_profile')
-        .select('nombre')
-        .eq('id', user.id)
-        .single();
-    
-    const nombrePila = profile?.nombre?.split(' ')[0] || 'Hola';
-    const greetEl = document.getElementById('greeting');
-    if(greetEl) greetEl.textContent = `${saludo}, ${nombrePila} 👋`;
-    
-    const dateEl = document.getElementById('currentDate');
-    if(dateEl) dateEl.textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
+    document.getElementById('greeting').textContent = `${saludo}, ${nombre} 👋`;
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
+  }
 
-    // B. Cargar Próxima Cita (SOLUCIÓN ZONA HORARIA)
-    // Obtenemos la fecha/hora local en formato ISO pero respetando tu zona horaria local
+  // B. Cargar Próxima Cita (CORREGIDO)
+  async function loadNextAppointment(userId) {
+    console.log("🔄 Buscando citas para:", userId);
+    
+    // Usamos la hora actual corregida para no filtrar citas de hoy
     const now = new Date();
-    // Restamos 5 horas (o el offset local) para asegurarnos de no ocultar citas del día
-    now.setHours(now.getHours() - 1); 
-    const fechaFiltro = now.toISOString();
+    now.setHours(now.getHours() - 2); 
 
-    console.log("📅 Buscando citas posteriores a:", fechaFiltro);
-
+    // AQUÍ ESTABA EL ERROR:
+    // 1. Usamos 'psicologo:psicologo_id' para apuntar a users_profile
+    // 2. Buscamos estado 'pendiente' o 'confirmada' (NO 'agendada')
     const { data: citas, error } = await window.sb
         .from('citas')
         .select(`
             *,
             psicologo:psicologo_id ( nombre, avatar_url )
         `)
-        .eq('paciente_id', user.id)
-        .neq('estado', 'cancelada')
-        .gte('fecha_hora', fechaFiltro) // Usamos el filtro corregido
+        .eq('paciente_id', userId)
+        .neq('estado', 'cancelada') // Trae pendientes y confirmadas
+        .gte('fecha_hora', now.toISOString())
         .order('fecha_hora', { ascending: true })
         .limit(1);
 
     if (error) {
-        console.error("❌ Error cargando citas:", error);
+        console.error("❌ Error Supabase:", error);
         return;
     }
 
-    console.log("✅ Citas encontradas:", citas);
-
     const nextCita = citas && citas.length > 0 ? citas[0] : null;
 
-    // Elementos del DOM
-    const cardEl = document.getElementById('nextCitaCard');
-    const emptyEl = document.getElementById('emptyCita');
-
-    // C. Renderizar
     if (nextCita) {
-        if(cardEl) cardEl.style.display = 'flex';
-        if(emptyEl) emptyEl.style.display = 'none';
+        // Mostrar Tarjeta
+        document.getElementById('nextCitaCard').style.display = 'flex';
+        document.getElementById('emptyCita').style.display = 'none';
+
+        const dateObj = new Date(nextCita.fecha_hora);
         
-        const dateObj = new Date(nextCita.fecha_hora); // JS convierte automáticamente a hora local
-        
-        // Datos del Doctor
+        // Llenar Datos
         const nombreDoc = nextCita.psicologo ? nextCita.psicologo.nombre : 'Especialista';
+        document.getElementById('docName').textContent = nombreDoc;
+        document.getElementById('citaDate').textContent = dateObj.toLocaleDateString();
+        document.getElementById('citaTime').textContent = dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         
-        const docNameEl = document.getElementById('docName');
-        if(docNameEl) docNameEl.textContent = nombreDoc;
-
-        const citaDateEl = document.getElementById('citaDate');
-        if(citaDateEl) citaDateEl.textContent = dateObj.toLocaleDateString();
-
-        const citaTimeEl = document.getElementById('citaTime');
-        if(citaTimeEl) citaTimeEl.textContent = dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        // Link Correcto
+        document.getElementById('citaLink').href = `../pro/sesion-live.html?room=${nextCita.link_reunion}&patient=${profile?.nombre}`;
         
-        // Link Videollamada
-        const linkEl = document.getElementById('citaLink');
-        if(linkEl) linkEl.href = `../pro/sesion-live.html?room=${nextCita.link_reunion}&patient=${nombrePila}`;
+        // Estado visual
+        const statusBadge = document.createElement('span');
+        statusBadge.textContent = nextCita.estado;
+        statusBadge.style.cssText = "font-size:0.7rem; padding:2px 8px; border-radius:10px; margin-left:10px; text-transform:uppercase; font-weight:bold;";
+        
+        if(nextCita.estado === 'pendiente') {
+            statusBadge.style.background = '#FEF3C7'; statusBadge.style.color = '#B45309';
+        } else {
+            statusBadge.style.background = '#DCFCE7'; statusBadge.style.color = '#166534';
+        }
+        // (Opcional) Agregar el badge al DOM si tienes donde ponerlo
         
     } else {
-        // Mostrar estado vacío
-        if(cardEl) cardEl.style.display = 'none';
-        if(emptyEl) emptyEl.style.display = 'block';
+        // Mostrar Vacío
+        document.getElementById('nextCitaCard').style.display = 'none';
+        document.getElementById('emptyCita').style.display = 'block';
     }
-}
+  }
 
-    function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
-    async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
-  </script>
+  // Iniciar
+  initDashboard();
+
+  async function logout() {
+    await window.sb.auth.signOut();
+    window.location.href = '../login.html';
+  }
+</script>
 </body>
 </html>
