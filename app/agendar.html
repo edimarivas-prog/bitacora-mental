@@ -143,21 +143,17 @@
   <script>
     let selectedSlot = null;
 
-    // Menú móvil
     function toggleSidebar() {
         document.getElementById('sidebar').classList.toggle('open');
     }
-
-    // --- LÓGICA DE RESERVAS (Supabase) ---
 
     // 1. INICIALIZAR
     async function init() {
         if (!window.sb) return setTimeout(init, 100);
         
-        // Configurar fecha mínima: HOY
         document.getElementById('dateInput').min = new Date().toISOString().split('T')[0];
 
-        // Cargar Psicólogos
+        // IMPORTANTE: Ahora pedimos también 'precio_consulta'
         const { data: psicos } = await window.sb
             .from('users_profile')
             .select('id, nombre, precio_consulta')
@@ -170,11 +166,11 @@
             psicos.forEach(p => {
                 const opt = document.createElement('option');
                 opt.value = p.id;
-                opt.dataset.price = p.precio_consulta || 80; // Guardar precio
+                // Si el precio es null, usamos 80 por defecto para evitar errores
+                opt.dataset.price = p.precio_consulta || 80; 
                 opt.textContent = `${p.nombre} (S/ ${p.precio_consulta || 80})`;
                 select.appendChild(opt);
             });
-            // Activar paso 2 si hay doctores
             document.getElementById('stepDate').classList.remove('disabled');
         } else {
             select.innerHTML = '<option value="">No hay especialistas disponibles</option>';
@@ -189,7 +185,7 @@
         updateButton();
     }
 
-    // 2. BUSCAR HORARIOS DISPONIBLES
+    // 2. BUSCAR HORARIOS
     async function loadSlots() {
         const dateVal = document.getElementById('dateInput').value;
         const psicoId = document.getElementById('psicoSelect').value;
@@ -203,12 +199,11 @@
         container.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:var(--text-soft);"><i class="fas fa-circle-notch fa-spin"></i> Verificando agenda...</p>';
         msg.textContent = '';
 
-        // Calcular día de la semana (Lunes=1 ... Domingo=7)
         const d = new Date(dateVal + 'T00:00:00');
         let dayOfWeek = d.getDay(); 
         if(dayOfWeek === 0) dayOfWeek = 7;
 
-        // A. Consultar Horario Base del Psicólogo
+        // A. Consultar Horario
         const { data: config } = await window.sb
             .from('horarios_profesionales')
             .select('franjas, activo')
@@ -216,7 +211,7 @@
             .eq('dia_semana', dayOfWeek)
             .single();
 
-        // B. Consultar Bloqueos (Excepciones/Vacaciones)
+        // B. Consultar Bloqueos
         const { data: blocks } = await window.sb
             .from('bloqueos_agenda')
             .select('*')
@@ -226,17 +221,17 @@
 
         if (blocks && blocks.length > 0) {
             container.innerHTML = '';
-            msg.innerHTML = '<i class="fas fa-ban"></i> El especialista no está disponible este día (Bloqueo administrativo).';
+            msg.innerHTML = '<i class="fas fa-ban"></i> Día bloqueado por el especialista.';
             return;
         }
 
         if (!config || !config.activo || !config.franjas) {
             container.innerHTML = '';
-            msg.innerHTML = '<i class="far fa-clock"></i> El especialista no atiende este día de la semana.';
+            msg.innerHTML = '<i class="far fa-clock"></i> El especialista no atiende este día.';
             return;
         }
 
-        // C. Consultar Citas YA Ocupadas
+        // C. Consultar Citas Ocupadas
         const { data: citas } = await window.sb
             .from('citas')
             .select('fecha_hora')
@@ -247,7 +242,6 @@
 
         const occupied = citas.map(c => c.fecha_hora.split('T')[1].substring(0,5));
 
-        // D. Generar Botones
         let html = '';
         let count = 0;
 
@@ -268,7 +262,7 @@
         });
 
         container.innerHTML = html;
-        if(count === 0) msg.textContent = "Lo sentimos, no quedan cupos libres hoy.";
+        if(count === 0) msg.textContent = "Sin cupos disponibles.";
     }
 
     function selectSlot(time, el) {
@@ -291,7 +285,7 @@
         }
     }
 
-    // 3. GUARDAR RESERVA (REAL)
+    // 3. GUARDAR RESERVA (CORREGIDO)
     async function confirmBooking() {
         const btn = document.getElementById('btnBook');
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
@@ -303,23 +297,24 @@
             const dateVal = document.getElementById('dateInput').value;
             const finalDate = `${dateVal}T${selectedSlot}:00`;
 
-            // Calcular montos
+            // OBTENER PRECIO
             const select = document.getElementById('psicoSelect');
             const price = parseFloat(select.options[select.selectedIndex].dataset.price);
-            const comision = price * 0.20; // 20% para la plataforma
+            const comision = price * 0.20; 
 
-            // A. Crear Cita
+            // A. Crear Cita (AHORA INCLUYE EL COSTO)
             const { error: err1 } = await window.sb.from('citas').insert({
                 paciente_id: user.id,
                 psicologo_id: psicoId,
                 fecha_hora: finalDate,
                 estado: 'pendiente',
                 link_reunion: 'Sala-' + Date.now().toString().substring(8),
-                costo: price
+                costo: price // <--- ¡AQUÍ ESTÁ LA SOLUCIÓN DEL ERROR!
             });
+            
             if(err1) throw err1;
 
-            // B. Registrar Finanzas
+            // B. Finanzas
             const { error: err2 } = await window.sb.from('finanzas_wallet').insert({
                 psicologo_id: psicoId,
                 concepto: 'Sesión Terapéutica',
@@ -329,11 +324,11 @@
                 estado: 'pendiente'
             });
 
-            // C. Éxito
             alert("¡Cita reservada con éxito!");
-            window.location.href = 'citas.html'; // Volver a la lista de citas
+            window.location.href = 'citas.html';
 
         } catch (e) {
+            console.error(e);
             alert("Error: " + e.message);
             btn.disabled = false;
             btn.textContent = "Intentar de nuevo";
