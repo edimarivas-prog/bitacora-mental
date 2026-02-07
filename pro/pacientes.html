@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mis Pacientes - Bitácora Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --sidebar-bg: #1F2933; --primary: #4F6F52; --bg: #F3F4F6; --text: #1F2933; --border: #E5E7EB;
+      --success: #10B981; --warning: #F59E0B; --danger: #EF4444;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); display: flex; min-height: 100vh; }
+
+    /* SIDEBAR (Estándar) */
+    .sidebar { width: 260px; background: var(--sidebar-bg); color: white; padding: 24px; position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; }
+    .logo { font-family: 'Outfit'; font-weight: 700; color: white; font-size: 1.3rem; margin-bottom: 40px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: #CBD5E1; text-decoration: none; border-radius: 12px; transition: 0.2s; }
+    .nav-item:hover, .nav-item.active { background: var(--primary); color: white; }
+    .nav-title { font-size: 0.7rem; text-transform: uppercase; color: #94A3B8; font-weight: 700; margin: 20px 0 10px 10px; }
+
+    /* MAIN */
+    .main { flex: 1; padding: 30px 40px; margin-left: 260px; }
+    
+    .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .page-title { font-family: 'Outfit'; font-size: 1.8rem; margin: 0; }
+    
+    /* Buscador */
+    .search-box { position: relative; width: 300px; }
+    .search-input { width: 100%; padding: 12px 15px 12px 40px; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; }
+    .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #9CA3AF; }
+
+    /* GRID PACIENTES */
+    .patients-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+    
+    .patient-card { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid transparent; transition: 0.2s; position: relative; }
+    .patient-card:hover { transform: translateY(-3px); border-color: var(--primary); }
+    
+    /* Semáforo (Indicador de Estado) */
+    .status-badge { position: absolute; top: 20px; right: 20px; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+    .status-ok { background: #DCFCE7; color: var(--success); }
+    .status-warn { background: #FEF3C7; color: var(--warning); }
+    .status-crit { background: #FEE2E2; color: var(--danger); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+
+    .p-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+    .p-avatar { width: 60px; height: 60px; background: #E0F2FE; color: #0369A1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; }
+    
+    .p-stats { display: flex; justify-content: space-between; margin-bottom: 20px; background: #F8FAFC; padding: 10px; border-radius: 10px; }
+    .stat-mini { text-align: center; flex: 1; }
+    .stat-mini label { font-size: 0.7rem; color: #64748B; display: block; text-transform: uppercase; }
+    .stat-mini strong { font-size: 0.95rem; color: var(--text); }
+
+    .p-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn { padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: white; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s; }
+    .btn:hover { background: #F1F5F9; }
+    .btn-primary { background: var(--sidebar-bg); color: white; border: none; }
+    .btn-primary:hover { background: #374151; }
+    .btn-disabled { opacity: 0.5; cursor: not-allowed; background: #E5E7EB; color: #9CA3AF; }
+
+    @media (max-width: 900px) { .sidebar { display: none; } .main { margin-left: 0; padding: 20px; } .search-box { width: 100%; } }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <a href="#" class="logo"><i class="fas fa-user-md"></i> BITÁCORA PRO</a>
+    <div class="nav-title">CONSULTORIO</div>
+    <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Resumen</a>
+    <a href="agenda.html" class="nav-item"><i class="far fa-calendar-alt"></i> Agenda</a>
+    <a href="pacientes.html" class="nav-item active"><i class="fas fa-users"></i> Mis Pacientes</a>
+    <div class="nav-title">GESTIÓN</div>
+    <a href="billetera.html" class="nav-item"><i class="fas fa-wallet"></i> Billetera</a>
+    <a href="perfil.html" class="nav-item"><i class="fas fa-id-card"></i> Mi Perfil</a>
+    <div style="margin-top:auto;"><a href="#" onclick="logout()" class="nav-item" style="color:#EF4444;">Salir</a></div>
+  </aside>
+
+  <main class="main">
+    <div class="header-bar">
+        <h1 class="page-title">Expedientes Activos</h1>
+        <div class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Buscar paciente..." onkeyup="filterPatients(this.value)">
+        </div>
+    </div>
+
+    <div class="patients-grid" id="patientsContainer">
+        <div style="text-align:center; grid-column:1/-1; color:#94A3B8; padding:40px;">
+            <i class="fas fa-circle-notch fa-spin fa-2x"></i>
+            <p>Cargando pacientes...</p>
+        </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script>
+    let allPatients = [];
+
+    // 1. INICIAR
+    async function init() {
+        if (!window.sb) return setTimeout(init, 100);
+        const { data: { session } } = await window.sb.auth.getSession();
+        if (!session) window.location.href = '../login.html';
+
+        loadPatients(session.user.id);
+    }
+    init();
+
+    // 2. CARGAR PACIENTES (Lógica CRM)
+    async function loadPatients(doctorId) {
+        // A. Obtener IDs de pacientes que han tenido cita con este doctor
+        // (Usamos una consulta distinta para no repetir pacientes)
+        const { data: citas } = await window.sb
+            .from('citas')
+            .select('paciente_id, fecha_hora')
+            .eq('psicologo_id', doctorId)
+            .order('fecha_hora', { ascending: false });
+
+        if (!citas || citas.length === 0) {
+            document.getElementById('patientsContainer').innerHTML = `<p style="text-align:center; color:#94A3B8; grid-column:1/-1;">Aún no tienes pacientes asignados.</p>`;
+            return;
+        }
+
+        // Extraer IDs únicos
+        const uniquePatientIds = [...new Set(citas.map(c => c.paciente_id))];
+
+        // B. Obtener Perfiles de esos pacientes
+        const { data: profiles } = await window.sb
+            .from('users_profile')
+            .select('*')
+            .in('id', uniquePatientIds);
+
+        // C. Obtener Último Estado de Ánimo para el Semáforo
+        // (Hacemos una consulta rápida a monitoreo)
+        const { data: monitor } = await window.sb
+            .from('monitoreo_sintomas')
+            .select('usuario_id, nivel_ansiedad, nivel_animo, created_at')
+            .in('usuario_id', uniquePatientIds)
+            .order('created_at', { ascending: false });
+
+        // D. Combinar Datos
+        allPatients = profiles.map(p => {
+            // Buscar última cita
+            const lastAppt = citas.find(c => c.paciente_id === p.id);
+            // Buscar último monitoreo
+            const lastMood = monitor ? monitor.find(m => m.usuario_id === p.id) : null;
+            
+            return {
+                ...p,
+                last_seen: lastAppt ? new Date(lastAppt.fecha_hora) : null,
+                mood: lastMood
+            };
+        });
+
+        renderPatients(allPatients);
+    }
+
+    function renderPatients(list) {
+        const container = document.getElementById('patientsContainer');
+        
+        if(list.length === 0) {
+            container.innerHTML = `<p style="text-align:center;">No se encontraron resultados.</p>`;
+            return;
+        }
+
+        container.innerHTML = list.map(p => {
+            // Lógica del Semáforo
+            let statusClass = 'status-ok';
+            let statusText = 'Estable';
+            
+            if (p.mood) {
+                if (p.mood.nivel_ansiedad >= 8 || p.mood.nivel_animo <= 3) {
+                    statusClass = 'status-crit';
+                    statusText = 'Crítico';
+                } else if (p.mood.nivel_ansiedad >= 5) {
+                    statusClass = 'status-warn';
+                    statusText = 'Atención';
+                }
+            } else {
+                statusClass = 'status-warn'; // Sin datos recientes
+                statusText = 'Sin datos';
+            }
+
+            // Lógica de Permisos Éticos
+            const canViewDiary = p.permiso_terapeuta === true;
+            
+            return `
+            <div class="patient-card">
+                <div class="status-badge ${statusClass}">
+                    <span class="dot"></span> ${statusText}
+                </div>
+                
+                <div class="p-header">
+                    <div class="p-avatar">${p.nombre ? p.nombre.charAt(0) : 'U'}</div>
+                    <div>
+                        <div style="font-weight:700; font-size:1.1rem;">${p.nombre || 'Usuario'}</div>
+                        <div style="font-size:0.8rem; color:#64748B;">Última sesión: ${p.last_seen ? p.last_seen.toLocaleDateString() : '--'}</div>
+                    </div>
+                </div>
+
+                <div class="p-stats">
+                    <div class="stat-mini">
+                        <label>Ansiedad</label>
+                        <strong>${p.mood ? p.mood.nivel_ansiedad + '/10' : '-'}</strong>
+                    </div>
+                    <div class="stat-mini" style="border-left:1px solid #E2E8F0; border-right:1px solid #E2E8F0;">
+                        <label>Ánimo</label>
+                        <strong>${p.mood ? p.mood.nivel_animo + '/10' : '-'}</strong>
+                    </div>
+                    <div class="stat-mini">
+                        <label>Edad</label>
+                        <strong>${p.edad || '-'}</strong>
+                    </div>
+                </div>
+
+                <div class="p-actions">
+                    <button class="btn" onclick="openNotes('${p.id}')">Notas</button>
+                    ${canViewDiary 
+                        ? `<button class="btn btn-primary" onclick="viewExpediente('${p.id}')"><i class="fas fa-book-medical"></i> Expediente</button>`
+                        : `<button class="btn btn-disabled" title="El paciente no ha dado acceso" onclick="alert('El paciente no ha autorizado el acceso a su bitácora.')"><i class="fas fa-lock"></i> Privado</button>`
+                    }
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function filterPatients(term) {
+        const filtered = allPatients.filter(p => p.nombre.toLowerCase().includes(term.toLowerCase()));
+        renderPatients(filtered);
+    }
+
+    function viewExpediente(id) {
+        // Redirigir a la vista detallada del paciente (Próximo paso)
+        window.location.href = `expediente.html?id=${id}`;
+    }
+
+    async function logout() {
+        await window.sb.auth.signOut();
+        window.location.href = '../login.html';
+    }
+  </script>
+</body>
+</html>
