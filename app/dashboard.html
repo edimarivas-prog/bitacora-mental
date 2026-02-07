@@ -247,9 +247,22 @@
 
             const dateObj = new Date(nextCita.fecha_hora);
             
-            document.getElementById('docName').textContent = nextCita.psicologo ? nextCita.psicologo.nombre : 'Especialista';
-            document.getElementById('citaDate').textContent = dateObj.toLocaleDateString();
-            document.getElementById('citaTime').textContent = dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+document.getElementById('docName').textContent = nextCita.psicologo ? nextCita.psicologo.nombre : 'Especialista';
+
+// CORRECCIÓN FECHA: Forzamos UTC
+document.getElementById('citaDate').textContent = dateObj.toLocaleDateString('es-PE', {
+    day: 'numeric', 
+    month: 'long', 
+    timeZone: 'UTC' 
+});
+
+// CORRECCIÓN HORA: Forzamos UTC (Esto arregla el desfase de 5 horas)
+document.getElementById('citaTime').textContent = dateObj.toLocaleTimeString('es-PE', {
+    hour: '2-digit', 
+    minute: '2-digit', 
+    hour12: true, 
+    timeZone: 'UTC'
+});;
             
             const nombrePaciente = userName?.split(' ')[0] || 'Paciente';
             document.getElementById('citaLink').href = `../pro/sesion-live.html?room=${nextCita.link_reunion}&patient=${nombrePaciente}`;
