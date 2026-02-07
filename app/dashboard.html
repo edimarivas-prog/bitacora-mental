@@ -60,49 +60,6 @@
     .mobile-nav { display: none; padding: 15px; background: white; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
     .menu-toggle { font-size: 1.5rem; background: none; border: none; color: var(--text); }
 
-    /* --- MODAL DE BIENVENIDA (ONBOARDING) --- */
-    .modal-overlay {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
-        z-index: 1000; display: none; align-items: center; justify-content: center;
-        animation: fadeIn 0.3s ease;
-    }
-    .modal-card {
-        background: white; width: 90%; max-width: 500px; padding: 40px;
-        border-radius: 24px; text-align: center; position: relative;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-        animation: slideUp 0.4s ease;
-    }
-    .modal-icon {
-        width: 80px; height: 80px; background: #E8F5E9; color: var(--primary);
-        border-radius: 50%; display: flex; align-items: center; justify-content: center;
-        font-size: 2.5rem; margin: 0 auto 20px;
-    }
-    .step-dots { display: flex; justify-content: center; gap: 8px; margin: 20px 0; }
-    .dot { width: 10px; height: 10px; background: #E2E8F0; border-radius: 50%; transition: 0.3s; }
-    .dot.active { background: var(--primary); width: 20px; border-radius: 10px; }
-    
-    .welcome-btn {
-        background: var(--primary); color: white; border: none; padding: 14px 30px;
-        border-radius: 12px; font-weight: 600; font-size: 1rem; cursor: pointer;
-        width: 100%; transition: 0.2s;
-    }
-    .welcome-btn:hover { background: #3E5A41; transform: translateY(-2px); }
-
-    /* --- TOAST DE REGRESO --- */
-    .toast {
-        position: fixed; bottom: 30px; right: 30px;
-        background: white; padding: 15px 25px; border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid var(--primary);
-        display: flex; align-items: center; gap: 15px;
-        transform: translateY(100px); opacity: 0; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        z-index: 1000;
-    }
-    .toast.show { transform: translateY(0); opacity: 1; }
-
-    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-    @keyframes slideUp { from{transform:translateY(20px)} to{transform:translateY(0)} }
-
     @media (max-width: 900px) {
       .sidebar { transform: translateX(-100%); }
       .sidebar.open { transform: translateX(0); }
@@ -112,32 +69,6 @@
   </style>
 </head>
 <body>
-
-  <div id="welcomeToast" class="toast">
-    <i class="fas fa-smile-beam" style="color:var(--primary); font-size:1.5rem;"></i>
-    <div>
-        <h4 style="margin:0; font-family:'Outfit'">¡Qué bueno verte!</h4>
-        <p style="margin:0; font-size:0.9rem; color:#64748B;">Tu espacio está listo.</p>
-    </div>
-  </div>
-
-  <div id="onboardingModal" class="modal-overlay">
-    <div class="modal-card">
-        <div class="modal-icon"><i class="fas fa-hand-holding-heart"></i></div>
-        <h2 style="font-family:'Outfit'; margin-bottom:10px;">¡Hola, <span id="modalName">viajero</span>!</h2>
-        <p style="color:#64748B; line-height:1.6; margin-bottom:20px;">
-            Bienvenido a tu espacio seguro. Aquí podrás registrar tus emociones, agendar sesiones y encontrar recursos para tu bienestar.
-        </p>
-        
-        <div class="step-dots">
-            <span class="dot active"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-        </div>
-
-        <button class="welcome-btn" onclick="closeOnboarding()">¡Comenzar mi viaje!</button>
-    </div>
-  </div>
 
   <div class="mobile-nav">
     <a href="#" class="logo" style="margin:0"><i class="fas fa-brain"></i> Bitácora</a>
@@ -177,15 +108,36 @@
     </div>
 
     <div class="grid">
-      <div class="card appointment-card">
+      <div class="card appointment-card" id="appointmentContainer">
+        
         <div class="card-header">
           <div class="card-title" style="color:white"><i class="fas fa-video"></i> Próxima Sesión</div>
         </div>
-        <h2 id="nextCitaTitle" style="font-size:1.5rem; margin-bottom:5px;">Sin citas agendadas</h2>
-        <p class="subtitle" id="nextCitaSub" style="color:rgba(255,255,255,0.8); margin-bottom:20px;">Agenda tu primera sesión hoy.</p>
-        <a href="agendar.html" style="background:white; color:var(--primary); padding:10px 20px; border-radius:10px; text-decoration:none; font-weight:600; display:inline-block;">
-          <i class="fas fa-plus"></i> Agendar ahora
-        </a>
+
+        <div id="emptyCita">
+            <h2 style="font-size:1.5rem; margin-bottom:5px;">Sin citas agendadas</h2>
+            <p class="subtitle" style="color:rgba(255,255,255,0.8); margin-bottom:20px;">Agenda tu primera sesión hoy.</p>
+            <a href="agendar.html" style="background:white; color:var(--primary); padding:10px 20px; border-radius:10px; text-decoration:none; font-weight:600; display:inline-block;">
+                <i class="fas fa-plus"></i> Agendar ahora
+            </a>
+        </div>
+
+        <div id="nextCitaCard" style="display:none;">
+            <div style="margin-bottom:15px;">
+                <h2 id="citaTime" style="font-size:2rem; margin:0; font-weight:700;">--:--</h2>
+                <p id="citaDate" style="font-size:1.1rem; opacity:0.9; margin:0;">--/--/--</p>
+            </div>
+            
+            <div style="margin-bottom:20px;">
+                <p style="margin:0; font-size:0.9rem; opacity:0.8;">Especialista:</p>
+                <strong id="docName" style="font-size:1.1rem;">Dr. ...</strong>
+            </div>
+
+            <a href="#" id="citaLink" style="background:#10B981; color:white; padding:10px 20px; border-radius:10px; text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
+                <i class="fas fa-video"></i> Entrar a Videollamada
+            </a>
+        </div>
+
       </div>
 
       <div class="card pulse-card">
@@ -231,117 +183,93 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/supabase-config.js"></script>
-<script>
-  async function initDashboard() {
-    if (!window.sb) return setTimeout(initDashboard, 100);
+  <script src="../js/supabase-config.js"></script>
+  <script>
+    async function initDashboard() {
+        if (!window.sb) return setTimeout(initDashboard, 100);
 
-    // 1. Verificar Sesión
-    const { data: { session } } = await window.sb.auth.getSession();
-    if (!session) {
-        window.location.href = '../login.html';
-        return;
+        // 1. Verificar Sesión
+        const { data: { session } } = await window.sb.auth.getSession();
+        if (!session) {
+            window.location.href = '../login.html';
+            return;
+        }
+
+        const user = session.user;
+
+        // 2. Guardia de Seguridad
+        const { data: profile } = await window.sb.from('users_profile').select('rol, nombre').eq('id', user.id).single();
+
+        if (profile) {
+            if(profile.rol === 'psicologo') {
+                window.location.href = '../pro/dashboard.html';
+                return;
+            } else if (profile.rol === 'admin') {
+                window.location.href = '../admin/panel-admin.html';
+                return;
+            }
+        }
+
+        // 3. Cargar Datos
+        loadGreeting(profile?.nombre);
+        loadNextAppointment(user.id, profile?.nombre);
     }
 
-    const user = session.user;
+    function loadGreeting(nombreCompleto) {
+        const hour = new Date().getHours();
+        const saludo = hour < 12 ? 'Buenos días' : (hour < 18 ? 'Buenas tardes' : 'Buenas noches');
+        const nombre = nombreCompleto?.split(' ')[0] || 'Hola';
+        
+        document.getElementById('greeting').textContent = `${saludo}, ${nombre} 👋`;
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
+    }
 
-    // 2. Guardia de Seguridad (Redirección por Rol)
-    const { data: profile } = await window.sb
-        .from('users_profile')
-        .select('rol, nombre')
-        .eq('id', user.id)
-        .single();
+    // B. Cargar Próxima Cita (Lógica Corregida y Conectada al DOM)
+    async function loadNextAppointment(userId, userName) {
+        const now = new Date();
+        now.setHours(now.getHours() - 2); 
 
-    if (profile) {
-        if(profile.rol === 'psicologo') {
-            window.location.href = '../pro/dashboard.html';
-            return;
-        } else if (profile.rol === 'admin') {
-            window.location.href = '../admin/panel-admin.html';
-            return;
+        const { data: citas, error } = await window.sb
+            .from('citas')
+            .select(`*, psicologo:psicologo_id ( nombre )`)
+            .eq('paciente_id', userId)
+            .neq('estado', 'cancelada')
+            .gte('fecha_hora', now.toISOString())
+            .order('fecha_hora', { ascending: true })
+            .limit(1);
+
+        const nextCita = citas && citas.length > 0 ? citas[0] : null;
+
+        // CONEXIÓN CON EL DOM (Ahora sí existen los elementos)
+        if (nextCita) {
+            document.getElementById('emptyCita').style.display = 'none';
+            document.getElementById('nextCitaCard').style.display = 'block';
+
+            const dateObj = new Date(nextCita.fecha_hora);
+            
+            document.getElementById('docName').textContent = nextCita.psicologo ? nextCita.psicologo.nombre : 'Especialista';
+            document.getElementById('citaDate').textContent = dateObj.toLocaleDateString();
+            document.getElementById('citaTime').textContent = dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            const nombrePaciente = userName?.split(' ')[0] || 'Paciente';
+            document.getElementById('citaLink').href = `../pro/sesion-live.html?room=${nextCita.link_reunion}&patient=${nombrePaciente}`;
+        } else {
+            document.getElementById('nextCitaCard').style.display = 'none';
+            document.getElementById('emptyCita').style.display = 'block';
         }
     }
 
-    // 3. Cargar Datos del Paciente
-    loadGreeting(profile?.nombre);
-    loadNextAppointment(user.id);
-  }
-
-  // A. Saludo
-  function loadGreeting(nombreCompleto) {
-    const hour = new Date().getHours();
-    const saludo = hour < 12 ? 'Buenos días' : (hour < 18 ? 'Buenas tardes' : 'Buenas noches');
-    const nombre = nombreCompleto?.split(' ')[0] || 'Hola';
-    
-    document.getElementById('greeting').textContent = `${saludo}, ${nombre} 👋`;
-    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
-  }
-
-  // B. Cargar Próxima Cita (CORREGIDO)
-  async function loadNextAppointment(userId) {
-    console.log("🔄 Buscando citas para:", userId);
-    
-    // Usamos la hora actual corregida para no filtrar citas de hoy
-    const now = new Date();
-    now.setHours(now.getHours() - 2); 
-
-    // AQUÍ ESTABA EL ERROR:
-    // 1. Usamos 'psicologo:psicologo_id' para apuntar a users_profile (Correcto)
-    // 2. Buscamos estado diferente a 'cancelada' (Correcto)
-    const { data: citas, error } = await window.sb
-        .from('citas')
-        .select(`
-            *,
-            psicologo:psicologo_id ( nombre, avatar_url )
-        `)
-        .eq('paciente_id', userId)
-        .neq('estado', 'cancelada') // Trae pendientes y confirmadas
-        .gte('fecha_hora', now.toISOString())
-        .order('fecha_hora', { ascending: true })
-        .limit(1);
-
-    if (error) {
-        console.error("❌ Error Supabase:", error);
-        return;
+    function toggleMenu() {
+        document.getElementById('sidebar').classList.toggle('open');
     }
 
-    const nextCita = citas && citas.length > 0 ? citas[0] : null;
-
-    if (nextCita) {
-        // Mostrar Tarjeta
-        document.getElementById('nextCitaCard').style.display = 'flex';
-        document.getElementById('emptyCita').style.display = 'none';
-
-        const dateObj = new Date(nextCita.fecha_hora);
-        
-        // Llenar Datos
-        const nombreDoc = nextCita.psicologo ? nextCita.psicologo.nombre : 'Especialista';
-        document.getElementById('docName').textContent = nombreDoc;
-        document.getElementById('citaDate').textContent = dateObj.toLocaleDateString();
-        document.getElementById('citaTime').textContent = dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        
-        // Link Correcto
-        // Se añade el nombre del paciente para que aparezca en la videollamada
-        const nombrePaciente = profile?.nombre?.split(' ')[0] || 'Paciente';
-        document.getElementById('citaLink').href = `../pro/sesion-live.html?room=${nextCita.link_reunion}&patient=${nombrePaciente}`;
-        
-        // Estado visual (Opcional)
-        console.log("Estado de la cita:", nextCita.estado);
-        
-    } else {
-        // Mostrar Vacío
-        document.getElementById('nextCitaCard').style.display = 'none';
-        document.getElementById('emptyCita').style.display = 'block';
+    async function logout() {
+        await window.sb.auth.signOut();
+        window.location.href = '../login.html';
     }
-  }
 
-  // Iniciar
-  initDashboard();
-
-  async function logout() {
-    await window.sb.auth.signOut();
-    window.location.href = '../login.html';
-  }
-</script>
+    // Iniciar
+    initDashboard();
+  </script>
 </body>
 </html>
