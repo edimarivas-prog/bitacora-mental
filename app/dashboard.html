@@ -292,48 +292,59 @@
 
     function closeOnboarding() { document.getElementById('onboardingModal').style.display = 'none'; }
 
-    // 3. Cargar Datos Dashboard (Solo para pacientes)
-    async function loadDashboard(user) {
-      const hour = new Date().getHours();
-      const saludo = hour < 12 ? 'Buenos días' : (hour < 18 ? 'Buenas tardes' : 'Buenas noches');
-      const { data: profile } = await window.sb.from('users_profile').select('nombre').eq('id', user.id).single();
-      
-      document.getElementById('greeting').textContent = `${saludo}, ${profile?.nombre?.split(' ')[0] || 'Hola'} 👋`;
-      document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
+    // 3. Cargar Datos Dashboard (PACIENTE)
+async function loadDashboard(user) {
+    // A. Saludo y Fecha
+    const hour = new Date().getHours();
+    const saludo = hour < 12 ? 'Buenos días' : (hour < 18 ? 'Buenas tardes' : 'Buenas noches');
+    
+    // Obtener perfil para el nombre
+    const { data: profile } = await window.sb
+        .from('users_profile')
+        .select('nombre')
+        .eq('id', user.id)
+        .single();
+    
+    const nombrePila = profile?.nombre?.split(' ')[0] || 'Hola';
+    document.getElementById('greeting').textContent = `${saludo}, ${nombrePila} 👋`;
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
 
-      // Cargar citas y pulso...
-      async function loadDashboardData(userId) {
-    // 1. Cargar Próxima Cita
+    // B. Cargar Próxima Cita (Integrado directamente)
     const { data: citas, error } = await window.sb
         .from('citas')
         .select(`
             *,
             psicologo:psicologo_id ( nombre, avatar_url )
         `)
-        .eq('paciente_id', userId)
+        .eq('paciente_id', user.id) // Usamos user.id directo
         .neq('estado', 'cancelada')
-        .gte('fecha_hora', new Date().toISOString())
+        .gte('fecha_hora', new Date().toISOString()) // Solo citas futuras
         .order('fecha_hora', { ascending: true })
         .limit(1);
 
     const nextCita = citas && citas.length > 0 ? citas[0] : null;
 
+    // C. Renderizar en el HTML
     if (nextCita) {
         const date = new Date(nextCita.fecha_hora);
-        // Mostrar tarjeta llena
+
+        // Mostrar tarjeta y ocultar "vacío"
         document.getElementById('nextCitaCard').style.display = 'flex';
         document.getElementById('emptyCita').style.display = 'none';
         
-        // Llenar datos (usando 'psicologo' que viene de users_profile)
-        // Nota: Si 'psicologo' viene null, ponemos 'Especialista'
+        // Datos del Doctor
         const nombreDoc = nextCita.psicologo ? nextCita.psicologo.nombre : 'Especialista';
         
         document.getElementById('docName').textContent = nombreDoc;
         document.getElementById('citaDate').textContent = date.toLocaleDateString();
         document.getElementById('citaTime').textContent = date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        document.getElementById('citaLink').href = `../pro/sesion-live.html?room=${nextCita.link_reunion}`;
+        
+        // Link a la Videollamada
+        // Nota: Le pasamos también el nombre del paciente para que aparezca bien en Jitsi
+        document.getElementById('citaLink').href = `../pro/sesion-live.html?room=${nextCita.link_reunion}&patient=${nombrePila}`;
+        
     } else {
-        // Mostrar vacío
+        // Mostrar estado vacío
         document.getElementById('nextCitaCard').style.display = 'none';
         document.getElementById('emptyCita').style.display = 'block';
     }
