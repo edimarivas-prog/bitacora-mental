@@ -27,7 +27,7 @@
     .spec-card { background: white; padding: 30px; border-radius: var(--radius); text-align: center; box-shadow: var(--shadow); transition: transform 0.2s; border: 1px solid transparent; display: flex; flex-direction: column; justify-content: space-between; }
     .spec-card:hover { transform: translateY(-5px); border-color: var(--primary); }
     
-    .spec-avatar { width: 90px; height: 90px; background: var(--primary); border-radius: 50%; margin: 0 auto 15px; color: white; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-family: 'Outfit'; }
+    .spec-avatar { width: 90px; height: 90px; background: var(--primary); border-radius: 50%; margin: 0 auto 15px; color: white; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-family: 'Outfit'; object-fit: cover; }
     .spec-name { font-family: 'Outfit'; font-size: 1.2rem; font-weight: 600; margin: 0 0 5px 0; }
     .spec-role { color: var(--primary); font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
     .spec-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; margin-bottom: 20px; }
@@ -86,21 +86,7 @@
         </div>
 
         <div class="spec-grid" id="grid">
-            <div class="spec-card">
-                <div>
-                    <div class="spec-avatar">A</div>
-                    <h3 class="spec-name">Dra. Ana López</h3>
-                    <div class="spec-role">Psicóloga Clínica</div>
-                    <div class="spec-tags">
-                        <span class="tag">Ansiedad</span>
-                        <span class="tag">Pareja</span>
-                    </div>
-                </div>
-                <div>
-                    <div class="spec-price">S/ 120 <span>/ sesión</span></div>
-                    <a href="agendar.html" class="btn-book">Agendar Cita</a>
-                </div>
-            </div>
+            <p style="text-align:center; width:100%;">Cargando especialistas...</p>
         </div>
     </main>
   </div>
@@ -120,28 +106,56 @@
 
     async function init() {
         if(!window.sb) return setTimeout(init, 100);
-        const { data } = await window.sb.from('psicologos').select('*').eq('estado', 'activo');
         
-        if(data && data.length > 0) {
-            document.getElementById('grid').innerHTML = data.map(doc => `
+        // CONSULTA CORRECTA: Usamos 'users_profile' filtrando por rol
+        const { data: doctors } = await window.sb
+            .from('users_profile')
+            .select('*')
+            .eq('rol', 'psicologo');
+        
+        const grid = document.getElementById('grid');
+        
+        if(doctors && doctors.length > 0) {
+            grid.innerHTML = doctors.map(doc => {
+                // Lógica para mostrar foto o inicial
+                let avatarHtml = '';
+                if(doc.avatar_url) {
+                    avatarHtml = `<img src="${doc.avatar_url}" class="spec-avatar">`;
+                } else {
+                    avatarHtml = `<div class="spec-avatar">${doc.nombre.charAt(0)}</div>`;
+                }
+
+                // Lógica para especialidades
+                let tagsHtml = '';
+                if(doc.especialidades && doc.especialidades.length > 0) {
+                    tagsHtml = doc.especialidades.slice(0, 3).map(t => `<span class="tag">${t}</span>`).join('');
+                } else {
+                    tagsHtml = `<span class="tag">Psicología General</span>`;
+                }
+
+                return `
                 <div class="spec-card">
                     <div>
-                        <div class="spec-avatar">${doc.nombre_completo.charAt(0)}</div>
-                        <h3 class="spec-name">${doc.nombre_completo}</h3>
-                        <div class="spec-role">Especialista</div>
+                        ${avatarHtml}
+                        <h3 class="spec-name">${doc.nombre}</h3>
+                        <div class="spec-role">${doc.headline || 'Especialista en Salud Mental'}</div>
                         <div class="spec-tags">
-                            ${(doc.especialidades || ['General']).map(t => `<span class="tag">${t}</span>`).join('')}
+                            ${tagsHtml}
                         </div>
                     </div>
                     <div>
-                        <div class="spec-price">S/ ${doc.tarifa_sesion} <span>/ sesión</span></div>
+                        <div class="spec-price">S/ ${doc.precio_consulta || 80} <span>/ sesión</span></div>
                         <a href="agendar.html" class="btn-book">Agendar Cita</a>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
+        } else {
+            grid.innerHTML = '<p style="grid-column:1/-1; text-align:center;">No se encontraron especialistas disponibles.</p>';
         }
     }
     init();
+
     async function logout() { await window.sb.auth.signOut(); window.location.href='../login.html'; }
   </script>
 </body>
