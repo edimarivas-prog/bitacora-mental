@@ -106,18 +106,18 @@
   <script src="../js/supabase-config.js"></script>
   <script>
     async function checkAuth() {
-        if (!window.sb) { setTimeout(checkAuth, 100); return; }
-        const { data: { session } } = await window.sb.auth.getSession();
-        if (!session) window.location.replace('../login.html');
-        else {
-            // Nombre seguro (Fallback robusto)
-            let userName = 'Paciente';
-            const { data: profile } = await window.sb.from('users_profile').select('nombre').eq('id', session.user.id).single();
-            if (profile && profile.nombre) userName = profile.nombre;
-            else if (session.user.user_metadata && session.user.user_metadata.full_name) userName = session.user.user_metadata.full_name;
+        // 🔒 SEGURIDAD
+        const user = await window.checkSession();
+        if (!user) return;
 
-            loadCitas(session.user.id, userName);
-        }
+        // Lógica
+        let userName = 'Paciente';
+        const { data: profile } = await window.sb.from('users_profile').select('nombre').eq('id', user.id).single();
+        
+        if (profile?.nombre) userName = profile.nombre;
+        else if (user.user_metadata?.full_name) userName = user.user_metadata.full_name;
+
+        loadCitas(user.id, userName);
     }
     checkAuth();
 
