@@ -79,21 +79,18 @@
 
   <aside class="sidebar" id="sidebar">
     <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
-    
     <div class="nav-section">
       <div class="nav-title">Principal</div>
       <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i> Inicio</a>
       <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
       <a href="especialistas.html" class="nav-item"><i class="fas fa-user-md"></i> Especialistas</a>
     </div>
-
     <div class="nav-section">
       <div class="nav-title">Tu Espacio</div>
       <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> Diario</a>
       <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> Progreso</a>
       <a href="recursos.html" class="nav-item"><i class="fas fa-box-open"></i> Recursos</a>
     </div>
-
     <div class="nav-section">
       <div class="nav-title">Cuenta</div>
       <a href="plan.html" class="nav-item"><i class="fas fa-crown"></i> Mi Plan</a>
@@ -190,31 +187,21 @@
     async function initDashboard() {
         if (!window.sb) return setTimeout(initDashboard, 100);
 
-        // 1. Verificar Sesión
         const { data: { session } } = await window.sb.auth.getSession();
         if (!session) { window.location.href = '../login.html'; return; }
         const user = session.user;
 
-        // 2. Cargar Datos Básicos
         const { data: profile } = await window.sb.from('users_profile').select('rol, nombre').eq('id', user.id).single();
         if (profile?.rol === 'psicologo') { window.location.href = '../pro/dashboard.html'; return; }
         
         loadGreeting(profile?.nombre);
         loadNextAppointment(user.id, profile?.nombre);
-        
-        // 3. NUEVO: Verificar estado del Pulso Semanal
         checkPulseStatus(user.id);
     }
 
-    // --- LÓGICA DE PULSO SEMANAL (7 DÍAS) ---
     async function checkPulseStatus(uid) {
-        const { data } = await window.sb
-            .from('monitoreo_sintomas')
-            .select('fecha_realizado')
-            .eq('user_id', uid)
-            .order('fecha_realizado', { ascending: false })
-            .limit(1);
-
+        const { data } = await window.sb.from('monitoreo_sintomas').select('fecha_realizado').eq('user_id', uid).order('fecha_realizado', { ascending: false }).limit(1);
+        
         const card = document.getElementById('pulseCard');
         const badge = document.getElementById('pulseBadge');
         const bar = document.getElementById('pulseBar');
@@ -222,49 +209,28 @@
         const text = document.getElementById('pulseText');
 
         if (data && data.length > 0) {
-            const lastDate = new Date(data[0].fecha_realizado);
-            const now = new Date();
-            const diffTime = Math.abs(now - lastDate);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-
+            const diffDays = Math.ceil(Math.abs(new Date() - new Date(data[0].fecha_realizado)) / (1000 * 60 * 60 * 24));
             if (diffDays < 7) {
-                // YA COMPLETADO RECIENTEMENTE (BLOQUEAR)
                 card.classList.add('completed');
-                badge.textContent = "Completado";
-                badge.style.background = "#D1FAE5";
-                badge.style.color = "#065F46";
-                
-                bar.style.width = "100%";
-                bar.style.background = "#10B981";
-                
-                const daysLeft = 7 - diffDays + 1;
-                text.textContent = `¡Gracias por registrarte! Vuelve en unos días.`;
-                
-                link.innerHTML = `<i class="fas fa-lock"></i> Disponible en ${daysLeft} días`;
-                link.style.pointerEvents = "none";
-                link.style.color = "#94A3B8";
-                link.href = "#"; // Desactivar link
-            } else {
-                // DISPONIBLE (PASARON 7 DÍAS)
-                bar.style.width = "10%";
-            }
-        } else {
-            // NUNCA HECHO
-            bar.style.width = "5%";
-        }
+                badge.textContent = "Completado"; badge.style.background = "#D1FAE5"; badge.style.color = "#065F46";
+                bar.style.width = "100%"; bar.style.background = "#10B981";
+                text.textContent = `¡Gracias por registrarte!`;
+                link.innerHTML = `<i class="fas fa-lock"></i> Disponible en ${7 - diffDays + 1} días`;
+                link.style.pointerEvents = "none"; link.style.color = "#94A3B8";
+            } else { bar.style.width = "10%"; }
+        } else { bar.style.width = "5%"; }
     }
 
-    function loadGreeting(nombreCompleto) {
-        const hour = new Date().getHours();
-        const saludo = hour < 12 ? 'Buenos días' : (hour < 18 ? 'Buenas tardes' : 'Buenas noches');
-        const nombre = nombreCompleto?.split(' ')[0] || 'Hola';
-        document.getElementById('greeting').textContent = `${saludo}, ${nombre} 👋`;
+    function loadGreeting(nombre) {
+        const h = new Date().getHours();
+        const saludo = h < 12 ? 'Buenos días' : (h < 18 ? 'Buenas tardes' : 'Buenas noches');
+        document.getElementById('greeting').textContent = `${saludo}, ${nombre?.split(' ')[0] || 'Hola'} 👋`;
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
     }
 
+    // --- CORRECCIÓN CLAVE: FUNCIÓN ASYNC Y LÓGICA DE 10 MINUTOS ---
     async function loadNextAppointment(userId, userName) {
         const now = new Date();
-        // Buscamos citas desde hace 1 hora para que si llega tarde aún aparezca
         const searchTime = new Date(now.getTime() - 60 * 60 * 1000); 
 
         const { data: citas } = await window.sb
@@ -284,54 +250,41 @@
 
             const citaDate = new Date(nextCita.fecha_hora);
             
-            // --- LÓGICA DE BLOQUEO 10 MINUTOS ---
-            const diffMs = citaDate - new Date(); // Diferencia en milisegundos
-            const diffMins = Math.floor(diffMs / 60000); // Diferencia en minutos
-            
+            // LÓGICA DE 10 MINUTOS
+            const diffMs = citaDate - new Date(); 
+            const diffMins = Math.floor(diffMs / 60000);
             const btnLink = document.getElementById('citaLink');
             
-            // Si faltan más de 10 minutos
             if (diffMins > 10) {
-                btnLink.style.background = '#CBD5E1'; // Gris
-                btnLink.style.pointerEvents = 'none'; // No clicable
+                // Faltan más de 10 min -> BLOQUEADO
+                btnLink.style.background = '#CBD5E1'; 
+                btnLink.style.pointerEvents = 'none';
                 btnLink.style.cursor = 'default';
-                
-                // Formato amigable del tiempo restante
-                let timeText = "";
-                if(diffMins > 60) {
-                    const hours = Math.floor(diffMins / 60);
-                    timeText = `en ${hours} horas`;
-                } else {
-                    timeText = `en ${diffMins} min`;
-                }
-                
+                const timeText = diffMins > 60 ? `en ${Math.floor(diffMins/60)} horas` : `en ${diffMins} min`;
                 btnLink.innerHTML = `<i class="fas fa-lock"></i> Sala abre ${timeText}`;
             } else {
-                // Ya es hora (o faltan menos de 10 min)
+                // Ya es hora -> DISPONIBLE
                 const nombrePaciente = userName?.split(' ')[0] || 'Paciente';
-                btnLink.style.background = '#10B981'; // Verde original
+                btnLink.style.background = '#10B981';
                 btnLink.style.pointerEvents = 'auto';
                 btnLink.style.cursor = 'pointer';
                 btnLink.innerHTML = `<i class="fas fa-video"></i> Entrar a Videollamada`;
                 btnLink.href = `../pro/sesion-live.html?room=${nextCita.link_reunion}&patient=${nombrePaciente}`;
             }
-            // -------------------------------------
 
             document.getElementById('docName').textContent = nextCita.psicologo ? nextCita.psicologo.nombre : 'Especialista';
-            
-            // Mostrar hora correcta (UTC)
-            document.getElementById('citaDate').textContent = citaDate.toLocaleDateString('es-PE', { 
-                day: 'numeric', month: 'long', timeZone: 'UTC' 
-            });
-            document.getElementById('citaTime').textContent = citaDate.toLocaleTimeString('es-PE', { 
-                hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'UTC' 
-            });
+            document.getElementById('citaDate').textContent = citaDate.toLocaleDateString('es-PE', { day: 'numeric', month: 'long', timeZone: 'UTC' });
+            document.getElementById('citaTime').textContent = citaDate.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'UTC' });
 
         } else {
             document.getElementById('nextCitaCard').style.display = 'none';
             document.getElementById('emptyCita').style.display = 'block';
         }
     }
-</script>
+
+    function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
+    async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
+    initDashboard();
+  </script>
 </body>
 </html>
