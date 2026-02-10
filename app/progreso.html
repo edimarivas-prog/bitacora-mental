@@ -126,10 +126,9 @@
   <script src="../js/supabase-config.js"></script>
   <script>
     async function init() {
-        if(!window.sb) return setTimeout(init, 100);
-        
-        const { data: { user } } = await window.sb.auth.getUser();
-        if(!user) window.location.href='../login.html';
+        // 🔒 SEGURIDAD
+        const user = await window.checkSession();
+        if (!user) return;
         
         loadRealStats(user.id);
     }
