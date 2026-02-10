@@ -188,7 +188,7 @@
         if (!session) { window.location.href = '../login.html'; return; }
         const user = session.user;
 
-        // 2. Obtener Nombre Seguro (Fallback robusto)
+        // 2. Obtener Nombre Seguro (Fallback)
         let userName = 'Paciente';
         const { data: profile } = await window.sb.from('users_profile').select('rol, nombre').eq('id', user.id).single();
         
@@ -196,7 +196,7 @@
             if (profile.rol === 'psicologo') { window.location.href = '../pro/dashboard.html'; return; }
             if (profile.nombre) userName = profile.nombre;
         } else if (user.user_metadata && user.user_metadata.full_name) {
-            userName = user.user_metadata.full_name; // Fallback a Google/Auth data
+            userName = user.user_metadata.full_name;
         }
 
         // 3. Cargar UI
@@ -205,6 +205,7 @@
         checkPulseStatus(user.id);
     }
 
+    // --- PULSO (Semanal) ---
     async function checkPulseStatus(uid) {
         const { data } = await window.sb.from('monitoreo_sintomas').select('fecha_realizado').eq('user_id', uid).order('fecha_realizado', { ascending: false }).limit(1);
         
@@ -230,12 +231,14 @@
     function loadGreeting(nombre) {
         const h = new Date().getHours();
         const saludo = h < 12 ? 'Buenos días' : (h < 18 ? 'Buenas tardes' : 'Buenas noches');
-        const primerNombre = nombre.split(' ')[0]; // Usamos la variable segura
+        const primerNombre = nombre.split(' ')[0];
         document.getElementById('greeting').textContent = `${saludo}, ${primerNombre} 👋`;
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
     }
 
+    // --- CITA (Hora corregida Perú) ---
     async function loadNextAppointment(userId, userName) {
+        // Usar hora local para filtro (restar 1 hora de margen)
         const now = new Date();
         const searchTime = new Date(now.getTime() - 60 * 60 * 1000).toISOString(); 
 
@@ -254,11 +257,21 @@
             document.getElementById('emptyCita').style.display = 'none';
             document.getElementById('nextCitaCard').style.display = 'block';
 
-            // UTC Fix
-            let dateString = nextCita.fecha_hora;
-            if (!dateString.includes('Z') && !dateString.includes('+')) dateString += 'Z';
+            // --- TRUCO HORA PERÚ ---
+            // Leemos la fecha de la DB (ej: '2026-02-10T10:00:00') y la parseamos LITERALMENTE
+            // como si fuera hora local de Perú, ignorando cualquier zona horaria extraña.
+            const rawDate = nextCita.fecha_hora; 
+            // Separamos componentes YYYY-MM-DD THH:mm
+            const datePart = rawDate.split('T')[0];
+            const timePart = rawDate.split('T')[1].split('+')[0].split('Z')[0]; // Limpiamos Z o +00
             
-            const citaDate = new Date(dateString);
+            const [y, m, d] = datePart.split('-');
+            const [hh, mm] = timePart.split(':');
+
+            // Creamos fecha local exacta (Mes en JS es 0-11)
+            const citaDate = new Date(y, m - 1, d, hh, mm); 
+            
+            // Calculamos diferencia contra AHORA (Hora local de Perú)
             const diffMs = citaDate - new Date(); 
             const diffMins = Math.floor(diffMs / 60000);
             
@@ -276,13 +289,14 @@
                 btnLink.style.pointerEvents = 'auto';
                 btnLink.style.cursor = 'pointer';
                 btnLink.innerHTML = `<i class="fas fa-video"></i> Entrar a Videollamada`;
-                // Usamos la variable userName segura que calculamos al inicio
                 btnLink.href = `../pro/sesion-live.html?room=${nextCita.link_reunion}&patient=${userName}`;
             }
 
             document.getElementById('docName').textContent = nextCita.psicologo ? nextCita.psicologo.nombre : 'Especialista';
-            document.getElementById('citaDate').textContent = citaDate.toLocaleDateString('es-PE', { day: 'numeric', month: 'long', timeZone: 'UTC' });
-            document.getElementById('citaTime').textContent = citaDate.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'UTC' });
+            
+            // Visualización Local Exacta
+            document.getElementById('citaDate').textContent = citaDate.toLocaleDateString('es-PE', { day: 'numeric', month: 'long' });
+            document.getElementById('citaTime').textContent = citaDate.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: true });
 
         } else {
             document.getElementById('nextCitaCard').style.display = 'none';
