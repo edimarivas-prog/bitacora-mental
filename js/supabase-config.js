@@ -10,3 +10,39 @@ if (!window.sb) {
         console.error("❌ Error crítico: Librería Supabase no encontrada.");
     }
 }
+
+// ✅ FUNCIÓN DE SEGURIDAD CENTRALIZADA
+window.checkSession = async function() {
+    try {
+        // Esperar a que sb esté listo si cargó lento
+        if (!window.sb) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+
+        // 1. Validar contra el servidor (getUser es más seguro que getSession)
+        const { data: { user }, error } = await window.sb.auth.getUser();
+
+        if (error || !user) {
+            throw new Error('Sesión no válida o expirada');
+        }
+
+        return user; // Retorna el usuario verificado
+
+    } catch (e) {
+        console.warn('🔒 Seguridad: Redirigiendo al login...', e.message);
+        
+        // 2. Limpieza profunda
+        sessionStorage.clear();
+        localStorage.removeItem('sb-' + window.sbProjectUrl + '-auth-token'); // Limpia token específico
+        
+        // 3. Logout forzado en cliente
+        await window.sb.auth.signOut();
+
+        // 4. Redirección segura (reemplaza historial)
+        // Detectar si estamos en carpeta 'app' o raíz para la ruta correcta
+        const path = window.location.pathname.includes('/app/') ? '../login.html' : 'login.html';
+        window.location.replace(path);
+        
+        return null;
+    }
+};
