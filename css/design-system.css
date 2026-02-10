@@ -200,17 +200,88 @@ p, label, span, input, textarea {
 .btn-primary, .btn-save, .btn-confirm, .btn-action {
   color: #FFFFFF !important;
 }
-
-
-
-
-
-
-
-
-
-  
   --white: #FFFFFF;
   --border: #E6EFE8;
   --radius: var(--radius-xl);
+}
+
+
+
+/* --- UI COMPONENTS: Loading & Toasts --- */
+
+/* 1. Loading Spinner */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8);
+  width: 100%;
+  text-align: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--primary-100);
+  border-top-color: var(--primary-400);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: var(--space-3);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 2. Toasts (Notificaciones flotantes) */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--white);
+  padding: 16px 24px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Efecto rebote suave */
+  z-index: 10000; /* Siempre encima de todo */
+  font-weight: 500;
+  border: 1px solid var(--border);
+  min-width: 300px;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.toast-icon { font-size: 1.2rem; }
+
+/* Tipos de Toast */
+.toast-success { border-left: 5px solid var(--success); }
+.toast-success .toast-icon { color: var(--success); }
+
+.toast-error { border-left: 5px solid var(--error); }
+.toast-error .toast-icon { color: var(--error); }
+
+.toast-warning { border-left: 5px solid var(--warning); }
+.toast-warning .toast-icon { color: var(--warning); }
+
+.toast-info { border-left: 5px solid var(--info); }
+.toast-info .toast-icon { color: var(--info); }
+
+/* Móvil: Centrar toast */
+@media (max-width: 600px) {
+    .toast {
+        left: 20px;
+        right: 20px;
+        bottom: 20px;
+        min-width: auto;
+        justify-content: center;
+    }
 }
