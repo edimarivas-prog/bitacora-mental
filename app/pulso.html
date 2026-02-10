@@ -5,101 +5,192 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pulso Semanal - Bitácora Mental</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
-    /* (Mismos estilos base que entrevista.html) */
-    :root { --primary: #4F6F52; --background: #F9FBFA; --dark: #1F2933; --border: #E6EFE8; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--background); color: var(--dark); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-    .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 600px; width: 100%; }
-    h1 { font-family: 'Outfit', sans-serif; color: var(--primary); margin-bottom: 20px; text-align: center; }
-    .question { margin-bottom: 25px; }
-    .question label { font-weight: 600; display: block; margin-bottom: 10px; }
-    .scale-options { display: flex; justify-content: space-between; gap: 5px; }
-    .scale-btn { flex: 1; padding: 10px; border: 1px solid var(--border); background: white; border-radius: 8px; cursor: pointer; transition: 0.2s; text-align: center; font-size: 0.9rem; }
-    .scale-btn:hover, .scale-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
-    textarea { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 10px; margin-top: 10px; }
-    .btn { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: 600; font-size: 1rem; margin-top: 20px; }
+    /* --- Estilos Maestros (Sidebar y Layout) --- */
+    :root { --primary: #4F6F52; --primary-light: #E8F5E9; --bg: #F9FBFA; --white: #FFFFFF; --text: #1F2933; --text-soft: #64748B; --border: #E6EFE8; --radius: 20px; }
+    * { box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
+    
+    /* Sidebar */
+    .sidebar { width: 260px; background: var(--white); padding: 24px; border-right: 1px solid var(--border); position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s; }
+    .logo { font-family: 'Outfit'; font-weight: 700; color: var(--primary); font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 8px; margin-bottom: 30px; }
+    .nav-section { margin-bottom: 20px; }
+    .nav-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-soft); letter-spacing: 1px; margin-bottom: 10px; padding-left: 10px; font-weight: 700; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-soft); text-decoration: none; border-radius: 12px; font-weight: 500; transition: 0.2s; }
+    .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
+    .nav-item.active { font-weight: 600; }
+    
+    .mobile-nav { display: none; padding: 15px; background: white; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .menu-toggle { font-size: 1.5rem; background: none; border: none; color: var(--text); }
+    
+    @media (max-width: 900px) { .sidebar { display: none; } .mobile-nav { display: flex; } }
+
+    /* --- Estilos Específicos Pulso --- */
+    .main { flex: 1; padding: 30px; display: flex; justify-content: center; align-items: flex-start; }
+    
+    .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 600px; width: 100%; margin-top: 20px; }
+    h1 { font-family: 'Outfit', sans-serif; color: var(--primary); margin: 0 0 10px 0; text-align: center; }
+    
+    .question { margin-bottom: 30px; }
+    .question label { font-weight: 700; display: block; margin-bottom: 15px; color: var(--text); font-size: 1.05rem; }
+    
+    .scale-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .scale-btn { padding: 12px 5px; border: 1px solid var(--border); background: white; border-radius: 10px; cursor: pointer; transition: 0.2s; text-align: center; font-size: 0.85rem; color: var(--text-soft); font-weight: 500; }
+    .scale-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .scale-btn.selected { background: var(--primary); color: white; border-color: var(--primary); font-weight: 700; box-shadow: 0 4px 10px rgba(79, 111, 82, 0.2); }
+    
+    textarea { width: 100%; padding: 15px; border: 1px solid var(--border); border-radius: 12px; margin-top: 5px; font-family: inherit; resize: vertical; min-height: 80px; }
+    textarea:focus { outline: 2px solid var(--primary-light); border-color: var(--primary); }
+    
+    .btn { background: var(--primary); color: white; border: none; padding: 16px; border-radius: 12px; cursor: pointer; width: 100%; font-weight: 700; font-size: 1.1rem; margin-top: 10px; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 10px; }
+    .btn:hover { background: #3E5A41; transform: translateY(-2px); }
+    .btn:disabled { background: #CBD5E1; cursor: not-allowed; transform: none; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>🩺 Pulso Semanal</h1>
-    <p style="text-align:center; color:#666; margin-bottom:30px;">Responde pensando en los últimos 7 días.</p>
-    
-    <div id="questionsContainer">
-      <div class="question" data-id="animo">
-        <label>1. ¿Con qué frecuencia has sentido poco interés o placer en hacer cosas?</label>
-        <div class="scale-options">
-          <div class="scale-btn" onclick="selectOption(this, 'animo', 0)">Nunca</div>
-          <div class="scale-btn" onclick="selectOption(this, 'animo', 1)">Varios días</div>
-          <div class="scale-btn" onclick="selectOption(this, 'animo', 2)">Más de la mitad</div>
-          <div class="scale-btn" onclick="selectOption(this, 'animo', 3)">Casi todos</div>
-        </div>
-      </div>
 
-      <div class="question" data-id="ansiedad">
-        <label>2. ¿Con qué frecuencia te has sentido nervioso/a, ansioso/a o con los nervios de punta?</label>
-        <div class="scale-options">
-          <div class="scale-btn" onclick="selectOption(this, 'ansiedad', 0)">Nunca</div>
-          <div class="scale-btn" onclick="selectOption(this, 'ansiedad', 1)">Varios días</div>
-          <div class="scale-btn" onclick="selectOption(this, 'ansiedad', 2)">Más de la mitad</div>
-          <div class="scale-btn" onclick="selectOption(this, 'ansiedad', 3)">Casi todos</div>
-        </div>
-      </div>
-
-      <div class="question">
-        <label>3. Contexto (Opcional)</label>
-        <p style="font-size:0.9rem; margin-bottom:5px;">¿Pasó algo específico esta semana que influyó en tus respuestas?</p>
-        <textarea id="observacion" placeholder="Ej: Tuve mucha carga de trabajo, discutí con alguien..."></textarea>
-      </div>
-
-      <button class="btn" onclick="savePulse()">Guardar Registro</button>
-    </div>
+  <div class="mobile-nav">
+    <a href="#" class="logo" style="margin:0"><i class="fas fa-brain"></i> Bitácora</a>
+    <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
   </div>
+
+  <aside class="sidebar" id="sidebar">
+    <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
+    <div class="nav-section">
+      <div class="nav-title">Principal</div>
+      <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i> Inicio</a> <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
+      <a href="especialistas.html" class="nav-item"><i class="fas fa-user-md"></i> Especialistas</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-title">Tu Espacio</div>
+      <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> Diario</a>
+      <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> Progreso</a>
+      <a href="recursos.html" class="nav-item"><i class="fas fa-box-open"></i> Recursos</a>
+    </div>
+    <div class="nav-section">
+        <div class="nav-title">Cuenta</div>
+        <a href="plan.html" class="nav-item"><i class="fas fa-crown"></i> Mi Plan</a>
+        <a href="configuracion.html" class="nav-item"><i class="fas fa-cog"></i> Configuración</a>
+        <a href="perfil.html" class="nav-item"><i class="fas fa-user-circle"></i> Perfil</a>
+        <a href="#" onclick="logout()" class="nav-item" style="color:#EF4444"><i class="fas fa-sign-out-alt"></i> Salir</a>
+      </div>
+  </aside>
+
+  <main class="main">
+    <div class="card">
+      <h1>🩺 Pulso Semanal</h1>
+      <p style="text-align:center; color:#64748B; margin-bottom:30px; font-size:0.9rem;">Responde pensando en los últimos 7 días.</p>
+      
+      <div id="questionsContainer">
+        <div class="question" data-id="animo">
+          <label>1. ¿Con qué frecuencia has sentido poco interés o placer en hacer cosas?</label>
+          <div class="scale-options">
+            <div class="scale-btn" onclick="selectOption(this, 'animo', 0)">Nunca</div>
+            <div class="scale-btn" onclick="selectOption(this, 'animo', 1)">Varios días</div>
+            <div class="scale-btn" onclick="selectOption(this, 'animo', 2)">Más de la mitad</div>
+            <div class="scale-btn" onclick="selectOption(this, 'animo', 3)">Casi todos</div>
+          </div>
+        </div>
+
+        <div class="question" data-id="ansiedad">
+          <label>2. ¿Con qué frecuencia te has sentido nervioso/a, ansioso/a o con los nervios de punta?</label>
+          <div class="scale-options">
+            <div class="scale-btn" onclick="selectOption(this, 'ansiedad', 0)">Nunca</div>
+            <div class="scale-btn" onclick="selectOption(this, 'ansiedad', 1)">Varios días</div>
+            <div class="scale-btn" onclick="selectOption(this, 'ansiedad', 2)">Más de la mitad</div>
+            <div class="scale-btn" onclick="selectOption(this, 'ansiedad', 3)">Casi todos</div>
+          </div>
+        </div>
+
+        <div class="question">
+          <label>3. Contexto (Opcional)</label>
+          <p style="font-size:0.85rem; margin-bottom:8px; color:#64748B;">¿Pasó algo específico esta semana que influyó?</p>
+          <textarea id="observacion" placeholder="Ej: Tuve mucha carga de trabajo, discutí con alguien..."></textarea>
+        </div>
+
+        <button id="btnSave" class="btn" onclick="savePulse()">
+            <i class="fas fa-save"></i> Guardar Registro
+        </button>
+      </div>
+    </div>
+  </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
     let scores = { animo: null, ansiedad: null };
 
+    // Validar Auth al inicio
+    async function init() {
+        if(!window.sb) return setTimeout(init, 100);
+        const { data: { session } } = await window.sb.auth.getSession();
+        if(!session) window.location.href = '../login.html';
+    }
+    init();
+
     function selectOption(btn, category, value) {
-      // UI Update
+      // Visual
       const parent = btn.parentElement;
       parent.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
-      // Logic Update
+      
+      // Lógica
       scores[category] = value;
     }
 
     async function savePulse() {
       if (scores.animo === null || scores.ansiedad === null) {
-        alert('Por favor responde las preguntas de frecuencia.');
+        alert('Por favor responde las dos preguntas de frecuencia para continuar.');
         return;
       }
 
-      const { data: { user } } = await window.supabase.auth.getUser();
-      const observacion = document.getElementById('observacion').value;
+      const btn = document.getElementById('btnSave');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+      btn.disabled = true;
 
-      // Calcular "niveles" aproximados para compatibilidad con gráficos antiguos (0-10)
-      // Escala 0-3 se mapea a 0-10 aproximadamente
-      const mapScore = (s) => Math.round((s / 3) * 10);
+      try {
+          const { data: { user } } = await window.sb.auth.getUser();
+          const observacion = document.getElementById('observacion').value;
 
-      const { error } = await window.supabase.from('monitoreo_sintomas').insert({
-        user_id: user.id,
-        tipo_registro: 'pulso_semanal',
-        nivel_animo: 10 - mapScore(scores.animo), // Invertido: 0 sintomas = 10 animo
-        nivel_ansiedad: mapScore(scores.ansiedad),
-        nivel_estres: mapScore(scores.ansiedad), // Simplificacion inicial
-        observaciones_paciente: observacion,
-        escala_sintomas: scores
-      });
+          // Conversión para gráficos (0-10)
+          // Pregunta 1 (Animo): 0 (Nunca) es bueno -> 10 en gráfica de ánimo. 3 (Siempre) es malo -> 0.
+          // Formula: 10 - (valor * 3.33)
+          const nivelAnimo = Math.round(10 - (scores.animo * 3.33));
+          
+          // Pregunta 2 (Ansiedad): 0 (Nunca) es bueno (0 ansiedad).
+          const nivelAnsiedad = Math.round(scores.ansiedad * 3.33);
 
-      if (error) {
-        console.error(error);
-        alert('Error al guardar.');
-      } else {
-        window.location.href = 'dashboard.html';
+          const { error } = await window.sb.from('monitoreo_sintomas').insert({
+            user_id: user.id,
+            fecha_realizado: new Date().toISOString(), // Importante para el orden en progreso.html
+            nivel_animo: nivelAnimo,
+            nivel_ansiedad: nivelAnsiedad,
+            observaciones: observacion,
+            escala_data: scores // Guardamos el raw data por si acaso
+          });
+
+          if (error) throw error;
+
+          alert("¡Registro guardado exitosamente!");
+          window.location.href = 'progreso.html'; // Redirigir a progreso para ver la gráfica actualizada
+
+      } catch (e) {
+          console.error(e);
+          alert('Error al guardar: ' + e.message);
+          btn.innerHTML = '<i class="fas fa-save"></i> Guardar Registro';
+          btn.disabled = false;
       }
     }
+
+    function toggleMenu() { 
+        const s = document.getElementById('sidebar');
+        s.style.display = s.style.display === 'flex' ? 'none' : 'flex';
+        if(s.style.display === 'flex') { s.style.position='fixed'; s.style.height='100vh'; }
+    }
+    
+    async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
   </script>
 </body>
 </html>
