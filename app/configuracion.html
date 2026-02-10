@@ -211,13 +211,14 @@
 
     let currentUser = null;
 
+    let currentUser = null;
+
     async function init() {
-        if(!window.sb) return setTimeout(init, 100);
+        // 🔒 SEGURIDAD
+        const user = await window.checkSession();
+        if (!user) return;
         
-        const { data: { session } } = await window.sb.auth.getSession();
-        if(!session) { window.location.href = '../login.html'; return; }
-        
-        currentUser = session.user;
+        currentUser = user; // Guardamos en variable global para usar en uploadImage, etc.
         document.getElementById('inputEmail').value = currentUser.email;
 
         loadProfile();
