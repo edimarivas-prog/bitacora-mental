@@ -186,9 +186,8 @@
         if (!window.sb) return setTimeout(initDashboard, 100);
 
         // 1. Verificar Sesión
-        const { data: { session } } = await window.sb.auth.getSession();
-        if (!session) { window.location.href = '../login.html'; return; }
-        const user = session.user;
+        const user = await window.checkSession();
+        if (!user) return; // Detiene la ejecución si no hay usuario
 
         // 2. Obtener Nombre Seguro (Fallback)
         let userName = 'Paciente';
