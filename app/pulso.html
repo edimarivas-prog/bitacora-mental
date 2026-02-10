@@ -8,12 +8,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    /* --- Estilos Maestros (Sidebar y Layout) --- */
+    /* --- Estilos Maestros --- */
     :root { --primary: #4F6F52; --primary-light: #E8F5E9; --bg: #F9FBFA; --white: #FFFFFF; --text: #1F2933; --text-soft: #64748B; --border: #E6EFE8; --radius: 20px; }
     * { box-sizing: border-box; }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
     
-    /* Sidebar */
     .sidebar { width: 260px; background: var(--white); padding: 24px; border-right: 1px solid var(--border); position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s; }
     .logo { font-family: 'Outfit'; font-weight: 700; color: var(--primary); font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 8px; margin-bottom: 30px; }
     .nav-section { margin-bottom: 20px; }
@@ -27,9 +26,8 @@
     
     @media (max-width: 900px) { .sidebar { display: none; } .mobile-nav { display: flex; } }
 
-    /* --- Estilos Específicos Pulso --- */
+    /* --- Pulso --- */
     .main { flex: 1; padding: 30px; display: flex; justify-content: center; align-items: flex-start; }
-    
     .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 600px; width: 100%; margin-top: 20px; }
     h1 { font-family: 'Outfit', sans-serif; color: var(--primary); margin: 0 0 10px 0; text-align: center; }
     
@@ -60,7 +58,8 @@
     <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
     <div class="nav-section">
       <div class="nav-title">Principal</div>
-      <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i> Inicio</a> <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
+      <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i> Inicio</a>
+      <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
       <a href="especialistas.html" class="nav-item"><i class="fas fa-user-md"></i> Especialistas</a>
     </div>
     <div class="nav-section">
@@ -122,21 +121,37 @@
   <script>
     let scores = { animo: null, ansiedad: null };
 
-    // Validar Auth al inicio
+    // Validar Auth + Chequear si ya lo hizo
     async function init() {
         if(!window.sb) return setTimeout(init, 100);
         const { data: { session } } = await window.sb.auth.getSession();
-        if(!session) window.location.href = '../login.html';
+        if(!session) { window.location.href = '../login.html'; return; }
+        
+        // CHECK: ¿Lo hizo hace menos de 7 días?
+        const { data } = await window.sb
+            .from('monitoreo_sintomas')
+            .select('fecha_realizado')
+            .eq('user_id', session.user.id)
+            .order('fecha_realizado', { ascending: false })
+            .limit(1);
+
+        if(data && data.length > 0) {
+            const lastDate = new Date(data[0].fecha_realizado);
+            const now = new Date();
+            const diffDays = Math.ceil(Math.abs(now - lastDate) / (1000 * 60 * 60 * 24));
+            
+            if(diffDays < 7) {
+                alert(`¡Hola! Ya realizaste tu pulso semanal hace ${diffDays} días. Vuelve cuando pases la semana.`);
+                window.location.href = 'dashboard.html';
+            }
+        }
     }
     init();
 
     function selectOption(btn, category, value) {
-      // Visual
       const parent = btn.parentElement;
       parent.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
-      
-      // Lógica
       scores[category] = value;
     }
 
@@ -154,27 +169,22 @@
           const { data: { user } } = await window.sb.auth.getUser();
           const observacion = document.getElementById('observacion').value;
 
-          // Conversión para gráficos (0-10)
-          // Pregunta 1 (Animo): 0 (Nunca) es bueno -> 10 en gráfica de ánimo. 3 (Siempre) es malo -> 0.
-          // Formula: 10 - (valor * 3.33)
           const nivelAnimo = Math.round(10 - (scores.animo * 3.33));
-          
-          // Pregunta 2 (Ansiedad): 0 (Nunca) es bueno (0 ansiedad).
           const nivelAnsiedad = Math.round(scores.ansiedad * 3.33);
 
           const { error } = await window.sb.from('monitoreo_sintomas').insert({
             user_id: user.id,
-            fecha_realizado: new Date().toISOString(), // Importante para el orden en progreso.html
+            fecha_realizado: new Date().toISOString(),
             nivel_animo: nivelAnimo,
             nivel_ansiedad: nivelAnsiedad,
             observaciones: observacion,
-            escala_data: scores // Guardamos el raw data por si acaso
+            escala_data: scores 
           });
 
           if (error) throw error;
 
           alert("¡Registro guardado exitosamente!");
-          window.location.href = 'progreso.html'; // Redirigir a progreso para ver la gráfica actualizada
+          window.location.href = 'progreso.html'; 
 
       } catch (e) {
           console.error(e);
