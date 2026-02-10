@@ -117,3 +117,63 @@ window.fetchWithCache = async function(key, fetchFn) {
     
     return data;
 };
+
+
+// 7. UI UTILITIES (Feedback Visual)
+
+// A. Mostrar Spinner de Carga
+window.showLoading = function(containerId, message = 'Cargando contenido...') {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    // Usamos window.sanitize para seguridad
+    const safeMessage = window.sanitize(message);
+    
+    container.innerHTML = `
+        <div class="loading-state">
+            <div class="spinner"></div>
+            <p style="color:var(--text-soft); font-size:0.9rem;">${safeMessage}</p>
+        </div>
+    `;
+};
+
+// B. Mostrar Toast (Notificación)
+window.showToast = function(message, type = 'info') {
+    // Evitar acumulación excesiva de toasts
+    const existingToasts = document.querySelectorAll('.toast');
+    if (existingToasts.length > 2) {
+        existingToasts[0].remove();
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    
+    const icons = {
+        success: '<i class="fas fa-check-circle"></i>',
+        error: '<i class="fas fa-exclamation-circle"></i>',
+        warning: '<i class="fas fa-exclamation-triangle"></i>',
+        info: '<i class="fas fa-info-circle"></i>'
+    };
+    
+    // Sanitizar mensaje
+    const safeMessage = window.sanitize(message);
+
+    toast.innerHTML = `
+        <span class="toast-icon">${icons[type]}</span>
+        <span>${safeMessage}</span>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Animación Entrada
+    // Pequeño delay para permitir que el DOM renderice antes de añadir clase 'show'
+    requestAnimationFrame(() => {
+        toast.classList.add('show');
+    });
+    
+    // Auto-eliminar
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300); // Esperar a que termine la animación de salida
+    }, 4000); // 4 segundos visible
+};
