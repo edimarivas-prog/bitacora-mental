@@ -33,10 +33,12 @@ window.checkSession = async function() {
         
         // 2. Limpieza profunda
         sessionStorage.clear();
-        localStorage.removeItem('sb-' + window.sbProjectUrl + '-auth-token'); // Limpia token específico
+        // Nota: Asegúrate que esta clave coincida con la que usa Supabase internamente
+        // Si tienes dudas, localStorage.clear() limpia todo y es más seguro para cerrar sesión.
+        localStorage.clear(); 
         
         // 3. Logout forzado en cliente
-        await window.sb.auth.signOut();
+        if(window.sb) await window.sb.auth.signOut();
 
         // 4. Redirección segura (reemplaza historial)
         // Detectar si estamos en carpeta 'app' o raíz para la ruta correcta
@@ -45,10 +47,12 @@ window.checkSession = async function() {
         
         return null;
     }
+}; // <--- ¡AQUÍ FALTABA EL CIERRE DE LA FUNCIÓN!
+
+// ✅ FUNCIÓN ANTI-XSS
 window.sanitize = function(str) {
     if (!str) return '';
     const div = document.createElement('div');
     div.textContent = str; // Esto escapa automáticamente HTML peligroso
     return div.innerHTML;
 };
-
