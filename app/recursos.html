@@ -112,6 +112,13 @@
         const user = await window.checkSession();
         if (!user) return;
 
+    document.getElementById('loading').style.display = 'none';
+    if(window.showLoading) {
+            window.showLoading('resGrid', 'Buscando herramientas de bienestar...'); 
+        }
+
+      
+
         // 2. Cargar Recursos (Con Caché también, para máxima velocidad)
         allResources = await window.fetchWithCache('resources_list', async () => {
             const { data } = await window.sb
