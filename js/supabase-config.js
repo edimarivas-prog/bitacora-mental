@@ -47,7 +47,7 @@ window.checkSession = async function() {
         
         return null;
     }
-}; // <--- ¡AQUÍ FALTABA EL CIERRE DE LA FUNCIÓN!
+}; 
 
 // ✅ FUNCIÓN ANTI-XSS
 window.sanitize = function(str) {
