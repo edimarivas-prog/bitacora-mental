@@ -4,20 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mi Plan - Bitácora Mental</title>
+  
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <link rel="stylesheet" href="../css/design-system.css">
   
   <style>
+    /* Estilos Locales (Usando variables del sistema) */
     
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
+    body { 
+        font-family: 'DM Sans', sans-serif; 
+        background: var(--bg); 
+        color: var(--text); 
+        margin: 0; 
+        display: flex; 
+        min-height: 100vh; 
+    }
     
-    /* Sidebar */
+    /* Sidebar (Ahora usa variables para coincidir con los otros) */
     .sidebar { width: 260px; background: var(--white); padding: 24px; border-right: 1px solid var(--border); position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; z-index: 100; }
     .logo { font-family: 'Outfit'; font-weight: 700; color: var(--primary); font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 8px; margin-bottom: 30px; }
     .nav-section { margin-bottom: 20px; }
-    .nav-title { font-size: 0.75rem; text-transform: uppercase; color: #64748B; padding-left: 10px; font-weight: 700; margin-bottom: 5px; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: #64748B; text-decoration: none; border-radius: 12px; font-weight: 500; }
+    
+    /* CORREGIDO: Usamos var(--text-soft) en lugar de #64748B */
+    .nav-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-soft); padding-left: 10px; font-weight: 700; margin-bottom: 5px; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-soft); text-decoration: none; border-radius: 12px; font-weight: 500; transition: 0.2s; }
+    
     .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
     .nav-item.active { font-weight: 600; }
     
@@ -26,16 +39,23 @@
     /* Estilos Planes */
     .plans-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; max-width: 900px; }
     
-    .plan-card { background: white; padding: 40px; border-radius: var(--radius); border: 2px solid var(--border); transition: transform 0.2s; position: relative; }
+    .plan-card { 
+        background: var(--white); 
+        padding: 40px; 
+        border-radius: var(--radius); 
+        border: 2px solid var(--border); 
+        transition: transform 0.2s; 
+        position: relative; 
+    }
     .plan-card:hover { transform: translateY(-5px); }
     
     .plan-header { margin-bottom: 30px; text-align: center; }
-    .plan-name { font-family: 'Outfit'; font-weight: 700; font-size: 1.5rem; margin-bottom: 10px; }
+    .plan-name { font-family: 'Outfit'; font-weight: 700; font-size: 1.5rem; margin-bottom: 10px; color: var(--text); }
     .plan-price { font-size: 2.5rem; font-weight: 700; color: var(--primary); font-family: 'Outfit'; }
-    .plan-period { font-size: 1rem; color: #64748B; font-weight: 400; }
+    .plan-period { font-size: 1rem; color: var(--text-soft); font-weight: 400; }
     
     .plan-features { list-style: none; padding: 0; margin-bottom: 30px; }
-    .plan-features li { padding: 10px 0; display: flex; align-items: center; gap: 10px; color: var(--text); border-bottom: 1px solid var(--bg); }
+    .plan-features li { padding: 10px 0; display: flex; align-items: center; gap: 10px; color: var(--text); border-bottom: 1px solid var(--border); }
     .plan-features i { color: var(--primary); }
     
     .btn-plan { width: 100%; padding: 15px; border-radius: 12px; font-weight: 600; cursor: pointer; border: none; font-size: 1rem; transition: 0.2s; }
@@ -43,15 +63,23 @@
     .btn-fill { background: var(--white); color: var(--primary); }
 
     /* Estilo Premium */
-    .premium-card { background: linear-gradient(135deg, var(--primary), #3E5A41); color: white; border: none; box-shadow: 0 10px 30px rgba(79, 111, 82, 0.3); transform: scale(1.05); }
+    .premium-card { 
+        background: linear-gradient(135deg, var(--primary), #2F4631); 
+        color: white; 
+        border: none; 
+        box-shadow: 0 10px 30px rgba(79, 111, 82, 0.3); 
+        transform: scale(1.05); 
+    }
+    .premium-card .plan-name { color: white; }
     .premium-card .plan-price { color: white; }
     .premium-card .plan-period { color: rgba(255,255,255,0.7); }
     .premium-card .plan-features li { border-color: rgba(255,255,255,0.1); color: white; }
     .premium-card .plan-features i { color: #F59E0B; }
+    
     .badge { position: absolute; top: 20px; right: 20px; background: #F59E0B; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
 
     /* Mobile */
-    .mobile-nav { display: none; padding: 15px; background: white; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .mobile-nav { display: none; padding: 15px; background: var(--white); justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
     .menu-toggle { font-size: 1.5rem; background: none; border: none; color: var(--text); }
     @media (max-width: 900px) { 
         .sidebar { display: none; } 
@@ -85,7 +113,7 @@
 
     <div class="nav-section">
       <div class="nav-title">Cuenta</div>
-      <a href="plan.html" class="nav-item"><i class="fas fa-crown"></i> Mi Plan</a>
+      <a href="plan.html" class="nav-item active"><i class="fas fa-crown"></i> Mi Plan</a>
       <a href="configuracion.html" class="nav-item"><i class="fas fa-cog"></i> Configuración</a>
       <a href="#" onclick="logout()" class="nav-item" style="color:#EF4444"><i class="fas fa-sign-out-alt"></i> Salir</a>
     </div>
@@ -93,7 +121,7 @@
 
     <main class="main">
         <h1 style="font-family:'Outfit'; margin-bottom:10px;">Elige tu Camino</h1>
-        <p style="color:#64748B;">Invierte en tu salud mental con planes diseñados para ti.</p>
+        <p style="color:var(--text-soft);">Invierte en tu salud mental con planes diseñados para ti.</p>
 
         <div class="plans-container">
             <div class="plan-card">
