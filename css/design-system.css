@@ -162,6 +162,54 @@ h1, h2, h3, h4, h5, h6 {
   --text: var(--text-main);
   --text-soft: var(--text-soft); 
   --bg: #F9FBFA;
+
+/* --- 🚑 BLOQUE DE RESCATE (Arreglar texto blanco) --- */
+
+:root {
+  /* Redefinimos las variables antiguas CON COLORES FIJOS para asegurar contraste */
+  --text: #1F2933;       /* Casi negro (para texto normal) */
+  --text-soft: #475569;  /* Gris oscuro (para subtítulos) */
+  --primary: #4F6F52;    /* Verde (para títulos o botones) */
+  --bg: #F9FBFA;         /* Fondo claro */
+  --white: #FFFFFF;      /* Blanco puro */
+}
+
+/* Forzamos el color base en todo el cuerpo */
+body {
+  color: var(--text) !important;
+  background-color: var(--bg);
+}
+
+/* Forzamos el color de los títulos */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--primary); 
+}
+
+/* Forzamos el color de los párrafos y etiquetas */
+p, label, span, input, textarea {
+  color: var(--text);
+}
+
+/* Forzamos el color de los inputs específicamente */
+.form-input, .input {
+  color: var(--text) !important;
+  background-color: var(--white) !important;
+}
+
+/* EXCEPCIÓN: Los botones primarios SÍ deben tener texto blanco */
+.btn-primary, .btn-save, .btn-confirm, .btn-action {
+  color: #FFFFFF !important;
+}
+
+
+
+
+
+
+
+
+
+  
   --white: #FFFFFF;
   --border: #E6EFE8;
   --radius: var(--radius-xl);
