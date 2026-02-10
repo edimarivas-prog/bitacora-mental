@@ -156,22 +156,27 @@
     }
     checkAuth();
 
-    function initDiary(user) {
-        // Saludo y Prompt
-        const h = new Date().getHours();
-        const saludo = h < 12 ? 'Buenos días' : (h < 19 ? 'Buenas tardes' : 'Buenas noches');
-        document.getElementById('editor').placeholder = `${saludo}. Este es tu espacio seguro. Tómate un tiempo para escribir...`;
+    async function init() {
+        // 🔒 SEGURIDAD
+        const user = await window.checkSession();
+        if (!user) return;
+        
+        // UI Inicial
+        const hour = new Date().getHours();
+        let greeting = hour < 12 ? "Buenos días" : (hour < 19 ? "Buenas tardes" : "Buenas noches");
+        document.getElementById('editor').placeholder = `${greeting}. Tómate un momento para respirar...`;
         document.getElementById('dailyPrompt').textContent = prompts[Math.floor(Math.random()*prompts.length)];
-
-        // Cargar datos
-        loadMonthData(user.id);
-        loadEntry(user.id, selectedDate);
-
-        // Auto-save
-        document.getElementById('editor').addEventListener('input', () => {
+        
+        // Cargar datos usando user.id
+        await loadMonthEntries(user.id);
+        await loadEntryForDate(selectedDate);
+        
+        // Auto-save listener
+        const editor = document.getElementById('editor');
+        editor.addEventListener('input', () => {
             updateStatus('saving');
             clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(() => saveEntry(user.id), 1000);
+            saveTimeout = setTimeout(() => saveEntry(user.id), 1000); 
         });
     }
 
