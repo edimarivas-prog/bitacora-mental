@@ -86,7 +86,9 @@
     .time-btn { padding: 10px; border: 1px solid var(--border); border-radius: 10px; background: white; cursor: pointer; text-align: center; transition: 0.2s; }
     .time-btn:hover { border-color: var(--primary); color: var(--primary); }
     .time-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
-    .time-btn.disabled { background: #F1F5F9; color: #CBD5E1; pointer-events: none; }
+    
+    /* Estilos para estado bloqueado/pasado */
+    .time-btn.disabled { background: #F1F5F9; color: #CBD5E1; pointer-events: none; border-color: #E2E8F0; }
 
     .btn-confirm { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1.1rem; margin-top: 20px; cursor: pointer; transition: 0.2s; }
     .btn-confirm:disabled { background: #CBD5E1; cursor: not-allowed; }
@@ -137,7 +139,7 @@
         </div>
 
         <div id="doctorsGrid" class="doctors-grid">
-            </div>
+        </div>
     </div>
 
     <div id="step2" class="step-section">
@@ -158,10 +160,12 @@
             </div>
 
             <div class="days-grid" id="calendarDays">
-                </div>
+            </div>
 
             <div id="slotsSection" class="slots-section">
                 <h4 style="margin:0 0 10px 0;">Horarios disponibles:</h4>
+                <p style="font-size:0.8rem; color:#64748B; margin:0 0 15px 0;">* Reservas con mínimo 2 horas de anticipación</p>
+                
                 <div id="slotsGrid" class="slots-grid"></div>
                 <p id="msgSlots" style="font-size:0.9rem; color:var(--text-soft); margin-top:10px;"></p>
                 
@@ -177,7 +181,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
-    let allDoctors = []; // Almacén global para evitar errores de sintaxis
+    let allDoctors = []; 
     let selectedDoc = null;
     let currentMonth = new Date();
     let selectedDate = null;
@@ -201,7 +205,7 @@
         document.getElementById('loadingDocs').style.display = 'none';
 
         if(doctors && doctors.length > 0) {
-            allDoctors = doctors; // Guardar en memoria
+            allDoctors = doctors;
             
             grid.innerHTML = doctors.map((doc, index) => {
                 let tagsHtml = '';
@@ -211,7 +215,6 @@
                     tagsHtml = `<span class="tag">Psicología General</span>`;
                 }
 
-                // SOLUCIÓN ERROR SINTAXIS: Usamos el índice, no el objeto JSON string
                 return `
                 <div class="doc-card">
                     <div class="doc-header">
@@ -252,7 +255,7 @@
             .eq('activo', true);
         docSchedule = schedule ? schedule.map(s => s.dia_semana) : [];
 
-        // Cargar Bloqueos (Rango)
+        // Cargar Bloqueos
         const today = new Date();
         const { data: blocks } = await window.sb
             .from('bloqueos_agenda')
@@ -278,7 +281,7 @@
         document.getElementById('slotsSection').style.display = 'none';
     }
 
-    // 3. RENDERIZAR CALENDARIO (Con Lógica de 30 Días + Bloqueos)
+    // 3. RENDERIZAR CALENDARIO
     function renderCalendar() {
         const grid = document.getElementById('calendarDays');
         const label = document.getElementById('monthLabel');
@@ -296,7 +299,6 @@
         const today = new Date();
         today.setHours(0,0,0,0);
         
-        // Límite: 30 días
         const maxDate = new Date();
         maxDate.setDate(today.getDate() + 30);
         maxDate.setHours(23,59,59,999);
@@ -305,7 +307,8 @@
 
         for (let day = 1; day <= daysInMonth; day++) {
             const dateStr = `${year}-${(month+1).toString().padStart(2,'0')}-${day.toString().padStart(2,'0')}`;
-            const cellDate = new Date(dateStr + 'T00:00:00');
+            // Crear fecha local para evitar líos de zona horaria en el calendario
+            const cellDate = new Date(year, month, day);
             
             let dayOfWeekDB = cellDate.getDay(); 
             if(dayOfWeekDB === 0) dayOfWeekDB = 7;
@@ -314,12 +317,10 @@
             cell.className = 'day-cell';
             cell.textContent = day;
 
-            // --- VALIDACIONES ---
             const isPast = cellDate < today;
             const isTooFar = cellDate > maxDate; 
             const isBaseDay = docSchedule.includes(dayOfWeekDB);
             
-            // Chequeo de Bloqueos por Rango
             const isBlockedRange = docBlocks.some(b => {
                 const start = new Date(b.fecha_inicio); start.setHours(0,0,0,0);
                 const end = new Date(b.fecha_fin); end.setHours(23,59,59,999);
@@ -331,16 +332,14 @@
             } else if (isTooFar) {
                 cell.classList.add('disabled');
                 cell.style.opacity = '0.3';
-                cell.title = "Solo reservas a 30 días vista";
             } else if (isBlockedRange) {
-                cell.classList.add('disabled'); // Bloqueo especial
+                cell.classList.add('disabled');
                 cell.style.backgroundColor = '#FEF2F2'; 
-                cell.title = "No disponible por el especialista";
             } else if (isBaseDay) {
                 cell.classList.add('available');
                 cell.onclick = () => selectDate(dateStr, cell);
             } else {
-                cell.classList.add('disabled'); // No trabaja ese día
+                cell.classList.add('disabled');
                 cell.style.opacity = '0.5';
             }
 
@@ -353,7 +352,7 @@
         renderCalendar();
     }
 
-    // 4. SELECCIONAR FECHA Y HORAS
+    // 4. SELECCIONAR FECHA Y HORAS (CON VALIDACIÓN 2 HORAS)
     function selectDate(dateStr, cellEl) {
         document.querySelectorAll('.day-cell').forEach(c => c.classList.remove('selected'));
         cellEl.classList.add('selected');
@@ -371,8 +370,12 @@
         msg.textContent = '';
         document.getElementById('btnConfirm').disabled = true;
 
-        const d = new Date(dateVal + 'T00:00:00');
-        let dayOfWeek = d.getDay(); if(dayOfWeek === 0) dayOfWeek = 7;
+        // Construir fecha local
+        const [y, m, d_str] = dateVal.split('-');
+        const dateObj = new Date(y, m-1, d_str);
+        
+        let dayOfWeek = dateObj.getDay(); 
+        if(dayOfWeek === 0) dayOfWeek = 7;
 
         // Horario Base
         const { data: config } = await window.sb.from('horarios_profesionales')
@@ -388,25 +391,51 @@
             .lte('fecha_hora', dateVal + 'T23:59:59')
             .neq('estado', 'cancelada');
 
-        const occupied = citas.map(c => c.fecha_hora.split('T')[1].substring(0,5));
+        const occupied = citas.map(c => {
+            // Extraer hora limpia HH:mm
+            return c.fecha_hora.split('T')[1].substring(0,5);
+        });
+
+        // --- LÓGICA DE VALIDACIÓN DE 2 HORAS ---
+        const now = new Date();
+        const bufferTime = 2 * 60 * 60 * 1000; // 2 horas en milisegundos
 
         let html = '';
+        let availableCount = 0;
+
         if(config && config.franjas) {
             config.franjas.forEach(f => {
                 let start = parseInt(f.start.split(':')[0]);
                 let end = parseInt(f.end.split(':')[0]);
+                
                 for(let h=start; h<end; h++) {
                     const timeStr = h.toString().padStart(2,'0') + ':00';
-                    if(occupied.includes(timeStr)) {
-                        html += `<div class="time-btn disabled">${timeStr}</div>`;
+                    
+                    // Crear objeto Fecha para este slot específico
+                    const slotDate = new Date(y, m-1, d_str, h, 0, 0); 
+                    
+                    // Validar si está en el pasado o dentro de las 2 horas
+                    const diff = slotDate - now;
+                    const isTooSoon = diff < bufferTime; // Si faltan menos de 2 horas (o es pasado)
+
+                    const isTaken = occupied.includes(timeStr);
+
+                    if(isTaken) {
+                        html += `<div class="time-btn disabled" title="Ocupado">${timeStr}</div>`;
+                    } else if (isTooSoon) {
+                        // Bloquear por margen de tiempo
+                        html += `<div class="time-btn disabled" style="opacity:0.6; cursor:not-allowed;" title="Muy pronto (min 2h)">${timeStr}</div>`;
                     } else {
+                        // Disponible
                         html += `<div class="time-btn" onclick="selectTime('${timeStr}', this)">${timeStr}</div>`;
+                        availableCount++;
                     }
                 }
             });
         }
-        grid.innerHTML = html || 'No hay horarios.';
-        if(!html) msg.textContent = "Sin cupos disponibles.";
+        
+        grid.innerHTML = html || 'No hay horarios configurados.';
+        if(availableCount === 0) msg.textContent = "No hay cupos disponibles para hoy (o ya pasaron).";
     }
 
     function selectTime(time, el) {
@@ -429,7 +458,6 @@
             const finalDate = `${selectedDate}T${selectedTime}:00`;
             const price = parseFloat(selectedDoc.precio_consulta || 80);
 
-            // Cita
             const { error } = await window.sb.from('citas').insert({
                 paciente_id: user.id,
                 psicologo_id: selectedDoc.id,
@@ -440,7 +468,6 @@
             });
             if(error) throw error;
 
-            // Finanzas
             await window.sb.from('finanzas_wallet').insert({
                 psicologo_id: selectedDoc.id,
                 concepto: 'Sesión Terapéutica',
