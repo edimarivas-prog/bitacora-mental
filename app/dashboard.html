@@ -228,17 +228,17 @@
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
     }
 
-    // --- CORRECCIÓN CLAVE: FUNCIÓN ASYNC Y LÓGICA DE 10 MINUTOS ---
     async function loadNextAppointment(userId, userName) {
         const now = new Date();
-        const searchTime = new Date(now.getTime() - 60 * 60 * 1000); 
+        // Buscamos citas recientes (última hora) para que no desaparezcan si llega 1 min tarde
+        const searchTime = new Date(now.getTime() - 60 * 60 * 1000).toISOString(); 
 
         const { data: citas } = await window.sb
             .from('citas')
             .select(`*, psicologo:psicologo_id ( nombre )`)
             .eq('paciente_id', userId)
             .neq('estado', 'cancelada')
-            .gte('fecha_hora', searchTime.toISOString())
+            .gte('fecha_hora', searchTime)
             .order('fecha_hora', { ascending: true })
             .limit(1);
 
@@ -248,24 +248,41 @@
             document.getElementById('emptyCita').style.display = 'none';
             document.getElementById('nextCitaCard').style.display = 'block';
 
-            const citaDate = new Date(nextCita.fecha_hora);
+            // --- CORRECCIÓN DE ZONA HORARIA ---
+            // 1. Aseguramos que el string de la DB se trate como UTC agregando 'Z' si no tiene
+            let dateString = nextCita.fecha_hora;
+            if (!dateString.includes('Z') && !dateString.includes('+')) {
+                dateString += 'Z';
+            }
             
-            // LÓGICA DE 10 MINUTOS
-            const diffMs = citaDate - new Date(); 
-            const diffMins = Math.floor(diffMs / 60000);
+            const citaDate = new Date(dateString); // Fecha Real de la Cita (Objeto Date)
+            const diffMs = citaDate - new Date();  // Resta correcta (milisegundos)
+            const diffMins = Math.floor(diffMs / 60000); // Minutos restantes
+            
             const btnLink = document.getElementById('citaLink');
             
+            // LÓGICA DE 10 MINUTOS
             if (diffMins > 10) {
                 // Faltan más de 10 min -> BLOQUEADO
                 btnLink.style.background = '#CBD5E1'; 
                 btnLink.style.pointerEvents = 'none';
                 btnLink.style.cursor = 'default';
-                const timeText = diffMins > 60 ? `en ${Math.floor(diffMins/60)} horas` : `en ${diffMins} min`;
+                
+                // Cálculo visual de horas/minutos
+                let timeText = "";
+                if(diffMins > 60) {
+                    const hours = Math.floor(diffMins / 60);
+                    const mins = diffMins % 60;
+                    timeText = `en ${hours}h ${mins}m`;
+                } else {
+                    timeText = `en ${diffMins} min`;
+                }
+                
                 btnLink.innerHTML = `<i class="fas fa-lock"></i> Sala abre ${timeText}`;
             } else {
-                // Ya es hora -> DISPONIBLE
+                // Ya es hora (o faltan menos de 10 min) -> DISPONIBLE
                 const nombrePaciente = userName?.split(' ')[0] || 'Paciente';
-                btnLink.style.background = '#10B981';
+                btnLink.style.background = '#10B981'; // Verde
                 btnLink.style.pointerEvents = 'auto';
                 btnLink.style.cursor = 'pointer';
                 btnLink.innerHTML = `<i class="fas fa-video"></i> Entrar a Videollamada`;
@@ -273,18 +290,20 @@
             }
 
             document.getElementById('docName').textContent = nextCita.psicologo ? nextCita.psicologo.nombre : 'Especialista';
-            document.getElementById('citaDate').textContent = citaDate.toLocaleDateString('es-PE', { day: 'numeric', month: 'long', timeZone: 'UTC' });
-            document.getElementById('citaTime').textContent = citaDate.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'UTC' });
+            
+            // Visualización de fecha/hora (Forzando UTC para que coincida con lo agendado)
+            document.getElementById('citaDate').textContent = citaDate.toLocaleDateString('es-PE', { 
+                day: 'numeric', month: 'long', timeZone: 'UTC' 
+            });
+            document.getElementById('citaTime').textContent = citaDate.toLocaleTimeString('es-PE', { 
+                hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'UTC' 
+            });
 
         } else {
             document.getElementById('nextCitaCard').style.display = 'none';
             document.getElementById('emptyCita').style.display = 'block';
         }
     }
-
-    function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
-    async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
-    initDashboard();
-  </script>
+</script>
 </body>
 </html>
