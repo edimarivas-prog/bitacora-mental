@@ -11,13 +11,14 @@
   <link rel="stylesheet" href="../css/design-system.css">
   
   <style>
-    /* Estilos Locales (Complementan al Design System) */
+    /* Estilos Específicos del Layout Centrado (Wizard) */
     body { 
         display: flex; 
         justify-content: center; 
         align-items: center; 
         min-height: 100vh; 
         padding: 20px; 
+        background-color: var(--bg);
         background-image: radial-gradient(var(--primary-200) 0.5px, transparent 0.5px); 
         background-size: 20px 20px; 
     }
@@ -37,15 +38,18 @@
     /* Barra de Progreso */
     .progress-container { margin-bottom: 30px; }
     .progress-bar-bg { background: var(--border); height: 6px; border-radius: 10px; overflow: hidden; }
-    .progress-fill { height: 100%; background: var(--primary); width: 33%; transition: width 0.4s ease; }
+    .progress-fill { height: 100%; background: var(--primary); width: 33%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
     .progress-text { text-align: right; font-size: 0.8rem; color: var(--text-soft); margin-top: 8px; font-weight: 600; }
 
+    /* Tipografía Local */
     h1 { font-family: 'Outfit', sans-serif; color: var(--primary); margin: 0 0 10px 0; font-size: 1.8rem; line-height: 1.2; }
     p.subtitle { color: var(--text-soft); font-size: 1rem; margin-bottom: 30px; line-height: 1.5; }
 
+    /* Formulario */
     .form-group { margin-bottom: 20px; }
     label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text); font-size: 0.95rem; }
     
+    /* Inputs unificados con el sistema */
     input, select, textarea { 
         width: 100%; 
         padding: 16px; 
@@ -55,7 +59,7 @@
         font-size: 1rem; 
         color: var(--text); 
         background: #FAFAFA; 
-        transition: all 0.3s; 
+        transition: all 0.2s; 
         outline: none; 
     }
     
@@ -65,7 +69,7 @@
         box-shadow: 0 0 0 4px var(--primary-100); 
     }
     
-    /* Feedback de error */
+    /* Error visual */
     input:invalid.touched, select:invalid.touched, textarea:invalid.touched {
         border-color: var(--error);
         background-color: var(--error-bg);
@@ -73,10 +77,11 @@
 
     textarea { resize: none; min-height: 120px; }
 
-    /* Animación de Pasos */
+    /* Pasos */
     .step { display: none; opacity: 0; transform: translateY(10px); transition: all 0.4s ease; }
     .step.active { display: block; opacity: 1; transform: translateY(0); }
 
+    /* Botones */
     .btn-full { width: 100%; margin-top: 10px; justify-content: center; font-size: 1.1rem; padding: 14px; }
     .btn-link { background: transparent; color: var(--text-soft); font-size: 0.9rem; padding: 10px; margin-top: 5px; cursor: pointer; border: none; width: 100%; text-decoration: underline; }
     .btn-link:hover { color: var(--primary); }
@@ -176,7 +181,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
-    // --- LÓGICA DE PASOS ---
+    // --- LÓGICA DE NAVEGACIÓN (Wizard) ---
     function nextStep(step) {
       const currentStep = document.getElementById('step' + (step - 1));
       const inputs = currentStep.querySelectorAll('input, select, textarea');
@@ -185,7 +190,7 @@
       inputs.forEach(i => { 
           if (!i.checkValidity()) { 
               i.reportValidity(); 
-              i.classList.add('touched'); // Activa estilo de error rojo
+              i.classList.add('touched'); // Activa el borde rojo
               valid = false; 
           } 
       });
@@ -202,7 +207,7 @@
       document.getElementById('progressBar').style.width = (step / 3 * 100) + '%';
     }
 
-    // --- GUARDADO TEMPORAL Y SEGURIDAD ---
+    // --- GUARDADO DE DATOS ---
     document.getElementById('intakeForm').addEventListener('submit', (e) => {
       e.preventDefault();
       
@@ -212,30 +217,37 @@
       btn.disabled = true;
 
       try {
-          // 1. Recolectar datos CON SANITIZACIÓN (Anti-XSS)
+          // 1. Recolectar datos + Sanitización Global
           const datos = {
             fecha_nacimiento: document.getElementById('fechaNacimiento').value,
             sexo: document.getElementById('sexo').value,
-            motivo_consulta: window.sanitize(document.getElementById('motivo').value), // 🛡️
+            // Usamos window.sanitize definido en supabase-config.js
+            motivo_consulta: window.sanitize ? window.sanitize(document.getElementById('motivo').value) : document.getElementById('motivo').value,
             historia_clinica: {
-               expectativa: window.sanitize(document.getElementById('expectativa').value), // 🛡️
+               expectativa: window.sanitize ? window.sanitize(document.getElementById('expectativa').value) : document.getElementById('expectativa').value,
                sueno: document.getElementById('sueño').value,
                energia: document.getElementById('energia').value,
                fecha_entrevista: new Date().toISOString()
             }
           };
 
-          // 2. Guardar en SessionStorage (Para pasar al Registro)
+          // 2. Guardar Temporalmente (SessionStorage)
+          // Esto permite pasar los datos a la página de Registro
           sessionStorage.setItem('temp_entrevista', JSON.stringify(datos));
 
-          // 3. Redirigir al Registro
+          // 3. Redirigir
           setTimeout(() => {
             window.location.href = '../registro.html';
           }, 800);
 
       } catch (err) {
           console.error(err);
-          window.showToast("Ocurrió un error al guardar. Inténtalo de nuevo.", "error");
+          // Usamos el Toast Global si existe, sino alert
+          if(window.showToast) {
+              window.showToast("Ocurrió un error al guardar. Inténtalo de nuevo.", "error");
+          } else {
+              alert("Error al guardar.");
+          }
           
           btn.innerHTML = originalText;
           btn.disabled = false;
