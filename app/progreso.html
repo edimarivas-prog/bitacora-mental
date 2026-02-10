@@ -134,12 +134,11 @@
     init();
 
     async function loadRealStats(uid) {
-        // 1. CARGAR DATOS (Diario y Pulso)
-        // Traemos fechas de creación para calcular actividad
+        // 1. CARGAR DATOS (CORREGIDO: 'diario_entries' y 'fecha')
         const { data: diario } = await window.sb
-            .from('diario_emocional')
-            .select('fecha_creacion, id')
-            .eq('paciente_id', uid);
+            .from('diario_entries')
+            .select('fecha, id')
+            .eq('user_id', uid);
 
         const { data: pulsos } = await window.sb
             .from('monitoreo_sintomas')
@@ -161,7 +160,7 @@
 
         // Días Activos (Unique dates)
         const allDates = new Set();
-        if(diario) diario.forEach(d => allDates.add(d.fecha_creacion.split('T')[0]));
+        if(diario) diario.forEach(d => allDates.add(d.fecha.split('T')[0])); // CORREGIDO: d.fecha
         if(pulsos) pulsos.forEach(p => allDates.add(p.fecha_realizado.split('T')[0]));
         
         // Renderizar Textos
@@ -171,8 +170,6 @@
 
         // 3. GRÁFICO DE LÍNEA (Evolución Ánimo)
         const moodCtx = document.getElementById('moodChart').getContext('2d');
-        
-        // Preparar datos para gráfico
         const labelsMood = pulsos ? pulsos.map(p => new Date(p.fecha_realizado).toLocaleDateString('es-PE', {day:'numeric', month:'short'})) : [];
         const dataMood = pulsos ? pulsos.map(p => p.nivel_animo) : [];
 
@@ -203,21 +200,23 @@
         });
 
         // 4. GRÁFICO DE BARRAS (Consistencia por Día de Semana)
-        // 0=Dom, 1=Lun, ... 6=Sab
         const dayCounts = [0, 0, 0, 0, 0, 0, 0]; 
         
-        // Contamos entradas de diario + pulsos
+        // Contamos entradas de diario (usando 'fecha')
         if(diario) diario.forEach(d => {
-            const day = new Date(d.fecha_creacion).getDay();
-            dayCounts[day]++;
+            // Nota: d.fecha puede ser '2026-02-04 19:55...' o '2026-02-04'
+            // Forzamos interpretación correcta de fecha
+            const day = new Date(d.fecha).getDay(); 
+            // Manejo de error si la fecha es inválida
+            if(!isNaN(day)) dayCounts[day]++;
         });
+        
         if(pulsos) pulsos.forEach(p => {
             const day = new Date(p.fecha_realizado).getDay();
-            dayCounts[day]++;
+            if(!isNaN(day)) dayCounts[day]++;
         });
 
         // Reordenar para empezar en Lunes (Lun, Mar... Dom)
-        // Array original: [Dom, Lun, Mar, Mie, Jue, Vie, Sab]
         const orderedData = [
             dayCounts[1], // Lun
             dayCounts[2], // Mar
