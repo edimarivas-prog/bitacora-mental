@@ -262,16 +262,17 @@
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
     }
 
-    async function loadNextAppointment(userId, userName) {
+    asasync function loadNextAppointment(userId, userName) {
         const now = new Date();
-        now.setHours(now.getHours() - 2); 
+        // Buscamos citas desde hace 1 hora para que si llega tarde aún aparezca
+        const searchTime = new Date(now.getTime() - 60 * 60 * 1000); 
 
         const { data: citas } = await window.sb
             .from('citas')
             .select(`*, psicologo:psicologo_id ( nombre )`)
             .eq('paciente_id', userId)
             .neq('estado', 'cancelada')
-            .gte('fecha_hora', now.toISOString())
+            .gte('fecha_hora', searchTime.toISOString())
             .order('fecha_hora', { ascending: true })
             .limit(1);
 
@@ -280,14 +281,52 @@
         if (nextCita) {
             document.getElementById('emptyCita').style.display = 'none';
             document.getElementById('nextCitaCard').style.display = 'block';
-            const dateObj = new Date(nextCita.fecha_hora);
+
+            const citaDate = new Date(nextCita.fecha_hora);
             
+            // --- LÓGICA DE BLOQUEO 10 MINUTOS ---
+            const diffMs = citaDate - new Date(); // Diferencia en milisegundos
+            const diffMins = Math.floor(diffMs / 60000); // Diferencia en minutos
+            
+            const btnLink = document.getElementById('citaLink');
+            
+            // Si faltan más de 10 minutos
+            if (diffMins > 10) {
+                btnLink.style.background = '#CBD5E1'; // Gris
+                btnLink.style.pointerEvents = 'none'; // No clicable
+                btnLink.style.cursor = 'default';
+                
+                // Formato amigable del tiempo restante
+                let timeText = "";
+                if(diffMins > 60) {
+                    const hours = Math.floor(diffMins / 60);
+                    timeText = `en ${hours} horas`;
+                } else {
+                    timeText = `en ${diffMins} min`;
+                }
+                
+                btnLink.innerHTML = `<i class="fas fa-lock"></i> Sala abre ${timeText}`;
+            } else {
+                // Ya es hora (o faltan menos de 10 min)
+                const nombrePaciente = userName?.split(' ')[0] || 'Paciente';
+                btnLink.style.background = '#10B981'; // Verde original
+                btnLink.style.pointerEvents = 'auto';
+                btnLink.style.cursor = 'pointer';
+                btnLink.innerHTML = `<i class="fas fa-video"></i> Entrar a Videollamada`;
+                btnLink.href = `../pro/sesion-live.html?room=${nextCita.link_reunion}&patient=${nombrePaciente}`;
+            }
+            // -------------------------------------
+
             document.getElementById('docName').textContent = nextCita.psicologo ? nextCita.psicologo.nombre : 'Especialista';
-            document.getElementById('citaDate').textContent = dateObj.toLocaleDateString('es-PE', { day: 'numeric', month: 'long', timeZone: 'UTC' });
-            document.getElementById('citaTime').textContent = dateObj.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'UTC' });
             
-            const nombrePaciente = userName?.split(' ')[0] || 'Paciente';
-            document.getElementById('citaLink').href = `../pro/sesion-live.html?room=${nextCita.link_reunion}&patient=${nombrePaciente}`;
+            // Mostrar hora correcta (UTC)
+            document.getElementById('citaDate').textContent = citaDate.toLocaleDateString('es-PE', { 
+                day: 'numeric', month: 'long', timeZone: 'UTC' 
+            });
+            document.getElementById('citaTime').textContent = citaDate.toLocaleTimeString('es-PE', { 
+                hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'UTC' 
+            });
+
         } else {
             document.getElementById('nextCitaCard').style.display = 'none';
             document.getElementById('emptyCita').style.display = 'block';
