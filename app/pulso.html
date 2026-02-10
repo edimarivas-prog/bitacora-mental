@@ -125,15 +125,15 @@
 
     // Validar Auth + Chequear si ya lo hizo
     async function init() {
-        if(!window.sb) return setTimeout(init, 100);
-        const { data: { session } } = await window.sb.auth.getSession();
-        if(!session) { window.location.href = '../login.html'; return; }
+        // 🔒 SEGURIDAD
+        const user = await window.checkSession();
+        if (!user) return;
         
         // CHECK: ¿Lo hizo hace menos de 7 días?
         const { data } = await window.sb
             .from('monitoreo_sintomas')
             .select('fecha_realizado')
-            .eq('user_id', session.user.id)
+            .eq('user_id', user.id)
             .order('fecha_realizado', { ascending: false })
             .limit(1);
 
