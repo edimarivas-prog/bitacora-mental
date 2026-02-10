@@ -6,160 +6,156 @@
   <title>Especialistas - Bitácora Mental</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
-    /* Estilos Maestros (Mismos) */
-    :root { --primary: #4F6F52; --primary-light: #E8F5E9; --bg: #F9FBFA; --white: #FFFFFF; --text: #1F2933; --text-soft: #64748B; --border: #E6EFE8; --radius: 20px; --shadow: 0 4px 20px rgba(0,0,0,0.06); }
+    /* Estilos Maestros */
+    :root { --primary: #4F6F52; --primary-light: #E8F5E9; --accent: #F59E0B; --bg: #F9FBFA; --white: #FFFFFF; --text: #1F2933; --text-soft: #64748B; --border: #E6EFE8; --radius: 20px; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
     
     /* Sidebar */
-    .sidebar { width: 260px; background: var(--white); padding: 24px; border-right: 1px solid var(--border); position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; z-index: 100; }
+    .sidebar { width: 260px; background: var(--white); padding: 24px; border-right: 1px solid var(--border); position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s; }
     .logo { font-family: 'Outfit'; font-weight: 700; color: var(--primary); font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 8px; margin-bottom: 30px; }
     .nav-section { margin-bottom: 20px; }
-    .nav-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-soft); font-weight: 700; padding-left: 10px; margin-bottom: 5px; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-soft); text-decoration: none; border-radius: 12px; font-weight: 500; }
+    .nav-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-soft); letter-spacing: 1px; margin-bottom: 10px; padding-left: 10px; font-weight: 700; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-soft); text-decoration: none; border-radius: 12px; font-weight: 500; transition: 0.2s; }
     .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
     .nav-item.active { font-weight: 600; }
-    
-    .main { flex: 1; padding: 30px 40px; }
-
-    /* Grid Especialistas */
-    .spec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; margin-top: 30px; }
-    .spec-card { background: white; padding: 30px; border-radius: var(--radius); text-align: center; box-shadow: var(--shadow); transition: transform 0.2s; border: 1px solid transparent; display: flex; flex-direction: column; justify-content: space-between; }
-    .spec-card:hover { transform: translateY(-5px); border-color: var(--primary); }
-    
-    .spec-avatar { width: 90px; height: 90px; background: var(--primary); border-radius: 50%; margin: 0 auto 15px; color: white; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-family: 'Outfit'; object-fit: cover; }
-    .spec-name { font-family: 'Outfit'; font-size: 1.2rem; font-weight: 600; margin: 0 0 5px 0; }
-    .spec-role { color: var(--primary); font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .spec-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; margin-bottom: 20px; }
-    .tag { background: #F3F4F6; padding: 4px 10px; border-radius: 10px; font-size: 0.8rem; color: var(--text-soft); }
-    
-    .spec-price { font-size: 1.3rem; font-weight: 700; color: var(--text); margin-bottom: 20px; }
-    .spec-price span { font-size: 0.9rem; font-weight: 400; color: var(--text-soft); }
-    
-    .btn-book { background: var(--primary); color: white; text-decoration: none; padding: 12px; border-radius: 12px; font-weight: 600; display: block; transition: 0.2s; }
-    .btn-book:hover { background: #3E5A41; }
-
-    /* Mobile Nav */
+    .main { flex: 1; padding: 30px; margin-left: 260px; max-width: 100%; }
     .mobile-nav { display: none; padding: 15px; background: white; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
     .menu-toggle { font-size: 1.5rem; background: none; border: none; color: var(--text); }
+    @media (max-width: 900px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main { margin-left: 0; padding: 20px; } .mobile-nav { display: flex; } }
 
-    @media (max-width: 900px) { 
-        .sidebar { display: none; } 
-        .mobile-nav { display: flex; }
-    }
+    /* Estilos Especialistas */
+    .page-header { margin-bottom: 30px; }
+    .page-header h1 { font-family: 'Outfit'; margin: 0 0 5px 0; }
+    
+    .doctors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+    .doc-card { background: white; border-radius: 20px; padding: 25px; border: 1px solid var(--border); transition: 0.3s; display: flex; flex-direction: column; }
+    .doc-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-color: var(--primary); }
+    
+    .doc-head { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+    .doc-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; background: var(--primary-light); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--primary); font-size: 1.5rem; overflow: hidden; }
+    .doc-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+    .tag { font-size: 0.75rem; background: #F1F5F9; padding: 4px 10px; border-radius: 20px; color: #475569; font-weight: 600; }
+    
+    .doc-bio { font-size: 0.9rem; color: var(--text-soft); line-height: 1.5; margin-bottom: 20px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    
+    .btn-book { margin-top: auto; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; text-decoration: none; display: block; text-align: center; }
+    .btn-book:hover { background: #3E5A41; }
   </style>
 </head>
 <body>
+
   <div class="mobile-nav">
     <a href="#" class="logo" style="margin:0"><i class="fas fa-brain"></i> Bitácora</a>
-    <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
   </div>
 
-  <div style="display:flex; width:100%;">
-    <aside class="sidebar" id="sidebar">
+  <aside class="sidebar" id="sidebar">
     <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
-    
     <div class="nav-section">
       <div class="nav-title">Principal</div>
       <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
       <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
-      <a href="especialistas.html" class="nav-item"><i class="fas fa-user-md"></i> Especialistas</a>
+      <a href="especialistas.html" class="nav-item active"><i class="fas fa-user-md"></i> Especialistas</a>
     </div>
-
     <div class="nav-section">
       <div class="nav-title">Tu Espacio</div>
       <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> Diario</a>
       <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> Progreso</a>
       <a href="recursos.html" class="nav-item"><i class="fas fa-box-open"></i> Recursos</a>
     </div>
-
     <div class="nav-section">
       <div class="nav-title">Cuenta</div>
       <a href="plan.html" class="nav-item"><i class="fas fa-crown"></i> Mi Plan</a>
       <a href="configuracion.html" class="nav-item"><i class="fas fa-cog"></i> Configuración</a>
       <a href="#" onclick="logout()" class="nav-item" style="color:#EF4444"><i class="fas fa-sign-out-alt"></i> Salir</a>
     </div>
-</aside>
+  </aside>
 
-    <main class="main">
-        <div class="page-header">
-            <h1 style="font-family:'Outfit'; margin-bottom:5px;">Nuestros Especialistas</h1>
-            <p style="color:var(--text-soft);">Profesionales verificados listos para escucharte.</p>
-        </div>
+  <main class="main">
+    <div class="page-header">
+        <h1>Nuestros Especialistas</h1>
+        <p style="color:var(--text-soft)">Encuentra al profesional ideal para ti.</p>
+    </div>
 
-        <div class="spec-grid" id="grid">
-            <p style="text-align:center; width:100%;">Cargando especialistas...</p>
-        </div>
-    </main>
-  </div>
+    <div id="loading" style="text-align:center; padding:40px; color:var(--text-soft);">
+        <i class="fas fa-spinner fa-spin fa-2x"></i>
+    </div>
+
+    <div id="gridDocs" class="doctors-grid"></div>
+  </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
-    function toggleMenu() { 
-        const sb = document.getElementById('sidebar');
-        sb.style.display = sb.style.display === 'flex' ? 'none' : 'flex';
-        if(sb.style.display === 'flex') {
-            sb.style.position = 'fixed';
-            sb.style.zIndex = '1000';
-            sb.style.height = '100vh';
-        }
-    }
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+    async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
 
     async function init() {
-        // 🔒 SEGURIDAD
+        if (!window.sb) return setTimeout(init, 100);
+        
+        // 🔒 1. Validación de Sesión
         const user = await window.checkSession();
         if (!user) return;
-        // CONSULTA CORRECTA: Usamos 'users_profile' filtrando por rol
-        const { data: doctors } = await window.sb
+
+        // 2. Cargar Doctores
+        const { data: doctors, error } = await window.sb
             .from('users_profile')
             .select('*')
             .eq('rol', 'psicologo');
-        
-        const grid = document.getElementById('grid');
-        
-        if(doctors && doctors.length > 0) {
-            grid.innerHTML = doctors.map(doc => {
-                // Lógica para mostrar foto o inicial
-                let avatarHtml = '';
-                if(doc.avatar_url) {
-                    avatarHtml = `<img src="${doc.avatar_url}" class="spec-avatar">`;
-                } else {
-                    avatarHtml = `<div class="spec-avatar">${doc.nombre.charAt(0)}</div>`;
-                }
 
-                // Lógica para especialidades
-                let tagsHtml = '';
-                if(doc.especialidades && doc.especialidades.length > 0) {
-                    tagsHtml = doc.especialidades.slice(0, 3).map(t => `<span class="tag">${t}</span>`).join('');
-                } else {
-                    tagsHtml = `<span class="tag">Psicología General</span>`;
-                }
+        document.getElementById('loading').style.display = 'none';
+        const grid = document.getElementById('gridDocs');
 
-                return `
-                <div class="spec-card">
+        if (!doctors || doctors.length === 0) {
+            grid.innerHTML = '<p>No hay especialistas disponibles por el momento.</p>';
+            return;
+        }
+
+        // 🛡️ 3. Renderizado Seguro con SANITIZACIÓN
+        grid.innerHTML = doctors.map(doc => {
+            // Sanitizar nombre
+            const safeName = window.sanitize(doc.nombre || 'Especialista');
+            const safeHeadline = window.sanitize(doc.headline || 'Psicología Clínica');
+            const safeBio = window.sanitize(doc.bio || 'Sin descripción disponible.');
+            
+            // Lógica Avatar
+            let avatarHtml = `<div class="doc-avatar">${safeName.charAt(0)}</div>`;
+            if (doc.avatar_url) {
+                // Sanitizar URL por si acaso (aunque menos crítico en img src si viene de storage)
+                avatarHtml = `<div class="doc-avatar"><img src="${doc.avatar_url}" alt="${safeName}"></div>`;
+            }
+
+            // Sanitizar Tags
+            let tagsHtml = '';
+            if (doc.especialidades && doc.especialidades.length > 0) {
+                tagsHtml = doc.especialidades.slice(0, 3)
+                    .map(tag => `<span class="tag">${window.sanitize(tag)}</span>`)
+                    .join('');
+            } else {
+                tagsHtml = `<span class="tag">General</span>`;
+            }
+
+            return `
+            <div class="doc-card">
+                <div class="doc-head">
+                    ${avatarHtml}
                     <div>
-                        ${avatarHtml}
-                        <h3 class="spec-name">${doc.nombre}</h3>
-                        <div class="spec-role">${doc.headline || 'Especialista en Salud Mental'}</div>
-                        <div class="spec-tags">
-                            ${tagsHtml}
-                        </div>
-                    </div>
-                    <div>
-                        <div class="spec-price">S/ ${doc.precio_consulta || 80} <span>/ sesión</span></div>
-                        <a href="agendar.html" class="btn-book">Agendar Cita</a>
+                        <h3 style="margin:0; font-family:'Outfit'; font-size:1.1rem;">${safeName}</h3>
+                        <span style="font-size:0.85rem; color:var(--primary); font-weight:500;">${safeHeadline}</span>
                     </div>
                 </div>
-                `;
-            }).join('');
-        } else {
-            grid.innerHTML = '<p style="grid-column:1/-1; text-align:center;">No se encontraron especialistas disponibles.</p>';
-        }
+                <div class="tags">${tagsHtml}</div>
+                <div class="doc-bio">${safeBio}</div>
+                <a href="agendar.html" class="btn-book">Agendar Cita</a>
+            </div>`;
+        }).join('');
     }
     init();
-
-    async function logout() { await window.sb.auth.signOut(); window.location.href='../login.html'; }
   </script>
 </body>
 </html>
