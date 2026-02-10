@@ -1,7 +1,7 @@
 var _SB_URL = 'https://wulnsvyyrfsaiartzypn.supabase.co'; 
 var _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1bG5zdnl5cmZzYWlhcnR6eXBuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNTQwNjgsImV4cCI6MjA4NTYzMDA2OH0.sa0JNGf3haLPz5poZBSMML6ydq3EJ1P84g0jpZf7Nv8';
 
-// Iniciamos solo si no existe ya
+// 1. Inicializar cliente Supabase
 if (!window.sb) {
     if (typeof supabase !== 'undefined') {
         window.sb = supabase.createClient(_SB_URL, _SB_KEY);
@@ -11,48 +11,45 @@ if (!window.sb) {
     }
 }
 
-// ✅ FUNCIÓN DE SEGURIDAD CENTRALIZADA
+// 2. Función de Seguridad Centralizada (Valida sesión real)
 window.checkSession = async function() {
     try {
-        // Esperar a que sb esté listo si cargó lento
+        // Esperar si la librería aún no cargó
         if (!window.sb) {
             await new Promise(resolve => setTimeout(resolve, 100));
         }
 
-        // 1. Validar contra el servidor (getUser es más seguro que getSession)
+        // Verificar token contra el servidor
         const { data: { user }, error } = await window.sb.auth.getUser();
 
         if (error || !user) {
-            throw new Error('Sesión no válida o expirada');
+            throw new Error('Sesión inválida');
         }
 
-        return user; // Retorna el usuario verificado
+        return user; // Retorna usuario verificado
 
     } catch (e) {
-        console.warn('🔒 Seguridad: Redirigiendo al login...', e.message);
+        console.warn('🔒 Seguridad: Sesión no válida, cerrando...', e.message);
         
-        // 2. Limpieza profunda
+        // Limpieza total
         sessionStorage.clear();
-        // Nota: Asegúrate que esta clave coincida con la que usa Supabase internamente
-        // Si tienes dudas, localStorage.clear() limpia todo y es más seguro para cerrar sesión.
         localStorage.clear(); 
         
-        // 3. Logout forzado en cliente
-        if(window.sb) await window.sb.auth.signOut();
+        // Logout en Supabase si es posible
+        if (window.sb) await window.sb.auth.signOut();
 
-        // 4. Redirección segura (reemplaza historial)
-        // Detectar si estamos en carpeta 'app' o raíz para la ruta correcta
-        const path = window.location.pathname.includes('/app/') ? '../login.html' : 'login.html';
-        window.location.replace(path);
+        // Redirección segura
+        const isAppDir = window.location.pathname.includes('/app/');
+        window.location.replace(isAppDir ? '../login.html' : 'login.html');
         
         return null;
     }
-}; 
+};
 
-// ✅ FUNCIÓN ANTI-XSS
+// 3. Función Anti-XSS (Limpia texto malicioso)
 window.sanitize = function(str) {
     if (!str) return '';
     const div = document.createElement('div');
-    div.textContent = str; // Esto escapa automáticamente HTML peligroso
+    div.textContent = str;
     return div.innerHTML;
 };
