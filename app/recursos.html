@@ -4,32 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recursos - Bitácora Mental</title>
+  
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="../css/design-system.css"> <style>
-    /* Estilos Locales */
+  
+  <link rel="stylesheet" href="../css/design-system.css">
+  
+  <style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
     
-    .sidebar { width: 260px; background: var(--white); padding: 24px; border-right: 1px solid var(--border); position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s; }
-    .logo { font-family: 'Outfit'; font-weight: 700; color: var(--primary); font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 8px; margin-bottom: 30px; }
-    .nav-section { margin-bottom: 20px; }
-    .nav-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-soft); letter-spacing: 1px; margin-bottom: 10px; padding-left: 10px; font-weight: 700; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-soft); text-decoration: none; border-radius: 12px; font-weight: 500; transition: 0.2s; }
-    .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
-    .nav-item.active { font-weight: 600; }
-    
+    /* Layout */
     .main { flex: 1; padding: 30px; margin-left: 260px; max-width: 100%; }
-    .mobile-nav { display: none; padding: 15px; background: white; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .menu-toggle { font-size: 1.5rem; background: none; border: none; color: var(--text); }
-    @media (max-width: 900px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main { margin-left: 0; padding: 20px; } .mobile-nav { display: flex; } }
+    
+    @media (max-width: 900px) { 
+        .main { margin-left: 0; padding: 20px; } 
+    }
 
-    /* Estilos Recursos */
+    /* --- ESTILOS ESPECÍFICOS DE RECURSOS --- */
     .header-box { margin-bottom: 30px; }
     
-    /* ⚡ Estilos Buscador */
+    /* Buscador */
     .search-container { position: relative; max-width: 400px; margin-top: 15px; }
-    .search-input { width: 100%; padding: 12px 15px 12px 40px; border-radius: 12px; border: 1px solid var(--border); font-family: inherit; font-size: 0.95rem; outline: none; transition: 0.2s; }
+    
+    .search-input { width: 100%; padding: 12px 15px 12px 40px; border-radius: 12px; border: 1px solid var(--border); font-family: inherit; font-size: 0.95rem; outline: none; transition: 0.2s; background: var(--white); }
     .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+    
     .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-soft); }
 
     .res-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; margin-top: 20px; }
@@ -57,27 +58,7 @@
     <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
   </div>
 
-  <aside class="sidebar" id="sidebar">
-    <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
-    <div class="nav-section">
-      <div class="nav-title">Principal</div>
-      <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
-      <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
-      <a href="especialistas.html" class="nav-item"><i class="fas fa-user-md"></i> Especialistas</a>
-    </div>
-    <div class="nav-section">
-      <div class="nav-title">Tu Espacio</div>
-      <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> Diario</a>
-      <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> Progreso</a>
-      <a href="recursos.html" class="nav-item active"><i class="fas fa-box-open"></i> Recursos</a>
-    </div>
-    <div class="nav-section">
-      <div class="nav-title">Cuenta</div>
-      <a href="plan.html" class="nav-item"><i class="fas fa-crown"></i> Mi Plan</a>
-      <a href="configuracion.html" class="nav-item"><i class="fas fa-cog"></i> Configuración</a>
-      <a href="#" onclick="logout()" class="nav-item" style="color:#EF4444"><i class="fas fa-sign-out-alt"></i> Salir</a>
-    </div>
-  </aside>
+  <div id="sidebar-container"></div>
 
   <main class="main">
     <div class="header-box">
@@ -90,36 +71,33 @@
         </div>
     </div>
 
-    <div id="loading" style="text-align:center; padding:40px;">
-        <i class="fas fa-spinner fa-spin fa-2x" style="color:#CBD5E1;"></i>
-    </div>
-
     <div id="resGrid" class="res-grid"></div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
+  <script src="../js/components.js"></script>
+
   <script>
     let allResources = []; // Variable global para filtrado local
 
-    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
-    async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', () => {
+        if(window.renderSidebar) window.renderSidebar('recursos'); // Marcamos 'recursos' activo
+        init();
+    });
 
     async function init() {
         if (!window.sb) return setTimeout(init, 100);
         
-        // 1. Seguridad
+        // 🔒 1. Seguridad
         const user = await window.checkSession();
         if (!user) return;
 
-    document.getElementById('loading').style.display = 'none';
-    if(window.showLoading) {
-            window.showLoading('resGrid', 'Buscando herramientas de bienestar...'); 
-        }
+        // Loading Global
+        if(window.showLoading) window.showLoading('resGrid', 'Buscando herramientas de bienestar...');
 
-      
-
-        // 2. Cargar Recursos (Con Caché también, para máxima velocidad)
+        // ⚡ 2. Cargar Recursos (Con Caché para velocidad)
         allResources = await window.fetchWithCache('resources_list', async () => {
             const { data } = await window.sb
                 .from('recursos')
@@ -128,8 +106,7 @@
             return data || [];
         });
 
-        document.getElementById('loading').style.display = 'none';
-        
+        // Renderizado inicial
         if (allResources.length === 0) {
             renderEmptyState();
         } else {
@@ -137,7 +114,7 @@
         }
     }
 
-    // ⚡ 3. FUNCIÓN DEBOUNCE (La optimización clave)
+    // ⚡ 3. FUNCIÓN DEBOUNCE (Optimización de búsqueda)
     function debounce(func, wait) {
         let timeout;
         return function executedFunction(...args) {
@@ -159,9 +136,8 @@
             (r.categoria && r.categoria.toLowerCase().includes(lowerTerm))
         );
         renderResources(filtered);
-    }, 300); // Espera 300ms después de que el usuario deje de escribir
+    }, 300); // Espera 300ms
 
-    // Event Listener
     document.getElementById('searchInput').addEventListener('keyup', (e) => {
         handleSearch(e.target.value);
     });
@@ -169,8 +145,9 @@
     // 5. Renderizado
     function renderResources(list) {
         const grid = document.getElementById('resGrid');
+        
         if(list.length === 0) {
-            grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:var(--text-soft);">No se encontraron recursos que coincidan.</p>';
+            grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:var(--text-soft); padding:40px;">No se encontraron recursos que coincidan.</p>';
             return;
         }
 
@@ -180,14 +157,14 @@
             const safeCat = window.sanitize(r.categoria || 'General');
             const typeIcon = r.tipo === 'video' ? 'play-circle' : (r.tipo === 'audio' ? 'headphones' : 'file-alt');
             
-            // Lazy Loading aquí también
+            // Lazy Loading
             const imgHtml = `<img src="${r.imagen_url || 'https://via.placeholder.com/400x200?text=Bienestar'}" alt="${safeTitle}" loading="lazy">`;
 
             return `
             <div class="res-card">
                 <div class="res-img">
                     ${imgHtml}
-                    <div class="res-type"><i class="fas fa-${typeIcon}"></i> ${r.tipo || 'Articulo'}</div>
+                    <div class="res-type"><i class="fas fa-${typeIcon}"></i> ${r.tipo || 'Artículo'}</div>
                 </div>
                 <div class="res-body">
                     <div class="res-cat">${safeCat}</div>
@@ -203,13 +180,14 @@
 
     function renderEmptyState() {
         document.getElementById('resGrid').innerHTML = `
-            <div style="grid-column: 1/-1; text-align:center; color:#94A3B8;">
+            <div style="grid-column: 1/-1; text-align:center; color:#94A3B8; padding: 40px;">
+                <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
                 <p>Pronto subiremos contenido exclusivo para ti.</p>
             </div>
         `;
     }
-
-    init();
+    
+    // Nota: toggleSidebar y logout gestionados por components.js
   </script>
 </body>
 </html>
