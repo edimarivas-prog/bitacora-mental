@@ -235,7 +235,8 @@
 
       } catch (err) {
           console.error(err);
-          alert("Ocurrió un error. Intenta de nuevo.");
+          window.showToast("Ocurrió un error al guardar. Inténtalo de nuevo.", "error");
+          
           btn.innerHTML = originalText;
           btn.disabled = false;
       }
