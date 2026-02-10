@@ -262,7 +262,7 @@
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
     }
 
-    asasync function loadNextAppointment(userId, userName) {
+    async function loadNextAppointment(userId, userName) {
         const now = new Date();
         // Buscamos citas desde hace 1 hora para que si llega tarde aún aparezca
         const searchTime = new Date(now.getTime() - 60 * 60 * 1000); 
@@ -332,10 +332,6 @@
             document.getElementById('emptyCita').style.display = 'block';
         }
     }
-
-    function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
-    async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
-    initDashboard();
-  </script>
+</script>
 </body>
 </html>
