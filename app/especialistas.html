@@ -97,39 +97,46 @@
     async function init() {
         if (!window.sb) return setTimeout(init, 100);
         
-        // 🔒 1. Validación de Sesión
+        // 🔒 1. Seguridad
         const user = await window.checkSession();
         if (!user) return;
 
-        // 2. Cargar Doctores
-        const { data: doctors, error } = await window.sb
-            .from('users_profile')
-            .select('*')
-            .eq('rol', 'psicologo');
+        const grid = document.getElementById('gridDocs');
+
+        // ⚡ 2. OPTIMIZACIÓN: Carga con Caché
+        // Usamos la función global que creamos en supabase-config.js
+        const doctors = await window.fetchWithCache('specialists_list', async () => {
+            const { data, error } = await window.sb
+                .from('users_profile')
+                .select('*')
+                .eq('rol', 'psicologo');
+            return data || [];
+        });
 
         document.getElementById('loading').style.display = 'none';
-        const grid = document.getElementById('gridDocs');
 
         if (!doctors || doctors.length === 0) {
             grid.innerHTML = '<p>No hay especialistas disponibles por el momento.</p>';
             return;
         }
 
-        // 🛡️ 3. Renderizado Seguro con SANITIZACIÓN
+        // 🛡️ 3. Renderizado Seguro + ⚡ Lazy Loading
         grid.innerHTML = doctors.map(doc => {
-            // Sanitizar nombre
             const safeName = window.sanitize(doc.nombre || 'Especialista');
             const safeHeadline = window.sanitize(doc.headline || 'Psicología Clínica');
             const safeBio = window.sanitize(doc.bio || 'Sin descripción disponible.');
             
-            // Lógica Avatar
+            // ⚡ OPTIMIZACIÓN: Lazy Loading en imágenes
             let avatarHtml = `<div class="doc-avatar">${safeName.charAt(0)}</div>`;
             if (doc.avatar_url) {
-                // Sanitizar URL por si acaso (aunque menos crítico en img src si viene de storage)
-                avatarHtml = `<div class="doc-avatar"><img src="${doc.avatar_url}" alt="${safeName}"></div>`;
+                avatarHtml = `<div class="doc-avatar">
+                    <img src="${doc.avatar_url}" 
+                         alt="${safeName}" 
+                         loading="lazy" 
+                         style="width:100%; height:100%; object-fit:cover;">
+                </div>`;
             }
 
-            // Sanitizar Tags
             let tagsHtml = '';
             if (doc.especialidades && doc.especialidades.length > 0) {
                 tagsHtml = doc.especialidades.slice(0, 3)
@@ -155,6 +162,6 @@
         }).join('');
     }
     init();
-  </script>
+</script>
 </body>
 </html>
