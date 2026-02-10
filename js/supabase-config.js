@@ -177,3 +177,42 @@ window.showToast = function(message, type = 'info') {
         setTimeout(() => toast.remove(), 300); // Esperar a que termine la animación de salida
     }, 4000); // 4 segundos visible
 };
+
+// 8. MANEJO DE ERRORES CENTRALIZADO
+class ErrorHandler {
+    static handle(error, context = '') {
+        console.error(`🔴 Error en [${context}]:`, error);
+
+        // A. Errores de Base de Datos (Postgres/Supabase)
+        if (error.code) {
+            const dbMessages = {
+                '23505': 'Este registro ya existe (duplicado).',
+                '23503': 'Operación inválida: Falta información relacionada.',
+                '42P01': 'Error de sistema: Tabla no encontrada.',
+                '42501': 'No tienes permisos para realizar esta acción.',
+                'PGRST116': 'No se encontraron resultados.'
+            };
+            
+            const msg = dbMessages[error.code] || `Error de base de datos (${error.code})`;
+            if (window.showToast) window.showToast(msg, 'error');
+            else alert(msg);
+            return;
+        }
+
+        // B. Errores de Red / Conexión
+        if (error.message && (error.message.includes('fetch') || error.message.includes('network'))) {
+            const msg = 'Sin conexión a internet. Verifica tu red.';
+            if (window.showToast) window.showToast(msg, 'warning');
+            else alert(msg);
+            return;
+        }
+
+        // C. Errores Genéricos
+        const genericMsg = error.message || 'Ocurrió un error inesperado.';
+        if (window.showToast) window.showToast(genericMsg, 'error');
+        else alert(genericMsg);
+    }
+}
+
+// Hacemos la clase global
+window.ErrorHandler = ErrorHandler;
