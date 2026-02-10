@@ -4,42 +4,46 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Mi Diario - Bitácora Mental</title>
+  
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <link rel="stylesheet" href="../css/design-system.css">
+  
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
-    .sidebar { width: 260px; background: var(--white); padding: 24px; border-right: 1px solid var(--border); position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s; }
-    .logo { font-family: 'Outfit'; font-weight: 700; color: var(--primary); font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 8px; margin-bottom: 30px; }
-    .nav-section { margin-bottom: 20px; }
-    .nav-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-soft); letter-spacing: 1px; margin-bottom: 10px; padding-left: 10px; font-weight: 700; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-soft); text-decoration: none; border-radius: 12px; font-weight: 500; transition: 0.2s; }
-    .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
-    .nav-item.active { font-weight: 600; }
+    
+    /* Ajuste Main para Sidebar Fijo */
     .main { flex: 1; padding: 30px; margin-left: 260px; max-width: 100%; display: flex; flex-direction: column; }
-    .mobile-nav { display: none; padding: 15px; background: white; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .menu-toggle { font-size: 1.5rem; background: none; border: none; color: var(--text); }
-    @media (max-width: 900px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main { margin-left: 0; padding: 20px; } .mobile-nav { display: flex; } }
+    
+    @media (max-width: 900px) { 
+        .main { margin-left: 0; padding: 20px; } 
+    }
 
-    /* Estilos Específicos Diario */
+    /* --- Estilos Específicos Diario --- */
     .diary-layout { display: grid; grid-template-columns: 320px 1fr; gap: 24px; height: calc(100vh - 100px); }
-    .cal-card { background: var(--white); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
-    .editor-card { background: var(--white); border-radius: var(--radius); padding: 30px; display: flex; flex-direction: column; box-shadow: 0 4px 20px rgba(0,0,0,0.04); position: relative; }
+    
+    .cal-card { background: var(--white); border-radius: var(--radius-xl); padding: 24px; display: flex; flex-direction: column; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border: 1px solid var(--border); }
+    
+    .editor-card { background: var(--white); border-radius: var(--radius-xl); padding: 30px; display: flex; flex-direction: column; box-shadow: 0 4px 20px rgba(0,0,0,0.04); position: relative; border: 1px solid var(--border); }
     
     .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-weight: 700; color: var(--primary); font-family: 'Outfit'; }
     .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
+    
     .day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 10px; cursor: pointer; font-size: 0.9rem; transition: 0.2s; position: relative; }
     .day:hover { background: var(--bg); }
     .day.active { background: var(--primary); color: white; font-weight: 600; }
     .day.has-entry::after { content: ''; position: absolute; bottom: 4px; width: 4px; height: 4px; background: var(--accent); border-radius: 50%; }
 
     .editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+    
     .emotions { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
     .emo-btn { border: 1px solid var(--border); background: white; padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: 0.2s; font-size: 0.9rem; white-space: nowrap; }
     .emo-btn:hover, .emo-btn.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
     
-    textarea { flex: 1; border: none; resize: none; font-size: 1.1rem; line-height: 1.7; outline: none; font-family: 'DM Sans', sans-serif; color: var(--text); }
+    textarea { flex: 1; border: none; resize: none; font-size: 1.1rem; line-height: 1.7; outline: none; font-family: 'DM Sans', sans-serif; color: var(--text); background: transparent; }
     textarea::placeholder { color: #CBD5E1; font-style: italic; }
     
     .prompt-box { background: #FFF7ED; padding: 15px; border-radius: 12px; margin-top: 20px; border-left: 4px solid var(--accent); }
@@ -51,39 +55,25 @@
     .status-text.saving { color: var(--accent); }
     .status-text.saved { color: var(--primary); }
 
-    @media (max-width: 1000px) { .diary-layout { grid-template-columns: 1fr; height: auto; } .cal-card { margin-bottom: 20px; } .editor-card { min-height: 500px; } }
+    @media (max-width: 1000px) { 
+        .diary-layout { grid-template-columns: 1fr; height: auto; } 
+        .cal-card { margin-bottom: 20px; } 
+        .editor-card { min-height: 500px; } 
+    }
   </style>
 </head>
 <body>
+
   <div class="mobile-nav">
     <a href="#" class="logo" style="margin:0"><i class="fas fa-brain"></i> Bitácora</a>
-    <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
   </div>
 
-  <aside class="sidebar" id="sidebar">
-    <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
-    <div class="nav-section">
-      <div class="nav-title">Principal</div>
-      <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
-      <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
-      <a href="especialistas.html" class="nav-item"><i class="fas fa-user-md"></i> Especialistas</a>
-    </div>
-    <div class="nav-section">
-      <div class="nav-title">Tu Espacio</div>
-      <a href="diario.html" class="nav-item active"><i class="fas fa-book"></i> Diario</a>
-      <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> Progreso</a>
-      <a href="recursos.html" class="nav-item"><i class="fas fa-box-open"></i> Recursos</a>
-    </div>
-    <div class="nav-section">
-      <div class="nav-title">Cuenta</div>
-      <a href="plan.html" class="nav-item"><i class="fas fa-crown"></i> Mi Plan</a>
-      <a href="configuracion.html" class="nav-item"><i class="fas fa-cog"></i> Configuración</a>
-      <a href="#" onclick="logout()" class="nav-item" style="color:#EF4444"><i class="fas fa-sign-out-alt"></i> Salir</a>
-    </div>
-  </aside>
+  <div id="sidebar-container"></div>
 
   <main class="main">
     <div class="diary-layout">
+      
       <div class="cal-card">
         <div class="cal-header">
           <span id="monthDisplay">--</span>
@@ -126,7 +116,15 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
+  <script src="../js/components.js"></script>
+
   <script>
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', () => {
+        if(window.renderSidebar) window.renderSidebar('diario'); // Marcamos 'diario' activo
+        init();
+    });
+
     // Variables Globales
     let currentDate = new Date();
     let selectedDate = new Date();
@@ -144,13 +142,13 @@
         "Describe un momento de calma hoy."
     ];
 
-    // INICIO
+    // INICIO LÓGICA
     async function init() {
         if (!window.sb) return setTimeout(init, 100);
 
-        // 🔒 SEGURIDAD (Función centralizada)
+        // 🔒 SEGURIDAD
         const user = await window.checkSession();
-        if (!user) return; // Si falla, redirige solo
+        if (!user) return; 
         
         // UI Inicial
         const hour = new Date().getHours();
@@ -159,10 +157,10 @@
         document.getElementById('dailyPrompt').textContent = prompts[Math.floor(Math.random()*prompts.length)];
         
         // Cargar datos
-        await loadMonthData(user.id); // Cargar puntitos del calendario
-        await loadEntry(user.id, selectedDate); // Cargar entrada de hoy
+        await loadMonthData(user.id);
+        await loadEntry(user.id, selectedDate);
         
-        // Auto-save
+        // Auto-save listener
         const editor = document.getElementById('editor');
         editor.addEventListener('input', () => {
             updateStatus('saving');
@@ -170,17 +168,14 @@
             saveTimeout = setTimeout(() => saveEntry(user.id), 1000); 
         });
     }
-    init(); // LLAMADA CORREGIDA
 
     // --- CARGAR CALENDARIO ---
     async function loadMonthData(uid) {
-        // Usamos fechas locales formateadas para evitar problemas de zona horaria
         const year = currentDate.getFullYear();
-        const month = currentDate.getMonth() + 1; // 1-12
+        const month = currentDate.getMonth() + 1; 
         const nextMonth = month === 12 ? 1 : month + 1;
         const nextYear = month === 12 ? year + 1 : year;
 
-        // Rango de fechas (String simple YYYY-MM-DD)
         const start = `${year}-${String(month).padStart(2,'0')}-01`;
         const end = `${nextYear}-${String(nextMonth).padStart(2,'0')}-01`;
 
@@ -192,7 +187,6 @@
             .lt('fecha', end);
 
         if(!error) {
-            // Guardar en cache solo la parte de la fecha (YYYY-MM-DD)
             entriesCache = data.map(d => d.fecha.split('T')[0]);
             renderCalendar();
         }
@@ -200,7 +194,6 @@
 
     // --- CARGAR ENTRADA ---
     async function loadEntry(uid, dateObj) {
-        // Formatear fecha local YYYY-MM-DD
         const y = dateObj.getFullYear();
         const m = String(dateObj.getMonth() + 1).padStart(2, '0');
         const d = String(dateObj.getDate()).padStart(2, '0');
@@ -215,7 +208,7 @@
         document.querySelectorAll('.emo-btn').forEach(b => b.classList.remove('selected'));
         updateStatus('ready');
 
-        // Buscar coincidencias que empiecen con esta fecha (ignorando hora exacta)
+        // Buscar entrada del día
         const { data } = await window.sb
             .from('diario_emocional')
             .select('*')
@@ -236,13 +229,13 @@
 
     // --- GUARDAR ---
     async function saveEntry(uid) {
-        const content = document.getElementById('editor').value;
+        // Sanitizar entrada antes de guardar (XSS protection)
+        let content = document.getElementById('editor').value;
+        if (window.sanitize) content = window.sanitize(content); // Usar nuestra función global
         
-        // Usar fecha local exacta para guardar
         const y = selectedDate.getFullYear();
         const m = String(selectedDate.getMonth() + 1).padStart(2, '0');
         const d = String(selectedDate.getDate()).padStart(2, '0');
-        // Guardamos como mediodía para evitar problemas de bordes de zona horaria
         const dateISO = `${y}-${m}-${d}T12:00:00`; 
 
         if(!content.trim() && !currentMood) {
@@ -265,7 +258,7 @@
             const res = await window.sb.from('diario_emocional').insert(payload).select();
             if(res.data) currentEntryId = res.data[0].id;
             error = res.error;
-            // Actualizar calendario visualmente si es nuevo
+            
             if(!error) {
                 const dateKey = `${y}-${m}-${d}`;
                 if(!entriesCache.includes(dateKey)) {
@@ -287,7 +280,6 @@
     function setMood(mood) {
         currentMood = mood;
         highlightMood(mood);
-        // Disparar autoguardado manual
         const editor = document.getElementById('editor');
         if(!editor.value.trim()) editor.value = " "; 
         editor.dispatchEvent(new Event('input'));
@@ -334,18 +326,15 @@
             dEl.className = 'day';
             dEl.textContent = i;
             
-            // Comparar fechas locales
             const checkDate = new Date(year, month, i);
             if (checkDate.toDateString() === selectedDate.toDateString()) dEl.classList.add('active');
             
-            // Verificar si hay entrada (String YYYY-MM-DD)
             const dateKey = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
             if(entriesCache.includes(dateKey)) dEl.classList.add('has-entry');
 
             dEl.onclick = async () => { 
                 selectedDate = new Date(year, month, i); 
                 renderCalendar(); 
-                // Obtener usuario de nuevo para recargar
                 const user = await window.checkSession();
                 if(user) loadEntry(user.id, selectedDate);
             };
@@ -355,7 +344,6 @@
 
     function changeMonth(d) { 
         currentDate.setMonth(currentDate.getMonth() + d); 
-        // Recargar datos del mes
         window.checkSession().then(user => {
             if(user) {
                 loadMonthData(user.id);
@@ -364,7 +352,7 @@
         });
     }
     
-    function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
+    // Nota: toggleSidebar ahora es global en components.js
     async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
   </script>
 </body>
