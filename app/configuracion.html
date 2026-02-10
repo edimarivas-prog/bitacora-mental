@@ -4,41 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Configuración - Bitácora Mental</title>
+  
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <link rel="stylesheet" href="../css/design-system.css">
+  
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
     
-    /* Sidebar */
-    .sidebar { width: 260px; background: var(--white); padding: 24px; border-right: 1px solid var(--border); position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s; }
-    .logo { font-family: 'Outfit'; font-weight: 700; color: var(--primary); font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 8px; margin-bottom: 30px; }
-    .nav-section { margin-bottom: 20px; }
-    .nav-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-soft); letter-spacing: 1px; margin-bottom: 10px; padding-left: 10px; font-weight: 700; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-soft); text-decoration: none; border-radius: 12px; font-weight: 500; transition: 0.2s; }
-    .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
-    .nav-item.active { font-weight: 600; }
-    
-    .mobile-nav { display: none; padding: 15px; background: white; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .menu-toggle { font-size: 1.5rem; background: none; border: none; color: var(--text); }
-    @media (max-width: 900px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main { margin-left: 0; padding: 20px; } .mobile-nav { display: flex; } }
-
-    /* --- CONTENIDO --- */
+    /* Layout */
     .main { flex: 1; padding: 30px 40px; margin-left: 260px; max-width: 100%; }
+    
+    @media (max-width: 900px) { 
+        .main { margin-left: 0; padding: 20px; } 
+    }
+
+    /* --- ESTILOS ESPECÍFICOS DE CONFIGURACIÓN --- */
     .page-header { margin-bottom: 30px; }
     .page-header h1 { font-family: 'Outfit'; font-size: 1.8rem; margin: 0 0 5px 0; }
     .page-header p { color: var(--text-soft); margin: 0; }
 
     .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
     
-    .card { background: var(--white); padding: 30px; border-radius: var(--radius); box-shadow: 0 4px 20px rgba(0,0,0,0.04); border: 1px solid var(--border); height: fit-content; }
+    .card { background: var(--white); padding: 30px; border-radius: var(--radius-xl); box-shadow: 0 4px 20px rgba(0,0,0,0.04); border: 1px solid var(--border); height: fit-content; }
     .card-title { font-family: 'Outfit'; font-weight: 600; font-size: 1.1rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--primary); }
     
-    /* Inputs & Buttons */
+    /* Inputs & Buttons Locales */
     .form-group { margin-bottom: 20px; }
     .form-label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-soft); margin-bottom: 8px; }
-    .form-input { width: 100%; padding: 12px 15px; border: 1px solid var(--border); border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--text); outline: none; transition: 0.2s; }
+    
+    /* Usamos estilos base pero reforzamos aquí */
+    .form-input { width: 100%; padding: 12px 15px; border: 1px solid var(--border); border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--text); outline: none; transition: 0.2s; background: var(--white); }
     .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
     .form-input:disabled { background: #F1F5F9; color: #94A3B8; cursor: not-allowed; }
 
@@ -56,16 +54,11 @@
     .btn-delete-card { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.3); border: none; color: white; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
     .btn-delete-card:hover { background: rgba(239, 68, 68, 0.8); }
 
-    /* Modal */
+    /* Modal Local */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
     .modal-overlay.open { display: flex; animation: fadeIn 0.2s; }
     .modal { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
     
-    /* Toast */
-    .toast { position: fixed; bottom: 30px; right: 30px; background: white; padding: 15px 25px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 15px; transform: translateY(100px); opacity: 0; transition: 0.4s; z-index: 2000; border-left: 5px solid #10B981; }
-    .toast.show { transform: translateY(0); opacity: 1; }
-    .toast.error { border-left-color: #EF4444; }
-
     @keyframes fadeIn { from{opacity:0} to{opacity:1} }
   </style>
 </head>
@@ -76,30 +69,7 @@
     <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
   </div>
 
-  <aside class="sidebar" id="sidebar">
-    <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
-    
-    <div class="nav-section">
-      <div class="nav-title">Principal</div>
-      <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
-      <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
-      <a href="especialistas.html" class="nav-item"><i class="fas fa-user-md"></i> Especialistas</a>
-    </div>
-
-    <div class="nav-section">
-      <div class="nav-title">Tu Espacio</div>
-      <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> Diario</a>
-      <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> Progreso</a>
-      <a href="recursos.html" class="nav-item"><i class="fas fa-box-open"></i> Recursos</a>
-    </div>
-
-    <div class="nav-section">
-      <div class="nav-title">Cuenta</div>
-      <a href="plan.html" class="nav-item"><i class="fas fa-crown"></i> Mi Plan</a>
-      <a href="configuracion.html" class="nav-item"><i class="fas fa-cog"></i> Configuración</a>
-      <a href="#" onclick="logout()" class="nav-item" style="color:#EF4444"><i class="fas fa-sign-out-alt"></i> Salir</a>
-    </div>
-</aside>
+  <div id="sidebar-container"></div>
 
   <main class="main">
     <div class="page-header">
@@ -108,7 +78,6 @@
     </div>
 
     <div class="settings-grid">
-        
         <div class="card">
             <div class="card-title"><i class="fas fa-user-circle"></i> Datos Personales</div>
             <div class="form-group">
@@ -193,21 +162,18 @@
       </div>
   </div>
 
-  <div id="toast" class="toast">
-      <div style="font-size:1.2rem;" id="toastIcon"></div>
-      <div>
-          <h4 style="margin:0; font-size:0.95rem;" id="toastTitle">Título</h4>
-          <p style="margin:0; font-size:0.85rem; color:var(--text-soft);" id="toastMessage">Mensaje</p>
-      </div>
-  </div>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
-  <script>
-    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
-    async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
+  <script src="../js/components.js"></script>
 
-    let currentUser = null;
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Renderizar Sidebar (Marcamos 'configuracion' como activo)
+        if(window.renderSidebar) window.renderSidebar('configuracion');
+        
+        // 2. Iniciar lógica
+        init();
+    });
 
     let currentUser = null;
 
@@ -216,13 +182,15 @@
         const user = await window.checkSession();
         if (!user) return;
         
-        currentUser = user; // Guardamos en variable global para usar en uploadImage, etc.
+        currentUser = user; 
         document.getElementById('inputEmail').value = currentUser.email;
 
         loadProfile();
         loadPaymentMethods();
     }
-    init();
+
+    // Nota: La función toggleSidebar ahora es global en components.js
+    // Nota: logout() ahora viene incluido en el sidebar
 
     // --- PERFIL ---
     async function loadProfile() {
@@ -241,23 +209,31 @@
         const name = document.getElementById('inputName').value;
         const phone = document.getElementById('inputPhone').value;
         const { error } = await window.sb.from('users_profile').update({ nombre: name, telefono: phone }).eq('id', currentUser.id);
-        if(error) showToast('error', 'Error', error.message);
-        else showToast('success', 'Guardado', 'Perfil actualizado.');
+        
+        // Usamos el Toast Global
+        if(error) window.showToast(error.message, 'error');
+        else window.showToast('Perfil actualizado correctamente.', 'success');
     }
 
     async function updateEmergency() {
         const data = { nombre: document.getElementById('emName').value, telefono: document.getElementById('emPhone').value };
         const { error } = await window.sb.from('users_profile').update({ contacto_emergencia: data }).eq('id', currentUser.id);
-        if(error) showToast('error', 'Error', 'No se pudo guardar.');
-        else showToast('success', 'Emergencia', 'Contacto actualizado.');
+        
+        if(error) window.showToast('No se pudo guardar.', 'error');
+        else window.showToast('Contacto de emergencia actualizado.', 'success');
     }
 
     async function updatePassword() {
         const pass = document.getElementById('inputPass').value;
-        if(pass.length < 6) return showToast('error', 'Contraseña débil', 'Mínimo 6 caracteres.');
+        if(pass.length < 6) return window.showToast('La contraseña debe tener mínimo 6 caracteres.', 'warning');
+        
         const { error } = await window.sb.auth.updateUser({ password: pass });
-        if(error) showToast('error', 'Error', error.message);
-        else { showToast('success', 'Éxito', 'Contraseña cambiada.'); document.getElementById('inputPass').value = ''; }
+        
+        if(error) window.showToast(error.message, 'error');
+        else { 
+            window.showToast('Contraseña cambiada exitosamente.', 'success'); 
+            document.getElementById('inputPass').value = ''; 
+        }
     }
 
     // --- MÉTODOS DE PAGO ---
@@ -292,7 +268,7 @@
         const holder = document.getElementById('ccHolder').value;
 
         if(number.length < 15 || !exp || !holder) {
-            showToast('error', 'Datos incompletos', 'Revisa la información de la tarjeta.');
+            window.showToast('Por favor completa los datos de la tarjeta.', 'warning');
             return;
         }
 
@@ -310,9 +286,9 @@
 
         if(error) {
             console.error(error);
-            showToast('error', 'Error', 'No se pudo guardar la tarjeta.');
+            window.showToast('No se pudo guardar la tarjeta.', 'error');
         } else {
-            showToast('success', 'Tarjeta Agregada', 'Método de pago listo.');
+            window.showToast('Método de pago agregado correctamente.', 'success');
             closePaymentModal();
             loadPaymentMethods();
             // Limpiar form
@@ -327,20 +303,9 @@
         if(!confirm("¿Eliminar esta tarjeta?")) return;
         const { error } = await window.sb.from('metodos_pago').delete().eq('id', id);
         if(!error) {
-            showToast('success', 'Eliminada', 'Tarjeta removida.');
+            window.showToast('Tarjeta eliminada.', 'success');
             loadPaymentMethods();
         }
-    }
-
-    // Helper Toast
-    function showToast(type, title, message) {
-        const toast = document.getElementById('toast');
-        const icon = document.getElementById('toastIcon');
-        toast.className = `toast ${type} show`;
-        icon.innerHTML = type === 'success' ? '<i class="fas fa-check-circle" style="color:#10B981"></i>' : '<i class="fas fa-times-circle" style="color:#EF4444"></i>';
-        document.getElementById('toastTitle').textContent = title;
-        document.getElementById('toastMessage').textContent = message;
-        setTimeout(() => toast.classList.remove('show'), 3000);
     }
   </script>
 </body>
