@@ -53,3 +53,31 @@ window.sanitize = function(str) {
     div.textContent = str;
     return div.innerHTML;
 };
+
+// 4. RATE LIMITING (Protección Anti-Spam Cliente)
+const RATE_LIMIT_RULES = {
+    bookings: { max: 3, window: 60 * 1000 }, // 3 intentos por minuto
+    login: { max: 5, window: 5 * 60 * 1000 } // 5 intentos en 5 minutos
+};
+
+window.checkRateLimit = function(action) {
+    const rule = RATE_LIMIT_RULES[action];
+    if (!rule) return; // Si no hay regla, pasar
+
+    const key = `rt_limit_${action}`;
+    const now = Date.now();
+    
+    // Obtener historial y filtrar viejos
+    let history = JSON.parse(localStorage.getItem(key) || '[]');
+    history = history.filter(time => now - time < rule.window);
+
+    // Verificar límite
+    if (history.length >= rule.max) {
+        const waitSeconds = Math.ceil((rule.window - (now - history[0])) / 1000);
+        throw new Error(`Demasiados intentos. Por favor espera ${waitSeconds} segundos.`);
+    }
+
+    // Registrar nuevo intento
+    history.push(now);
+    localStorage.setItem(key, JSON.stringify(history));
+};
