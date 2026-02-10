@@ -155,3 +155,14 @@ h1, h2, h3, h4, h5, h6 {
   outline: 2px solid var(--primary-400);
   outline-offset: 2px;
 }
+
+:root {
+  --primary: var(--primary-400);
+  --primary-light: var(--primary-100);
+  --text: var(--text-main);
+  --text-soft: var(--text-soft); 
+  --bg: #F9FBFA;
+  --white: #FFFFFF;
+  --border: #E6EFE8;
+  --radius: var(--radius-xl);
+}
