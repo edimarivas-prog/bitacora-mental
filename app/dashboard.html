@@ -45,7 +45,9 @@
     .icon-box { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
     
     /* Widgets Específicos */
-    .pulse-card { border-left: 4px solid var(--accent); }
+    .pulse-card { border-left: 4px solid var(--accent); transition: 0.3s; }
+    .pulse-card.completed { border-left-color: #10B981; } /* Verde cuando completado */
+    
     .pulse-bar { height: 8px; background: #F1F5F9; border-radius: 4px; margin-top: 10px; overflow: hidden; }
     .pulse-fill { height: 100%; background: var(--accent); width: 0%; transition: width 1s; }
     
@@ -140,15 +142,15 @@
 
       </div>
 
-      <div class="card pulse-card">
+      <div class="card pulse-card" id="pulseCard">
         <div class="card-header">
           <div class="card-title"><i class="fas fa-heartbeat" style="color:var(--accent)"></i> Pulso Semanal</div>
           <span id="pulseBadge" style="font-size:0.8rem; background:#FEF3C7; color:#92400E; padding:4px 8px; border-radius:10px;">Pendiente</span>
         </div>
-        <p style="font-size:0.9rem; color:#666;">¿Cómo te sientes esta semana?</p>
+        <p id="pulseText" style="font-size:0.9rem; color:#666;">¿Cómo te sientes esta semana?</p>
         <div class="pulse-bar"><div class="pulse-fill" id="pulseBar"></div></div>
         <div style="margin-top:15px; text-align:right;">
-          <a href="pulso.html" style="color:var(--primary); font-weight:600; text-decoration:none; font-size:0.9rem;">Registrar <i class="fas fa-arrow-right"></i></a>
+          <a href="pulso.html" id="pulseLink" style="color:var(--primary); font-weight:600; text-decoration:none; font-size:0.9rem;">Registrar <i class="fas fa-arrow-right"></i></a>
         </div>
       </div>
     </div>
@@ -190,46 +192,81 @@
 
         // 1. Verificar Sesión
         const { data: { session } } = await window.sb.auth.getSession();
-        if (!session) {
-            window.location.href = '../login.html';
-            return;
-        }
-
+        if (!session) { window.location.href = '../login.html'; return; }
         const user = session.user;
 
-        // 2. Guardia de Seguridad
+        // 2. Cargar Datos Básicos
         const { data: profile } = await window.sb.from('users_profile').select('rol, nombre').eq('id', user.id).single();
-
-        if (profile) {
-            if(profile.rol === 'psicologo') {
-                window.location.href = '../pro/dashboard.html';
-                return;
-            } else if (profile.rol === 'admin') {
-                window.location.href = '../admin/panel-admin.html';
-                return;
-            }
-        }
-
-        // 3. Cargar Datos
+        if (profile?.rol === 'psicologo') { window.location.href = '../pro/dashboard.html'; return; }
+        
         loadGreeting(profile?.nombre);
         loadNextAppointment(user.id, profile?.nombre);
+        
+        // 3. NUEVO: Verificar estado del Pulso Semanal
+        checkPulseStatus(user.id);
+    }
+
+    // --- LÓGICA DE PULSO SEMANAL (7 DÍAS) ---
+    async function checkPulseStatus(uid) {
+        const { data } = await window.sb
+            .from('monitoreo_sintomas')
+            .select('fecha_realizado')
+            .eq('user_id', uid)
+            .order('fecha_realizado', { ascending: false })
+            .limit(1);
+
+        const card = document.getElementById('pulseCard');
+        const badge = document.getElementById('pulseBadge');
+        const bar = document.getElementById('pulseBar');
+        const link = document.getElementById('pulseLink');
+        const text = document.getElementById('pulseText');
+
+        if (data && data.length > 0) {
+            const lastDate = new Date(data[0].fecha_realizado);
+            const now = new Date();
+            const diffTime = Math.abs(now - lastDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+
+            if (diffDays < 7) {
+                // YA COMPLETADO RECIENTEMENTE (BLOQUEAR)
+                card.classList.add('completed');
+                badge.textContent = "Completado";
+                badge.style.background = "#D1FAE5";
+                badge.style.color = "#065F46";
+                
+                bar.style.width = "100%";
+                bar.style.background = "#10B981";
+                
+                const daysLeft = 7 - diffDays + 1;
+                text.textContent = `¡Gracias por registrarte! Vuelve en unos días.`;
+                
+                link.innerHTML = `<i class="fas fa-lock"></i> Disponible en ${daysLeft} días`;
+                link.style.pointerEvents = "none";
+                link.style.color = "#94A3B8";
+                link.href = "#"; // Desactivar link
+            } else {
+                // DISPONIBLE (PASARON 7 DÍAS)
+                bar.style.width = "10%";
+            }
+        } else {
+            // NUNCA HECHO
+            bar.style.width = "5%";
+        }
     }
 
     function loadGreeting(nombreCompleto) {
         const hour = new Date().getHours();
         const saludo = hour < 12 ? 'Buenos días' : (hour < 18 ? 'Buenas tardes' : 'Buenas noches');
         const nombre = nombreCompleto?.split(' ')[0] || 'Hola';
-        
         document.getElementById('greeting').textContent = `${saludo}, ${nombre} 👋`;
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
     }
 
-    // B. Cargar Próxima Cita (Lógica Corregida y Conectada al DOM)
     async function loadNextAppointment(userId, userName) {
         const now = new Date();
         now.setHours(now.getHours() - 2); 
 
-        const { data: citas, error } = await window.sb
+        const { data: citas } = await window.sb
             .from('citas')
             .select(`*, psicologo:psicologo_id ( nombre )`)
             .eq('paciente_id', userId)
@@ -240,29 +277,14 @@
 
         const nextCita = citas && citas.length > 0 ? citas[0] : null;
 
-        // CONEXIÓN CON EL DOM (Ahora sí existen los elementos)
         if (nextCita) {
             document.getElementById('emptyCita').style.display = 'none';
             document.getElementById('nextCitaCard').style.display = 'block';
-
             const dateObj = new Date(nextCita.fecha_hora);
             
-document.getElementById('docName').textContent = nextCita.psicologo ? nextCita.psicologo.nombre : 'Especialista';
-
-// CORRECCIÓN FECHA: Forzamos UTC
-document.getElementById('citaDate').textContent = dateObj.toLocaleDateString('es-PE', {
-    day: 'numeric', 
-    month: 'long', 
-    timeZone: 'UTC' 
-});
-
-// CORRECCIÓN HORA: Forzamos UTC (Esto arregla el desfase de 5 horas)
-document.getElementById('citaTime').textContent = dateObj.toLocaleTimeString('es-PE', {
-    hour: '2-digit', 
-    minute: '2-digit', 
-    hour12: true, 
-    timeZone: 'UTC'
-});;
+            document.getElementById('docName').textContent = nextCita.psicologo ? nextCita.psicologo.nombre : 'Especialista';
+            document.getElementById('citaDate').textContent = dateObj.toLocaleDateString('es-PE', { day: 'numeric', month: 'long', timeZone: 'UTC' });
+            document.getElementById('citaTime').textContent = dateObj.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'UTC' });
             
             const nombrePaciente = userName?.split(' ')[0] || 'Paciente';
             document.getElementById('citaLink').href = `../pro/sesion-live.html?room=${nextCita.link_reunion}&patient=${nombrePaciente}`;
@@ -272,16 +294,8 @@ document.getElementById('citaTime').textContent = dateObj.toLocaleTimeString('es
         }
     }
 
-    function toggleMenu() {
-        document.getElementById('sidebar').classList.toggle('open');
-    }
-
-    async function logout() {
-        await window.sb.auth.signOut();
-        window.location.href = '../login.html';
-    }
-
-    // Iniciar
+    function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
+    async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
     initDashboard();
   </script>
 </body>
