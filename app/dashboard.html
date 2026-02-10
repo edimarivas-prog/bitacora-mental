@@ -46,7 +46,7 @@
     
     /* Widgets Específicos */
     .pulse-card { border-left: 4px solid var(--accent); transition: 0.3s; }
-    .pulse-card.completed { border-left-color: #10B981; } /* Verde cuando completado */
+    .pulse-card.completed { border-left-color: #10B981; } 
     
     .pulse-bar { height: 8px; background: #F1F5F9; border-radius: 4px; margin-top: 10px; overflow: hidden; }
     .pulse-fill { height: 100%; background: var(--accent); width: 0%; transition: width 1s; }
@@ -108,7 +108,6 @@
 
     <div class="grid">
       <div class="card appointment-card" id="appointmentContainer">
-        
         <div class="card-header">
           <div class="card-title" style="color:white"><i class="fas fa-video"></i> Próxima Sesión</div>
         </div>
@@ -126,17 +125,14 @@
                 <h2 id="citaTime" style="font-size:2rem; margin:0; font-weight:700;">--:--</h2>
                 <p id="citaDate" style="font-size:1.1rem; opacity:0.9; margin:0;">--/--/--</p>
             </div>
-            
             <div style="margin-bottom:20px;">
                 <p style="margin:0; font-size:0.9rem; opacity:0.8;">Especialista:</p>
                 <strong id="docName" style="font-size:1.1rem;">Dr. ...</strong>
             </div>
-
             <a href="#" id="citaLink" style="background:#10B981; color:white; padding:10px 20px; border-radius:10px; text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
                 <i class="fas fa-video"></i> Entrar a Videollamada
             </a>
         </div>
-
       </div>
 
       <div class="card pulse-card" id="pulseCard">
@@ -187,15 +183,25 @@
     async function initDashboard() {
         if (!window.sb) return setTimeout(initDashboard, 100);
 
+        // 1. Verificar Sesión
         const { data: { session } } = await window.sb.auth.getSession();
         if (!session) { window.location.href = '../login.html'; return; }
         const user = session.user;
 
+        // 2. Obtener Nombre Seguro (Fallback robusto)
+        let userName = 'Paciente';
         const { data: profile } = await window.sb.from('users_profile').select('rol, nombre').eq('id', user.id).single();
-        if (profile?.rol === 'psicologo') { window.location.href = '../pro/dashboard.html'; return; }
         
-        loadGreeting(profile?.nombre);
-        loadNextAppointment(user.id, profile?.nombre);
+        if (profile) {
+            if (profile.rol === 'psicologo') { window.location.href = '../pro/dashboard.html'; return; }
+            if (profile.nombre) userName = profile.nombre;
+        } else if (user.user_metadata && user.user_metadata.full_name) {
+            userName = user.user_metadata.full_name; // Fallback a Google/Auth data
+        }
+
+        // 3. Cargar UI
+        loadGreeting(userName);
+        loadNextAppointment(user.id, userName);
         checkPulseStatus(user.id);
     }
 
@@ -224,13 +230,13 @@
     function loadGreeting(nombre) {
         const h = new Date().getHours();
         const saludo = h < 12 ? 'Buenos días' : (h < 18 ? 'Buenas tardes' : 'Buenas noches');
-        document.getElementById('greeting').textContent = `${saludo}, ${nombre?.split(' ')[0] || 'Hola'} 👋`;
+        const primerNombre = nombre.split(' ')[0]; // Usamos la variable segura
+        document.getElementById('greeting').textContent = `${saludo}, ${primerNombre} 👋`;
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
     }
 
     async function loadNextAppointment(userId, userName) {
         const now = new Date();
-        // Buscamos citas recientes (última hora) para que no desaparezcan si llega 1 min tarde
         const searchTime = new Date(now.getTime() - 60 * 60 * 1000).toISOString(); 
 
         const { data: citas } = await window.sb
@@ -248,62 +254,47 @@
             document.getElementById('emptyCita').style.display = 'none';
             document.getElementById('nextCitaCard').style.display = 'block';
 
-            // --- CORRECCIÓN DE ZONA HORARIA ---
-            // 1. Aseguramos que el string de la DB se trate como UTC agregando 'Z' si no tiene
+            // UTC Fix
             let dateString = nextCita.fecha_hora;
-            if (!dateString.includes('Z') && !dateString.includes('+')) {
-                dateString += 'Z';
-            }
+            if (!dateString.includes('Z') && !dateString.includes('+')) dateString += 'Z';
             
-            const citaDate = new Date(dateString); // Fecha Real de la Cita (Objeto Date)
-            const diffMs = citaDate - new Date();  // Resta correcta (milisegundos)
-            const diffMins = Math.floor(diffMs / 60000); // Minutos restantes
+            const citaDate = new Date(dateString);
+            const diffMs = citaDate - new Date(); 
+            const diffMins = Math.floor(diffMs / 60000);
             
             const btnLink = document.getElementById('citaLink');
             
-            // LÓGICA DE 10 MINUTOS
+            // Lógica 10 Minutos
             if (diffMins > 10) {
-                // Faltan más de 10 min -> BLOQUEADO
                 btnLink.style.background = '#CBD5E1'; 
                 btnLink.style.pointerEvents = 'none';
                 btnLink.style.cursor = 'default';
-                
-                // Cálculo visual de horas/minutos
-                let timeText = "";
-                if(diffMins > 60) {
-                    const hours = Math.floor(diffMins / 60);
-                    const mins = diffMins % 60;
-                    timeText = `en ${hours}h ${mins}m`;
-                } else {
-                    timeText = `en ${diffMins} min`;
-                }
-                
+                const timeText = diffMins > 60 ? `en ${Math.floor(diffMins/60)}h ${diffMins%60}m` : `en ${diffMins} min`;
                 btnLink.innerHTML = `<i class="fas fa-lock"></i> Sala abre ${timeText}`;
             } else {
-                // Ya es hora (o faltan menos de 10 min) -> DISPONIBLE
-                const nombrePaciente = userName?.split(' ')[0] || 'Paciente';
-                btnLink.style.background = '#10B981'; // Verde
+                btnLink.style.background = '#10B981';
                 btnLink.style.pointerEvents = 'auto';
                 btnLink.style.cursor = 'pointer';
                 btnLink.innerHTML = `<i class="fas fa-video"></i> Entrar a Videollamada`;
-                btnLink.href = `../pro/sesion-live.html?room=${nextCita.link_reunion}&patient=${nombrePaciente}`;
+                // Usamos la variable userName segura que calculamos al inicio
+                btnLink.href = `../pro/sesion-live.html?room=${nextCita.link_reunion}&patient=${userName}`;
             }
 
             document.getElementById('docName').textContent = nextCita.psicologo ? nextCita.psicologo.nombre : 'Especialista';
-            
-            // Visualización de fecha/hora (Forzando UTC para que coincida con lo agendado)
-            document.getElementById('citaDate').textContent = citaDate.toLocaleDateString('es-PE', { 
-                day: 'numeric', month: 'long', timeZone: 'UTC' 
-            });
-            document.getElementById('citaTime').textContent = citaDate.toLocaleTimeString('es-PE', { 
-                hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'UTC' 
-            });
+            document.getElementById('citaDate').textContent = citaDate.toLocaleDateString('es-PE', { day: 'numeric', month: 'long', timeZone: 'UTC' });
+            document.getElementById('citaTime').textContent = citaDate.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'UTC' });
 
         } else {
             document.getElementById('nextCitaCard').style.display = 'none';
             document.getElementById('emptyCita').style.display = 'block';
         }
     }
-</script>
+
+    function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
+    async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
+    
+    // Iniciar
+    initDashboard();
+  </script>
 </body>
 </html>
