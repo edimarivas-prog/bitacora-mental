@@ -44,7 +44,7 @@ window.checkSession = async function() {
         
         return null;
     }
-}; // <--- ESTA LLAVE Y PUNTO Y COMA ERAN LOS QUE FALTABAN
+}; 
 
 // 3. Función Anti-XSS (Limpia texto malicioso)
 window.sanitize = function(str) {
@@ -80,4 +80,40 @@ window.checkRateLimit = function(action) {
     // Registrar nuevo intento
     history.push(now);
     localStorage.setItem(key, JSON.stringify(history));
+};
+
+
+// 6. SISTEMA DE CACHÉ (Optimización de Rendimiento)
+// Guarda datos en el navegador por 5 minutos para no saturar la base de datos
+window.CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
+
+window.fetchWithCache = async function(key, fetchFn) {
+    const cached = localStorage.getItem(key);
+    
+    if (cached) {
+        try {
+            const { data, timestamp } = JSON.parse(cached);
+            // Si el dato es fresco (menor a 5 min), úsalo
+            if (Date.now() - timestamp < window.CACHE_DURATION) {
+                console.log(`⚡ Usando caché para: ${key}`);
+                return data;
+            }
+        } catch (e) {
+            console.warn("Error leyendo caché", e);
+        }
+    }
+    
+    // Si no hay caché o expiró, busca en la DB
+    console.log(`🌐 Buscando en red: ${key}`);
+    const data = await fetchFn();
+    
+    // Guardar para la próxima
+    if (data) {
+        localStorage.setItem(key, JSON.stringify({
+            data,
+            timestamp: Date.now()
+        }));
+    }
+    
+    return data;
 };
