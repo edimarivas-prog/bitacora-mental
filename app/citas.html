@@ -108,7 +108,6 @@
         const { data: { session } } = await window.sb.auth.getSession();
         if (!session) window.location.replace('../login.html');
         else {
-            // Cargar nombre para el link de Jitsi
             const { data: profile } = await window.sb.from('users_profile').select('nombre').eq('id', session.user.id).single();
             const userName = profile?.nombre || 'Paciente';
             loadCitas(session.user.id, userName);
@@ -118,28 +117,21 @@
 
     async function loadCitas(userId, userName) {
         const list = document.getElementById('citasList');
-        
-        // CORRECCIÓN 1: Filtro de fecha para evitar problemas de zona horaria
-        const now = new Date();
-        now.setHours(now.getHours() - 2); 
+        const searchTime = new Date(new Date().getTime() - 2 * 60 * 60 * 1000); 
 
-        // CORRECCIÓN 2: Consulta correcta (users_profile y estado != cancelada)
         const { data: citas, error } = await window.sb
             .from('citas')
-            .select(`
-                *, 
-                psicologo:psicologo_id ( nombre )
-            `)
+            .select(`*, psicologo:psicologo_id ( nombre )`)
             .eq('paciente_id', userId)
-            .neq('estado', 'cancelada') // Trae pendientes y confirmadas
-            .gte('fecha_hora', now.toISOString())
+            .neq('estado', 'cancelada')
+            .gte('fecha_hora', searchTime.toISOString())
             .order('fecha_hora', {ascending: true});
 
         document.getElementById('loadingCitas').style.display = 'none';
 
         if (error) {
             console.error(error);
-            list.innerHTML = '<p style="color:red; text-align:center;">Error al cargar citas.</p>';
+            list.innerHTML = '<p style="color:red; text-align:center;">Error al cargar.</p>';
             return;
         }
 
@@ -152,83 +144,54 @@
             return;
         }
 
-        list.innerHTML = list.innerHTML = citas.map(c => {
-        const date = new Date(c.fecha_hora);
-        const nombreDoc = c.psicologo ? c.psicologo.nombre : 'Especialista';
-        
-        // --- CORRECCIÓN DE HORA Y FECHA ---
-        // Usamos 'timeZone: UTC' para que muestre la hora exacta de la base de datos sin restarle 5 horas.
-        const fechaVisual = date.toLocaleDateString('es-PE', {
-            weekday: 'long', 
-            day: 'numeric', 
-            month: 'long', 
-            timeZone: 'UTC' 
-        });
-        
-        const horaVisual = date.toLocaleTimeString('es-PE', {
-            hour: '2-digit', 
-            minute: '2-digit', 
-            hour12: true, 
-            timeZone: 'UTC' 
-        });
-        // ----------------------------------
-
-        const jitsiLink = `../pro/sesion-live.html?room=${c.link_reunion}&patient=${userName}`;
-
-        return `
-        <div class="cita-card">
-            <div class="cita-info">
-                <h3>${nombreDoc}</h3>
-                <div class="cita-meta">
-                    <span><i class="far fa-calendar"></i> ${fechaVisual}</span>
-                    <span><i class="far fa-clock"></i> ${horaVisual}</span>
-                    
-                    <span style="background:${c.estado === 'confirmada' ? '#DCFCE7' : '#FEF3C7'}; color:${c.estado === 'confirmada' ? '#166534' : '#B45309'}; padding:2px 8px; border-radius:10px; font-size:0.75rem; text-transform:uppercase; font-weight:700;">${c.estado}</span>
-                </div>
-            </div>
-            <div class="cita-actions">
-                <button class="btn-cancel" onclick="cancelCita('${c.id}')">Cancelar</button>
-                <a href="${jitsiLink}" class="btn-join"><i class="fas fa-video"></i> Unirse</a>
-            </div>
-        </div>`;
-    }).join('');(c => {
+        list.innerHTML = citas.map(c => {
             const date = new Date(c.fecha_hora);
             const nombreDoc = c.psicologo ? c.psicologo.nombre : 'Especialista';
             
-            // CORRECCIÓN 3: Link correcto a nuestra sala
-            const jitsiLink = `../pro/sesion-live.html?room=${c.link_reunion}&patient=${userName}`;
+            // Visual Date
+            const fechaVisual = date.toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
+            const horaVisual = date.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'UTC' });
+
+            // Lógica 10 Minutos
+            const diffMins = Math.floor((date - new Date()) / 60000);
+            
+            let btnJoinHTML = '';
+            const urlSala = `../pro/sesion-live.html?room=${c.link_reunion}&patient=${userName}`;
+
+            if (diffMins > 10) {
+                btnJoinHTML = `
+                <span class="btn-join" style="background:#F1F5F9; color:#94A3B8; cursor:not-allowed;" title="Abre 10 min antes">
+                    <i class="fas fa-lock"></i> Espera
+                </span>`;
+            } else {
+                btnJoinHTML = `
+                <a href="${urlSala}" class="btn-join">
+                    <i class="fas fa-video"></i> Unirse
+                </a>`;
+            }
 
             return `
             <div class="cita-card">
                 <div class="cita-info">
                     <h3>${nombreDoc}</h3>
                     <div class="cita-meta">
-                        <span><i class="far fa-calendar"></i> ${date.toLocaleDateString('es-PE', {weekday:'long', day:'numeric', month:'long'})}</span>
-                        <span><i class="far fa-clock"></i> ${date.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+                        <span><i class="far fa-calendar"></i> ${fechaVisual}</span>
+                        <span><i class="far fa-clock"></i> ${horaVisual}</span>
                         <span style="background:${c.estado === 'confirmada' ? '#DCFCE7' : '#FEF3C7'}; color:${c.estado === 'confirmada' ? '#166534' : '#B45309'}; padding:2px 8px; border-radius:10px; font-size:0.75rem; text-transform:uppercase; font-weight:700;">${c.estado}</span>
                     </div>
                 </div>
                 <div class="cita-actions">
                     <button class="btn-cancel" onclick="cancelCita('${c.id}')">Cancelar</button>
-                    <a href="${jitsiLink}" class="btn-join"><i class="fas fa-video"></i> Unirse</a>
+                    ${btnJoinHTML}
                 </div>
             </div>`;
         }).join('');
     }
 
     async function cancelCita(id) {
-        if(!confirm("¿Seguro que deseas cancelar esta cita?")) return;
-        
-        const { error } = await window.sb.from('citas')
-            .update({ estado: 'cancelada' })
-            .eq('id', id);
-
-        if(!error) {
-            alert("Cita cancelada.");
-            location.reload();
-        } else {
-            alert("Error al cancelar.");
-        }
+        if(!confirm("¿Seguro que deseas cancelar?")) return;
+        const { error } = await window.sb.from('citas').update({ estado: 'cancelada' }).eq('id', id);
+        if(!error) location.reload();
     }
 
     function showTab(tab) {
@@ -236,20 +199,17 @@
         event.target.classList.add('active');
         document.getElementById('proximas').style.display = tab === 'proximas' ? 'block' : 'none';
         document.getElementById('historial').style.display = tab === 'historial' ? 'block' : 'none';
-        
         if(tab === 'historial') loadHistorial();
     }
 
-    // Cargar Historial (Citas pasadas o canceladas)
     async function loadHistorial() {
         const { data: { user } } = await window.sb.auth.getSession();
         const container = document.getElementById('historial');
-        
         const { data: historial } = await window.sb
             .from('citas')
             .select(`*, psicologo:psicologo_id ( nombre )`)
             .eq('paciente_id', user.id)
-            .or(`estado.eq.cancelada,estado.eq.realizada,fecha_hora.lt.${new Date().toISOString()}`)
+            .or(`estado.eq.cancelada,estado.eq.realizada`)
             .order('fecha_hora', {ascending: false})
             .limit(10);
 
