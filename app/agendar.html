@@ -39,7 +39,7 @@
         .mobile-nav { display: flex; } 
     }
 
-    /* -- ESTILOS DE RESERVA -- */
+    /* --- ESTILOS DE RESERVA --- */
     .step-section { display: none; animation: fadeIn 0.4s ease; }
     .step-section.active { display: block; }
 
@@ -86,8 +86,6 @@
     .time-btn { padding: 10px; border: 1px solid var(--border); border-radius: 10px; background: white; cursor: pointer; text-align: center; transition: 0.2s; }
     .time-btn:hover { border-color: var(--primary); color: var(--primary); }
     .time-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
-    
-    /* Estilos para estado bloqueado/pasado */
     .time-btn.disabled { background: #F1F5F9; color: #CBD5E1; pointer-events: none; border-color: #E2E8F0; }
 
     .btn-confirm { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1.1rem; margin-top: 20px; cursor: pointer; transition: 0.2s; }
@@ -105,28 +103,25 @@
 
   <aside class="sidebar" id="sidebar">
     <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
-    
     <div class="nav-section">
       <div class="nav-title">Principal</div>
       <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
-      <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
+      <a href="citas.html" class="nav-item active"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
       <a href="especialistas.html" class="nav-item"><i class="fas fa-user-md"></i> Especialistas</a>
     </div>
-
     <div class="nav-section">
       <div class="nav-title">Tu Espacio</div>
       <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> Diario</a>
       <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> Progreso</a>
       <a href="recursos.html" class="nav-item"><i class="fas fa-box-open"></i> Recursos</a>
     </div>
-
     <div class="nav-section">
       <div class="nav-title">Cuenta</div>
       <a href="plan.html" class="nav-item"><i class="fas fa-crown"></i> Mi Plan</a>
       <a href="configuracion.html" class="nav-item"><i class="fas fa-cog"></i> Configuración</a>
       <a href="#" onclick="logout()" class="nav-item" style="color:#EF4444"><i class="fas fa-sign-out-alt"></i> Salir</a>
     </div>
-</aside>
+  </aside>
 
   <main class="main">
     
@@ -188,20 +183,20 @@
     let currentMonth = new Date();
     let selectedDate = null;
     let selectedTime = null;
-    let docSchedule = []; // Días activos (1, 3, 5)
-    let docBlocks = [];   // Bloqueos
+    let docSchedule = [];
+    let docBlocks = [];
 
     function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
     async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
 
-    // 1. CARGAR DOCTORES
-    aasync function init() {
-        // 🔒 SEGURIDAD (Opcional al cargar, pero recomendado)
+    // 1. CARGAR (CON SEGURIDAD)
+    async function init() {
+        if (!window.sb) return setTimeout(init, 100);
+        
         const user = await window.checkSession();
         if (!user) return;
 
-        // Cargar doctores...
-        const { data: doctors } = await window.sb.from('users_profile').select('*').eq('rol', 'psicologo');
+        const { data: doctors } = await window.sb
             .from('users_profile')
             .select('*')
             .eq('rol', 'psicologo');
@@ -213,11 +208,14 @@
             allDoctors = doctors;
             
             grid.innerHTML = doctors.map((doc, index) => {
-                let tagsHtml = '';
+                const safeName = window.sanitize(doc.nombre);
+                const safeHeadline = window.sanitize(doc.headline || 'Especialista');
+                const safeBio = window.sanitize(doc.bio || 'Sin info.');
+                
+                // Tags
+                let tagsHtml = '<span class="tag">General</span>';
                 if(doc.especialidades && doc.especialidades.length > 0) {
-                    tagsHtml = doc.especialidades.slice(0, 3).map(tag => `<span class="tag">${tag}</span>`).join('');
-                } else {
-                    tagsHtml = `<span class="tag">Psicología General</span>`;
+                    tagsHtml = doc.especialidades.slice(0, 3).map(tag => `<span class="tag">${window.sanitize(tag)}</span>`).join('');
                 }
 
                 return `
@@ -225,13 +223,11 @@
                     <div class="doc-header">
                         <img src="${doc.avatar_url || 'https://via.placeholder.com/150'}" class="doc-avatar">
                         <div class="doc-info">
-                            <h3>${doc.nombre}</h3>
-                            <div class="doc-headline">${doc.headline || 'Especialista en Salud Mental'}</div>
+                            <h3>${safeName}</h3>
+                            <div class="doc-headline">${safeHeadline}</div>
                         </div>
                     </div>
-                    <div class="doc-bio">
-                        ${doc.bio || 'Sin biografía disponible. Profesional verificado.'}
-                    </div>
+                    <div class="doc-bio">${safeBio}</div>
                     <div class="tags-container">${tagsHtml}</div>
                     <div class="doc-footer">
                         <span class="price-tag">S/ ${doc.precio_consulta || 80}</span>
@@ -252,7 +248,7 @@
         selectedDoc = allDoctors[index];
         document.getElementById('calDocName').textContent = `Agenda de ${selectedDoc.nombre}`;
         
-        // Cargar Horario Base
+        // Cargar Horario
         const { data: schedule } = await window.sb
             .from('horarios_profesionales')
             .select('dia_semana')
@@ -286,7 +282,7 @@
         document.getElementById('slotsSection').style.display = 'none';
     }
 
-    // 3. RENDERIZAR CALENDARIO
+    // 3. CALENDARIO
     function renderCalendar() {
         const grid = document.getElementById('calendarDays');
         const label = document.getElementById('monthLabel');
@@ -305,18 +301,15 @@
         today.setHours(0,0,0,0);
         
         const maxDate = new Date();
-        maxDate.setDate(today.getDate() + 30);
-        maxDate.setHours(23,59,59,999);
+        maxDate.setDate(today.getDate() + 30); // Max 30 días vista
 
         for (let i = 0; i < firstDay; i++) grid.innerHTML += `<div class="day-cell empty"></div>`;
 
         for (let day = 1; day <= daysInMonth; day++) {
             const dateStr = `${year}-${(month+1).toString().padStart(2,'0')}-${day.toString().padStart(2,'0')}`;
-            // Crear fecha local para evitar líos de zona horaria en el calendario
-            const cellDate = new Date(year, month, day);
+            const cellDate = new Date(year, month, day); // Fecha Local
             
-            let dayOfWeekDB = cellDate.getDay(); 
-            if(dayOfWeekDB === 0) dayOfWeekDB = 7;
+            let dayOfWeekDB = cellDate.getDay(); if(dayOfWeekDB === 0) dayOfWeekDB = 7;
 
             const cell = document.createElement('div');
             cell.className = 'day-cell';
@@ -332,20 +325,14 @@
                 return cellDate >= start && cellDate <= end;
             });
 
-            if (isPast) {
-                cell.classList.add('disabled');
-            } else if (isTooFar) {
-                cell.classList.add('disabled');
-                cell.style.opacity = '0.3';
-            } else if (isBlockedRange) {
-                cell.classList.add('disabled');
-                cell.style.backgroundColor = '#FEF2F2'; 
-            } else if (isBaseDay) {
+            if (isPast) cell.classList.add('disabled');
+            else if (isTooFar) { cell.classList.add('disabled'); cell.style.opacity = '0.3'; }
+            else if (isBlockedRange) { cell.classList.add('disabled'); cell.style.backgroundColor = '#FEF2F2'; }
+            else if (isBaseDay) {
                 cell.classList.add('available');
                 cell.onclick = () => selectDate(dateStr, cell);
             } else {
-                cell.classList.add('disabled');
-                cell.style.opacity = '0.5';
+                cell.classList.add('disabled'); cell.style.opacity = '0.5';
             }
 
             grid.appendChild(cell);
@@ -357,7 +344,7 @@
         renderCalendar();
     }
 
-    // 4. SELECCIONAR FECHA Y HORAS (CON VALIDACIÓN 2 HORAS)
+    // 4. HORARIOS (CON VALIDACIÓN 2 HORAS)
     function selectDate(dateStr, cellEl) {
         document.querySelectorAll('.day-cell').forEach(c => c.classList.remove('selected'));
         cellEl.classList.add('selected');
@@ -375,12 +362,9 @@
         msg.textContent = '';
         document.getElementById('btnConfirm').disabled = true;
 
-        // Construir fecha local
         const [y, m, d_str] = dateVal.split('-');
         const dateObj = new Date(y, m-1, d_str);
-        
-        let dayOfWeek = dateObj.getDay(); 
-        if(dayOfWeek === 0) dayOfWeek = 7;
+        let dayOfWeek = dateObj.getDay(); if(dayOfWeek === 0) dayOfWeek = 7;
 
         // Horario Base
         const { data: config } = await window.sb.from('horarios_profesionales')
@@ -396,14 +380,11 @@
             .lte('fecha_hora', dateVal + 'T23:59:59')
             .neq('estado', 'cancelada');
 
-        const occupied = citas.map(c => {
-            // Extraer hora limpia HH:mm
-            return c.fecha_hora.split('T')[1].substring(0,5);
-        });
+        const occupied = citas.map(c => c.fecha_hora.split('T')[1].substring(0,5));
 
-        // --- LÓGICA DE VALIDACIÓN DE 2 HORAS ---
+        // --- VALIDACIÓN 2 HORAS ---
         const now = new Date();
-        const bufferTime = 2 * 60 * 60 * 1000; // 2 horas en milisegundos
+        const bufferTime = 2 * 60 * 60 * 1000;
 
         let html = '';
         let availableCount = 0;
@@ -415,23 +396,17 @@
                 
                 for(let h=start; h<end; h++) {
                     const timeStr = h.toString().padStart(2,'0') + ':00';
-                    
-                    // Crear objeto Fecha para este slot específico
                     const slotDate = new Date(y, m-1, d_str, h, 0, 0); 
                     
-                    // Validar si está en el pasado o dentro de las 2 horas
                     const diff = slotDate - now;
-                    const isTooSoon = diff < bufferTime; // Si faltan menos de 2 horas (o es pasado)
-
+                    const isTooSoon = diff < bufferTime;
                     const isTaken = occupied.includes(timeStr);
 
                     if(isTaken) {
                         html += `<div class="time-btn disabled" title="Ocupado">${timeStr}</div>`;
                     } else if (isTooSoon) {
-                        // Bloquear por margen de tiempo
-                        html += `<div class="time-btn disabled" style="opacity:0.6; cursor:not-allowed;" title="Muy pronto (min 2h)">${timeStr}</div>`;
+                        html += `<div class="time-btn disabled" style="opacity:0.6; cursor:not-allowed;" title="Cerrado (min 2h)">${timeStr}</div>`;
                     } else {
-                        // Disponible
                         html += `<div class="time-btn" onclick="selectTime('${timeStr}', this)">${timeStr}</div>`;
                         availableCount++;
                     }
@@ -439,8 +414,8 @@
             });
         }
         
-        grid.innerHTML = html || 'No hay horarios configurados.';
-        if(availableCount === 0) msg.textContent = "No hay cupos disponibles para hoy (o ya pasaron).";
+        grid.innerHTML = html || 'No hay horarios.';
+        if(availableCount === 0) msg.textContent = "No hay cupos disponibles (o ya cerraron).";
     }
 
     function selectTime(time, el) {
@@ -452,44 +427,48 @@
         btn.textContent = `Confirmar Reserva (${selectedTime})`;
     }
 
-    // 5. CONFIRMAR
+    // 5. CONFIRMAR (CON SEGURIDAD RPC)
     async function confirmBooking() {
         const btn = document.getElementById('btnConfirm');
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Validando...';
         btn.disabled = true;
 
         try {
-            // 🔒 SEGURIDAD: Verificar sesión justo antes de pagar/reservar
+            // Verificar sesión antes de pagar/reservar
             const user = await window.checkSession();
-            if (!user) throw new Error("Sesión expirada. Inicia sesión nuevamente.");
+            if (!user) throw new Error("Sesión perdida.");
 
             const finalDate = `${selectedDate}T${selectedTime}:00`;
             const price = parseFloat(selectedDoc.precio_consulta || 80);
+            const linkSecure = 'Sala-' + crypto.randomUUID(); // Link único
 
-            const { error } = await window.sb.from('citas').insert({
-                paciente_id: user.id,
-                psicologo_id: selectedDoc.id,
-                fecha_hora: finalDate,
-                estado: 'pendiente',
-                link_reunion: 'Sala-' + Date.now().toString().substring(8),
-                costo: price
-            });
-            if(error) throw error;
-
-            await window.sb.from('finanzas_wallet').insert({
-                psicologo_id: selectedDoc.id,
-                concepto: 'Sesión Terapéutica',
-                monto_total: price,
-                comision: price*0.2,
-                monto_neto: price*0.8,
-                estado: 'pendiente'
+            // LLAMADA A LA FUNCIÓN SEGURA EN EL SERVIDOR (RPC)
+            // Esto valida saldo, crea cita y resta sesión en UNA sola transacción
+            const { error } = await window.sb.rpc('book_appointment_secure', {
+                p_psicologo_id: selectedDoc.id,
+                p_fecha_hora: finalDate,
+                p_link: linkSecure,
+                p_costo: price
             });
 
-            alert("¡Reserva exitosa!");
+            if(error) {
+                // Si el error es de saldo, lo atrapamos
+                if(error.message.includes("Saldo insuficiente")) {
+                    if(confirm("No tienes sesiones disponibles en tu plan. ¿Deseas recargar?")) {
+                        window.location.href = 'plan.html';
+                    }
+                } else {
+                    throw error;
+                }
+                return;
+            }
+
+            alert("¡Reserva confirmada exitosamente!");
             window.location.href = 'dashboard.html';
 
         } catch (e) {
-            alert("Error: " + e.message);
+            console.error(e);
+            alert("Error: " + (e.message || "No se pudo agendar."));
             btn.disabled = false;
             btn.textContent = "Reintentar";
         }
