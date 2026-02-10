@@ -459,7 +459,10 @@
         btn.disabled = true;
 
         try {
-            const { data: { user } } = await window.sb.auth.getUser();
+            // 🔒 SEGURIDAD: Verificar sesión justo antes de pagar/reservar
+            const user = await window.checkSession();
+            if (!user) throw new Error("Sesión expirada. Inicia sesión nuevamente.");
+
             const finalDate = `${selectedDate}T${selectedTime}:00`;
             const price = parseFloat(selectedDoc.precio_consulta || 80);
 
