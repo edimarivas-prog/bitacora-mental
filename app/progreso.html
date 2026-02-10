@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* Estilos Maestros */
+    /* Estilos Maestros (Intactos) */
     :root { --primary: #4F6F52; --primary-light: #E8F5E9; --accent: #F59E0B; --bg: #F9FBFA; --white: #FFFFFF; --text: #1F2933; --text-soft: #64748B; --border: #E6EFE8; --radius: 20px; --shadow: 0 4px 20px rgba(0,0,0,0.06); }
     * { box-sizing: border-box; }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
@@ -134,17 +134,19 @@
     init();
 
     async function loadRealStats(uid) {
-        // 1. CARGAR DATOS (CORREGIDO: 'diario_entries' y 'fecha')
+        // CORRECCIÓN 1: Tabla 'diario_emocional' con 'user_id'
         const { data: diario } = await window.sb
-            .from('diario_entries')
-            .select('fecha, id')
-            .eq('user_id', uid);
+            .from('diario_emocional')
+            .select('*') 
+            .eq('user_id', uid); // Antes fallaba con paciente_id
 
+        // CORRECCIÓN 2: Tabla 'monitoreo_sintomas' con 'user_id'
+        // Si no tienes 'monitoreo_sintomas', las gráficas se llenarán solo con datos del diario
         const { data: pulsos } = await window.sb
             .from('monitoreo_sintomas')
-            .select('nivel_animo, fecha_realizado')
-            .eq('paciente_id', uid)
-            .order('fecha_realizado', { ascending: true });
+            .select('*')
+            .eq('user_id', uid) // Antes fallaba con paciente_id
+            .order('created_at', { ascending: true }); // Usamos created_at por defecto
 
         // 2. CALCULAR ESTADÍSTICAS
         const totalDiario = diario ? diario.length : 0;
@@ -158,10 +160,17 @@
             avgAnimo = "--";
         }
 
-        // Días Activos (Unique dates)
+        // Días Activos (Calculamos fechas únicas)
         const allDates = new Set();
-        if(diario) diario.forEach(d => allDates.add(d.fecha.split('T')[0])); // CORREGIDO: d.fecha
-        if(pulsos) pulsos.forEach(p => allDates.add(p.fecha_realizado.split('T')[0]));
+        
+        // Helper para sacar fecha segura
+        const getDateStr = (obj) => {
+            const dateVal = obj.fecha || obj.fecha_creacion || obj.created_at || obj.fecha_realizado;
+            return dateVal ? dateVal.split('T')[0] : null;
+        };
+
+        if(diario) diario.forEach(d => { const dt = getDateStr(d); if(dt) allDates.add(dt); });
+        if(pulsos) pulsos.forEach(p => { const dt = getDateStr(p); if(dt) allDates.add(dt); });
         
         // Renderizar Textos
         document.getElementById('statDiario').textContent = totalDiario;
@@ -170,7 +179,11 @@
 
         // 3. GRÁFICO DE LÍNEA (Evolución Ánimo)
         const moodCtx = document.getElementById('moodChart').getContext('2d');
-        const labelsMood = pulsos ? pulsos.map(p => new Date(p.fecha_realizado).toLocaleDateString('es-PE', {day:'numeric', month:'short'})) : [];
+        
+        const labelsMood = pulsos ? pulsos.map(p => {
+            const d = getDateStr(p);
+            return d ? new Date(d).toLocaleDateString('es-PE', {day:'numeric', month:'short'}) : '';
+        }) : [];
         const dataMood = pulsos ? pulsos.map(p => p.nivel_animo) : [];
 
         new Chart(moodCtx, {
@@ -199,24 +212,22 @@
             }
         });
 
-        // 4. GRÁFICO DE BARRAS (Consistencia por Día de Semana)
+        // 4. GRÁFICO DE BARRAS (Consistencia Semanal)
         const dayCounts = [0, 0, 0, 0, 0, 0, 0]; 
         
-        // Contamos entradas de diario (usando 'fecha')
-        if(diario) diario.forEach(d => {
-            // Nota: d.fecha puede ser '2026-02-04 19:55...' o '2026-02-04'
-            // Forzamos interpretación correcta de fecha
-            const day = new Date(d.fecha).getDay(); 
-            // Manejo de error si la fecha es inválida
-            if(!isNaN(day)) dayCounts[day]++;
-        });
-        
-        if(pulsos) pulsos.forEach(p => {
-            const day = new Date(p.fecha_realizado).getDay();
-            if(!isNaN(day)) dayCounts[day]++;
-        });
+        const countDay = (obj) => {
+            const dateStr = getDateStr(obj);
+            if(dateStr) {
+                // Truco: Agregar 'T00:00' para evitar desfase de zona horaria al hacer getDay
+                const day = new Date(dateStr + 'T00:00:00').getDay();
+                dayCounts[day]++;
+            }
+        };
 
-        // Reordenar para empezar en Lunes (Lun, Mar... Dom)
+        if(diario) diario.forEach(countDay);
+        if(pulsos) pulsos.forEach(countDay);
+
+        // Reordenar para empezar en Lunes (Lun...Dom)
         const orderedData = [
             dayCounts[1], // Lun
             dayCounts[2], // Mar
