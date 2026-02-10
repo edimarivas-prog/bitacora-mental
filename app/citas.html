@@ -36,8 +36,14 @@
     .cita-info h3 { margin: 0 0 5px 0; font-family: 'Outfit'; font-size: 1.2rem; }
     .cita-meta { display: flex; gap: 15px; color: var(--text-soft); font-size: 0.9rem; align-items: center; }
     .cita-actions { display: flex; gap: 10px; }
-    .btn-join { background: var(--primary-light); color: var(--primary); padding: 8px 16px; border-radius: 10px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; }
+    
+    /* Botones */
+    .btn-join { background: var(--primary-light); color: var(--primary); padding: 8px 16px; border-radius: 10px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; border: none; cursor: pointer; font-size: 1rem; }
+    .btn-join:hover { background: #DCFCE7; }
     .btn-cancel { background: #FEF2F2; color: #DC2626; padding: 8px 16px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; }
+    
+    /* Estado bloqueado */
+    .btn-join.disabled { background: #F1F5F9; color: #94A3B8; cursor: not-allowed; }
 
     /* Empty State */
     .empty-state { text-align: center; padding: 40px; color: var(--text-soft); }
@@ -52,28 +58,25 @@
 
   <aside class="sidebar" id="sidebar">
     <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
-    
     <div class="nav-section">
       <div class="nav-title">Principal</div>
       <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
-      <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
+      <a href="citas.html" class="nav-item active"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
       <a href="especialistas.html" class="nav-item"><i class="fas fa-user-md"></i> Especialistas</a>
     </div>
-
     <div class="nav-section">
       <div class="nav-title">Tu Espacio</div>
       <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> Diario</a>
       <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> Progreso</a>
       <a href="recursos.html" class="nav-item"><i class="fas fa-box-open"></i> Recursos</a>
     </div>
-
     <div class="nav-section">
       <div class="nav-title">Cuenta</div>
       <a href="plan.html" class="nav-item"><i class="fas fa-crown"></i> Mi Plan</a>
       <a href="configuracion.html" class="nav-item"><i class="fas fa-cog"></i> Configuración</a>
       <a href="#" onclick="logout()" class="nav-item" style="color:#EF4444"><i class="fas fa-sign-out-alt"></i> Salir</a>
     </div>
-</aside>
+  </aside>
 
   <main class="main">
     <div class="header-actions">
@@ -106,22 +109,17 @@
   <script src="../js/supabase-config.js"></script>
   <script>
     async function checkAuth() {
-        // 🔒 SEGURIDAD
-        const user = await window.checkSession();
-        if (!user) return;
-
-        // Lógica
-        let userName = 'Paciente';
-        const { data: profile } = await window.sb.from('users_profile').select('nombre').eq('id', user.id).single();
+        if (!window.sb) { setTimeout(checkAuth, 100); return; }
         
-        if (profile?.nombre) userName = profile.nombre;
-        else if (user.user_metadata?.full_name) userName = user.user_metadata.full_name;
+        // 🔒 Seguridad Centralizada
+        const user = await window.checkSession();
+        if (!user) return; // checkSession redirige si falla
 
-        loadCitas(user.id, userName);
+        loadCitas(user.id);
     }
     checkAuth();
 
-    async function loadCitas(userId, userName) {
+    async function loadCitas(userId) {
         const list = document.getElementById('citasList');
         const searchTime = new Date(new Date().getTime() - 2 * 60 * 60 * 1000).toISOString(); 
 
@@ -151,53 +149,47 @@
         }
 
         list.innerHTML = citas.map(c => {
-            // --- TRUCO HORA PERÚ (PARSEO LITERAL) ---
+            // Manejo de Fechas (Literal Perú)
             const rawDate = c.fecha_hora; 
             const datePart = rawDate.split('T')[0];
-            const timePart = rawDate.split('T')[1].split('+')[0].split('Z')[0]; // Limpiamos Z o +00
-            
+            const timePart = rawDate.split('T')[1].split('+')[0].split('Z')[0];
             const [y, m, d] = datePart.split('-');
             const [hh, mm] = timePart.split(':');
-
-            // Creamos fecha local exacta
             const date = new Date(y, m - 1, d, hh, mm); 
             
             const nombreDoc = c.psicologo ? c.psicologo.nombre : 'Especialista';
-            
-            // Visualización
             const fechaVisual = date.toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
             const horaVisual = date.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: true });
 
-            // Cálculo diferencia (10 min)
+            // Lógica 10 Minutos
             const diffMs = date - new Date();
             const diffMins = Math.floor(diffMs / 60000);
             
-            let btnJoinHTML = '';
-            const urlSala = `../pro/sesion-live.html?room=${c.link_reunion}&patient=${userName}`;
+            let btnActionHTML = '';
 
             if (diffMins > 10) {
-                // Cálculo horas para mostrar
-                let timeText = diffMins > 60 ? `en ${Math.floor(diffMins/60)}h` : `en ${diffMins} min`;
-                
-                btnJoinHTML = `
-                <span class="btn-join" style="background:#F1F5F9; color:#94A3B8; cursor:not-allowed;" title="Abre 10 min antes">
+                // Faltan más de 10 min -> Bloqueado
+                const timeText = diffMins > 60 ? `en ${Math.floor(diffMins/60)}h` : `en ${diffMins} min`;
+                btnActionHTML = `
+                <button class="btn-join disabled" disabled title="La sala abre 10 min antes">
                     <i class="fas fa-lock"></i> Abre ${timeText}
-                </span>`;
+                </button>`;
             } else if (diffMins < -60) {
-                // Pasó 1 hora
-                btnJoinHTML = `<span style="color:#64748B; font-size:0.8rem; font-weight:600;">Finalizada</span>`;
+                // Pasó 1 hora -> Finalizada
+                btnActionHTML = `<span style="color:#64748B; font-size:0.8rem; font-weight:600;">Finalizada</span>`;
             } else {
-                // Disponible
-                btnJoinHTML = `
-                <a href="${urlSala}" class="btn-join">
+                // Disponible -> Botón Activo (genera token al hacer click)
+                // 🔒 SEGURIDAD: Ya no pasamos datos en URL, usamos joinSession
+                btnActionHTML = `
+                <button onclick="joinSession('${c.id}')" class="btn-join">
                     <i class="fas fa-video"></i> Unirse
-                </a>`;
+                </button>`;
             }
 
             return `
             <div class="cita-card">
                 <div class="cita-info">
-                    <h3>${nombreDoc}</h3>
+                    <h3>${window.sanitize(nombreDoc)}</h3>
                     <div class="cita-meta">
                         <span><i class="far fa-calendar"></i> ${fechaVisual}</span>
                         <span><i class="far fa-clock"></i> ${horaVisual}</span>
@@ -206,10 +198,46 @@
                 </div>
                 <div class="cita-actions">
                     ${diffMins > 0 ? `<button class="btn-cancel" onclick="cancelCita('${c.id}')">Cancelar</button>` : ''}
-                    ${btnJoinHTML}
+                    ${btnActionHTML}
                 </div>
             </div>`;
         }).join('');
+    }
+
+    // 🔒 3. FUNCIÓN DE SEGURIDAD PARA UNIRSE
+    async function joinSession(citaId) {
+        // UI Feedback
+        const btn = event.currentTarget; // El botón que se clickeó
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
+        btn.disabled = true;
+
+        try {
+            const user = await window.checkSession();
+            if (!user) return;
+
+            // Generar ID de sesión efímero
+            const sessionId = crypto.randomUUID();
+            
+            // Insertar en tabla de seguridad
+            const { error } = await window.sb.from('sesiones_activas').insert({
+                session_id: sessionId,
+                cita_id: citaId,
+                user_id: user.id,
+                expires_at: new Date(Date.now() + 2 * 60 * 60 * 1000) // Expira en 2 horas
+            });
+
+            if (error) throw error;
+
+            // Redirigir SOLO con el token
+            window.location.href = `../pro/sesion-live.html?session=${sessionId}`;
+
+        } catch (e) {
+            console.error(e);
+            alert("Error de conexión segura. Intente nuevamente.");
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
     }
 
     async function cancelCita(id) {
@@ -227,7 +255,7 @@
     }
 
     async function loadHistorial() {
-        const { data: { user } } = await window.sb.auth.getSession();
+        const user = await window.checkSession();
         const container = document.getElementById('historial');
         const { data: historial } = await window.sb
             .from('citas')
@@ -242,7 +270,7 @@
         container.innerHTML = historial.map(c => `
             <div class="cita-card" style="border-left:5px solid #CBD5E1; opacity:0.8;">
                 <div class="cita-info">
-                    <h3 style="color:#64748B">${c.psicologo?.nombre || 'Especialista'}</h3>
+                    <h3 style="color:#64748B">${window.sanitize(c.psicologo?.nombre || 'Especialista')}</h3>
                     <div class="cita-meta">
                         <span>${new Date(c.fecha_hora).toLocaleDateString()}</span>
                         <span style="text-transform:uppercase; font-weight:bold;">${c.estado}</span>
