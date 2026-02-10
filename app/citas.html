@@ -108,8 +108,12 @@
         const { data: { session } } = await window.sb.auth.getSession();
         if (!session) window.location.replace('../login.html');
         else {
+            // Nombre seguro (Fallback robusto)
+            let userName = 'Paciente';
             const { data: profile } = await window.sb.from('users_profile').select('nombre').eq('id', session.user.id).single();
-            const userName = profile?.nombre || 'Paciente';
+            if (profile && profile.nombre) userName = profile.nombre;
+            else if (session.user.user_metadata && session.user.user_metadata.full_name) userName = session.user.user_metadata.full_name;
+
             loadCitas(session.user.id, userName);
         }
     }
@@ -145,19 +149,24 @@
         }
 
         list.innerHTML = citas.map(c => {
-            // CORRECCIÓN ZONA HORARIA
-            let dateString = c.fecha_hora;
-            if (!dateString.includes('Z') && !dateString.includes('+')) {
-                dateString += 'Z';
-            }
-            const date = new Date(dateString);
+            // --- TRUCO HORA PERÚ (PARSEO LITERAL) ---
+            const rawDate = c.fecha_hora; 
+            const datePart = rawDate.split('T')[0];
+            const timePart = rawDate.split('T')[1].split('+')[0].split('Z')[0]; // Limpiamos Z o +00
+            
+            const [y, m, d] = datePart.split('-');
+            const [hh, mm] = timePart.split(':');
+
+            // Creamos fecha local exacta
+            const date = new Date(y, m - 1, d, hh, mm); 
+            
             const nombreDoc = c.psicologo ? c.psicologo.nombre : 'Especialista';
             
-            // Visual
-            const fechaVisual = date.toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
-            const horaVisual = date.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'UTC' });
+            // Visualización
+            const fechaVisual = date.toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
+            const horaVisual = date.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: true });
 
-            // Cálculo diferencia
+            // Cálculo diferencia (10 min)
             const diffMs = date - new Date();
             const diffMins = Math.floor(diffMs / 60000);
             
