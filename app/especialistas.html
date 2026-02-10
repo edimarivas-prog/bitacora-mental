@@ -107,8 +107,9 @@
     }
 
     async function init() {
-        if(!window.sb) return setTimeout(init, 100);
-        
+        // 🔒 SEGURIDAD
+        const user = await window.checkSession();
+        if (!user) return;
         // CONSULTA CORRECTA: Usamos 'users_profile' filtrando por rol
         const { data: doctors } = await window.sb
             .from('users_profile')
