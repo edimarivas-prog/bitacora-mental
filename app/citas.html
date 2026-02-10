@@ -4,47 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mis Citas - Bitácora Mental</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="../css/design-system.css">
+  
   <style>
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
-    .sidebar { width: 260px; background: var(--white); padding: 24px; border-right: 1px solid var(--border); position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s; }
-    .logo { font-family: 'Outfit'; font-weight: 700; color: var(--primary); font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 8px; margin-bottom: 30px; }
-    .nav-section { margin-bottom: 20px; }
-    .nav-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-soft); letter-spacing: 1px; margin-bottom: 10px; padding-left: 10px; font-weight: 700; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-soft); text-decoration: none; border-radius: 12px; font-weight: 500; transition: 0.2s; }
-    .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
-    .nav-item.active { font-weight: 600; }
-    .main { flex: 1; padding: 30px; margin-left: 260px; max-width: 100%; }
-    .mobile-nav { display: none; padding: 15px; background: white; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .menu-toggle { font-size: 1.5rem; background: none; border: none; color: var(--text); }
-    @media (max-width: 900px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main { margin-left: 0; padding: 20px; } .mobile-nav { display: flex; } }
-
-    /* Estilos Específicos Citas */
+    /* Estilos Locales Específicos */
     .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-    .btn-action { background: var(--primary); color: white; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
-    .btn-action:hover { background: #3E5A41; transform: translateY(-2px); }
-
+    
     .tabs { display: flex; gap: 20px; border-bottom: 1px solid var(--border); margin-bottom: 25px; }
-    .tab { padding: 10px 0; background: none; border: none; font-size: 1rem; color: var(--text-soft); cursor: pointer; border-bottom: 3px solid transparent; font-weight: 500; transition: 0.3s; }
+    .tab { padding: 10px 0; background: none; border: none; font-size: 1rem; color: var(--text-soft); cursor: pointer; border-bottom: 3px solid transparent; font-weight: 500; transition: 0.3s; font-family: var(--font-body); }
     .tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
 
-    .cita-card { background: white; padding: 24px; border-radius: var(--radius); margin-bottom: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border-left: 5px solid var(--primary); }
-    .cita-info h3 { margin: 0 0 5px 0; font-family: 'Outfit'; font-size: 1.2rem; }
+    .cita-card { background: white; padding: 24px; border-radius: var(--radius-xl); margin-bottom: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; box-shadow: var(--shadow-sm); border-left: 5px solid var(--primary); border: 1px solid var(--border); border-left-width: 5px; }
+    .cita-info h3 { margin: 0 0 5px 0; font-family: 'Outfit'; font-size: 1.2rem; color: var(--text); }
     .cita-meta { display: flex; gap: 15px; color: var(--text-soft); font-size: 0.9rem; align-items: center; }
     .cita-actions { display: flex; gap: 10px; }
     
-    /* Botones */
-    .btn-join { background: var(--primary-light); color: var(--primary); padding: 8px 16px; border-radius: 10px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; border: none; cursor: pointer; font-size: 1rem; }
-    .btn-join:hover { background: #DCFCE7; }
-    .btn-cancel { background: #FEF2F2; color: #DC2626; padding: 8px 16px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; }
-    
-    /* Estado bloqueado */
-    .btn-join.disabled { background: #F1F5F9; color: #94A3B8; cursor: not-allowed; }
-
-    /* Empty State */
     .empty-state { text-align: center; padding: 40px; color: var(--text-soft); }
     .empty-icon { font-size: 3rem; color: #E2E8F0; margin-bottom: 15px; }
   </style>
@@ -52,7 +29,7 @@
 <body>
   <div class="mobile-nav">
     <a href="#" class="logo" style="margin:0"><i class="fas fa-brain"></i> Bitácora</a>
-    <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
   </div>
 
   <aside class="sidebar" id="sidebar">
@@ -80,7 +57,7 @@
   <main class="main">
     <div class="header-actions">
       <h1 style="font-family:'Outfit'; margin:0;">Mis Sesiones</h1>
-      <a href="agendar.html" class="btn-action"><i class="fas fa-plus"></i> Agendar Cita</a>
+      <a href="agendar.html" class="btn btn-primary"><i class="fas fa-plus"></i> Agendar Cita</a>
     </div>
 
     <div class="tabs">
@@ -107,20 +84,21 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+    async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
+
     async function checkAuth() {
         if (!window.sb) { setTimeout(checkAuth, 100); return; }
-        
-        // 🔒 Seguridad Centralizada
         const user = await window.checkSession();
-        if (!user) return; // checkSession redirige si falla
-
+        if (!user) return; 
         loadCitas(user.id);
     }
     checkAuth();
 
     async function loadCitas(userId) {
         const list = document.getElementById('citasList');
-        const searchTime = new Date(new Date().getTime() - 2 * 60 * 60 * 1000).toISOString(); 
+        // Buscar desde hace 2 horas en adelante (UTC)
+        const searchTime = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(); 
 
         const { data: citas, error } = await window.sb
             .from('citas')
@@ -148,39 +126,46 @@
         }
 
         list.innerHTML = citas.map(c => {
-            // Manejo de Fechas (Literal Perú)
-            const rawDate = c.fecha_hora; 
-            const datePart = rawDate.split('T')[0];
-            const timePart = rawDate.split('T')[1].split('+')[0].split('Z')[0];
-            const [y, m, d] = datePart.split('-');
-            const [hh, mm] = timePart.split(':');
-            const date = new Date(y, m - 1, d, hh, mm); 
+            // 🐛 CORRECCIÓN DE BUG DE ZONA HORARIA
+            // Convertimos la fecha UTC de Supabase directamente a fecha Perú
+            const dateObj = new Date(c.fecha_hora);
             
-            const nombreDoc = c.psicologo ? c.psicologo.nombre : 'Especialista';
-            const fechaVisual = date.toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
-            const horaVisual = date.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: true });
+            const fechaVisual = dateObj.toLocaleDateString('es-PE', { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'long',
+                timeZone: 'America/Lima' // ✅ Forzamos Perú
+            });
+            
+            const horaVisual = dateObj.toLocaleTimeString('es-PE', { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                hour12: true,
+                timeZone: 'America/Lima' // ✅ Forzamos Perú
+            });
 
-            // Lógica 10 Minutos
-            const diffMs = date - new Date();
+            const nombreDoc = c.psicologo ? window.sanitize(c.psicologo.nombre) : 'Especialista';
+            
+            // Lógica de 10 minutos (Comparando timestamps)
+            const now = new Date();
+            const diffMs = dateObj - now;
             const diffMins = Math.floor(diffMs / 60000);
             
             let btnActionHTML = '';
 
             if (diffMins > 10) {
-                // Faltan más de 10 min -> Bloqueado
+                // Faltan más de 10 min
                 const timeText = diffMins > 60 ? `en ${Math.floor(diffMins/60)}h` : `en ${diffMins} min`;
                 btnActionHTML = `
-                <button class="btn-join disabled" disabled title="La sala abre 10 min antes">
+                <button class="btn btn-secondary" style="background:#F1F5F9; color:#94A3B8; cursor:not-allowed;" disabled>
                     <i class="fas fa-lock"></i> Abre ${timeText}
                 </button>`;
             } else if (diffMins < -60) {
-                // Pasó 1 hora -> Finalizada
-                btnActionHTML = `<span style="color:#64748B; font-size:0.8rem; font-weight:600;">Finalizada</span>`;
+                btnActionHTML = `<span style="color:var(--text-soft); font-size:0.8rem; font-weight:600;">Finalizada</span>`;
             } else {
-                // Disponible -> Botón Activo (genera token al hacer click)
-                // 🔒 SEGURIDAD: Ya no pasamos datos en URL, usamos joinSession
+                // Botón activo con seguridad RPC
                 btnActionHTML = `
-                <button onclick="joinSession('${c.id}')" class="btn-join">
+                <button onclick="joinSession('${c.id}')" class="btn btn-primary">
                     <i class="fas fa-video"></i> Unirse
                 </button>`;
             }
@@ -188,99 +173,64 @@
             return `
             <div class="cita-card">
                 <div class="cita-info">
-                    <h3>${window.sanitize(nombreDoc)}</h3>
+                    <h3>${nombreDoc}</h3>
                     <div class="cita-meta">
                         <span><i class="far fa-calendar"></i> ${fechaVisual}</span>
                         <span><i class="far fa-clock"></i> ${horaVisual}</span>
-                        <span style="background:${c.estado === 'confirmada' ? '#DCFCE7' : '#FEF3C7'}; color:${c.estado === 'confirmada' ? '#166534' : '#B45309'}; padding:2px 8px; border-radius:10px; font-size:0.75rem; text-transform:uppercase; font-weight:700;">${c.estado}</span>
+                        <span style="background:${c.estado === 'confirmada' ? 'var(--success-bg)' : '#FEF3C7'}; color:${c.estado === 'confirmada' ? 'var(--success)' : '#B45309'}; padding:2px 8px; border-radius:10px; font-size:0.75rem; text-transform:uppercase; font-weight:700;">${c.estado}</span>
                     </div>
                 </div>
                 <div class="cita-actions">
-                    ${diffMins > 0 ? `<button class="btn-cancel" onclick="cancelCita('${c.id}')">Cancelar</button>` : ''}
+                    ${diffMins > 0 ? `<button class="btn btn-secondary" style="color:var(--error);" onclick="cancelCita('${c.id}')">Cancelar</button>` : ''}
                     ${btnActionHTML}
                 </div>
             </div>`;
         }).join('');
     }
 
-    // 🔒 3. FUNCIÓN DE SEGURIDAD PARA UNIRSE
+    // Unirse a sesión (Seguro)
     async function joinSession(citaId) {
-        // UI Feedback
-        const btn = event.currentTarget; // El botón que se clickeó
+        const btn = event.currentTarget;
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
         btn.disabled = true;
 
         try {
             const user = await window.checkSession();
             if (!user) return;
-
-            // Generar ID de sesión efímero
             const sessionId = crypto.randomUUID();
             
-            // Insertar en tabla de seguridad
             const { error } = await window.sb.from('sesiones_activas').insert({
                 session_id: sessionId,
                 cita_id: citaId,
                 user_id: user.id,
-                expires_at: new Date(Date.now() + 2 * 60 * 60 * 1000) // Expira en 2 horas
+                expires_at: new Date(Date.now() + 2 * 60 * 60 * 1000)
             });
 
             if (error) throw error;
-
-            // Redirigir SOLO con el token
             window.location.href = `../pro/sesion-live.html?session=${sessionId}`;
-
         } catch (e) {
             console.error(e);
-            alert("Error de conexión segura. Intente nuevamente.");
+            alert("Error al conectar.");
             btn.innerHTML = originalText;
             btn.disabled = false;
         }
     }
 
     async function cancelCita(id) {
-        if(!confirm("¿Seguro que deseas cancelar?")) return;
+        if(!confirm("¿Deseas cancelar esta cita?")) return;
         const { error } = await window.sb.from('citas').update({ estado: 'cancelada' }).eq('id', id);
         if(!error) location.reload();
     }
 
+    // Pestañas y cleanup básico
     function showTab(tab) {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         event.target.classList.add('active');
         document.getElementById('proximas').style.display = tab === 'proximas' ? 'block' : 'none';
         document.getElementById('historial').style.display = tab === 'historial' ? 'block' : 'none';
-        if(tab === 'historial') loadHistorial();
     }
 
-    async function loadHistorial() {
-        const user = await window.checkSession();
-        const container = document.getElementById('historial');
-        const { data: historial } = await window.sb
-            .from('citas')
-            .select(`*, psicologo:psicologo_id ( nombre )`)
-            .eq('paciente_id', user.id)
-            .or(`estado.eq.cancelada,estado.eq.realizada`)
-            .order('fecha_hora', {ascending: false})
-            .limit(10);
-
-        if(!historial || historial.length === 0) return;
-
-        container.innerHTML = historial.map(c => `
-            <div class="cita-card" style="border-left:5px solid #CBD5E1; opacity:0.8;">
-                <div class="cita-info">
-                    <h3 style="color:#64748B">${window.sanitize(c.psicologo?.nombre || 'Especialista')}</h3>
-                    <div class="cita-meta">
-                        <span>${new Date(c.fecha_hora).toLocaleDateString()}</span>
-                        <span style="text-transform:uppercase; font-weight:bold;">${c.estado}</span>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
-    async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
   </script>
 </body>
 </html>
