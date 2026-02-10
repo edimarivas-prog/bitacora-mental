@@ -195,10 +195,13 @@
     async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
 
     // 1. CARGAR DOCTORES
-    async function init() {
-        if (!window.sb) return setTimeout(init, 100);
+    aasync function init() {
+        // 🔒 SEGURIDAD (Opcional al cargar, pero recomendado)
+        const user = await window.checkSession();
+        if (!user) return;
 
-        const { data: doctors, error } = await window.sb
+        // Cargar doctores...
+        const { data: doctors } = await window.sb.from('users_profile').select('*').eq('rol', 'psicologo');
             .from('users_profile')
             .select('*')
             .eq('rol', 'psicologo');
