@@ -117,14 +117,14 @@
 
     async function loadCitas(userId, userName) {
         const list = document.getElementById('citasList');
-        const searchTime = new Date(new Date().getTime() - 2 * 60 * 60 * 1000); 
+        const searchTime = new Date(new Date().getTime() - 2 * 60 * 60 * 1000).toISOString(); 
 
         const { data: citas, error } = await window.sb
             .from('citas')
             .select(`*, psicologo:psicologo_id ( nombre )`)
             .eq('paciente_id', userId)
             .neq('estado', 'cancelada')
-            .gte('fecha_hora', searchTime.toISOString())
+            .gte('fecha_hora', searchTime)
             .order('fecha_hora', {ascending: true});
 
         document.getElementById('loadingCitas').style.display = 'none';
@@ -145,25 +145,38 @@
         }
 
         list.innerHTML = citas.map(c => {
-            const date = new Date(c.fecha_hora);
+            // CORRECCIÓN ZONA HORARIA
+            let dateString = c.fecha_hora;
+            if (!dateString.includes('Z') && !dateString.includes('+')) {
+                dateString += 'Z';
+            }
+            const date = new Date(dateString);
             const nombreDoc = c.psicologo ? c.psicologo.nombre : 'Especialista';
             
-            // Visual Date
+            // Visual
             const fechaVisual = date.toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
             const horaVisual = date.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'UTC' });
 
-            // Lógica 10 Minutos
-            const diffMins = Math.floor((date - new Date()) / 60000);
+            // Cálculo diferencia
+            const diffMs = date - new Date();
+            const diffMins = Math.floor(diffMs / 60000);
             
             let btnJoinHTML = '';
             const urlSala = `../pro/sesion-live.html?room=${c.link_reunion}&patient=${userName}`;
 
             if (diffMins > 10) {
+                // Cálculo horas para mostrar
+                let timeText = diffMins > 60 ? `en ${Math.floor(diffMins/60)}h` : `en ${diffMins} min`;
+                
                 btnJoinHTML = `
                 <span class="btn-join" style="background:#F1F5F9; color:#94A3B8; cursor:not-allowed;" title="Abre 10 min antes">
-                    <i class="fas fa-lock"></i> Espera
+                    <i class="fas fa-lock"></i> Abre ${timeText}
                 </span>`;
+            } else if (diffMins < -60) {
+                // Pasó 1 hora
+                btnJoinHTML = `<span style="color:#64748B; font-size:0.8rem; font-weight:600;">Finalizada</span>`;
             } else {
+                // Disponible
                 btnJoinHTML = `
                 <a href="${urlSala}" class="btn-join">
                     <i class="fas fa-video"></i> Unirse
@@ -181,7 +194,7 @@
                     </div>
                 </div>
                 <div class="cita-actions">
-                    <button class="btn-cancel" onclick="cancelCita('${c.id}')">Cancelar</button>
+                    ${diffMins > 0 ? `<button class="btn-cancel" onclick="cancelCita('${c.id}')">Cancelar</button>` : ''}
                     ${btnJoinHTML}
                 </div>
             </div>`;
