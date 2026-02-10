@@ -10,18 +10,35 @@
   <link rel="stylesheet" href="../css/design-system.css">
   
   <style>
-    /* --- ESTILOS DE ESTRUCTURA (Sidebar y Layout) --- */
-    /* Estos fueron los que faltaron en la versión anterior */
+    /* --- ESTRUCTURA PRINCIPAL (Sincronizada) --- */
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
     
     /* Sidebar */
-    .sidebar { width: 260px; background: var(--white); padding: 24px; border-right: 1px solid var(--border); position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s; }
+    .sidebar { 
+        width: 260px; 
+        background: var(--white); 
+        padding: 24px; 
+        border-right: 1px solid var(--border); 
+        position: fixed; 
+        height: 100%; 
+        top: 0; 
+        display: flex; 
+        flex-direction: column; 
+        z-index: 100; 
+        transition: transform 0.3s; 
+    }
+    
     .logo { font-family: 'Outfit'; font-weight: 700; color: var(--primary); font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 8px; margin-bottom: 30px; }
     
     .nav-section { margin-bottom: 20px; }
     .nav-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-soft); letter-spacing: 1px; margin-bottom: 10px; padding-left: 10px; font-weight: 700; }
+    
     .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-soft); text-decoration: none; border-radius: 12px; font-weight: 500; transition: 0.2s; }
+    /* ALINEACIÓN PERFECTA DE ICONOS */
+    .nav-item i { width: 20px; text-align: center; } 
+    
     .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
     .nav-item.active { font-weight: 600; }
     
@@ -39,7 +56,7 @@
         .mobile-nav { display: flex; } 
     }
 
-    /* --- ESTILOS ESPECÍFICOS DE CITAS --- */
+    /* --- ESTILOS DE PÁGINA --- */
     .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
     
     .tabs { display: flex; gap: 20px; border-bottom: 1px solid var(--border); margin-bottom: 25px; }
@@ -49,14 +66,14 @@
     .cita-card { 
         background: white; 
         padding: 24px; 
-        border-radius: var(--radius-xl); 
+        border-radius: 20px; /* Igual a radius-xl */
         margin-bottom: 20px; 
         display: flex; 
         flex-wrap: wrap; 
         justify-content: space-between; 
         align-items: center; 
         gap: 20px; 
-        box-shadow: var(--shadow-sm); 
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
         border: 1px solid var(--border);
         border-left: 5px solid var(--primary); 
     }
@@ -169,26 +186,24 @@
         }
 
         list.innerHTML = citas.map(c => {
-            // CORRECCIÓN DE ZONA HORARIA (Manteniendo la lógica que te funcionó)
             const dateObj = new Date(c.fecha_hora);
             
             const fechaVisual = dateObj.toLocaleDateString('es-PE', { 
                 weekday: 'long', 
                 day: 'numeric', 
                 month: 'long',
-                timeZone: 'America/Lima' // ✅ Forzamos Perú
+                timeZone: 'America/Lima'
             });
             
             const horaVisual = dateObj.toLocaleTimeString('es-PE', { 
                 hour: '2-digit', 
                 minute: '2-digit', 
                 hour12: true,
-                timeZone: 'America/Lima' // ✅ Forzamos Perú
+                timeZone: 'America/Lima'
             });
 
             const nombreDoc = c.psicologo ? window.sanitize(c.psicologo.nombre) : 'Especialista';
             
-            // Lógica de 10 minutos
             const now = new Date();
             const diffMs = dateObj - now;
             const diffMins = Math.floor(diffMs / 60000);
@@ -196,7 +211,6 @@
             let btnActionHTML = '';
 
             if (diffMins > 10) {
-                // Faltan más de 10 min
                 const timeText = diffMins > 60 ? `en ${Math.floor(diffMins/60)}h` : `en ${diffMins}h`;
                 btnActionHTML = `
                 <button class="btn btn-secondary" style="background:#F1F5F9; color:#94A3B8; cursor:not-allowed;" disabled>
@@ -205,7 +219,6 @@
             } else if (diffMins < -60) {
                 btnActionHTML = `<span style="color:var(--text-soft); font-size:0.8rem; font-weight:600;">Finalizada</span>`;
             } else {
-                // Botón activo
                 btnActionHTML = `
                 <button onclick="joinSession('${c.id}')" class="btn btn-primary">
                     <i class="fas fa-video"></i> Unirse
@@ -230,9 +243,7 @@
         }).join('');
     }
 
-    // Unirse a sesión (Seguro)
     async function joinSession(citaId) {
-        // ... (misma lógica segura anterior)
         const btn = event.currentTarget;
         const originalText = btn.innerHTML;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
