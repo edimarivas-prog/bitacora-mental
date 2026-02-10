@@ -102,18 +102,18 @@
       <div class="insight-banner">
         <div class="insight-icon"><i class="fas fa-lightbulb"></i></div>
         <div>
-            <h3 style="margin:0 0 5px 0; font-family:'Outfit';">¡Vas muy bien!</h3>
-            <p style="margin:0; opacity:0.9; font-size:0.95rem;">Hemos notado que escribes más los fines de semana. Esa constancia te ayuda a procesar mejor tu semana.</p>
+            <h3 style="margin:0 0 5px 0; font-family:'Outfit';">¡Sigue así!</h3>
+            <p style="margin:0; opacity:0.9; font-size:0.95rem;">Registrar tu progreso es el primer paso para entender tu bienestar emocional.</p>
         </div>
       </div>
 
       <div class="charts-container">
         <div class="chart-card">
-            <div class="chart-title">Nivel de Bienestar (Pulso Semanal)</div>
+            <div class="chart-title">Nivel de Bienestar (Historial)</div>
             <div style="height:300px;"><canvas id="moodChart"></canvas></div>
         </div>
         <div class="chart-card">
-            <div class="chart-title">Consistencia</div>
+            <div class="chart-title">Consistencia Semanal</div>
             <div style="height:300px;"><canvas id="barChart"></canvas></div>
         </div>
       </div>
@@ -125,59 +125,133 @@
   <script>
     async function init() {
         if(!window.sb) return setTimeout(init, 100);
+        
         const { data: { user } } = await window.sb.auth.getUser();
         if(!user) window.location.href='../login.html';
         
-        loadStats(user.id);
+        loadRealStats(user.id);
     }
     init();
 
-    async function loadStats(uid) {
-        // Cargar datos reales
-        const { count: countDiario } = await window.sb.from('diario_emocional').select('*', { count: 'exact' }).eq('user_id', uid);
-        const { data: pulsos } = await window.sb.from('monitoreo_sintomas').select('nivel_animo, fecha_realizado').eq('user_id', uid).order('fecha_realizado');
+    async function loadRealStats(uid) {
+        // 1. CARGAR DATOS (Diario y Pulso)
+        // Traemos fechas de creación para calcular actividad
+        const { data: diario } = await window.sb
+            .from('diario_emocional')
+            .select('fecha_creacion, id')
+            .eq('paciente_id', uid);
 
-        document.getElementById('statDiario').textContent = countDiario || 0;
+        const { data: pulsos } = await window.sb
+            .from('monitoreo_sintomas')
+            .select('nivel_animo, fecha_realizado')
+            .eq('paciente_id', uid)
+            .order('fecha_realizado', { ascending: true });
+
+        // 2. CALCULAR ESTADÍSTICAS
+        const totalDiario = diario ? diario.length : 0;
         
-        if(pulsos && pulsos.length > 0) {
-            // Promedio Ánimo
-            const avg = pulsos.reduce((a,b) => a + (b.nivel_animo || 0), 0) / pulsos.length;
-            document.getElementById('statAnimo').textContent = avg.toFixed(1);
-            document.getElementById('statDias').textContent = pulsos.length * 7; // Estimado
-
-            // Gráfico Línea
-            new Chart(document.getElementById('moodChart'), {
-                type: 'line',
-                data: {
-                    labels: pulsos.map(p => new Date(p.fecha_realizado).toLocaleDateString('es-PE', {day:'2-digit', month:'short'})),
-                    datasets: [{
-                        label: 'Ánimo',
-                        data: pulsos.map(p => p.nivel_animo),
-                        borderColor: '#4F6F52',
-                        backgroundColor: 'rgba(79, 111, 82, 0.1)',
-                        fill: true, tension: 0.4
-                    }]
-                },
-                options: { responsive:true, maintainAspectRatio:false, scales:{y:{min:0, max:10}} }
-            });
+        // Promedio Ánimo
+        let avgAnimo = 0;
+        if (pulsos && pulsos.length > 0) {
+            const sum = pulsos.reduce((acc, curr) => acc + (curr.nivel_animo || 0), 0);
+            avgAnimo = (sum / pulsos.length).toFixed(1);
+        } else {
+            avgAnimo = "--";
         }
 
-        // Gráfico Barras (Estático por ahora)
-        new Chart(document.getElementById('barChart'), {
+        // Días Activos (Unique dates)
+        const allDates = new Set();
+        if(diario) diario.forEach(d => allDates.add(d.fecha_creacion.split('T')[0]));
+        if(pulsos) pulsos.forEach(p => allDates.add(p.fecha_realizado.split('T')[0]));
+        
+        // Renderizar Textos
+        document.getElementById('statDiario').textContent = totalDiario;
+        document.getElementById('statAnimo').textContent = avgAnimo;
+        document.getElementById('statDias').textContent = allDates.size;
+
+        // 3. GRÁFICO DE LÍNEA (Evolución Ánimo)
+        const moodCtx = document.getElementById('moodChart').getContext('2d');
+        
+        // Preparar datos para gráfico
+        const labelsMood = pulsos ? pulsos.map(p => new Date(p.fecha_realizado).toLocaleDateString('es-PE', {day:'numeric', month:'short'})) : [];
+        const dataMood = pulsos ? pulsos.map(p => p.nivel_animo) : [];
+
+        new Chart(moodCtx, {
+            type: 'line',
+            data: {
+                labels: labelsMood,
+                datasets: [{
+                    label: 'Ánimo',
+                    data: dataMood,
+                    borderColor: '#4F6F52',
+                    backgroundColor: 'rgba(79, 111, 82, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#4F6F52'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, max: 10, grid: { color: '#F1F5F9' } },
+                    x: { grid: { display: false } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // 4. GRÁFICO DE BARRAS (Consistencia por Día de Semana)
+        // 0=Dom, 1=Lun, ... 6=Sab
+        const dayCounts = [0, 0, 0, 0, 0, 0, 0]; 
+        
+        // Contamos entradas de diario + pulsos
+        if(diario) diario.forEach(d => {
+            const day = new Date(d.fecha_creacion).getDay();
+            dayCounts[day]++;
+        });
+        if(pulsos) pulsos.forEach(p => {
+            const day = new Date(p.fecha_realizado).getDay();
+            dayCounts[day]++;
+        });
+
+        // Reordenar para empezar en Lunes (Lun, Mar... Dom)
+        // Array original: [Dom, Lun, Mar, Mie, Jue, Vie, Sab]
+        const orderedData = [
+            dayCounts[1], // Lun
+            dayCounts[2], // Mar
+            dayCounts[3], // Mie
+            dayCounts[4], // Jue
+            dayCounts[5], // Vie
+            dayCounts[6], // Sab
+            dayCounts[0]  // Dom
+        ];
+
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
             type: 'bar',
             data: {
                 labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
                 datasets: [{
                     label: 'Actividad',
-                    data: [1, 3, 2, 5, 1, 0, 2],
+                    data: orderedData,
                     backgroundColor: '#F59E0B',
-                    borderRadius: 5
+                    borderRadius: 6
                 }]
             },
-            options: { responsive:true, maintainAspectRatio:false }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, grid: { display: false } },
+                    x: { grid: { display: false } }
+                },
+                plugins: { legend: { display: false } }
+            }
         });
     }
-    
+
     async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
   </script>
 </body>
