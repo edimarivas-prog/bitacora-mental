@@ -45,4 +45,10 @@ window.checkSession = async function() {
         
         return null;
     }
+window.sanitize = function(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str; // Esto escapa automáticamente HTML peligroso
+    return div.innerHTML;
 };
+
