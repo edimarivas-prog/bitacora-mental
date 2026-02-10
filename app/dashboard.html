@@ -4,23 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Dashboard - Bitácora Mental</title>
+  
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="../css/design-system.css">
+  
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
     
-    /* Sidebar */
+    /* El Sidebar ahora se carga desde components.js, pero mantenemos los estilos base por si acaso */
     .sidebar { width: 260px; background: var(--white); padding: 24px; border-right: 1px solid var(--border); position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s; }
-    .logo { font-family: 'Outfit'; font-weight: 700; color: var(--primary); font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 8px; margin-bottom: 30px; }
-    
-    .nav-section { margin-bottom: 20px; }
-    .nav-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-soft); letter-spacing: 1px; margin-bottom: 10px; padding-left: 10px; font-weight: 700; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-soft); text-decoration: none; border-radius: 12px; font-weight: 500; transition: 0.2s; }
-    .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
-    .nav-item.active { font-weight: 600; }
     
     /* Main Content */
     .main { flex: 1; padding: 30px; margin-left: 260px; max-width: 100%; }
@@ -69,33 +64,10 @@
 
   <div class="mobile-nav">
     <a href="#" class="logo" style="margin:0"><i class="fas fa-brain"></i> Bitácora</a>
-    <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
   </div>
 
-  <aside class="sidebar" id="sidebar">
-    <a href="dashboard.html" class="logo"><i class="fas fa-brain"></i> Bitácora Mental</a>
-    
-    <div class="nav-section">
-      <div class="nav-title">Principal</div>
-      <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
-      <a href="citas.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Mis Citas</a>
-      <a href="especialistas.html" class="nav-item"><i class="fas fa-user-md"></i> Especialistas</a>
-    </div>
-
-    <div class="nav-section">
-      <div class="nav-title">Tu Espacio</div>
-      <a href="diario.html" class="nav-item"><i class="fas fa-book"></i> Diario</a>
-      <a href="progreso.html" class="nav-item"><i class="fas fa-chart-line"></i> Progreso</a>
-      <a href="recursos.html" class="nav-item"><i class="fas fa-box-open"></i> Recursos</a>
-    </div>
-
-    <div class="nav-section">
-      <div class="nav-title">Cuenta</div>
-      <a href="plan.html" class="nav-item"><i class="fas fa-crown"></i> Mi Plan</a>
-      <a href="configuracion.html" class="nav-item"><i class="fas fa-cog"></i> Configuración</a>
-      <a href="#" onclick="logout()" class="nav-item" style="color:#EF4444"><i class="fas fa-sign-out-alt"></i> Salir</a>
-    </div>
-</aside>
+  <div id="sidebar-container"></div>
 
   <main class="main">
     <div class="header">
@@ -176,13 +148,23 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
+  <script src="../js/components.js"></script>
+
   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. RENDERIZAR SIDEBAR (Marcando 'dashboard' como activo)
+        if(window.renderSidebar) window.renderSidebar('dashboard');
+        
+        // 2. Iniciar lógica
+        initDashboard();
+    });
+
     async function initDashboard() {
         if (!window.sb) return setTimeout(initDashboard, 100);
 
         // 1. Verificar Sesión
         const user = await window.checkSession();
-        if (!user) return; // Detiene la ejecución si no hay usuario
+        if (!user) return; 
 
         // 2. Obtener Nombre Seguro (Fallback)
         let userName = 'Paciente';
@@ -254,26 +236,20 @@
             document.getElementById('nextCitaCard').style.display = 'block';
 
             // --- TRUCO HORA PERÚ ---
-            // Leemos la fecha de la DB (ej: '2026-02-10T10:00:00') y la parseamos LITERALMENTE
-            // como si fuera hora local de Perú, ignorando cualquier zona horaria extraña.
             const rawDate = nextCita.fecha_hora; 
-            // Separamos componentes YYYY-MM-DD THH:mm
             const datePart = rawDate.split('T')[0];
-            const timePart = rawDate.split('T')[1].split('+')[0].split('Z')[0]; // Limpiamos Z o +00
+            const timePart = rawDate.split('T')[1].split('+')[0].split('Z')[0]; 
             
             const [y, m, d] = datePart.split('-');
             const [hh, mm] = timePart.split(':');
 
-            // Creamos fecha local exacta (Mes en JS es 0-11)
             const citaDate = new Date(y, m - 1, d, hh, mm); 
             
-            // Calculamos diferencia contra AHORA (Hora local de Perú)
             const diffMs = citaDate - new Date(); 
             const diffMins = Math.floor(diffMs / 60000);
             
             const btnLink = document.getElementById('citaLink');
             
-            // Lógica 10 Minutos
             if (diffMins > 10) {
                 btnLink.style.background = '#CBD5E1'; 
                 btnLink.style.pointerEvents = 'none';
@@ -290,7 +266,6 @@
 
             document.getElementById('docName').textContent = nextCita.psicologo ? nextCita.psicologo.nombre : 'Especialista';
             
-            // Visualización Local Exacta
             document.getElementById('citaDate').textContent = citaDate.toLocaleDateString('es-PE', { day: 'numeric', month: 'long' });
             document.getElementById('citaTime').textContent = citaDate.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: true });
 
@@ -300,11 +275,8 @@
         }
     }
 
-    function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
+    // Nota: La función logout() ya viene en el sidebar renderizado, pero podemos mantenerla aquí por seguridad o moverla globalmente si prefieres.
     async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
-    
-    // Iniciar
-    initDashboard();
   </script>
 </body>
 </html>
