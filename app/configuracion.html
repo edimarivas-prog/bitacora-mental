@@ -219,13 +219,23 @@
             }
         }
 
+    // En app/configuracion.html
+
     async function updateProfile() {
         const name = document.getElementById('inputName').value;
         const phone = document.getElementById('inputPhone').value;
-        const { error } = await window.sb.from('users_profile').update({ nombre: name, telefono: phone }).eq('id', currentUser.id);
-        
-        // Usamos el Toast Global
-        if(error) window.showToast(error.message, 'error');
+    
+        // Usamos UPSERT para crear el perfil si es la primera vez
+        const { error } = await window.sb
+            .from('users_profile')
+            .upsert({ 
+                id: currentUser.id, // ⚠️ IMPORTANTE: El ID es obligatorio en upsert
+                nombre: name, 
+                telefono: phone,
+                updated_at: new Date()
+            });
+    
+        if (error) window.showToast(error.message, 'error');
         else window.showToast('Perfil actualizado correctamente.', 'success');
     }
 
