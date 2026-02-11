@@ -221,22 +221,35 @@
 
     // En app/configuracion.html
 
-    async function updateProfile() {
-        const name = document.getElementById('inputName').value;
-        const phone = document.getElementById('inputPhone').value;
-    
-        // Usamos UPSERT para crear el perfil si es la primera vez
+    // En app/configuracion.html
+
+async function updateProfile() {
+    const name = document.getElementById('inputName').value;
+    const phone = document.getElementById('inputPhone').value;
+
+    // 1. Validar que haya datos
+    if(!name) return window.showToast('El nombre es obligatorio', 'warning');
+
+    // 2. Usar UPSERT con TODOS los campos obligatorios
+    // Si la tabla pide 'rol' y no lo envías al crear, da error 400.
         const { error } = await window.sb
             .from('users_profile')
             .upsert({ 
-                id: currentUser.id, // ⚠️ IMPORTANTE: El ID es obligatorio en upsert
+                id: currentUser.id, 
                 nombre: name, 
                 telefono: phone,
+                rol: 'paciente', // 👈 AGREGADO: Asegura que el perfil nuevo tenga rol
                 updated_at: new Date()
             });
     
-        if (error) window.showToast(error.message, 'error');
-        else window.showToast('Perfil actualizado correctamente.', 'success');
+        if (error) {
+            console.error("Error detallado:", error); // Mira la consola para ver el mensaje exacto
+            window.showToast(error.message, 'error');
+        } else {
+            window.showToast('Perfil actualizado correctamente.', 'success');
+            // Recargar para ver los cambios reflejados (opcional)
+            setTimeout(() => location.reload(), 1000);
+        }
     }
 
     async function updateEmergency() {
