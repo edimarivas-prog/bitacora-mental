@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Bitácora Mental - Plataforma integral de salud emocional y terapia online.">
-  <title>Bitácora Mental - El mapa de tu mundo interior</title>
+  <title>Bitácora Mental - Tu bienestar comienza aquí</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,96 +13,199 @@
 
   <style>
     /* =========================================
-       ESTILOS EXCLUSIVOS DE LANDING PAGE
-       (Solo lo que NO está en design-system.css)
+       ESTILOS ESPECÍFICOS LANDING (OVERRIDES)
        ========================================= */
     
-    /* Navbar Transparente (Estilo Selia) */
-    .landing-nav { 
-        position: fixed; 
-        top: 0; 
+    /* Ajustes generales sobre el design-system */
+    body {
+        background-color: var(--white); /* Selia usa fondo blanco limpio */
+        overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+        font-family: 'Outfit', sans-serif; /* Tu fuente de títulos */
+        color: var(--text-main);
+        line-height: 1.1;
+    }
+
+    p {
+        color: var(--text-soft);
+        line-height: 1.6;
+        font-size: 1.05rem;
+    }
+
+    /* --- NAVBAR (ESTILO SELIA) --- */
+    .landing-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
         width: 100%;
-        background: rgba(255,255,255,0.90); 
-        backdrop-filter: blur(12px); 
-        padding: 15px 5%; 
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center; 
-        z-index: 1000; 
-        border-bottom: 1px solid var(--border); 
-        transition: 0.3s;
+        padding: 15px 5%;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
     }
-    
-    .nav-brand { 
-        font-family: var(--font-heading); 
-        font-weight: 800; 
-        font-size: 1.5rem; 
-        color: var(--primary); 
+
+    .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
         text-decoration: none;
-        display: flex; 
-        align-items: center; 
-        gap: 8px; 
+        color: var(--primary);
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
+        font-size: 1.5rem;
+        z-index: 1002; /* Por encima del menú móvil */
     }
-    
-    .nav-menu { display: flex; align-items: center; gap: 40px; }
-    .nav-links { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; }
-    
-    .nav-link { 
-        color: var(--text-soft); 
-        font-weight: 500; 
-        font-size: 0.95rem; 
+
+    /* Enlaces Desktop */
+    .nav-center {
+        display: flex;
+        gap: 30px;
+    }
+
+    .nav-link {
         text-decoration: none;
+        color: var(--text-soft);
+        font-weight: 500;
+        font-size: 0.95rem;
         transition: color 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
     }
     .nav-link:hover { color: var(--primary); }
-    
-    .nav-actions { display: flex; gap: 15px; }
+    .nav-link i { font-size: 0.7rem; margin-top: 2px; opacity: 0.5; }
 
-    /* Botón Hamburguesa (Solo Móvil) */
-    .mobile-toggle {
-        display: none;
+    /* Botones Desktop */
+    .nav-right {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+    /* Botones personalizados */
+    .btn-nav-login {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        color: var(--primary);
+        background-color: var(--primary-light); /* Verde muy suave */
+        transition: 0.2s;
+    }
+    .btn-nav-login:hover { background-color: #dcece2; }
+
+    .btn-nav-cta {
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        color: white;
+        background-color: var(--primary);
+        transition: 0.2s;
+        box-shadow: 0 4px 12px rgba(79, 111, 82, 0.2);
+    }
+    .btn-nav-cta:hover { 
+        background-color: var(--primary-dark); 
+        transform: translateY(-2px);
+    }
+
+    /* Botón Hamburguesa (Móvil) */
+    .hamburger {
+        display: none; /* Oculto en desktop */
         background: none;
         border: none;
         font-size: 1.5rem;
         color: var(--text-main);
         cursor: pointer;
+        z-index: 1002;
     }
 
-    /* Hero Section */
-    .hero { 
-        padding: 160px 5% 100px; 
-        display: flex; 
-        align-items: center; 
-        justify-content: space-between; 
-        /* Usamos tus variables de color */
-        background: radial-gradient(circle at top right, var(--primary-50), transparent 60%); 
-        min-height: 90vh; 
+    /* Menú Móvil (Off-canvas) */
+    .mobile-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100vh;
+        background: white;
+        padding: 80px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        transform: translateX(100%); /* Oculto a la derecha */
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1001;
+    }
+    .mobile-menu.active { transform: translateX(0); }
+
+    .mobile-link {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text-main);
+        text-decoration: none;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--border);
     }
 
-    .hero-content { max-width: 600px; }
-    
-    .hero-title { 
-        font-size: 3.5rem; 
-        color: var(--primary-600); 
-        margin-bottom: 25px; 
-        line-height: 1.1; 
+    /* --- HERO SECTION (Referencia Selia) --- */
+    .hero {
+        padding: 140px 5% 80px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 50px;
+        min-height: 90vh;
+        background: radial-gradient(circle at top right, var(--primary-light), transparent 70%);
     }
-    
-    .hero-image {
-        width: 45%;
+
+    .hero-content { flex: 1; max-width: 600px; }
+
+    .hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        color: var(--primary);
+        letter-spacing: -1px;
+    }
+
+    .hero-badges {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #FEF3C7; /* Amarillo suave */
+        color: #92400E;
+        padding: 6px 14px;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 25px;
+    }
+
+    .hero-img-container {
+        flex: 1;
+        position: relative;
+    }
+
+    .hero-img {
+        width: 100%;
         height: 550px;
         object-fit: cover;
-        border-radius: var(--radius-xl);
-        box-shadow: var(--shadow-lg);
-        background-image: url('https://images.unsplash.com/photo-1573497620053-ea5300f94f21?q=80&w=1000');
-        background-size: cover;
-        background-position: center;
+        border-radius: 24px;
+        box-shadow: 20px 20px 0px rgba(79, 111, 82, 0.1); /* Sombra sólida estilo moderno */
     }
 
-    /* Servicios Grid */
+    /* --- SERVICIOS (Grid estilo Selia) --- */
     .section { padding: 100px 5%; }
-    .section-header { text-align: center; margin-bottom: 60px; max-width: 800px; margin: 0 auto; }
     
+    .section-header { text-align: center; margin-bottom: 60px; max-width: 800px; margin-left: auto; margin-right: auto; }
+    .section-header h2 { font-size: 2.8rem; margin-bottom: 15px; }
+
     .services-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -110,69 +213,124 @@
     }
 
     .service-card {
-        background: var(--white);
-        border-radius: var(--radius-lg);
-        border: 1px solid var(--border);
-        overflow: hidden;
-        transition: var(--transition);
-        display: flex; flex-direction: column;
+        display: flex;
+        flex-direction: column;
+        transition: 0.3s;
     }
-    .service-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: var(--primary); }
-    .srv-img { height: 200px; background: #eee; object-fit: cover; }
-    .srv-body { padding: 25px; flex: 1; display: flex; flex-direction: column; }
+    .service-card:hover { transform: translateY(-5px); }
 
-    /* Planes (Pricing) */
-    .pricing-grid { 
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; 
+    .srv-img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        border-radius: 16px;
+        margin-bottom: 20px;
     }
-    
-    .plan-card { 
-        background: var(--white); 
-        border: 1px solid var(--border); 
-        border-radius: var(--radius-xl); 
-        padding: 40px; 
-        text-align: center; 
+
+    .srv-title { font-size: 1.4rem; margin-bottom: 10px; color: var(--text-main); }
+    .srv-link {
+        margin-top: auto;
+        color: var(--primary);
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid var(--border);
+        padding: 10px 20px;
+        border-radius: 50px;
+        width: fit-content;
+        transition: 0.2s;
+    }
+    .srv-link:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+    /* --- CÓMO FUNCIONA (Pasos) --- */
+    .steps-section {
+        background-color: var(--bg); /* Fondo gris muy suave */
+        display: flex;
+        align-items: center;
+        gap: 80px;
+        padding: 100px 5%;
+    }
+
+    .step-item {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .step-number {
+        font-family: 'Outfit', serif; /* O una fuente serif si quieres más estilo Selia */
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--primary);
+        line-height: 1;
+        opacity: 0.3;
+    }
+
+    /* --- PLANES (Cards Modernas) --- */
+    .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .plan-card {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        transition: 0.3s;
         position: relative;
     }
     
     .plan-card.featured {
-        border-color: var(--primary); 
-        background: var(--primary-50);
-        transform: scale(1.05); 
-        box-shadow: var(--shadow-lg);
-        z-index: 2;
+        background: #F4F9F6; /* Verde muy pálido */
+        border-color: var(--primary);
+        box-shadow: 0 20px 40px rgba(79, 111, 82, 0.1);
     }
 
-    .plan-price { font-size: 3rem; font-weight: 800; color: var(--primary); line-height: 1; margin: 10px 0; }
-    
-    /* Footer Simplificado */
-    .footer { background: var(--primary-50); color: var(--text-main); padding: 80px 5% 30px; margin-top: 50px; }
-    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 60px; }
-    .footer-links a { display: block; color: var(--text-soft); text-decoration: none; margin-bottom: 10px; transition: 0.2s; }
-    .footer-links a:hover { color: var(--primary); transform: translateX(5px); }
+    .plan-price { font-size: 3rem; font-weight: 800; color: var(--primary); line-height: 1; margin: 15px 0; }
+    .plan-features li { padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px; color: var(--text-soft); }
+    .plan-features i { color: var(--primary); margin-top: 4px; }
 
-    /* --- RESPONSIVE --- */
+    /* --- FOOTER (Limpio) --- */
+    .footer {
+        background: #F8F9FA;
+        padding: 80px 5% 40px;
+        margin-top: 50px;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr 1fr 1fr;
+        gap: 40px;
+    }
+
+    .footer h3 { color: var(--primary); font-size: 1.5rem; margin-bottom: 20px; }
+    .footer h4 { font-size: 1.1rem; margin-bottom: 20px; color: var(--text-main); font-weight: 700; }
+    
+    .footer-links { list-style: none; padding: 0; }
+    .footer-links li { margin-bottom: 12px; }
+    .footer-links a { text-decoration: none; color: var(--text-soft); transition: 0.2s; }
+    .footer-links a:hover { color: var(--primary); }
+
+    /* --- RESPONSIVE MEDIA QUERIES --- */
     @media (max-width: 900px) {
-        .hero { flex-direction: column-reverse; padding-top: 120px; text-align: center; }
-        .hero-title { font-size: 2.5rem; }
-        .hero-image { width: 100%; height: 300px; }
+        .nav-center, .nav-right { display: none; } /* Ocultar menú desktop */
+        .hamburger { display: block; } /* Mostrar botón móvil */
         
+        .hero { flex-direction: column-reverse; padding-top: 100px; text-align: center; }
+        .hero h1 { font-size: 2.5rem; }
+        .hero-badges { margin: 0 auto 20px; }
+        .hero-img { height: 350px; }
+        
+        .steps-section { flex-direction: column; padding: 60px 5%; }
         .footer-grid { grid-template-columns: 1fr; gap: 40px; }
-        .nav-menu { display: none; } /* Ocultamos menú desktop */
-        .mobile-toggle { display: block; } /* Mostramos botón móvil */
-        
-        /* Menú Móvil Desplegable */
-        .mobile-nav-container {
-            position: fixed;
-            top: 70px; left: 0; width: 100%; height: 100vh;
-            background: var(--white);
-            flex-direction: column; padding: 40px; gap: 20px;
-            transform: translateX(100%);
-            transition: 0.3s;
-            display: flex;
-        }
-        .mobile-nav-container.active { transform: translateX(0); }
-        .mobile-nav-container a { font-size: 1.2rem; font-weight: 600; color: var(--text-main); }
     }
   </style>
 </head>
@@ -180,128 +338,201 @@
 
   <nav class="landing-nav">
     <a href="/" class="nav-brand">
-        <i class="fas fa-brain"></i> Bitácora Mental
+      <i class="fas fa-brain"></i> Bitácora
     </a>
 
-    <button class="mobile-toggle" onclick="toggleLandingMenu()">
-        <i class="fas fa-bars"></i>
+    <div class="nav-center">
+      <a href="#servicios" class="nav-link">Servicios</a>
+      <a href="#metodo" class="nav-link">Cómo funciona</a>
+      <a href="#planes" class="nav-link">Planes</a>
+      <a href="#faq" class="nav-link">Preguntas</a>
+    </div>
+
+    <div class="nav-right">
+      <a href="app/login.html" class="btn-nav-login">Iniciar sesión</a>
+      <a href="app/entrevista.html" class="btn-nav-cta">Crear cuenta</a>
+    </div>
+
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Abrir menú">
+      <i class="fas fa-bars"></i>
     </button>
-
-    <div class="nav-menu">
-        <ul class="nav-links">
-            <li><a href="#servicios" class="nav-link">Servicios</a></li>
-            <li><a href="#metodo" class="nav-link">El Método</a></li>
-            <li><a href="#planes" class="nav-link">Planes</a></li>
-        </ul>
-        <div class="nav-actions">
-            <a href="app/login.html" class="btn btn-secondary" style="text-decoration:none;">Ingresar</a>
-            <a href="app/entrevista.html" class="btn btn-primary" style="text-decoration:none; color:white;">Empezar Gratis</a>
-        </div>
-    </div>
-
-    <div class="mobile-nav-container" id="mobileMenu">
-        <a href="#servicios" onclick="toggleLandingMenu()">Servicios</a>
-        <a href="#metodo" onclick="toggleLandingMenu()">El Método</a>
-        <a href="#planes" onclick="toggleLandingMenu()">Planes</a>
-        <hr style="width:100%; border:0; border-top:1px solid var(--border);">
-        <a href="app/login.html">Ingresar</a>
-        <a href="app/entrevista.html" style="color:var(--primary);">Crear Cuenta Gratis</a>
-    </div>
   </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#servicios" class="mobile-link" onclick="toggleMenu()">Servicios</a>
+    <a href="#metodo" class="mobile-link" onclick="toggleMenu()">Cómo funciona</a>
+    <a href="#planes" class="mobile-link" onclick="toggleMenu()">Planes</a>
+    <a href="#faq" class="mobile-link" onclick="toggleMenu()">Preguntas Frecuentes</a>
+    
+    <hr style="border:0; border-top:1px solid var(--border); margin:10px 0;">
+    
+    <a href="app/login.html" class="mobile-link" style="color:var(--primary);">Iniciar sesión</a>
+    <a href="app/entrevista.html" class="btn-nav-cta" style="text-align:center; margin-top:10px;">Crear cuenta gratis</a>
+  </div>
 
   <section class="hero">
     <div class="hero-content">
-      <div style="background:var(--accent-light); color:var(--accent); padding:5px 15px; border-radius:20px; display:inline-block; font-weight:700; font-size:0.85rem; margin-bottom:20px;">
-         <i class="fas fa-star"></i> Nueva plataforma 2026
+      <div class="hero-badges">
+        <i class="fas fa-star"></i> Nueva Plataforma 2026
       </div>
-      <h1 class="hero-title">Recupera el control de tu narrativa emocional.</h1>
-      <p style="font-size:1.2rem; color:var(--text-soft); margin-bottom:30px;">
-        Bitácora Mental no es solo terapia: es tu sistema diario para registrar, entender y gestionar tus emociones con datos reales.
-      </p>
-      <a href="app/entrevista.html" class="btn btn-primary" style="padding:15px 30px; text-decoration:none; color:white;">
-        Iniciar mi registro diario <i class="fas fa-arrow-right"></i>
-      </a>
+      <h1>Recupera el control de tu narrativa emocional.</h1>
+      <p>Bitácora Mental no es solo terapia: es tu sistema diario para registrar, entender y gestionar tus emociones con datos reales.</p>
+      
+      <div style="margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+        <a href="app/entrevista.html" class="btn-nav-cta" style="padding: 15px 30px; font-size: 1.1rem;">
+          Empezar ahora
+        </a>
+        <a href="#metodo" class="btn-nav-login" style="background:transparent; border: 2px solid var(--border); color:var(--text-main);">
+          Ver cómo funciona
+        </a>
+      </div>
     </div>
-    <div class="hero-image"></div>
+    
+    <div class="hero-img-container">
+      <img src="https://images.unsplash.com/photo-1573497620053-ea5300f94f21?q=80&w=1000" class="hero-img" alt="Bienestar Mental">
+    </div>
   </section>
 
   <section id="servicios" class="section">
     <div class="section-header">
-        <h2>Un ecosistema para tu bienestar</h2>
-        <p>Herramientas profesionales adaptadas a tu ritmo, no al revés.</p>
+      <h2>¿Qué tipo de apoyo buscas hoy?</h2>
+      <p>Un ecosistema completo adaptado a tu momento de vida.</p>
     </div>
+
     <div class="services-grid">
-        <div class="service-card">
-            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600" class="srv-img" alt="Terapia">
-            <div class="srv-body">
-                <h3 style="margin-bottom:10px; color:var(--text-main);">Terapia 1 a 1</h3>
-                <p style="color:var(--text-soft); font-size:0.95rem; flex:1;">Sesiones privadas con especialistas verificados.</p>
-                <a href="#" style="color:var(--primary); font-weight:700;">Ver directorio &rarr;</a>
-            </div>
-        </div>
-        <div class="service-card">
-            <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=600" class="srv-img" alt="Diario">
-            <div class="srv-body">
-                <h3 style="margin-bottom:10px; color:var(--text-main);">Diario Inteligente</h3>
-                <p style="color:var(--text-soft); font-size:0.95rem; flex:1;">Tu espacio seguro para volcar pensamientos.</p>
-                <a href="#" style="color:var(--primary); font-weight:700;">Empezar a escribir &rarr;</a>
-            </div>
-        </div>
-        <div class="service-card">
-            <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600" class="srv-img" alt="Recursos">
-            <div class="srv-body">
-                <h3 style="margin-bottom:10px; color:var(--text-main);">Caja de Herramientas</h3>
-                <p style="color:var(--text-soft); font-size:0.95rem; flex:1;">Tests, audios y guías prácticas validadas.</p>
-                <a href="#" style="color:var(--primary); font-weight:700;">Explorar recursos &rarr;</a>
-            </div>
-        </div>
+      <div class="service-card">
+        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600" class="srv-img" alt="Terapia">
+        <h3 class="srv-title">Terapia Psicológica</h3>
+        <p>Sesiones 1 a 1 con especialistas verificados para ansiedad, depresión y procesos profundos.</p>
+        <a href="#" class="srv-link">Ver psicólogos <i class="fas fa-arrow-right"></i></a>
+      </div>
+
+      <div class="service-card">
+        <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600" class="srv-img" alt="Coaching">
+        <h3 class="srv-title">Coaching Emocional</h3>
+        <p>Enfoque práctico para desbloquear metas, mejorar hábitos y gestionar el estrés laboral.</p>
+        <a href="#" class="srv-link">Ver coaches <i class="fas fa-arrow-right"></i></a>
+      </div>
+
+      <div class="service-card">
+        <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=600" class="srv-img" alt="Diario">
+        <h3 class="srv-title">Diario Inteligente</h3>
+        <p>Herramienta digital gratuita para registrar tus pensamientos y detectar patrones.</p>
+        <a href="#" class="srv-link">Empezar diario <i class="fas fa-arrow-right"></i></a>
+      </div>
+
+      <div class="service-card">
+        <img src="https://images.unsplash.com/photo-1519834785169-98be25ec3f84?q=80&w=600" class="srv-img" alt="Recursos">
+        <h3 class="srv-title">Recursos Guiados</h3>
+        <p>Audios de meditación, tests de autoconocimiento y guías prácticas validadas.</p>
+        <a href="#" class="srv-link">Explorar biblioteca <i class="fas fa-arrow-right"></i></a>
+      </div>
     </div>
   </section>
 
-  <section id="planes" class="section" style="background:var(--white);">
-    <div class="section-header">
-      <h2>Invierte en tu paz mental</h2>
-      <p>Planes transparentes que puedes cancelar cuando quieras.</p>
+  <section id="metodo" class="steps-section">
+    <div style="flex:1;">
+      <h2 style="font-size: 2.5rem; margin-bottom: 30px;">Tu ruta de claridad en 3 pasos</h2>
+      
+      <div class="step-item">
+        <div class="step-number">1</div>
+        <div>
+          <h3>Regístrate en la Bitácora</h3>
+          <p>Crea tu cuenta gratuita en segundos. Sin tarjetas de crédito para empezar.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">2</div>
+        <div>
+          <h3>Mide tu clima interno</h3>
+          <p>Usa nuestro "Pulso Semanal" para entender cómo te sientes con datos reales.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">3</div>
+        <div>
+          <h3>Toma acción informada</h3>
+          <p>El sistema te sugerirá el recurso o terapeuta ideal basado en tu estado actual.</p>
+        </div>
+      </div>
+
+      <a href="app/entrevista.html" class="btn-nav-cta" style="display:inline-block; margin-top:20px;">Comenzar mi ruta</a>
     </div>
     
-    <div class="pricing-grid" id="planesContainer">
-        <div style="grid-column:1/-1; text-align:center;">
-            <i class="fas fa-circle-notch fa-spin"></i> Cargando planes...
-        </div>
+    <div style="flex:1;">
+      <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800" style="width:100%; height:600px; object-fit:cover; border-radius:24px;" alt="Proceso">
     </div>
+  </section>
+
+  <section id="planes" class="section">
+    <div class="section-header">
+      <h2>Inversión transparente</h2>
+      <p>Elige el plan que se adapte a tu proceso actual.</p>
+    </div>
+
+    <div class="pricing-grid" id="planesContainer">
+      <div style="grid-column:1/-1; text-align:center; padding:60px;">
+        <i class="fas fa-circle-notch fa-spin fa-2x" style="color:var(--text-soft);"></i>
+        <p>Cargando opciones...</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="testimonios" class="section" style="background:var(--bg);">
+    <div class="section-header">
+      <h2>Historias de la comunidad</h2>
+    </div>
+    <div class="services-grid" id="testiContainer">
+        </div>
   </section>
 
   <footer class="footer">
     <div class="footer-grid">
-        <div>
-            <h3 style="color:var(--primary); margin-bottom:15px; font-weight:800;">Bitácora Mental</h3>
-            <p style="color:var(--text-soft); font-size:0.9rem;">Tecnología humana para el cuidado de la mente. Democratizando el bienestar en Latinoamérica.</p>
+      
+      <div>
+        <h3><i class="fas fa-brain"></i> Bitácora</h3>
+        <p>Tecnología humana para el cuidado de la mente. Democratizando el acceso al bienestar emocional en Latinoamérica.</p>
+        <div style="display:flex; gap:15px; margin-top:20px;">
+            <a href="#" style="font-size:1.5rem; color:var(--text-main);"><i class="fab fa-instagram"></i></a>
+            <a href="#" style="font-size:1.5rem; color:var(--text-main);"><i class="fab fa-tiktok"></i></a>
+            <a href="#" style="font-size:1.5rem; color:var(--text-main);"><i class="fab fa-linkedin"></i></a>
         </div>
-        <div>
-            <h4 style="margin-bottom:20px;">Plataforma</h4>
-            <div class="footer-links">
-                <a href="app/login.html">Iniciar Sesión</a>
-                <a href="app/entrevista.html">Registrarse</a>
-                <a href="#planes">Membresías</a>
-            </div>
-        </div>
-        <div>
-            <h4 style="margin-bottom:20px;">Legal</h4>
-            <div class="footer-links">
-                <a href="#">Privacidad</a>
-                <a href="#">Términos</a>
-                <a href="#">Libro de Reclamaciones</a>
-            </div>
-        </div>
-        <div>
-            <h4 style="margin-bottom:20px;">Contacto</h4>
-            <div class="footer-links">
-                <a href="mailto:hola@bitacora.com">hola@bitacora.com</a>
-                <a href="#">Lima, Perú</a>
-            </div>
-        </div>
+      </div>
+
+      <div>
+        <h4>Servicios</h4>
+        <ul class="footer-links">
+          <li><a href="#">Terapia Online</a></li>
+          <li><a href="#">Coaching Emocional</a></li>
+          <li><a href="#">Psiquiatría</a></li>
+          <li><a href="#">Planes Corporativos</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Tests Gratuitos</h4>
+        <ul class="footer-links">
+          <li><a href="#">Test de Ansiedad</a></li>
+          <li><a href="#">Test de Depresión</a></li>
+          <li><a href="#">Test de Burnout</a></li>
+          <li><a href="#">Test de Pareja</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Soporte</h4>
+        <ul class="footer-links">
+          <li><a href="#">Centro de Ayuda</a></li>
+          <li><a href="#">Términos y Condiciones</a></li>
+          <li><a href="#">Política de Privacidad</a></li>
+          <li><a href="#">Libro de Reclamaciones</a></li>
+        </ul>
+      </div>
+
     </div>
-    <div style="border-top:1px solid rgba(0,0,0,0.1); padding-top:30px; text-align:center; font-size:0.85rem; color:var(--text-soft);">
+    <div style="border-top:1px solid rgba(0,0,0,0.1); padding-top:40px; text-align:center; color:var(--text-soft); font-size:0.9rem;">
         &copy; 2026 Bitácora Mental. Todos los derechos reservados.
     </div>
   </footer>
@@ -310,44 +541,75 @@
   <script src="js/supabase-config.js"></script>
   
   <script>
-    // 1. Lógica del Menú Móvil (Simple y efectiva para Landing)
-    function toggleLandingMenu() {
+    // 1. Lógica Menú Móvil
+    function toggleMenu() {
         const menu = document.getElementById('mobileMenu');
-        const btn = document.querySelector('.mobile-toggle i');
+        const icon = document.querySelector('.hamburger i');
         
         menu.classList.toggle('active');
         
         if (menu.classList.contains('active')) {
-            btn.classList.remove('fa-bars');
-            btn.classList.add('fa-times');
+            icon.classList.remove('fa-bars');
+            icon.classList.add('fa-times');
+            document.body.style.overflow = 'hidden'; // Evita scroll de fondo
         } else {
-            btn.classList.remove('fa-times');
-            btn.classList.add('fa-bars');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+            document.body.style.overflow = '';
         }
     }
 
-    // 2. Carga Dinámica de Planes (Igual que antes)
+    // 2. Lógica Supabase (Planes y Testimonios)
     document.addEventListener('DOMContentLoaded', async () => {
         if (!window.sb) return;
-        
+
+        // Cargar Planes
         const { data: planes } = await window.sb.from('web_planes').select('*').eq('visible', true).order('orden');
-        const container = document.getElementById('planesContainer');
+        const planesContainer = document.getElementById('planesContainer');
         
         if (planes && planes.length > 0) {
-            container.innerHTML = planes.map(plan => `
+            planesContainer.innerHTML = planes.map(plan => `
                 <div class="plan-card ${plan.es_recomendado ? 'featured' : ''}">
                     ${plan.es_recomendado ? '<div style="position:absolute; top:-15px; left:50%; transform:translateX(-50%); background:var(--primary); color:white; padding:5px 15px; border-radius:20px; font-size:0.8rem; font-weight:700;">RECOMENDADO</div>' : ''}
-                    <h3 style="font-size:1.5rem; margin-bottom:10px; color:var(--text-main);">${plan.nombre}</h3>
-                    <div class="plan-price">S/ ${plan.precio}<span style="font-size:1rem; font-weight:400; color:var(--text-soft);">/mes</span></div>
-                    <ul style="text-align:left; margin:30px 0; list-style:none; padding:0;">
-                        ${(plan.features || []).map(f => `<li style="margin-bottom:10px; color:var(--text-soft);"><i class="fas fa-check" style="color:var(--primary); margin-right:10px;"></i>${f}</li>`).join('')}
+                    <h3 style="margin-bottom:10px; color:var(--text-main); font-size:1.5rem;">${plan.nombre}</h3>
+                    <div class="plan-price">S/ ${plan.precio}</div>
+                    <ul class="plan-features" style="list-style:none; padding:0; margin:20px 0; text-align:left;">
+                        ${(plan.features || []).map(f => `<li style="padding:8px 0; border-bottom:1px solid #eee; display:flex; gap:10px;"><i class="fas fa-check" style="color:var(--primary); margin-top:4px;"></i>${f}</li>`).join('')}
                     </ul>
-                    <a href="app/entrevista.html" class="btn btn-primary" style="width:100%; text-decoration:none; display:inline-block; color:white;">${plan.btn_texto || 'Elegir Plan'}</a>
+                    <a href="app/entrevista.html" class="btn-nav-cta" style="display:block; text-align:center; width:100%; box-sizing:border-box; background:${plan.es_recomendado ? 'var(--primary)' : 'var(--text-main)'}">${plan.btn_texto || 'Elegir Plan'}</a>
                 </div>
             `).join('');
         } else {
             // Fallback
-            container.innerHTML = `<p style="text-align:center; grid-column:1/-1;">Planes no disponibles.</p>`;
+            planesContainer.innerHTML = `
+                <div class="plan-card">
+                    <h3>Básico</h3>
+                    <div class="plan-price">S/ 0</div>
+                    <ul style="list-style:none; padding:0; margin:20px 0;"><li><i class="fas fa-check"></i> Diario Digital</li></ul>
+                    <a href="#" class="btn-nav-login" style="display:block; text-align:center; border:1px solid var(--border);">Empezar Gratis</a>
+                </div>
+                <div class="plan-card featured">
+                    <h3>Pro</h3>
+                    <div class="plan-price">S/ 49</div>
+                    <ul style="list-style:none; padding:0; margin:20px 0;"><li><i class="fas fa-check"></i> Todo incluido</li></ul>
+                    <a href="#" class="btn-nav-cta" style="display:block; text-align:center;">Suscribirme</a>
+                </div>
+            `;
+        }
+
+        // Cargar Testimonios
+        const { data: testimonios } = await window.sb.from('web_testimonios').select('*');
+        const testiContainer = document.getElementById('testiContainer');
+        if (testimonios && testimonios.length > 0) {
+            testiContainer.innerHTML = testimonios.map(t => `
+                <div style="background:white; padding:30px; border-radius:16px; border:1px solid var(--border);">
+                    <div style="color:#F59E0B; margin-bottom:15px;">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p style="font-style:italic; margin-bottom:20px;">"${t.texto}"</p>
+                    <strong>${t.autor}</strong>
+                </div>
+            `).join('');
         }
     });
   </script>
