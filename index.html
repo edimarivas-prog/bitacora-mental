@@ -128,32 +128,108 @@
     }
 
     /* Menú Móvil (Off-canvas) */
-    .mobile-menu {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 100%;
-        height: 100vh;
-        background: white;
-        padding: 80px 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        transform: translateX(100%); /* Oculto a la derecha */
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 1001;
-    }
-    .mobile-menu.active { transform: translateX(0); }
+    /* --- ESTILOS MENÚ MÓVIL (TIPO SELIA) --- */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #F9F7F9; /* Fondo lila muy suave tipo Selia */
+    z-index: 2000;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
 
-    .mobile-link {
-        font-size: 1.2rem;
+.mobile-menu.active { transform: translateX(0); }
+
+/* Cabecera del menú móvil */
+.mobile-header {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Botón de cierre */
+.close-btn {
+    width: 40px;
+    height: 40px;
+    background: #E8E6F0; /* Fondo botón tipo Selia */
+    border: none;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--text-main);
+    cursor: pointer;
+}
+
+/* Botón de acción en cabecera */
+.header-cta {
+    background: #D4CDF4; /* Lila botón Selia */
+    color: #2D1B4E;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+/* Lista de enlaces (Acordeón) */
+    .mobile-links {
+        padding: 20px;
+        list-style: none;
+    }
+    
+    .mobile-item {
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .mobile-link-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 0;
+        font-size: 1.1rem;
         font-weight: 600;
         color: var(--text-main);
-        text-decoration: none;
-        padding: 15px 0;
-        border-bottom: 1px solid var(--border);
+        cursor: pointer;
     }
-
+    
+    .mobile-link-head i {
+        transition: transform 0.3s;
+        font-size: 0.9rem;
+        color: var(--primary);
+    }
+    
+    /* Rotación de flecha */
+    .mobile-item.open .mobile-link-head i { transform: rotate(180deg); }
+    
+    /* Submenú desplegable */
+    .submenu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        padding-left: 10px;
+    }
+    
+    .mobile-item.open .submenu { max-height: 500px; /* Altura suficiente */ }
+    
+    .submenu a {
+        display: block;
+        padding: 12px 0;
+        color: var(--text-soft);
+        text-decoration: none;
+        font-size: 0.95rem;
+    }
+    
     /* --- HERO SECTION (Referencia Selia) --- */
     .hero {
         padding: 140px 5% 80px;
@@ -359,15 +435,62 @@
   </nav>
 
   <div class="mobile-menu" id="mobileMenu">
-    <a href="#servicios" class="mobile-link" onclick="toggleMenu()">Servicios</a>
-    <a href="#metodo" class="mobile-link" onclick="toggleMenu()">Cómo funciona</a>
-    <a href="#planes" class="mobile-link" onclick="toggleMenu()">Planes</a>
-    <a href="#faq" class="mobile-link" onclick="toggleMenu()">Preguntas Frecuentes</a>
     
-    <hr style="border:0; border-top:1px solid var(--border); margin:10px 0;">
-    
-    <a href="app/login.html" class="mobile-link" style="color:var(--primary);">Iniciar sesión</a>
-    <a href="app/entrevista.html" class="btn-nav-cta" style="text-align:center; margin-top:10px;">Crear cuenta gratis</a>
+    <div class="mobile-header">
+        <a href="/" style="font-family:'Outfit'; font-weight:800; font-size:1.5rem; color:var(--primary); text-decoration:none;">Bitácora</a>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <a href="app/entrevista.html" class="header-cta">Agenda ahora</a>
+            <button class="close-btn" onclick="toggleMenu()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <ul class="mobile-links">
+        
+        <li class="mobile-item">
+            <div class="mobile-link-head" onclick="toggleSubmenu(this)">
+                Servicios <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="submenu">
+                <a href="#servicios">Terapia Psicológica</a>
+                <a href="#servicios">Coaching Emocional</a>
+                <a href="#servicios">Nutrición & Bienestar</a>
+            </div>
+        </li>
+
+        <li class="mobile-item">
+            <div class="mobile-link-head" onclick="toggleSubmenu(this)">
+                Tests <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="submenu">
+                <a href="#">Test de Ansiedad</a>
+                <a href="#">Test de Depresión</a>
+                <a href="#">Test de Burnout</a>
+            </div>
+        </li>
+
+        <li class="mobile-item">
+            <div class="mobile-link-head" onclick="toggleSubmenu(this)">
+                Programas <i class="fas fa-chevron-down"></i>
+            </div>
+              <div class="submenu">
+                  <a href="#">Programa Duelo</a>
+                  <a href="#">Programa Autoestima</a>
+              </div>
+          </li>
+  
+          <li class="mobile-item">
+              <a href="#planes" class="mobile-link-head" style="text-decoration:none;">Planes</a>
+          </li>
+          <li class="mobile-item">
+              <a href="#testimonios" class="mobile-link-head" style="text-decoration:none;">Blog</a>
+          </li>
+          
+          <li class="mobile-item" style="margin-top:20px; border:none;">
+              <a href="app/login.html" class="mobile-link-head" style="color:var(--primary);">Iniciar Sesión</a>
+          </li>
+      </ul>
   </div>
 
   <section class="hero">
@@ -541,23 +664,23 @@
   <script src="js/supabase-config.js"></script>
   
   <script>
-    // 1. Lógica Menú Móvil
-    function toggleMenu() {
-        const menu = document.getElementById('mobileMenu');
-        const icon = document.querySelector('.hamburger i');
-        
-        menu.classList.toggle('active');
-        
-        if (menu.classList.contains('active')) {
-            icon.classList.remove('fa-bars');
-            icon.classList.add('fa-times');
-            document.body.style.overflow = 'hidden'; // Evita scroll de fondo
-        } else {
-            icon.classList.remove('fa-times');
-            icon.classList.add('fa-bars');
-            document.body.style.overflow = '';
-        }
+    // Función para abrir/cerrar el menú principal
+function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.toggle('active');
+    
+    if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden'; // Bloquear scroll
+    } else {
+        document.body.style.overflow = ''; // Activar scroll
     }
+}
+
+// Función para el efecto acordeón (Submenús)
+function toggleSubmenu(header) {
+    const item = header.parentElement;
+    item.classList.toggle('open');
+}
 
     // 2. Lógica Supabase (Planes y Testimonios)
     document.addEventListener('DOMContentLoaded', async () => {
@@ -612,6 +735,7 @@
             `).join('');
         }
     });
+    
   </script>
 </body>
 </html>
