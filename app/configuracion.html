@@ -193,17 +193,31 @@
     // Nota: logout() ahora viene incluido en el sidebar
 
     // --- PERFIL ---
-    async function loadProfile() {
-        const { data: profile } = await window.sb.from('users_profile').select('*').eq('id', currentUser.id).single();
-        if(profile) {
-            document.getElementById('inputName').value = profile.nombre || '';
-            document.getElementById('inputPhone').value = profile.telefono || '';
-            if(profile.contacto_emergencia) {
-                document.getElementById('emName').value = profile.contacto_emergencia.nombre || '';
-                document.getElementById('emPhone').value = profile.contacto_emergencia.telefono || '';
+    // En app/configuracion.html
+
+        async function loadProfile() {
+            // Usamos maybeSingle() para evitar el error 406 si el perfil no existe aún
+            const { data: profile, error } = await window.sb
+                .from('users_profile')
+                .select('*')
+                .eq('id', currentUser.id)
+                .maybeSingle(); 
+        
+            if (error) {
+                console.error("Error cargando perfil:", error);
+                return;
+            }
+        
+            if (profile) {
+                document.getElementById('inputName').value = profile.nombre || '';
+                document.getElementById('inputPhone').value = profile.telefono || '';
+                
+                if (profile.contacto_emergencia) {
+                    document.getElementById('emName').value = profile.contacto_emergencia.nombre || '';
+                    document.getElementById('emPhone').value = profile.contacto_emergencia.telefono || '';
+                }
             }
         }
-    }
 
     async function updateProfile() {
         const name = document.getElementById('inputName').value;
