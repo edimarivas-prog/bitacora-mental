@@ -11,35 +11,44 @@
   <link rel="stylesheet" href="../css/design-system.css">
   
   <style>
-    /* Estilos específicos SOLO del Dashboard */
-    body { margin: 0; display: flex; min-height: 100vh; }
+    /* Estilos Específicos del Dashboard */
+    body { margin: 0; display: flex; min-height: 100vh; background-color: var(--bg); }
     
-    /* El margen izquierdo es necesario en Desktop para no quedar debajo del sidebar */
+    /* Ajuste layout principal */
     .main { flex: 1; padding: 30px; margin-left: 260px; max-width: 100%; }
     
+    @media (max-width: 900px) { 
+        .main { margin-left: 0; padding: 20px; } 
+    }
+
     .header { margin-bottom: 30px; }
-    .header h1 { font-family: 'Outfit'; font-size: 2rem; margin: 0 0 5px 0; }
+    .header h1 { font-family: 'Outfit'; font-size: 2rem; margin: 0 0 5px 0; color: var(--primary); }
     .subtitle { color: var(--text-soft); font-size: 1rem; }
     
     /* Grid Layout */
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 24px; }
     
-    .card { background: var(--white); padding: 24px; border-radius: var(--radius-xl); box-shadow: 0 4px 20px rgba(0,0,0,0.04); transition: transform 0.2s; border: 1px solid transparent; }
+    .card { background: var(--white); padding: 24px; border-radius: var(--radius-xl); box-shadow: 0 4px 20px rgba(0,0,0,0.04); transition: transform 0.2s; border: 1px solid var(--border); }
     .card:hover { transform: translateY(-3px); border-color: var(--primary-light); }
     
     .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-    .card-title { font-family: 'Outfit'; font-weight: 600; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; }
+    .card-title { font-family: 'Outfit'; font-weight: 600; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; color: var(--text); }
     .icon-box { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
     
-    /* Widgets Específicos */
+    /* Tarjeta de Pulso */
     .pulse-card { border-left: 4px solid var(--accent); transition: 0.3s; }
-    .pulse-card.completed { border-left-color: #10B981; } 
+    .pulse-card.completed { border-left-color: var(--success); } 
     .pulse-bar { height: 8px; background: #F1F5F9; border-radius: 4px; margin-top: 10px; overflow: hidden; }
     .pulse-fill { height: 100%; background: var(--accent); width: 0%; transition: width 1s; }
     
-    .appointment-card { background: linear-gradient(135deg, var(--primary), #3E5A41); color: white; }
-    .appointment-card .subtitle { color: rgba(255,255,255,0.8); }
+    /* Tarjeta de Cita (Verde Oscuro) */
+    .appointment-card { 
+        background: linear-gradient(135deg, var(--primary), #3E5A41); 
+        color: white; 
+        border: none;
+    }
     
+    /* Acciones Rápidas */
     .quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
     .action-btn { background: var(--bg); padding: 15px; border-radius: 15px; text-align: center; text-decoration: none; color: var(--text); font-weight: 600; font-size: 0.9rem; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 8px; }
     .action-btn:hover { background: var(--white); box-shadow: 0 4px 15px rgba(0,0,0,0.05); color: var(--primary); }
@@ -61,25 +70,30 @@
     </div>
 
     <div class="grid">
-      <div class="card appointment-card" id="appointmentContainer">
+      
+      <div class="card appointment-card theme-dark" id="appointmentContainer">
         <div class="card-header">
-          <div class="welcome-card theme-dark"> <h2>Próxima Sesión</h2>
-         </div>
+          <div class="card-title" style="color:white !important;">
+              <i class="fas fa-video"></i> Próxima Sesión
+          </div>
+        </div>
+        
         <div id="emptyCita">
-            <h2 style="font-size:1.5rem; margin-bottom:5px;">Sin citas agendadas</h2>
-            <p class="subtitle" style="color:rgba(255,255,255,0.8); margin-bottom:20px;">Agenda tu primera sesión hoy.</p>
+            <h2 style="font-size:1.5rem; margin-bottom:5px; color:white;">Sin citas agendadas</h2>
+            <p class="subtitle" style="color:rgba(255,255,255,0.9); margin-bottom:20px;">Agenda tu primera sesión hoy.</p>
             <a href="agendar.html" style="background:white; color:var(--primary); padding:10px 20px; border-radius:10px; text-decoration:none; font-weight:600; display:inline-block;">
                 <i class="fas fa-plus"></i> Agendar ahora
             </a>
         </div>
+
         <div id="nextCitaCard" style="display:none;">
             <div style="margin-bottom:15px;">
-                <h2 id="citaTime" style="font-size:2rem; margin:0; font-weight:700;">--:--</h2>
-                <p id="citaDate" style="font-size:1.1rem; opacity:0.9; margin:0;">--/--/--</p>
+                <h2 id="citaTime" style="font-size:2rem; margin:0; font-weight:700; color:white;">--:--</h2>
+                <p id="citaDate" style="font-size:1.1rem; opacity:0.9; margin:0; color:white;">--/--/--</p>
             </div>
             <div style="margin-bottom:20px;">
-                <p style="margin:0; font-size:0.9rem; opacity:0.8;">Especialista:</p>
-                <strong id="docName" style="font-size:1.1rem;">Dr. ...</strong>
+                <p style="margin:0; font-size:0.9rem; opacity:0.8; color:white;">Especialista:</p>
+                <strong id="docName" style="font-size:1.1rem; color:white;">Dr. ...</strong>
             </div>
             <a href="#" id="citaLink" style="background:white; color:var(--primary); padding:10px 20px; border-radius:10px; text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
                 <i class="fas fa-video"></i> Entrar a Videollamada
@@ -92,7 +106,7 @@
           <div class="card-title"><i class="fas fa-heartbeat" style="color:var(--accent)"></i> Pulso Semanal</div>
           <span id="pulseBadge" style="font-size:0.8rem; background:#FEF3C7; color:#92400E; padding:4px 8px; border-radius:10px;">Pendiente</span>
         </div>
-        <p id="pulseText" style="font-size:0.9rem; color:#666;">¿Cómo te sientes esta semana?</p>
+        <p id="pulseText" style="font-size:0.9rem; color:var(--text-soft);">¿Cómo te sientes esta semana?</p>
         <div class="pulse-bar"><div class="pulse-fill" id="pulseBar"></div></div>
         <div style="margin-top:15px; text-align:right;">
           <a href="pulso.html" id="pulseLink" style="color:var(--primary); font-weight:600; text-decoration:none; font-size:0.9rem;">Registrar <i class="fas fa-arrow-right"></i></a>
@@ -114,13 +128,14 @@
           </a>
         </div>
       </div>
+      
       <div class="card">
         <div class="card-title">✨ Para ti hoy</div>
         <div style="display:flex; gap:15px; align-items:center; margin-top:15px;">
           <div class="icon-box" style="background:#E0F2FE; color:#0284C7"><i class="fas fa-file-pdf"></i></div>
           <div>
             <h4 style="margin:0; font-size:1rem;">Guía de Ansiedad</h4>
-            <p style="margin:0; font-size:0.85rem; color:#64748B;">Lectura de 5 min</p>
+            <p style="margin:0; font-size:0.85rem; color:var(--text-soft);">Lectura de 5 min</p>
           </div>
           <a href="recursos.html" style="margin-left:auto; color:var(--primary);"><i class="fas fa-chevron-right"></i></a>
         </div>
@@ -134,8 +149,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Renderizar Sidebar (indicando que estamos en 'dashboard')
-        if(window.renderSidebar) window.renderSidebar('dashboard');
+        if(window.renderSidebar) window.renderSidebar('dashboard'); // Activo en dashboard
         initDashboard();
     });
 
@@ -146,15 +160,15 @@
         const user = await window.checkSession();
         if (!user) return; 
 
-        // 2. Obtener Nombre
+        // 2. Obtener Nombre Seguro
         let userName = 'Paciente';
         const { data: profile } = await window.sb.from('users_profile').select('rol, nombre').eq('id', user.id).single();
         
         if (profile) {
             if (profile.rol === 'psicologo') { window.location.href = '../pro/dashboard.html'; return; }
-            if (profile.nombre) userName = profile.nombre;
+            if (profile.nombre) userName = window.sanitize(profile.nombre);
         } else if (user.user_metadata && user.user_metadata.full_name) {
-            userName = user.user_metadata.full_name;
+            userName = window.sanitize(user.user_metadata.full_name);
         }
 
         loadGreeting(userName);
@@ -162,7 +176,7 @@
         checkPulseStatus(user.id);
     }
 
-    // --- FUNCIONES AUXILIARES (Pulso, Saludo, Citas) ---
+    // --- FUNCIONES AUXILIARES ---
     async function checkPulseStatus(uid) {
         const { data } = await window.sb.from('monitoreo_sintomas').select('fecha_realizado').eq('user_id', uid).order('fecha_realizado', { ascending: false }).limit(1);
         
@@ -175,10 +189,14 @@
             const diffDays = Math.ceil(Math.abs(new Date() - new Date(data[0].fecha_realizado)) / (1000 * 60 * 60 * 24));
             if (diffDays < 7) {
                 card.classList.add('completed');
-                badge.textContent = "Completado"; badge.style.background = "#D1FAE5"; badge.style.color = "#065F46";
-                bar.style.width = "100%"; bar.style.background = "#10B981";
+                badge.textContent = "Completado"; 
+                badge.style.background = "#D1FAE5"; 
+                badge.style.color = "#065F46";
+                bar.style.width = "100%"; 
+                bar.style.background = "#10B981";
                 link.innerHTML = `<i class="fas fa-lock"></i> Disponible en ${7 - diffDays + 1} días`;
-                link.style.pointerEvents = "none"; link.style.color = "#94A3B8";
+                link.style.pointerEvents = "none"; 
+                link.style.color = "#94A3B8";
             } else { bar.style.width = "10%"; }
         } else { bar.style.width = "5%"; }
     }
@@ -187,7 +205,7 @@
         const h = new Date().getHours();
         const saludo = h < 12 ? 'Buenos días' : (h < 18 ? 'Buenas tardes' : 'Buenas noches');
         const primerNombre = nombre.split(' ')[0];
-        document.getElementById('greeting').innerHTML = `${saludo}, <strong>${window.sanitize(primerNombre)}</strong> 👋`;
+        document.getElementById('greeting').innerHTML = `${saludo}, <strong>${primerNombre}</strong> 👋`;
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
     }
 
@@ -210,21 +228,15 @@
             document.getElementById('emptyCita').style.display = 'none';
             document.getElementById('nextCitaCard').style.display = 'block';
 
-            const rawDate = nextCita.fecha_hora; 
-            const datePart = rawDate.split('T')[0];
-            const timePart = rawDate.split('T')[1].split('+')[0].split('Z')[0]; 
-            const [y, m, d] = datePart.split('-');
-            const [hh, mm] = timePart.split(':');
-            const citaDate = new Date(y, m - 1, d, hh, mm); 
-            
+            const citaDate = new Date(nextCita.fecha_hora); 
             const diffMs = citaDate - new Date(); 
             const diffMins = Math.floor(diffMs / 60000);
             
             const btnLink = document.getElementById('citaLink');
             
             if (diffMins > 10) {
-                btnLink.style.background = '#CBD5E1'; 
-                btnLink.style.color = '#fff';
+                btnLink.style.background = '#FFFFFF80'; // Blanco semi-transparente
+                btnLink.style.color = '#FFFFFF';
                 btnLink.style.pointerEvents = 'none';
                 btnLink.innerHTML = `<i class="fas fa-lock"></i> Sala abre ${diffMins > 60 ? Math.floor(diffMins/60)+'h' : diffMins+'m'}`;
             } else {
