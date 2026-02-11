@@ -79,17 +79,21 @@
 
     <div class="settings-grid">
         <div class="card">
-            <div class="card-title"><i class="fas fa-user-circle"></i> Datos Personales</div>
-            <div class="form-group">
-                <label class="form-label">Nombre Completo</label>
-                <input type="text" id="inputName" class="form-input" placeholder="Tu nombre">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Teléfono</label>
-                <input type="tel" id="inputPhone" class="form-input" placeholder="+51 ...">
-            </div>
-            <button class="btn-save" onclick="updateProfile()">Guardar Cambios</button>
+        <div class="card-title"><i class="fas fa-user-circle"></i> Datos Personales</div>
+        <div class="form-group">
+            <label class="form-label">Nombre</label>
+            <input type="text" id="inputName" class="form-input" placeholder="Tu nombre">
         </div>
+        <div class="form-group">
+            <label class="form-label">Apellido</label>
+            <input type="text" id="inputLastName" class="form-input" placeholder="Tu apellido">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Teléfono</label>
+            <input type="tel" id="inputPhone" class="form-input" placeholder="+51 ...">
+        </div>
+        <button class="btn-save" onclick="updateProfile()">Guardar Cambios</button>
+    </div>
 
         <div class="card" style="border-left: 4px solid var(--primary);">
             <div class="card-title"><i class="fas fa-credit-card"></i> Métodos de Pago</div>
@@ -195,29 +199,40 @@
     // --- PERFIL ---
     // En app/configuracion.html
 
-        async function loadProfile() {
-            // Usamos maybeSingle() para evitar el error 406 si el perfil no existe aún
-            const { data: profile, error } = await window.sb
-                .from('users_profile')
-                .select('*')
-                .eq('id', currentUser.id)
-                .maybeSingle(); 
-        
-            if (error) {
-                console.error("Error cargando perfil:", error);
-                return;
+       async function loadProfile() {
+        // Usamos maybeSingle() para evitar errores si el perfil no existe
+        const { data: profile, error } = await window.sb
+            .from('users_profile')
+            .select('*')
+            .eq('id', currentUser.id)
+            .maybeSingle();
+
+        if (error) {
+            console.error("Error cargando perfil:", error);
+            return;
+        }
+
+        if (profile) {
+            // Rellenamos el Nombre
+            document.getElementById('inputName').value = profile.nombre || '';
+            
+            // ✅ NUEVO: Rellenamos el Apellido (Asegúrate de haber creado el input en el HTML)
+            // Si el elemento existe en el HTML, le ponemos el valor
+            const lastNameInput = document.getElementById('inputLastName');
+            if (lastNameInput) {
+                lastNameInput.value = profile.apellido || '';
             }
-        
-            if (profile) {
-                document.getElementById('inputName').value = profile.nombre || '';
-                document.getElementById('inputPhone').value = profile.telefono || '';
-                
-                if (profile.contacto_emergencia) {
-                    document.getElementById('emName').value = profile.contacto_emergencia.nombre || '';
-                    document.getElementById('emPhone').value = profile.contacto_emergencia.telefono || '';
-                }
+
+            // Rellenamos el Teléfono
+            document.getElementById('inputPhone').value = profile.telefono || '';
+
+            // Rellenamos Contacto de Emergencia (si existe)
+            if (profile.contacto_emergencia) {
+                document.getElementById('emName').value = profile.contacto_emergencia.nombre || '';
+                document.getElementById('emPhone').value = profile.contacto_emergencia.telefono || '';
             }
         }
+    }
 
     // En app/configuracion.html
 
@@ -225,22 +240,21 @@
 
 async function updateProfile() {
     const name = document.getElementById('inputName').value;
+    const lastName = document.getElementById('inputLastName').value; // Nuevo
     const phone = document.getElementById('inputPhone').value;
 
-    // 1. Validar que haya datos
-    if(!name) return window.showToast('El nombre es obligatorio', 'warning');
+    if(!name || !lastName) return window.showToast('Nombre y Apellido son obligatorios', 'warning');
 
-    // 2. Usar UPSERT con TODOS los campos obligatorios
-    // Si la tabla pide 'rol' y no lo envías al crear, da error 400.
-        const { error } = await window.sb
-            .from('users_profile')
-            .upsert({ 
-                id: currentUser.id, 
-                nombre: name, 
-                telefono: phone,
-                rol: 'paciente', // 👈 AGREGADO: Asegura que el perfil nuevo tenga rol
-                updated_at: new Date()
-            });
+    const { error } = await window.sb
+        .from('users_profile')
+        .upsert({ 
+            id: currentUser.id, 
+            nombre: name, 
+            apellido: lastName, // 👈 Enviamos el valor directo del input
+            telefono: phone,
+            rol: 'paciente',
+            updated_at: new Date()
+        });
     
         if (error) {
             console.error("Error detallado:", error); // Mira la consola para ver el mensaje exacto
