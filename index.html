@@ -13,28 +13,21 @@
 
   <style>
     /* =========================================
-       ESTILOS ESPECÍFICOS LANDING (OVERRIDES)
+       ESTILOS LANDING PAGE (Marca Bitácora)
        ========================================= */
     
-    /* Ajustes generales sobre el design-system */
     body {
-        background-color: var(--white); /* Selia usa fondo blanco limpio */
+        background-color: var(--white);
         overflow-x: hidden;
     }
 
     h1, h2, h3, h4 {
-        font-family: 'Outfit', sans-serif; /* Tu fuente de títulos */
+        font-family: 'Outfit', sans-serif;
         color: var(--text-main);
         line-height: 1.1;
     }
 
-    p {
-        color: var(--text-soft);
-        line-height: 1.6;
-        font-size: 1.05rem;
-    }
-
-    /* --- NAVBAR (ESTILO SELIA) --- */
+    /* --- NAVBAR DESKTOP --- */
     .landing-nav {
         position: fixed;
         top: 0;
@@ -56,14 +49,14 @@
         align-items: center;
         gap: 10px;
         text-decoration: none;
-        color: var(--primary);
+        color: var(--primary); /* TU VERDE */
         font-family: 'Outfit', sans-serif;
         font-weight: 800;
         font-size: 1.5rem;
-        z-index: 1002; /* Por encima del menú móvil */
+        z-index: 1002;
     }
 
-    /* Enlaces Desktop */
+    /* Enlaces Centro */
     .nav-center {
         display: flex;
         gap: 30px;
@@ -82,21 +75,16 @@
     .nav-link:hover { color: var(--primary); }
     .nav-link i { font-size: 0.7rem; margin-top: 2px; opacity: 0.5; }
 
-    /* Botones Desktop */
-    .nav-right {
-        display: flex;
-        gap: 15px;
-        align-items: center;
-    }
+    /* Botones Derecha */
+    .nav-right { display: flex; gap: 15px; align-items: center; }
 
-    /* Botones personalizados */
     .btn-nav-login {
         padding: 10px 20px;
         border-radius: 8px;
         font-weight: 600;
         text-decoration: none;
         color: var(--primary);
-        background-color: var(--primary-light); /* Verde muy suave */
+        background-color: var(--primary-light); /* Verde suave */
         transition: 0.2s;
     }
     .btn-nav-login:hover { background-color: #dcece2; }
@@ -107,7 +95,7 @@
         font-weight: 600;
         text-decoration: none;
         color: white;
-        background-color: var(--primary);
+        background-color: var(--primary); /* Verde fuerte */
         transition: 0.2s;
         box-shadow: 0 4px 12px rgba(79, 111, 82, 0.2);
     }
@@ -116,9 +104,9 @@
         transform: translateY(-2px);
     }
 
-    /* Botón Hamburguesa (Móvil) */
+    /* Botón Hamburguesa */
     .hamburger {
-        display: none; /* Oculto en desktop */
+        display: none;
         background: none;
         border: none;
         font-size: 1.5rem;
@@ -127,71 +115,61 @@
         z-index: 1002;
     }
 
-    /* Menú Móvil (Off-canvas) */
-    /* --- ESTILOS MENÚ MÓVIL (TIPO SELIA) --- */
-.mobile-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background: #F9F7F9; /* Fondo lila muy suave tipo Selia */
-    z-index: 2000;
-    transform: translateX(100%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-}
+    /* --- MENÚ MÓVIL (ACORDEÓN TIPO SELIA PERO VERDE) --- */
+    .mobile-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: var(--white); /* Fondo blanco limpio */
+        z-index: 2000;
+        transform: translateX(100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
 
-.mobile-menu.active { transform: translateX(0); }
+    .mobile-menu.active { transform: translateX(0); }
 
-/* Cabecera del menú móvil */
-.mobile-header {
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: white;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-}
-
-/* Botón de cierre */
-.close-btn {
-    width: 40px;
-    height: 40px;
-    background: #E8E6F0; /* Fondo botón tipo Selia */
-    border: none;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    color: var(--text-main);
-    cursor: pointer;
-}
-
-/* Botón de acción en cabecera */
-.header-cta {
-    background: #D4CDF4; /* Lila botón Selia */
-    color: #2D1B4E;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 700;
-    text-decoration: none;
-    font-size: 0.9rem;
-}
-
-/* Lista de enlaces (Acordeón) */
-    .mobile-links {
+    .mobile-header {
         padding: 20px;
-        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
     }
-    
-    .mobile-item {
-        border-bottom: 1px solid rgba(0,0,0,0.05);
+
+    .close-btn {
+        width: 40px;
+        height: 40px;
+        background: var(--bg); /* Gris/Verde muy claro */
+        border: none;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: var(--text-main);
+        cursor: pointer;
     }
+
+    .header-cta {
+        background: var(--primary); /* Verde Bitácora */
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 700;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+
+    .mobile-links { padding: 20px; list-style: none; margin: 0; }
     
+    .mobile-item { border-bottom: 1px solid var(--border); }
+
     .mobile-link-head {
         display: flex;
         justify-content: space-between;
@@ -208,29 +186,30 @@
         font-size: 0.9rem;
         color: var(--primary);
     }
-    
-    /* Rotación de flecha */
+
     .mobile-item.open .mobile-link-head i { transform: rotate(180deg); }
-    
-    /* Submenú desplegable */
+
     .submenu {
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.3s ease-out;
         padding-left: 10px;
+        background: var(--bg); /* Fondo sutil para submenú */
+        border-radius: 8px;
     }
-    
-    .mobile-item.open .submenu { max-height: 500px; /* Altura suficiente */ }
-    
+
+    .mobile-item.open .submenu { max-height: 500px; margin-bottom: 15px; }
+
     .submenu a {
         display: block;
-        padding: 12px 0;
+        padding: 12px 15px;
         color: var(--text-soft);
         text-decoration: none;
         font-size: 0.95rem;
     }
-    
-    /* --- HERO SECTION (Referencia Selia) --- */
+    .submenu a:hover { color: var(--primary); }
+
+    /* --- HERO SECTION --- */
     .hero {
         padding: 140px 5% 80px;
         display: flex;
@@ -238,6 +217,7 @@
         justify-content: space-between;
         gap: 50px;
         min-height: 90vh;
+        /* Gradiente VERDE, no morado */
         background: radial-gradient(circle at top right, var(--primary-light), transparent 70%);
     }
 
@@ -254,7 +234,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: #FEF3C7; /* Amarillo suave */
+        background: #FEF3C7; /* Naranja/Amarillo (Tu acento) */
         color: #92400E;
         padding: 6px 14px;
         border-radius: 50px;
@@ -263,150 +243,60 @@
         margin-bottom: 25px;
     }
 
-    .hero-img-container {
-        flex: 1;
-        position: relative;
-    }
-
     .hero-img {
         width: 100%;
         height: 550px;
         object-fit: cover;
         border-radius: 24px;
-        box-shadow: 20px 20px 0px rgba(79, 111, 82, 0.1); /* Sombra sólida estilo moderno */
+        box-shadow: 20px 20px 0px rgba(79, 111, 82, 0.1); /* Sombra verde */
     }
 
-    /* --- SERVICIOS (Grid estilo Selia) --- */
+    /* --- SECCIONES GENERALES --- */
     .section { padding: 100px 5%; }
-    
-    .section-header { text-align: center; margin-bottom: 60px; max-width: 800px; margin-left: auto; margin-right: auto; }
+    .section-header { text-align: center; margin-bottom: 60px; max-width: 800px; margin: 0 auto; }
     .section-header h2 { font-size: 2.8rem; margin-bottom: 15px; }
 
+    /* Servicios Grid */
     .services-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
         gap: 30px;
     }
-
     .service-card {
-        display: flex;
-        flex-direction: column;
-        transition: 0.3s;
+        display: flex; flex-direction: column; transition: 0.3s;
     }
     .service-card:hover { transform: translateY(-5px); }
-
-    .srv-img {
-        width: 100%;
-        height: 220px;
-        object-fit: cover;
-        border-radius: 16px;
-        margin-bottom: 20px;
-    }
-
+    .srv-img { width: 100%; height: 220px; object-fit: cover; border-radius: 16px; margin-bottom: 20px; }
     .srv-title { font-size: 1.4rem; margin-bottom: 10px; color: var(--text-main); }
     .srv-link {
-        margin-top: auto;
-        color: var(--primary);
-        font-weight: 700;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        border: 1px solid var(--border);
-        padding: 10px 20px;
-        border-radius: 50px;
-        width: fit-content;
-        transition: 0.2s;
+        margin-top: auto; color: var(--primary); font-weight: 700; text-decoration: none;
+        display: inline-flex; align-items: center; gap: 8px;
+        border: 1px solid var(--border); padding: 10px 20px; border-radius: 50px; width: fit-content;
     }
-    .srv-link:hover { background: var(--primary); color: white; border-color: var(--primary); }
+    .srv-link:hover { background: var(--primary); color: white; }
 
-    /* --- CÓMO FUNCIONA (Pasos) --- */
+    /* Pasos */
     .steps-section {
-        background-color: var(--bg); /* Fondo gris muy suave */
-        display: flex;
-        align-items: center;
-        gap: 80px;
-        padding: 100px 5%;
+        background-color: var(--bg); 
+        display: flex; align-items: center; gap: 80px; padding: 100px 5%;
     }
+    .step-number { font-size: 3rem; font-weight: 700; color: var(--primary); opacity: 0.3; }
 
-    .step-item {
-        display: flex;
-        gap: 20px;
-        margin-bottom: 40px;
-    }
-
-    .step-number {
-        font-family: 'Outfit', serif; /* O una fuente serif si quieres más estilo Selia */
-        font-size: 3rem;
-        font-weight: 700;
-        color: var(--primary);
-        line-height: 1;
-        opacity: 0.3;
-    }
-
-    /* --- PLANES (Cards Modernas) --- */
-    .pricing-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 30px;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .plan-card {
-        background: white;
-        border: 1px solid var(--border);
-        border-radius: 24px;
-        padding: 40px;
-        display: flex;
-        flex-direction: column;
-        transition: 0.3s;
-        position: relative;
-    }
-    
-    .plan-card.featured {
-        background: #F4F9F6; /* Verde muy pálido */
-        border-color: var(--primary);
-        box-shadow: 0 20px 40px rgba(79, 111, 82, 0.1);
-    }
-
-    .plan-price { font-size: 3rem; font-weight: 800; color: var(--primary); line-height: 1; margin: 15px 0; }
-    .plan-features li { padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px; color: var(--text-soft); }
-    .plan-features i { color: var(--primary); margin-top: 4px; }
-
-    /* --- FOOTER (Limpio) --- */
-    .footer {
-        background: #F8F9FA;
-        padding: 80px 5% 40px;
-        margin-top: 50px;
-    }
-
-    .footer-grid {
-        display: grid;
-        grid-template-columns: 1.5fr 1fr 1fr 1fr;
-        gap: 40px;
-    }
-
+    /* Footer */
+    .footer { background: #F8F9FA; padding: 80px 5% 40px; margin-top: 50px; }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 40px; }
     .footer h3 { color: var(--primary); font-size: 1.5rem; margin-bottom: 20px; }
-    .footer h4 { font-size: 1.1rem; margin-bottom: 20px; color: var(--text-main); font-weight: 700; }
-    
-    .footer-links { list-style: none; padding: 0; }
-    .footer-links li { margin-bottom: 12px; }
-    .footer-links a { text-decoration: none; color: var(--text-soft); transition: 0.2s; }
     .footer-links a:hover { color: var(--primary); }
 
-    /* --- RESPONSIVE MEDIA QUERIES --- */
+    /* Responsive */
     @media (max-width: 900px) {
-        .nav-center, .nav-right { display: none; } /* Ocultar menú desktop */
-        .hamburger { display: block; } /* Mostrar botón móvil */
-        
+        .nav-center, .nav-right { display: none; }
+        .hamburger { display: block; }
         .hero { flex-direction: column-reverse; padding-top: 100px; text-align: center; }
         .hero h1 { font-size: 2.5rem; }
-        .hero-badges { margin: 0 auto 20px; }
-        .hero-img { height: 350px; }
-        
         .steps-section { flex-direction: column; padding: 60px 5%; }
         .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+        .hero-img-container { width: 100%; }
     }
   </style>
 </head>
@@ -439,7 +329,7 @@
     <div class="mobile-header">
         <a href="/" style="font-family:'Outfit'; font-weight:800; font-size:1.5rem; color:var(--primary); text-decoration:none;">Bitácora</a>
         <div style="display:flex; gap:10px; align-items:center;">
-            <a href="app/entrevista.html" class="header-cta">Agenda ahora</a>
+            <a href="app/entrevista.html" class="header-cta">Empezar Gratis</a>
             <button class="close-btn" onclick="toggleMenu()">
                 <i class="fas fa-times"></i>
             </button>
@@ -455,42 +345,34 @@
             <div class="submenu">
                 <a href="#servicios">Terapia Psicológica</a>
                 <a href="#servicios">Coaching Emocional</a>
-                <a href="#servicios">Nutrición & Bienestar</a>
+                <a href="#servicios">Diario Inteligente</a>
             </div>
         </li>
 
         <li class="mobile-item">
             <div class="mobile-link-head" onclick="toggleSubmenu(this)">
-                Tests <i class="fas fa-chevron-down"></i>
+                Herramientas <i class="fas fa-chevron-down"></i>
             </div>
             <div class="submenu">
                 <a href="#">Test de Ansiedad</a>
-                <a href="#">Test de Depresión</a>
                 <a href="#">Test de Burnout</a>
+                <a href="#">Recursos de Calma</a>
             </div>
         </li>
 
         <li class="mobile-item">
-            <div class="mobile-link-head" onclick="toggleSubmenu(this)">
-                Programas <i class="fas fa-chevron-down"></i>
-            </div>
-              <div class="submenu">
-                  <a href="#">Programa Duelo</a>
-                  <a href="#">Programa Autoestima</a>
-              </div>
-          </li>
-  
-          <li class="mobile-item">
-              <a href="#planes" class="mobile-link-head" style="text-decoration:none;">Planes</a>
-          </li>
-          <li class="mobile-item">
-              <a href="#testimonios" class="mobile-link-head" style="text-decoration:none;">Blog</a>
-          </li>
-          
-          <li class="mobile-item" style="margin-top:20px; border:none;">
-              <a href="app/login.html" class="mobile-link-head" style="color:var(--primary);">Iniciar Sesión</a>
-          </li>
-      </ul>
+            <a href="#planes" class="mobile-link-head" style="text-decoration:none;" onclick="toggleMenu()">Planes</a>
+        </li>
+        <li class="mobile-item">
+            <a href="#metodo" class="mobile-link-head" style="text-decoration:none;" onclick="toggleMenu()">Cómo funciona</a>
+        </li>
+        
+        <li class="mobile-item" style="border:none; margin-top:20px;">
+            <a href="app/login.html" class="mobile-link-head" style="color:var(--primary);">
+                <i class="fas fa-user-circle"></i> Iniciar Sesión
+            </a>
+        </li>
+    </ul>
   </div>
 
   <section class="hero">
@@ -501,7 +383,7 @@
       <h1>Recupera el control de tu narrativa emocional.</h1>
       <p>Bitácora Mental no es solo terapia: es tu sistema diario para registrar, entender y gestionar tus emociones con datos reales.</p>
       
-      <div style="margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+      <div style="margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap;">
         <a href="app/entrevista.html" class="btn-nav-cta" style="padding: 15px 30px; font-size: 1.1rem;">
           Empezar ahora
         </a>
@@ -511,7 +393,7 @@
       </div>
     </div>
     
-    <div class="hero-img-container">
+    <div style="flex:1;">
       <img src="https://images.unsplash.com/photo-1573497620053-ea5300f94f21?q=80&w=1000" class="hero-img" alt="Bienestar Mental">
     </div>
   </section>
@@ -557,31 +439,29 @@
     <div style="flex:1;">
       <h2 style="font-size: 2.5rem; margin-bottom: 30px;">Tu ruta de claridad en 3 pasos</h2>
       
-      <div class="step-item">
+      <div style="display:flex; gap:20px; margin-bottom:40px;">
         <div class="step-number">1</div>
         <div>
-          <h3>Regístrate en la Bitácora</h3>
+          <h3 style="font-size:1.4rem; margin-bottom:10px;">Regístrate en la Bitácora</h3>
           <p>Crea tu cuenta gratuita en segundos. Sin tarjetas de crédito para empezar.</p>
         </div>
       </div>
 
-      <div class="step-item">
+      <div style="display:flex; gap:20px; margin-bottom:40px;">
         <div class="step-number">2</div>
         <div>
-          <h3>Mide tu clima interno</h3>
+          <h3 style="font-size:1.4rem; margin-bottom:10px;">Mide tu clima interno</h3>
           <p>Usa nuestro "Pulso Semanal" para entender cómo te sientes con datos reales.</p>
         </div>
       </div>
 
-      <div class="step-item">
+      <div style="display:flex; gap:20px;">
         <div class="step-number">3</div>
         <div>
-          <h3>Toma acción informada</h3>
+          <h3 style="font-size:1.4rem; margin-bottom:10px;">Toma acción informada</h3>
           <p>El sistema te sugerirá el recurso o terapeuta ideal basado en tu estado actual.</p>
         </div>
       </div>
-
-      <a href="app/entrevista.html" class="btn-nav-cta" style="display:inline-block; margin-top:20px;">Comenzar mi ruta</a>
     </div>
     
     <div style="flex:1;">
@@ -596,32 +476,17 @@
     </div>
 
     <div class="pricing-grid" id="planesContainer">
-      <div style="grid-column:1/-1; text-align:center; padding:60px;">
-        <i class="fas fa-circle-notch fa-spin fa-2x" style="color:var(--text-soft);"></i>
-        <p>Cargando opciones...</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="testimonios" class="section" style="background:var(--bg);">
-    <div class="section-header">
-      <h2>Historias de la comunidad</h2>
-    </div>
-    <div class="services-grid" id="testiContainer">
+        <div style="grid-column:1/-1; text-align:center; padding:40px;">
+            <i class="fas fa-circle-notch fa-spin"></i> Cargando planes...
         </div>
+    </div>
   </section>
 
   <footer class="footer">
     <div class="footer-grid">
-      
       <div>
         <h3><i class="fas fa-brain"></i> Bitácora</h3>
-        <p>Tecnología humana para el cuidado de la mente. Democratizando el acceso al bienestar emocional en Latinoamérica.</p>
-        <div style="display:flex; gap:15px; margin-top:20px;">
-            <a href="#" style="font-size:1.5rem; color:var(--text-main);"><i class="fab fa-instagram"></i></a>
-            <a href="#" style="font-size:1.5rem; color:var(--text-main);"><i class="fab fa-tiktok"></i></a>
-            <a href="#" style="font-size:1.5rem; color:var(--text-main);"><i class="fab fa-linkedin"></i></a>
-        </div>
+        <p>Tecnología humana para el cuidado de la mente. Democratizando el acceso al bienestar emocional.</p>
       </div>
 
       <div>
@@ -629,7 +494,6 @@
         <ul class="footer-links">
           <li><a href="#">Terapia Online</a></li>
           <li><a href="#">Coaching Emocional</a></li>
-          <li><a href="#">Psiquiatría</a></li>
           <li><a href="#">Planes Corporativos</a></li>
         </ul>
       </div>
@@ -640,7 +504,6 @@
           <li><a href="#">Test de Ansiedad</a></li>
           <li><a href="#">Test de Depresión</a></li>
           <li><a href="#">Test de Burnout</a></li>
-          <li><a href="#">Test de Pareja</a></li>
         </ul>
       </div>
 
@@ -648,12 +511,10 @@
         <h4>Soporte</h4>
         <ul class="footer-links">
           <li><a href="#">Centro de Ayuda</a></li>
-          <li><a href="#">Términos y Condiciones</a></li>
           <li><a href="#">Política de Privacidad</a></li>
           <li><a href="#">Libro de Reclamaciones</a></li>
         </ul>
       </div>
-
     </div>
     <div style="border-top:1px solid rgba(0,0,0,0.1); padding-top:40px; text-align:center; color:var(--text-soft); font-size:0.9rem;">
         &copy; 2026 Bitácora Mental. Todos los derechos reservados.
@@ -662,80 +523,57 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
-  
   <script>
-    // Función para abrir/cerrar el menú principal
-function toggleMenu() {
-    const menu = document.getElementById('mobileMenu');
-    menu.classList.toggle('active');
-    
-    if (menu.classList.contains('active')) {
-        document.body.style.overflow = 'hidden'; // Bloquear scroll
-    } else {
-        document.body.style.overflow = ''; // Activar scroll
+    // 1. Menú Móvil
+    function toggleMenu() {
+        const menu = document.getElementById('mobileMenu');
+        menu.classList.toggle('active');
+        if (menu.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
     }
-}
 
-// Función para el efecto acordeón (Submenús)
-function toggleSubmenu(header) {
-    const item = header.parentElement;
-    item.classList.toggle('open');
-}
+    // 2. Acordeón Móvil
+    function toggleSubmenu(header) {
+        const item = header.parentElement;
+        item.classList.toggle('open');
+    }
 
-    // 2. Lógica Supabase (Planes y Testimonios)
+    // 3. Cargar Planes (Supabase)
     document.addEventListener('DOMContentLoaded', async () => {
         if (!window.sb) return;
-
-        // Cargar Planes
         const { data: planes } = await window.sb.from('web_planes').select('*').eq('visible', true).order('orden');
-        const planesContainer = document.getElementById('planesContainer');
+        const container = document.getElementById('planesContainer');
         
         if (planes && planes.length > 0) {
-            planesContainer.innerHTML = planes.map(plan => `
+            container.innerHTML = planes.map(plan => `
                 <div class="plan-card ${plan.es_recomendado ? 'featured' : ''}">
-                    ${plan.es_recomendado ? '<div style="position:absolute; top:-15px; left:50%; transform:translateX(-50%); background:var(--primary); color:white; padding:5px 15px; border-radius:20px; font-size:0.8rem; font-weight:700;">RECOMENDADO</div>' : ''}
-                    <h3 style="margin-bottom:10px; color:var(--text-main); font-size:1.5rem;">${plan.nombre}</h3>
+                    <h3 style="font-size:1.5rem; margin-bottom:10px;">${plan.nombre}</h3>
                     <div class="plan-price">S/ ${plan.precio}</div>
-                    <ul class="plan-features" style="list-style:none; padding:0; margin:20px 0; text-align:left;">
-                        ${(plan.features || []).map(f => `<li style="padding:8px 0; border-bottom:1px solid #eee; display:flex; gap:10px;"><i class="fas fa-check" style="color:var(--primary); margin-top:4px;"></i>${f}</li>`).join('')}
+                    <ul class="plan-features" style="list-style:none; padding:0;">
+                        ${(plan.features || []).map(f => `<li><i class="fas fa-check"></i> ${f}</li>`).join('')}
                     </ul>
-                    <a href="app/entrevista.html" class="btn-nav-cta" style="display:block; text-align:center; width:100%; box-sizing:border-box; background:${plan.es_recomendado ? 'var(--primary)' : 'var(--text-main)'}">${plan.btn_texto || 'Elegir Plan'}</a>
+                    <a href="app/entrevista.html" class="srv-link" style="width:100%; justify-content:center; margin-top:20px;">${plan.btn_texto || 'Elegir'}</a>
                 </div>
             `).join('');
         } else {
-            // Fallback
-            planesContainer.innerHTML = `
+            // Fallback visual si no hay DB
+            container.innerHTML = `
                 <div class="plan-card">
-                    <h3>Básico</h3>
-                    <div class="plan-price">S/ 0</div>
-                    <ul style="list-style:none; padding:0; margin:20px 0;"><li><i class="fas fa-check"></i> Diario Digital</li></ul>
-                    <a href="#" class="btn-nav-login" style="display:block; text-align:center; border:1px solid var(--border);">Empezar Gratis</a>
+                    <h3>Básico</h3><div class="plan-price">S/ 0</div>
+                    <ul class="plan-features" style="list-style:none; padding:0;"><li><i class="fas fa-check"></i> Diario Digital</li></ul>
+                    <a href="#" class="srv-link" style="width:100%; justify-content:center;">Empezar</a>
                 </div>
                 <div class="plan-card featured">
-                    <h3>Pro</h3>
-                    <div class="plan-price">S/ 49</div>
-                    <ul style="list-style:none; padding:0; margin:20px 0;"><li><i class="fas fa-check"></i> Todo incluido</li></ul>
-                    <a href="#" class="btn-nav-cta" style="display:block; text-align:center;">Suscribirme</a>
+                    <h3>Pro</h3><div class="plan-price">S/ 49</div>
+                    <ul class="plan-features" style="list-style:none; padding:0;"><li><i class="fas fa-check"></i> Todo incluido</li></ul>
+                    <a href="#" class="srv-link" style="width:100%; justify-content:center; background:var(--primary); color:white;">Suscribirme</a>
                 </div>
             `;
         }
-
-        // Cargar Testimonios
-        const { data: testimonios } = await window.sb.from('web_testimonios').select('*');
-        const testiContainer = document.getElementById('testiContainer');
-        if (testimonios && testimonios.length > 0) {
-            testiContainer.innerHTML = testimonios.map(t => `
-                <div style="background:white; padding:30px; border-radius:16px; border:1px solid var(--border);">
-                    <div style="color:#F59E0B; margin-bottom:15px;">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <p style="font-style:italic; margin-bottom:20px;">"${t.texto}"</p>
-                    <strong>${t.autor}</strong>
-                </div>
-            `).join('');
-        }
     });
-    
   </script>
 </body>
 </html>
