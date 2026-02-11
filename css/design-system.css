@@ -406,3 +406,30 @@ p, label, span, input, textarea {
         padding: 20px !important; 
     }
 }
+
+/* =========================================
+   REGLAS DE CONTRASTE (SOLUCIÓN DEFINITIVA)
+   ========================================= */
+
+/* Esta clase fuerza que TODO el texto dentro sea blanco */
+.theme-dark,
+.theme-dark h1, .theme-dark h2, .theme-dark h3, 
+.theme-dark p, .theme-dark span, .theme-dark i, .theme-dark label {
+    color: #FFFFFF !important;
+}
+
+/* Aplicamos la regla automáticamente a componentes conocidos oscuros */
+.insight-banner,       /* Banner de Progreso */
+.premium-card,         /* Tarjeta Premium de Planes */
+.btn-primary,          /* Botones principales */
+.btn-save,
+.btn-confirm {
+    color: #FFFFFF !important;
+}
+
+/* Aseguramos que los títulos dentro de estos componentes también sean blancos */
+.insight-banner h3, 
+.premium-card .plan-name,
+.premium-card .plan-price {
+    color: #FFFFFF !important;
+}
