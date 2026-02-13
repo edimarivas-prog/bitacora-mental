@@ -2,7 +2,16 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="Plataforma de bienestar mental con terapia online, coaching emocional y herramientas de autogestión. Recupera el control de tu salud mental.">
+  <meta name="keywords" content="terapia online, psicólogo online, salud mental, bienestar emocional, coaching">
+  <meta name="theme-color" content="#4F6F52">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Bitácora Mental - Tu bienestar comienza aquí">
+  <meta property="og:description" content="Recupera el control de tu narrativa emocional con terapia online y herramientas profesionales.">
+  <meta property="og:image" content="/assets/og-image.jpg">
+  
   <title>Bitácora Mental - Tu bienestar comienza aquí</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
@@ -12,188 +21,846 @@
 
   <style>
     /* =========================================
-       ESTILOS VISUALES (CORRECCIONES DE DISEÑO)
+       RESET Y BASE
        ========================================= */
     
-    /* 1. Ajustes Globales para Landing */
-    body { background-color: #FFFFFF; overflow-x: hidden; }
-    h1, h2, h3 { font-family: 'Outfit', sans-serif; color: var(--text-main); }
-    p { font-family: 'DM Sans', sans-serif; color: var(--text-soft); line-height: 1.6; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body { 
+      background-color: #FFFFFF; 
+      overflow-x: hidden; 
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-main);
+    }
+    
+    h1, h2, h3 { 
+      font-family: 'Outfit', sans-serif; 
+      color: var(--text-main); 
+      line-height: 1.2;
+    }
+    
+    p { line-height: 1.6; color: var(--text-soft); }
+    
+    img { max-width: 100%; height: auto; }
+    
+    a { transition: all 0.2s ease; }
 
-    /* 2. Navbar Fijo con Blur */
+    /* =========================================
+       NAVBAR FIJO
+       ========================================= */
+    
     .landing-nav {
-        position: fixed; top: 0; left: 0; width: 100%; height: 80px;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(12px);
-        padding: 0 5%;
-        display: flex; justify-content: space-between; align-items: center;
-        z-index: 1000;
-        border-bottom: 1px solid rgba(0,0,0,0.05);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.02); /* Sombra sutil */
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 80px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0 5%;
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      transition: box-shadow 0.3s ease;
+    }
+    
+    .landing-nav.scrolled {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     }
 
     .nav-brand {
-        display: flex; align-items: center; gap: 10px;
-        font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.5rem;
-        color: var(--primary); text-decoration: none;
+      display: flex; 
+      align-items: center; 
+      gap: 10px;
+      font-family: 'Outfit', sans-serif; 
+      font-weight: 800; 
+      font-size: 1.5rem;
+      color: var(--primary); 
+      text-decoration: none;
+    }
+    
+    .nav-brand i {
+      font-size: 1.7rem;
     }
 
-    .nav-center { display: flex; gap: 30px; }
+    .nav-center { 
+      display: flex; 
+      gap: 30px; 
+    }
+    
     .nav-link {
-        text-decoration: none; color: var(--text-soft); font-weight: 600; font-size: 0.95rem;
-        transition: color 0.2s;
+      text-decoration: none; 
+      color: var(--text-soft); 
+      font-weight: 600; 
+      font-size: 0.95rem;
+      position: relative;
     }
-    .nav-link:hover { color: var(--primary); }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover {
+      color: var(--primary);
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
 
-    .nav-right { display: flex; gap: 15px; align-items: center; }
+    .nav-right { 
+      display: flex; 
+      gap: 15px; 
+      align-items: center; 
+    }
     
     .btn-login {
-        padding: 10px 20px; border-radius: 50px; font-weight: 700; text-decoration: none;
-        color: var(--primary); background: transparent; border: 2px solid var(--primary-light);
-        transition: 0.2s;
+      padding: 10px 20px; 
+      border-radius: 50px; 
+      font-weight: 700; 
+      text-decoration: none;
+      color: var(--primary); 
+      background: transparent; 
+      border: 2px solid var(--primary-light);
     }
-    .btn-login:hover { background: var(--primary-light); }
+    
+    .btn-login:hover { 
+      background: var(--primary-light); 
+      transform: translateY(-2px);
+    }
 
     .btn-cta {
-        padding: 10px 24px; border-radius: 50px; font-weight: 700; text-decoration: none;
-        color: white; background: var(--primary); 
-        box-shadow: 0 4px 15px rgba(79, 111, 82, 0.3); /* Sombra para dar volumen */
-        transition: 0.2s;
+      padding: 12px 28px; 
+      border-radius: 50px; 
+      font-weight: 700; 
+      text-decoration: none;
+      color: white; 
+      background: var(--primary); 
+      box-shadow: 0 4px 15px rgba(79, 111, 82, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
-    .btn-cta:hover { transform: translateY(-2px); background: var(--primary-dark); }
+    
+    .btn-cta:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 6px 20px rgba(79, 111, 82, 0.4);
+    }
+    
+    .btn-cta:active {
+      transform: translateY(0);
+    }
 
-    /* Hamburguesa Móvil */
-    .hamburger { display: none; background: none; border: none; font-size: 1.5rem; color: var(--text-main); cursor: pointer; }
+    .hamburger { 
+      display: none; 
+      background: var(--primary-50); 
+      border: none; 
+      border-radius: 10px;
+      width: 44px;
+      height: 44px;
+      font-size: 1.3rem; 
+      color: var(--primary); 
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .hamburger:active {
+      transform: scale(0.95);
+    }
 
-    /* 3. Hero Section (Portada) */
+    /* =========================================
+       HERO SECTION
+       ========================================= */
+    
     .hero {
-        padding: 140px 5% 80px;
-        display: flex; align-items: center; justify-content: space-between; gap: 50px;
-        min-height: 90vh;
-        /* Gradiente sutil para dar profundidad */
-        background: radial-gradient(circle at 80% 20%, var(--primary-light), transparent 60%);
+      padding: 140px 5% 80px;
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      gap: 60px;
+      min-height: 90vh;
+      background: radial-gradient(circle at 80% 20%, var(--primary-light), transparent 60%);
     }
-    .hero-content { flex: 1; max-width: 600px; }
-    .hero h1 { font-size: 3.5rem; margin-bottom: 20px; letter-spacing: -1px; line-height: 1.1; color: var(--primary); }
+    
+    .hero-content { 
+      flex: 1; 
+      max-width: 600px; 
+      animation: fadeInUp 0.8s ease;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .hero h1 { 
+      font-size: 3.5rem; 
+      margin-bottom: 20px; 
+      letter-spacing: -1px; 
+      color: var(--primary); 
+      font-weight: 800;
+    }
+    
+    .hero p {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      margin-bottom: 30px;
+    }
     
     .hero-badge {
-        display: inline-flex; align-items: center; gap: 8px;
-        background: #FEF3C7; color: #92400E;
-        padding: 8px 16px; border-radius: 50px;
-        font-size: 0.85rem; font-weight: 700; margin-bottom: 25px;
-        box-shadow: 0 2px 10px rgba(245, 158, 11, 0.1);
+      display: inline-flex; 
+      align-items: center; 
+      gap: 8px;
+      background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+      color: #92400E;
+      padding: 10px 18px; 
+      border-radius: 50px;
+      font-size: 0.85rem; 
+      font-weight: 700; 
+      margin-bottom: 25px;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 30px;
     }
 
     .hero-img {
-        flex: 1; height: 550px; object-fit: cover; border-radius: 24px;
-        box-shadow: 20px 20px 0px rgba(79, 111, 82, 0.15); /* Sombra dura estilo moderno */
+      flex: 1; 
+      height: 550px; 
+      object-fit: cover; 
+      border-radius: 24px;
+      box-shadow: 20px 20px 0px rgba(79, 111, 82, 0.15);
+      animation: fadeInRight 0.8s ease 0.2s backwards;
+    }
+    
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
-    /* 4. Grid de Servicios (Estilo Selia) */
-    .section { padding: 100px 5%; }
-    .section-header { text-align: center; margin-bottom: 60px; max-width: 800px; margin: 0 auto; }
-    .section-header h2 { font-size: 2.5rem; margin-bottom: 15px; }
+    /* =========================================
+       TRUST BADGES
+       ========================================= */
+    
+    .trust-section {
+      padding: 40px 5%;
+      background: var(--bg);
+      text-align: center;
+    }
+    
+    .trust-grid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    
+    .trust-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .trust-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+      font-family: 'Outfit', sans-serif;
+    }
+    
+    .trust-label {
+      font-size: 0.9rem;
+      color: var(--text-soft);
+    }
 
+    /* =========================================
+       SECCIONES
+       ========================================= */
+    
+    .section { 
+      padding: 100px 5%; 
+    }
+    
+    .section-header { 
+      text-align: center; 
+      margin-bottom: 60px; 
+      max-width: 700px; 
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .section-header h2 { 
+      font-size: 2.5rem; 
+      margin-bottom: 15px; 
+      font-weight: 700;
+    }
+    
+    .section-header p {
+      font-size: 1.1rem;
+    }
+
+    /* =========================================
+       SERVICIOS GRID
+       ========================================= */
+    
     .services-grid {
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px;
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
+    
     .service-card {
-        display: flex; flex-direction: column; 
-        background: white; border-radius: 20px;
-        transition: 0.3s; padding: 20px;
-        border: 1px solid transparent; /* Para evitar salto al hover */
+      display: flex; 
+      flex-direction: column; 
+      background: white; 
+      border-radius: 20px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
     }
+    
     .service-card:hover { 
-        transform: translateY(-5px); 
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-        border-color: var(--border);
+      transform: translateY(-8px); 
+      box-shadow: 0 15px 35px rgba(0,0,0,0.08); 
+      border-color: var(--primary-light);
     }
-    .srv-img { width: 100%; height: 200px; object-fit: cover; border-radius: 16px; margin-bottom: 20px; }
-    .srv-title { font-size: 1.3rem; margin-bottom: 10px; font-weight: 700; }
+    
+    .srv-img { 
+      width: 100%; 
+      height: 200px; 
+      object-fit: cover; 
+      border-radius: 16px; 
+      margin-bottom: 20px; 
+    }
+    
+    .srv-title { 
+      font-size: 1.3rem; 
+      margin-bottom: 10px; 
+      font-weight: 700; 
+      color: var(--text-main);
+    }
+    
+    .service-card p {
+      margin-bottom: 20px;
+      flex: 1;
+    }
     
     .srv-link {
-        margin-top: auto; color: var(--primary); font-weight: 700; text-decoration: none;
-        display: inline-flex; align-items: center; gap: 8px;
-        padding: 10px 0; font-size: 0.95rem;
+      color: var(--primary); 
+      font-weight: 700; 
+      text-decoration: none;
+      display: inline-flex; 
+      align-items: center; 
+      gap: 8px;
+      padding: 10px 0; 
+      font-size: 0.95rem;
     }
-    .srv-link:hover { gap: 12px; }
-
-    /* 5. Planes (Pricing Cards con Profundidad) */
-    .pricing-grid {
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;
-        max-width: 1200px; margin: 0 auto;
-    }
-    .plan-card {
-        background: white; border: 1px solid var(--border); border-radius: 24px;
-        padding: 40px; display: flex; flex-direction: column; position: relative;
-        transition: 0.3s;
-    }
-    /* El plan destacado tiene sombra y borde para resaltar */
-    .plan-card.featured {
-        background: #F8FBF9; /* Fondo muy suave */
-        border: 2px solid var(--primary);
-        box-shadow: 0 20px 40px rgba(79, 111, 82, 0.15);
-        transform: scale(1.02); z-index: 2;
-    }
-    .plan-tag {
-        position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-        background: var(--primary); color: white; padding: 5px 15px;
-        border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
-    }
-    .plan-price { font-size: 3rem; font-weight: 800; color: var(--primary); margin: 15px 0; line-height: 1; }
-    .plan-features { margin: 30px 0; list-style: none; padding: 0; flex: 1; }
-    .plan-features li { padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; gap: 10px; color: var(--text-soft); }
-    .plan-btn {
-        width: 100%; padding: 15px; border-radius: 12px; text-align: center;
-        font-weight: 700; text-decoration: none; transition: 0.2s;
-        border: 2px solid var(--primary);
-        background: transparent; color: var(--primary);
-    }
-    .plan-card.featured .plan-btn { background: var(--primary); color: white; }
-    .plan-btn:hover { opacity: 0.9; transform: translateY(-2px); }
-
-    /* 6. Footer Limpio */
-    .footer { background: #F8F9FA; padding: 80px 5% 40px; margin-top: 50px; }
-    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 40px; }
-    .footer h4 { margin-bottom: 20px; color: var(--text-main); font-weight: 700; }
-    .footer ul { list-style: none; padding: 0; }
-    .footer a { text-decoration: none; color: var(--text-soft); display: block; margin-bottom: 10px; transition: 0.2s; }
-    .footer a:hover { color: var(--primary); transform: translateX(5px); }
-
-    /* 7. Menú Móvil (Estilo Acordeón) */
-    .mobile-menu {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-        background: white; z-index: 2000;
-        transform: translateX(100%); transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        display: flex; flex-direction: column;
-    }
-    .mobile-menu.active { transform: translateX(0); }
-    .mobile-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-    .close-btn { width: 40px; height: 40px; border: none; background: #F3F4F6; border-radius: 8px; font-size: 1.2rem; cursor: pointer; }
     
-    .mobile-links { padding: 20px; overflow-y: auto; }
-    .mobile-item { border-bottom: 1px solid var(--border); }
-    .mobile-head { padding: 15px 0; font-weight: 700; font-size: 1.1rem; display: flex; justify-content: space-between; cursor: pointer; }
-    .mobile-head i { transition: 0.3s; color: var(--primary); }
-    .mobile-item.open .mobile-head i { transform: rotate(180deg); }
-    .submenu { max-height: 0; overflow: hidden; transition: 0.3s; background: #FAFAFA; border-radius: 8px; }
-    .mobile-item.open .submenu { max-height: 500px; margin-bottom: 15px; }
-    .submenu a { display: block; padding: 12px 15px; font-size: 0.95rem; color: var(--text-soft); }
+    .srv-link:hover { 
+      gap: 12px; 
+    }
+    
+    .srv-link i {
+      transition: transform 0.3s ease;
+    }
+    
+    .srv-link:hover i {
+      transform: translateX(5px);
+    }
 
-    /* Responsive */
+    /* =========================================
+       PRICING CARDS
+       ========================================= */
+    
+    .pricing-grid {
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+      gap: 30px;
+      max-width: 1200px; 
+      margin: 0 auto;
+    }
+    
+    .plan-card {
+      background: white; 
+      border: 2px solid var(--border); 
+      border-radius: 24px;
+      padding: 40px; 
+      display: flex; 
+      flex-direction: column; 
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    
+    .plan-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .plan-card.featured {
+      background: linear-gradient(135deg, #F8FBF9, #FFFFFF);
+      border: 3px solid var(--primary);
+      box-shadow: 0 20px 40px rgba(79, 111, 82, 0.15);
+      transform: scale(1.05);
+      z-index: 2;
+    }
+    
+    .plan-tag {
+      position: absolute; 
+      top: -15px; 
+      left: 50%; 
+      transform: translateX(-50%);
+      background: var(--primary); 
+      color: white; 
+      padding: 6px 18px;
+      border-radius: 20px; 
+      font-size: 0.75rem; 
+      font-weight: 700; 
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .plan-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    
+    .plan-price { 
+      font-size: 3rem; 
+      font-weight: 800; 
+      color: var(--primary); 
+      margin: 15px 0; 
+      line-height: 1;
+      font-family: 'Outfit', sans-serif;
+    }
+    
+    .plan-price span {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--text-soft);
+    }
+    
+    .plan-features { 
+      margin: 30px 0; 
+      list-style: none; 
+      padding: 0; 
+      flex: 1; 
+    }
+    
+    .plan-features li { 
+      padding: 12px 0; 
+      border-bottom: 1px solid rgba(0,0,0,0.05); 
+      display: flex; 
+      gap: 10px; 
+      color: var(--text-soft);
+      align-items: flex-start;
+    }
+    
+    .plan-features i {
+      color: var(--primary);
+      margin-top: 3px;
+    }
+    
+    .plan-btn {
+      width: 100%; 
+      padding: 16px; 
+      border-radius: 12px; 
+      text-align: center;
+      font-weight: 700; 
+      text-decoration: none; 
+      border: 2px solid var(--primary);
+      background: transparent; 
+      color: var(--primary);
+      display: inline-block;
+      font-size: 1rem;
+    }
+    
+    .plan-card.featured .plan-btn { 
+      background: var(--primary); 
+      color: white; 
+    }
+    
+    .plan-btn:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 4px 12px rgba(79, 111, 82, 0.2);
+    }
+
+    /* =========================================
+       CTA SECTION
+       ========================================= */
+    
+    .cta-section {
+      background: linear-gradient(135deg, var(--primary), var(--primary-500));
+      color: white;
+      text-align: center;
+      padding: 80px 5%;
+      margin: 100px 5%;
+      border-radius: 30px;
+    }
+    
+    .cta-section h2 {
+      font-size: 2.5rem;
+      color: white;
+      margin-bottom: 20px;
+    }
+    
+    .cta-section p {
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 30px;
+    }
+    
+    .btn-white {
+      background: white;
+      color: var(--primary);
+      padding: 16px 32px;
+      border-radius: 50px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.1rem;
+    }
+    
+    .btn-white:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    /* =========================================
+       FOOTER
+       ========================================= */
+    
+    .footer { 
+      background: #F8F9FA; 
+      padding: 80px 5% 40px; 
+    }
+    
+    .footer-grid { 
+      display: grid; 
+      grid-template-columns: 1.5fr 1fr 1fr 1fr; 
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .footer h4 { 
+      margin-bottom: 20px; 
+      color: var(--text-main); 
+      font-weight: 700; 
+      font-size: 1.1rem;
+    }
+    
+    .footer ul { 
+      list-style: none; 
+      padding: 0; 
+    }
+    
+    .footer a { 
+      text-decoration: none; 
+      color: var(--text-soft); 
+      display: block; 
+      margin-bottom: 10px; 
+      font-size: 0.95rem;
+    }
+    
+    .footer a:hover { 
+      color: var(--primary); 
+      transform: translateX(5px); 
+    }
+    
+    .social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .social-links a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary-50);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+    
+    .social-links a:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-3px);
+    }
+    
+    .footer-bottom {
+      border-top: 1px solid #E5E7EB;
+      padding-top: 30px;
+      margin-top: 40px;
+      text-align: center;
+      color: #6B7280;
+      font-size: 0.9rem;
+    }
+
+    /* =========================================
+       MENÚ MÓVIL
+       ========================================= */
+    
+    .mobile-menu {
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100vh;
+      background: white; 
+      z-index: 2000;
+      transform: translateX(100%); 
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; 
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    
+    .mobile-menu.active { 
+      transform: translateX(0); 
+    }
+    
+    .mobile-header { 
+      padding: 20px; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      border-bottom: 1px solid var(--border);
+      height: 80px;
+    }
+    
+    .close-btn { 
+      width: 44px; 
+      height: 44px; 
+      border: none; 
+      background: var(--primary-50); 
+      border-radius: 10px; 
+      font-size: 1.2rem; 
+      cursor: pointer; 
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .close-btn:active {
+      transform: scale(0.95);
+    }
+    
+    .mobile-links { 
+      padding: 20px; 
+      overflow-y: auto; 
+      flex: 1;
+    }
+    
+    .mobile-item { 
+      border-bottom: 1px solid var(--border); 
+    }
+    
+    .mobile-head { 
+      padding: 18px 0; 
+      font-weight: 700; 
+      font-size: 1.1rem; 
+      display: flex; 
+      justify-content: space-between; 
+      cursor: pointer;
+      color: var(--text-main);
+    }
+    
+    .mobile-head i { 
+      transition: transform 0.3s; 
+      color: var(--primary); 
+    }
+    
+    .mobile-item.open .mobile-head i { 
+      transform: rotate(180deg); 
+    }
+    
+    .submenu { 
+      max-height: 0; 
+      overflow: hidden; 
+      transition: max-height 0.3s ease; 
+      background: var(--bg); 
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+    
+    .mobile-item.open .submenu { 
+      max-height: 500px; 
+    }
+    
+    .submenu a { 
+      display: block; 
+      padding: 14px 18px; 
+      font-size: 0.95rem; 
+      color: var(--text-soft);
+      text-decoration: none;
+    }
+    
+    .submenu a:hover {
+      background: white;
+      color: var(--primary);
+    }
+    
+    .mobile-cta {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 30px;
+      padding: 20px;
+      background: var(--bg);
+      border-radius: 12px;
+    }
+    
+    .mobile-cta a {
+      text-align: center;
+      padding: 14px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    /* =========================================
+       RESPONSIVE
+       ========================================= */
+    
     @media (max-width: 900px) {
-        .nav-center, .nav-right { display: none; }
-        .hamburger { display: block; }
-        .hero { flex-direction: column-reverse; padding-top: 100px; text-align: center; }
-        .hero h1 { font-size: 2.8rem; }
-        .hero-img { width: 100%; height: 350px; }
-        .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+      .nav-center, .nav-right { display: none; }
+      .hamburger { display: flex; }
+      
+      .hero { 
+        flex-direction: column-reverse; 
+        padding-top: 100px; 
+        text-align: center;
+        gap: 40px;
+      }
+      
+      .hero h1 { font-size: 2.5rem; }
+      .hero p { font-size: 1rem; }
+      
+      .hero-img { 
+        width: 100%; 
+        height: 300px; 
+        box-shadow: 10px 10px 0px rgba(79, 111, 82, 0.15);
+      }
+      
+      .hero-actions {
+        justify-content: center;
+      }
+      
+      .trust-grid {
+        gap: 30px;
+      }
+      
+      .trust-number {
+        font-size: 1.5rem;
+      }
+      
+      .section {
+        padding: 60px 5%;
+      }
+      
+      .section-header h2 {
+        font-size: 2rem;
+      }
+      
+      .services-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .plan-card.featured {
+        transform: scale(1);
+      }
+      
+      .cta-section {
+        margin: 60px 20px;
+        padding: 50px 30px;
+      }
+      
+      .cta-section h2 {
+        font-size: 1.8rem;
+      }
+      
+      .footer-grid { 
+        grid-template-columns: 1fr; 
+        gap: 30px; 
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .btn-cta, .btn-login {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+      }
+      
+      .section-header h2 {
+        font-size: 1.75rem;
+      }
+      
+      .plan-price {
+        font-size: 2.5rem;
+      }
     }
   </style>
 </head>
 <body>
 
-  <nav class="landing-nav">
+  <!-- Navbar -->
+  <nav class="landing-nav" id="navbar">
     <a href="/" class="nav-brand">
       <i class="fas fa-brain"></i> Bitácora
     </a>
@@ -202,233 +869,441 @@
       <a href="#servicios" class="nav-link">Servicios</a>
       <a href="#metodo" class="nav-link">El Método</a>
       <a href="#planes" class="nav-link">Planes</a>
-      <a href="#faq" class="nav-link">Preguntas</a>
+      <a href="faq.html" class="nav-link">Preguntas</a>
     </div>
 
     <div class="nav-right">
-      <a href="app/login.html" class="btn-login">Ingresar</a>
-      <a href="app/entrevista.html" class="btn-cta">Crear cuenta</a>
+      <a href="login.html" class="btn-login">Ingresar</a>
+      <a href="registro.html" class="btn-cta">
+        Crear cuenta
+        <i class="fas fa-arrow-right"></i>
+      </a>
     </div>
 
-    <button class="hamburger" onclick="toggleMenu()">
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Abrir menú">
       <i class="fas fa-bars"></i>
     </button>
   </nav>
 
+  <!-- Mobile Menu -->
   <div class="mobile-menu" id="mobileMenu">
     <div class="mobile-header">
-        <span style="font-family:'Outfit'; font-weight:800; font-size:1.5rem; color:var(--primary);">Bitácora</span>
-        <button class="close-btn" onclick="toggleMenu()"><i class="fas fa-times"></i></button>
+      <span style="font-family:'Outfit'; font-weight:800; font-size:1.5rem; color:var(--primary);">
+        <i class="fas fa-brain"></i> Bitácora
+      </span>
+      <button class="close-btn" onclick="toggleMenu()" aria-label="Cerrar menú">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
+    
     <div class="mobile-links">
-        
-        <div class="mobile-item">
-            <div class="mobile-head" onclick="toggleSub(this)">Servicios <i class="fas fa-chevron-down"></i></div>
-            <div class="submenu">
-                <a href="#servicios">Terapia Online</a>
-                <a href="#servicios">Coaching Emocional</a>
-                <a href="#servicios">Diario Inteligente</a>
-            </div>
+      <div class="mobile-item">
+        <div class="mobile-head" onclick="toggleSub(this)">
+          Servicios <i class="fas fa-chevron-down"></i>
         </div>
+        <div class="submenu">
+          <a href="#servicios" onclick="toggleMenu()">Terapia Online</a>
+          <a href="#servicios" onclick="toggleMenu()">Coaching Emocional</a>
+          <a href="#servicios" onclick="toggleMenu()">Diario Inteligente</a>
+          <a href="#servicios" onclick="toggleMenu()">Recursos Guiados</a>
+        </div>
+      </div>
 
-        <div class="mobile-item">
-            <div class="mobile-head" onclick="toggleSub(this)">Herramientas <i class="fas fa-chevron-down"></i></div>
-            <div class="submenu">
-                <a href="#">Test de Ansiedad</a>
-                <a href="#">Test de Burnout</a>
-                <a href="#">Recursos de Calma</a>
-            </div>
+      <div class="mobile-item">
+        <div class="mobile-head" onclick="toggleSub(this)">
+          Herramientas <i class="fas fa-chevron-down"></i>
         </div>
+        <div class="submenu">
+          <a href="test-bienestar.html" onclick="toggleMenu()">Test de Bienestar</a>
+          <a href="recursos-gratuitos.html" onclick="toggleMenu()">Recursos Gratuitos</a>
+        </div>
+      </div>
 
-        <div class="mobile-item">
-            <a href="#planes" class="mobile-head" style="text-decoration:none;" onclick="toggleMenu()">Planes</a>
-        </div>
-        <div class="mobile-item">
-            <a href="#faq" class="mobile-head" style="text-decoration:none;" onclick="toggleMenu()">Preguntas</a>
-        </div>
+      <div class="mobile-item">
+        <a href="#planes" class="mobile-head" style="text-decoration:none;" onclick="toggleMenu()">
+          Planes y Precios
+        </a>
+      </div>
+      
+      <div class="mobile-item">
+        <a href="faq.html" class="mobile-head" style="text-decoration:none;" onclick="toggleMenu()">
+          Preguntas Frecuentes
+        </a>
+      </div>
+      
+      <div class="mobile-item">
+        <a href="contacto.html" class="mobile-head" style="text-decoration:none;" onclick="toggleMenu()">
+          Contacto
+        </a>
+      </div>
 
-        <div style="margin-top: 30px; display: flex; flex-direction: column; gap: 15px;">
-            <a href="app/login.html" style="text-align: center; font-weight: 700; color: var(--primary); text-decoration: none;">Iniciar Sesión</a>
-            <a href="app/entrevista.html" class="btn-cta" style="text-align: center; display: block;">Empezar Gratis</a>
-        </div>
+      <div class="mobile-cta">
+        <a href="login.html" class="btn-login" style="display:block;">
+          Iniciar Sesión
+        </a>
+        <a href="registro.html" class="btn-cta" style="width:100%;">
+          Empezar Gratis
+        </a>
+      </div>
     </div>
   </div>
 
+  <!-- Hero Section -->
   <section class="hero">
     <div class="hero-content">
       <div class="hero-badge">
-        <i class="fas fa-star"></i> Nueva Plataforma 2026
+        <i class="fas fa-star"></i> Plataforma 100% Peruana
       </div>
-      <h1>Recupera el control de tu narrativa emocional.</h1>
-      <p>Bitácora Mental no es solo terapia: es tu sistema diario para registrar, entender y gestionar tus emociones con datos reales.</p>
       
-      <div style="margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap;">
-        <a href="app/entrevista.html" class="btn-cta">Empezar ahora</a>
-        <a href="#metodo" class="btn-login">Ver cómo funciona</a>
+      <h1>Recupera el control de tu narrativa emocional.</h1>
+      
+      <p>
+        Bitácora Mental no es solo terapia: es tu sistema diario para registrar, 
+        entender y gestionar tus emociones con datos reales.
+      </p>
+      
+      <div class="hero-actions">
+        <a href="registro.html" class="btn-cta">
+          Empezar ahora
+          <i class="fas fa-arrow-right"></i>
+        </a>
+        <a href="#metodo" class="btn-login">
+          Ver cómo funciona
+        </a>
       </div>
     </div>
-    <img src="https://images.unsplash.com/photo-1573497620053-ea5300f94f21?q=80&w=1000" class="hero-img" alt="Bienestar">
+    
+    <img 
+      src="https://images.unsplash.com/photo-1573497620053-ea5300f94f21?q=80&w=1000" 
+      class="hero-img" 
+      alt="Persona sonriendo - Bienestar Mental"
+      loading="eager"
+    >
   </section>
 
+  <!-- Trust Section -->
+  <section class="trust-section">
+    <p style="color: var(--text-soft); margin-bottom: 20px; font-weight: 600;">
+      Confían en nosotros
+    </p>
+    <div class="trust-grid">
+      <div class="trust-item">
+        <div class="trust-number">500+</div>
+        <div class="trust-label">Usuarios activos</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-number">50+</div>
+        <div class="trust-label">Especialistas</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-number">4.8★</div>
+        <div class="trust-label">Valoración</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Servicios -->
   <section id="servicios" class="section">
     <div class="section-header">
       <h2>Un ecosistema para tu bienestar</h2>
-      <p>Herramientas profesionales adaptadas a tu ritmo.</p>
+      <p>Herramientas profesionales adaptadas a tu ritmo de vida.</p>
     </div>
     
     <div class="services-grid">
       <div class="service-card">
-        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600" class="srv-img">
+        <img 
+          src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600" 
+          class="srv-img"
+          alt="Terapia Online"
+          loading="lazy"
+        >
         <h3 class="srv-title">Terapia 1 a 1</h3>
-        <p>Sesiones privadas con especialistas verificados.</p>
-        <a href="#" class="srv-link">Ver directorio <i class="fas fa-arrow-right"></i></a>
+        <p>Sesiones privadas con psicólogos colegiados y especialistas verificados.</p>
+        <a href="app/especialistas.html" class="srv-link">
+          Ver especialistas <i class="fas fa-arrow-right"></i>
+        </a>
       </div>
+      
       <div class="service-card">
-        <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600" class="srv-img">
+        <img 
+          src="https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600" 
+          class="srv-img"
+          alt="Coaching Emocional"
+          loading="lazy"
+        >
         <h3 class="srv-title">Coaching Emocional</h3>
-        <p>Acompañamiento enfocado en metas y hábitos.</p>
-        <a href="#" class="srv-link">Buscar mentor <i class="fas fa-arrow-right"></i></a>
+        <p>Acompañamiento enfocado en metas concretas y construcción de hábitos.</p>
+        <a href="app/especialistas.html" class="srv-link">
+          Encontrar coach <i class="fas fa-arrow-right"></i>
+        </a>
       </div>
+      
       <div class="service-card">
-        <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=600" class="srv-img">
+        <img 
+          src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=600" 
+          class="srv-img"
+          alt="Diario Digital"
+          loading="lazy"
+        >
         <h3 class="srv-title">Diario Inteligente</h3>
-        <p>Tu espacio seguro para volcar pensamientos.</p>
-        <a href="#" class="srv-link">Empezar a escribir <i class="fas fa-arrow-right"></i></a>
+        <p>Tu espacio seguro y privado para expresar pensamientos y emociones.</p>
+        <a href="app/diario.html" class="srv-link">
+          Empezar a escribir <i class="fas fa-arrow-right"></i>
+        </a>
       </div>
+      
       <div class="service-card">
-        <img src="https://images.unsplash.com/photo-1519834785169-98be25ec3f84?q=80&w=600" class="srv-img">
+        <img 
+          src="https://images.unsplash.com/photo-1519834785169-98be25ec3f84?q=80&w=600" 
+          class="srv-img"
+          alt="Recursos de Bienestar"
+          loading="lazy"
+        >
         <h3 class="srv-title">Recursos Guiados</h3>
-        <p>Audios, tests y guías prácticas validadas.</p>
-        <a href="#" class="srv-link">Explorar recursos <i class="fas fa-arrow-right"></i></a>
+        <p>Audios de relajación, tests validados y guías prácticas descargables.</p>
+        <a href="app/recursos.html" class="srv-link">
+          Explorar recursos <i class="fas fa-arrow-right"></i>
+        </a>
       </div>
     </div>
   </section>
 
-  <section id="planes" class="section">
+  <!-- Planes -->
+  <section id="planes" class="section" style="background: var(--bg);">
     <div class="section-header">
       <h2>Inversión transparente</h2>
-      <p>Elige el plan que se adapte a tu proceso actual.</p>
+      <p>Elige el plan que se adapte a tu proceso actual. Sin sorpresas.</p>
     </div>
 
     <div class="pricing-grid" id="planesContainer">
-        <div class="plan-card">
-            <div class="plan-tag" style="background:#E2E8F0; color:#475569;">BÁSICO</div>
-            <h3>Inicial</h3>
-            <div class="plan-price">S/ 0</div>
-            <ul class="plan-features">
-                <li><i class="fas fa-check"></i> Diario Emocional Digital</li>
-                <li><i class="fas fa-check"></i> Pulso Semanal Básico</li>
-                <li><i class="fas fa-check"></i> Acceso a Blog</li>
-            </ul>
-            <a href="app/entrevista.html" class="plan-btn">Empezar Gratis</a>
-        </div>
+      <div class="plan-card">
+        <div class="plan-tag" style="background:#94A3B8;">BÁSICO</div>
+        <h3>Inicial</h3>
+        <div class="plan-price">S/ 0<span> /siempre</span></div>
+        <ul class="plan-features">
+          <li><i class="fas fa-check"></i> Diario Emocional Digital</li>
+          <li><i class="fas fa-check"></i> Pulso Semanal Básico</li>
+          <li><i class="fas fa-check"></i> Acceso a Recursos Públicos</li>
+          <li><i class="fas fa-check"></i> Comunidad de Apoyo</li>
+        </ul>
+        <a href="registro.html" class="plan-btn">Empezar Gratis</a>
+      </div>
 
-        <div class="plan-card featured">
-            <div class="plan-tag">MÁS POPULAR</div>
-            <h3>Evolución</h3>
-            <div class="plan-price">S/ 49</div>
-            <ul class="plan-features">
-                <li><i class="fas fa-check"></i> <b>Todo lo del plan Gratis</b></li>
-                <li><i class="fas fa-check"></i> 20% Dscto en Terapia</li>
-                <li><i class="fas fa-check"></i> Recursos Ilimitados</li>
-            </ul>
-            <a href="app/entrevista.html" class="plan-btn">Elegir Plan</a>
-        </div>
+      <div class="plan-card featured">
+        <div class="plan-tag">MÁS POPULAR</div>
+        <h3>Acompañamiento</h3>
+        <div class="plan-price">S/ 165<span> /mes</span></div>
+        <ul class="plan-features">
+          <li><i class="fas fa-check"></i> <b>Todo del plan Gratis</b></li>
+          <li><i class="fas fa-check"></i> 2 Sesiones con Especialista</li>
+          <li><i class="fas fa-check"></i> Seguimiento Personalizado</li>
+          <li><i class="fas fa-check"></i> Soporte vía WhatsApp</li>
+          <li><i class="fas fa-check"></i> Recursos Premium</li>
+        </ul>
+        <a href="registro.html" class="plan-btn">Elegir Plan</a>
+      </div>
 
-        <div class="plan-card">
-            <div class="plan-tag" style="background:#1F2933;">EMPRESAS</div>
-            <h3>Corporativo</h3>
-            <div class="plan-price">---</div>
-            <ul class="plan-features">
-                <li><i class="fas fa-check"></i> Dashboard de equipo</li>
-                <li><i class="fas fa-check"></i> Charlas de bienestar</li>
-                <li><i class="fas fa-check"></i> Paquetes de sesiones</li>
-            </ul>
-            <a href="#" class="plan-btn">Contactar Ventas</a>
-        </div>
+      <div class="plan-card">
+        <div class="plan-tag" style="background:#1F2933;">PREMIUM</div>
+        <h3>Premium</h3>
+        <div class="plan-price">S/ 300<span> /mes</span></div>
+        <ul class="plan-features">
+          <li><i class="fas fa-check"></i> <b>Todo lo anterior</b></li>
+          <li><i class="fas fa-check"></i> 4 Sesiones Mensuales</li>
+          <li><i class="fas fa-check"></i> Psicólogos Senior</li>
+          <li><i class="fas fa-check"></i> Prioridad en Agenda</li>
+          <li><i class="fas fa-check"></i> Reportes Mensuales</li>
+        </ul>
+        <a href="registro.html" class="plan-btn">Elegir Premium</a>
+      </div>
     </div>
   </section>
 
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <h2>Tu bienestar no puede esperar</h2>
+    <p>Únete a cientos de personas que ya transformaron su salud mental.</p>
+    <a href="registro.html" class="btn-white">
+      Comenzar mi viaje
+      <i class="fas fa-arrow-right"></i>
+    </a>
+  </section>
+
+  <!-- Footer -->
   <footer class="footer">
     <div class="footer-grid">
       <div>
-        <h3 style="display:flex; align-items:center; gap:10px;"><i class="fas fa-brain"></i> Bitácora</h3>
-        <p>Tecnología humana para el cuidado de la mente. Democratizando el acceso al bienestar.</p>
-        <div style="display:flex; gap:15px; margin-top:20px;">
-            <a href="#"><i class="fab fa-instagram fa-lg"></i></a>
-            <a href="#"><i class="fab fa-linkedin fa-lg"></i></a>
+        <h3 style="display:flex; align-items:center; gap:10px; font-size:1.5rem;">
+          <i class="fas fa-brain"></i> Bitácora Mental
+        </h3>
+        <p>
+          Tecnología humana para el cuidado de la mente. 
+          Democratizando el acceso al bienestar emocional en Perú.
+        </p>
+        <div class="social-links">
+          <a href="#" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="#" aria-label="LinkedIn">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a href="#" aria-label="Facebook">
+            <i class="fab fa-facebook"></i>
+          </a>
         </div>
       </div>
+      
       <div>
         <h4>Servicios</h4>
         <ul>
-            <li><a href="#">Terapia Online</a></li>
-            <li><a href="#">Coaching</a></li>
-            <li><a href="#">Planes</a></li>
+          <li><a href="app/especialistas.html">Terapia Online</a></li>
+          <li><a href="app/especialistas.html">Coaching</a></li>
+          <li><a href="app/diario.html">Diario Digital</a></li>
+          <li><a href="#planes">Ver Planes</a></li>
         </ul>
       </div>
+      
       <div>
         <h4>Legal</h4>
         <ul>
-            <li><a href="#">Privacidad</a></li>
-            <li><a href="#">Términos</a></li>
-            <li><a href="#">Libro de Reclamaciones</a></li>
+          <li><a href="privacidad.html">Política de Privacidad</a></li>
+          <li><a href="terminos.html">Términos de Uso</a></li>
+          <li><a href="libro-reclamaciones.html">Libro de Reclamaciones</a></li>
         </ul>
       </div>
+      
       <div>
         <h4>Contacto</h4>
         <ul>
-            <li><a href="mailto:hola@bitacora.com">hola@bitacora.com</a></li>
-            <li><a href="#">Lima, Perú</a></li>
+          <li><a href="mailto:hola@bitacoramental.pe">hola@bitacoramental.pe</a></li>
+          <li><a href="tel:+51999999999">+51 999 999 999</a></li>
+          <li><a href="contacto.html">Formulario de contacto</a></li>
+          <li>Lima, Perú</li>
         </ul>
       </div>
     </div>
-    <div style="border-top:1px solid #E5E7EB; padding-top:30px; margin-top:40px; text-align:center; color:#6B7280; font-size:0.9rem;">
-        &copy; 2026 Bitácora Mental. Todos los derechos reservados.
+    
+    <div class="footer-bottom">
+      &copy; 2026 Bitácora Mental. Todos los derechos reservados.
     </div>
   </footer>
 
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
   
   <script>
-    // 1. Funciones del Menú Móvil
+    // ============================================
+    // MENÚ MÓVIL
+    // ============================================
+    
     function toggleMenu() {
-        const menu = document.getElementById('mobileMenu');
-        menu.classList.toggle('active');
-        if (menu.classList.contains('active')) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = '';
-        }
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('active');
+      document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
     }
 
     function toggleSub(header) {
-        const item = header.parentElement;
-        item.classList.toggle('open');
+      const item = header.parentElement;
+      item.classList.toggle('open');
     }
 
-    // 2. Lógica Opcional: Cargar precios reales si hay DB
+    // ============================================
+    // NAVBAR SCROLL
+    // ============================================
+    
+    let lastScroll = 0;
+    const navbar = document.getElementById('navbar');
+    
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      
+      if (currentScroll > 100) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+      
+      lastScroll = currentScroll;
+    });
+
+    // ============================================
+    // SMOOTH SCROLL PARA ANCLAS
+    // ============================================
+    
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href !== '#' && href.length > 1) {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+            // Cerrar menú móvil si está abierto
+            const menu = document.getElementById('mobileMenu');
+            if (menu.classList.contains('active')) {
+              toggleMenu();
+            }
+          }
+        }
+      });
+    });
+
+    // ============================================
+    // CARGAR PLANES DESDE DB (OPCIONAL)
+    // ============================================
+    
     document.addEventListener('DOMContentLoaded', async () => {
-        if (!window.sb) return;
-        
-        // Intentar cargar planes actualizados sin borrar los que ya se ven
-        const { data: planes } = await window.sb.from('web_planes').select('*').eq('visible', true).order('orden');
-        
-        if (planes && planes.length > 0) {
+      // Si hay Supabase configurado, cargar planes dinámicamente
+      if (window.sb) {
+        try {
+          const { data: planes, error } = await window.sb
+            .from('web_planes')
+            .select('*')
+            .eq('visible', true)
+            .order('orden');
+          
+          if (planes && planes.length > 0) {
             const container = document.getElementById('planesContainer');
             container.innerHTML = planes.map(plan => `
-                <div class="plan-card ${plan.es_recomendado ? 'featured' : ''}">
-                    ${plan.es_recomendado ? '<div class="plan-tag">MÁS POPULAR</div>' : ''}
-                    <h3>${plan.nombre}</h3>
-                    <div class="plan-price">S/ ${plan.precio}</div>
-                    <ul class="plan-features">
-                        ${(plan.features || []).map(f => `<li><i class="fas fa-check"></i> ${f}</li>`).join('')}
-                    </ul>
-                    <a href="app/entrevista.html" class="plan-btn">${plan.btn_texto || 'Elegir'}</a>
+              <div class="plan-card ${plan.es_recomendado ? 'featured' : ''}">
+                ${plan.es_recomendado ? '<div class="plan-tag">MÁS POPULAR</div>' : ''}
+                <h3>${plan.nombre}</h3>
+                <div class="plan-price">
+                  S/ ${plan.precio}
+                  <span>${plan.periodo || '/mes'}</span>
                 </div>
+                <ul class="plan-features">
+                  ${(plan.features || []).map(f => `
+                    <li><i class="fas fa-check"></i> ${f}</li>
+                  `).join('')}
+                </ul>
+                <a href="registro.html" class="plan-btn">
+                  ${plan.btn_texto || 'Elegir Plan'}
+                </a>
+              </div>
             `).join('');
+          }
+        } catch (error) {
+          console.error('Error cargando planes:', error);
         }
+      }
+    });
+
+    // ============================================
+    // CERRAR MENÚ CON ESC
+    // ============================================
+    
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const menu = document.getElementById('mobileMenu');
+        if (menu.classList.contains('active')) {
+          toggleMenu();
+        }
+      }
     });
   </script>
 </body>
