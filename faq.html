@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="Preguntas frecuentes sobre terapia online, planes y funcionamiento de Bitácora Mental">
+  <title>Preguntas Frecuentes - Bitácora Mental</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/design-system.css">
+  
+  <style>
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      margin: 0;
+      padding-top: 80px;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+    
+    .page-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    
+    .page-header h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+    
+    .page-header p {
+      font-size: 1.1rem;
+      color: var(--text-soft);
+    }
+    
+    .faq-categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 40px;
+    }
+    
+    .category-btn {
+      padding: 15px 20px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      background: white;
+      color: var(--text-soft);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+    }
+    
+    .category-btn:hover,
+    .category-btn.active {
+      border-color: var(--primary);
+      background: var(--primary-50);
+      color: var(--primary);
+      transform: translateY(-2px);
+    }
+    
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .faq-item {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    
+    .faq-item:hover {
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    
+    .faq-question {
+      padding: 24px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--text-main);
+      user-select: none;
+    }
+    
+    .faq-icon {
+      color: var(--primary);
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+      flex-shrink: 0;
+    }
+    
+    .faq-item.open .faq-icon {
+      transform: rotate(180deg);
+    }
+    
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    
+    .faq-item.open .faq-answer {
+      max-height: 500px;
+    }
+    
+    .faq-answer-content {
+      padding: 0 24px 24px 24px;
+      color: var(--text-soft);
+      line-height: 1.7;
+    }
+    
+    .cta-box {
+      background: linear-gradient(135deg, var(--primary), var(--primary-500));
+      color: white;
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      margin-top: 60px;
+    }
+    
+    .cta-box h2 {
+      color: white;
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+    
+    .cta-box p {
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 25px;
+      font-size: 1.1rem;
+    }
+    
+    .btn-white {
+      background: white;
+      color: var(--primary);
+      padding: 14px 32px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .btn-white:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+    
+    @media (max-width: 768px) {
+      .page-header h1 {
+        font-size: 2rem;
+      }
+      
+      .faq-categories {
+        grid-template-columns: 1fr;
+      }
+      
+      .faq-question {
+        padding: 18px;
+        font-size: 0.95rem;
+      }
+      
+      .cta-box {
+        padding: 30px 20px;
+      }
+      
+      .cta-box h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>Preguntas Frecuentes</h1>
+      <p>Encuentra respuestas a las dudas más comunes sobre Bitácora Mental</p>
+    </div>
+
+    <div class="faq-categories">
+      <button class="category-btn active" onclick="filterCategory('todos')">
+        📋 Todas
+      </button>
+      <button class="category-btn" onclick="filterCategory('servicios')">
+        💼 Servicios
+      </button>
+      <button class="category-btn" onclick="filterCategory('planes')">
+        💳 Planes
+      </button>
+      <button class="category-btn" onclick="filterCategory('seguridad')">
+        🔒 Seguridad
+      </button>
+    </div>
+
+    <div class="faq-list" id="faqList">
+      <!-- Las preguntas se cargarán aquí -->
+    </div>
+
+    <div class="cta-box">
+      <h2>¿No encontraste tu respuesta?</h2>
+      <p>Nuestro equipo está listo para ayudarte</p>
+      <a href="contacto.html" class="btn-white">
+        Contáctanos
+        <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const faqs = [
+      {
+        category: 'servicios',
+        question: '¿Cómo funciona la terapia online?',
+        answer: 'Nuestras sesiones se realizan por videollamada en una sala virtual privada y segura. Agendas tu cita, el día indicado ingresas 10 minutos antes y te conectas directamente con tu especialista. Es como una sesión presencial, pero desde la comodidad de tu hogar.'
+      },
+      {
+        category: 'servicios',
+        question: '¿Los psicólogos están colegiados?',
+        answer: 'Sí, todos nuestros psicólogos están colegiados en el Colegio de Psicólogos del Perú. Verificamos sus credenciales y experiencia antes de integrarlos a nuestra plataforma.'
+      },
+      {
+        category: 'servicios',
+        question: '¿Puedo cambiar de especialista?',
+        answer: 'Absolutamente. Sabemos que la conexión con el terapeuta es fundamental. Si sientes que no hay "match", puedes solicitar un cambio sin costo adicional.'
+      },
+      {
+        category: 'servicios',
+        question: '¿Qué pasa si necesito cancelar una cita?',
+        answer: 'Puedes cancelar hasta 24 horas antes sin penalización. Si cancelas con menos tiempo, la sesión se descontará de tu plan. Entendemos las emergencias, contáctanos y evaluaremos tu caso.'
+      },
+      {
+        category: 'planes',
+        question: '¿Puedo probar antes de pagar?',
+        answer: 'Sí, nuestro plan Gratuito te da acceso al diario emocional y recursos básicos sin necesidad de tarjeta de crédito. Puedes explorar la plataforma antes de decidir.'
+      },
+      {
+        category: 'planes',
+        question: '¿Puedo cambiar de plan en cualquier momento?',
+        answer: 'Sí, puedes mejorar tu plan en cualquier momento y el cambio es inmediato. Si bajas de plan, el cambio se aplicará al final de tu ciclo de facturación actual.'
+      },
+      {
+        category: 'planes',
+        question: '¿Cómo funciona la renovación automática?',
+        answer: 'Tu plan se renueva automáticamente cada mes. Te enviamos un recordatorio 3 días antes. Puedes cancelar en cualquier momento desde tu panel de suscripción.'
+      },
+      {
+        category: 'planes',
+        question: '¿Ofrecen reembolsos?',
+        answer: 'Si cancelas dentro de los primeros 7 días y no has utilizado sesiones, ofrecemos reembolso completo. Después de usar sesiones, no hay reembolsos, pero puedes cancelar para no renovar.'
+      },
+      {
+        category: 'seguridad',
+        question: '¿Mi información está segura?',
+        answer: 'Absolutamente. Usamos encriptación de grado bancario (SSL/TLS) para proteger tus datos. Cumplimos con la Ley de Protección de Datos Personales del Perú y nunca compartimos tu información con terceros sin tu consentimiento.'
+      },
+      {
+        category: 'seguridad',
+        question: '¿Quién puede ver mi diario emocional?',
+        answer: 'Solo tú. Tu diario es completamente privado y encriptado. Ni siquiera tu terapeuta puede verlo a menos que tú decidas compartir entradas específicas durante una sesión.'
+      },
+      {
+        category: 'seguridad',
+        question: '¿Las videollamadas son privadas?',
+        answer: 'Sí, todas las sesiones son punto a punto encriptadas. No grabamos las sesiones sin tu consentimiento expreso. Las salas se destruyen automáticamente al finalizar.'
+      },
+      {
+        category: 'servicios',
+        question: '¿Atienden emergencias?',
+        answer: 'No somos un servicio de emergencias. Si tienes pensamientos suicidas o estás en crisis, por favor contacta la Línea 113 (Salud Mental), ve a emergencias o llama al 105 (Bomberos/Ambulancia).'
+      },
+      {
+        category: 'servicios',
+        question: '¿Desde qué edad pueden usar el servicio?',
+        answer: 'Atendemos desde los 16 años. Menores de 18 necesitan autorización de un tutor legal. Para niños menores de 16, recomendamos buscar especialistas en psicología infantil presencial.'
+      },
+      {
+        category: 'planes',
+        question: '¿Hay descuentos para estudiantes?',
+        answer: 'Sí, ofrecemos 20% de descuento a estudiantes universitarios con carnet vigente. Contáctanos por WhatsApp para verificar tu condición de estudiante.'
+      },
+      {
+        category: 'servicios',
+        question: '¿Puedo tener sesiones en inglés?',
+        answer: 'Tenemos algunos especialistas bilingües. Indícalo en tu perfil o menciona durante la reserva y te asignaremos un profesional que hable inglés.'
+      }
+    ];
+
+    let currentCategory = 'todos';
+
+    function renderFAQs() {
+      const container = document.getElementById('faqList');
+      const filtered = currentCategory === 'todos' 
+        ? faqs 
+        : faqs.filter(f => f.category === currentCategory);
+
+      container.innerHTML = filtered.map((faq, index) => `
+        <div class="faq-item" id="faq-${index}">
+          <div class="faq-question" onclick="toggleFAQ(${index})">
+            <span>${faq.question}</span>
+            <i class="fas fa-chevron-down faq-icon"></i>
+          </div>
+          <div class="faq-answer">
+            <div class="faq-answer-content">
+              ${faq.answer}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleFAQ(index) {
+      const item = document.getElementById(`faq-${index}`);
+      item.classList.toggle('open');
+    }
+
+    function filterCategory(category) {
+      currentCategory = category;
+      
+      // Actualizar botones
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // Renderizar FAQs
+      renderFAQs();
+    }
+
+    // Inicializar
+    renderFAQs();
+  </script>
+</body>
+</html>
