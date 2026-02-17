@@ -632,6 +632,150 @@
       if (t) { e.preventDefault(); t.scrollIntoView({behavior:'smooth'}); closeM(); }
     });
   });
+  // --- LÓGICA DE TALLERES GRATUITOS ---
+  
+      // 1. Cargar Talleres al inicio
+      async function cargarTalleres() {
+          if (!window.sb) return;
+          
+          const container = document.getElementById('talleresContainer');
+          
+          // Traer talleres futuros
+          const { data: talleres, error } = await window.sb
+              .from('web_talleres')
+              .select('*')
+              .gte('fecha', new Date().toISOString()) // Solo futuros
+              .eq('visible', true)
+              .order('fecha', { ascending: true })
+              .limit(3);
+  
+          if (talleres && talleres.length > 0) {
+              container.innerHTML = talleres.map(t => {
+                  const fecha = new Date(t.fecha);
+                  const dia = fecha.getDate();
+                  const mes = fecha.toLocaleString('es-ES', { month: 'short' });
+                  const hora = fecha.toLocaleString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                  
+                  // Calcular porcentaje de ocupación
+                  const porcentaje = (t.cupos_ocupados / t.cupos_totales) * 100;
+                  const disponibles = t.cupos_totales - t.cupos_ocupados;
+                  
+                  // Estilos según tipo
+                  const tagClass = t.tipo === 'Taller' ? 'tag-taller' : 'tag-psico';
+  
+                  return `
+                  <div class="workshop-card">
+                      <div class="date-badge">
+                          <span class="date-day">${dia}</span>
+                          <span class="date-month">${mes}</span>
+                      </div>
+                      <div class="ws-content">
+                          <div>
+                              <span class="ws-tag ${tagClass}">${t.tipo} • ${t.duracion}</span>
+                              <h3 class="ws-title">${t.titulo}</h3>
+                              <p class="ws-desc">${t.descripcion}</p>
+                          </div>
+                          
+                          <div class="ws-meta">
+                              <span><i class="far fa-clock"></i> ${hora}</span>
+                              <span><i class="fas fa-video"></i> Virtual</span>
+                              <span><i class="far fa-user"></i> ${t.especialista}</span>
+                          </div>
+  
+                          <div>
+                              <div class="spots-bar"><div class="spots-fill" style="width:${porcentaje}%"></div></div>
+                              <span class="spots-text">Quedan ${disponibles} cupos de ${t.cupos_totales}</span>
+                              <button onclick="openModal('${t.id}', '${t.titulo}')" class="btn-ws">Inscribirme gratis</button>
+                          </div>
+                      </div>
+                  </div>
+                  `;
+              }).join('');
+          } else {
+              container.innerHTML = `<p style="text-align:center; color:var(--text-soft); grid-column:1/-1;">No hay talleres programados esta semana.</p>`;
+          }
+      }
+  
+      // 2. Funciones del Modal
+      function openModal(id, titulo) {
+          document.getElementById('tallerId').value = id;
+          document.getElementById('modalTallerNombre').textContent = titulo;
+          document.getElementById('modalInscripcion').style.display = 'flex';
+      }
+  
+      function closeModal() {
+          document.getElementById('modalInscripcion').style.display = 'none';
+      }
+  
+      // 3. PROCESO DE INSCRIPCIÓN + REGISTRO AUTOMÁTICO
+      async function inscribirseTaller(e) {
+          e.preventDefault();
+          
+          const btn = document.getElementById('btnSubmit');
+          const originalText = btn.textContent;
+          btn.textContent = "Procesando...";
+          btn.disabled = true;
+  
+          const nombre = document.getElementById('userName').value;
+          const email = document.getElementById('userEmail').value;
+          const telefono = document.getElementById('userPhone').value;
+          const tallerId = document.getElementById('tallerId').value;
+  
+          try {
+              // A) Intentar crear usuario en Supabase Auth (Contraseña temporal)
+              // Nota: En un caso real, usaríamos Magic Link, pero para simplificar usamos signup
+              const tempPassword = "Bitacora" + Math.floor(Math.random() * 10000);
+              
+              const { data: authData, error: authError } = await window.sb.auth.signUp({
+                  email: email,
+                  password: tempPassword,
+                  options: {
+                      data: {
+                          full_name: nombre,
+                          phone: telefono
+                      }
+                  }
+              });
+  
+              // Si el usuario ya existe, authError dirá "User already registered". 
+              // En ese caso, procedemos igual a inscribirlo en la tabla.
+  
+              // B) Guardar la inscripción en la base de datos
+              const { error: dbError } = await window.sb
+                  .from('web_inscripciones')
+                  .insert([{
+                      taller_id: tallerId,
+                      nombre: nombre,
+                      email: email,
+                      telefono: telefono
+                  }]);
+  
+              if (dbError) throw dbError;
+  
+              // C) Actualizar cupos visualmente (opcional, requeriría recargar o update local)
+              
+              // D) Éxito
+              alert(`¡Listo, ${nombre}! Te has inscrito correctamente. Revisa tu correo (y spam) para confirmar tu cuenta y recibir el link de Zoom.`);
+              closeModal();
+              document.getElementById('formInscripcion').reset();
+  
+          } catch (err) {
+              console.error(err);
+              alert("Hubo un error al procesar tu solicitud. Intenta nuevamente.");
+          } finally {
+              btn.textContent = originalText;
+              btn.disabled = false;
+          }
+      }
+  
+      // Agregar cargarTalleres() al inicio
+      document.addEventListener('DOMContentLoaded', async () => {
+          // ... tu código existente ...
+          cargarTalleres(); // <--- AGREGAR ESTO
+      });
+
+
+  
 </script>
 </body>
 </html>
