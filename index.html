@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <meta name="description" content="Bitácora Mental — Plataforma peruana de terapia online. Psicólogos colegiados verificados. Sin traslados, sin listas de espera.">
+  <meta name="description" content="Bitácora Mental — Plataforma peruana de terapia online. Psicólogos colegiados verificados.">
   <meta name="theme-color" content="#4F6F52">
   <title>Bitácora Mental — Tu bienestar emocional comienza aquí</title>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -49,7 +49,7 @@
     .btn-li{padding:9px 20px;border-radius:50px;border:2px solid var(--border);color:var(--tb);font-size:.88rem;font-weight:700}
     .btn-li:hover{border-color:var(--g400);color:var(--g700)}
     .btn-ct{padding:10px 22px;border-radius:50px;background:var(--g700);color:#fff;font-size:.88rem;font-weight:700;box-shadow:0 4px 14px rgba(79,111,82,.3)}
-    .btn-ct:hover{background:var(--g800, #2d4a30);transform:translateY(-1px)}
+    .btn-ct:hover{background:var(--g800);transform:translateY(-1px)}
     .hbg{display:none;width:44px;height:44px;background:var(--g50);border:none;border-radius:var(--rsm);color:var(--g700);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center}
 
     /* MOBILE MENU */
@@ -138,7 +138,34 @@
     .srv-lk i{transition:transform .3s}
     .srv-lk:hover i{transform:translateX(5px)}
 
-    /* PLANES (MODALIDADES) */
+    /* --- ESTILOS TALLERES GRATUITOS (LO QUE FALTABA) --- */
+    .workshop-section { background: #F0FDF4; padding: 100px 5%; }
+    .workshop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
+    .workshop-card { background: white; border-radius: 20px; border: 1px solid var(--border); overflow: hidden; position: relative; transition: 0.3s; display: flex; flex-direction: column; }
+    .workshop-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+    .date-badge { position: absolute; top: 20px; right: 20px; background: white; border-radius: 12px; text-align: center; padding: 8px 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid var(--border); min-width: 60px; }
+    .date-day { font-size: 1.4rem; font-weight: 800; color: var(--g700); line-height: 1; display: block; }
+    .date-month { font-size: 0.8rem; text-transform: uppercase; color: var(--ts); font-weight: 700; }
+    .ws-content { padding: 30px 25px 25px; flex: 1; display: flex; flex-direction: column; }
+    .ws-tag { display: inline-block; padding: 5px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 15px; }
+    .tag-taller { background: #E0E7FF; color: #4338CA; } 
+    .tag-psico { background: #FEF3C7; color: #92400E; }
+    .ws-title { font-family: var(--fd); font-size: 1.3rem; margin-bottom: 10px; color: var(--td); line-height: 1.3; }
+    .ws-desc { font-size: 0.95rem; color: var(--ts); margin-bottom: 20px; flex: 1; }
+    .ws-meta { display: flex; gap: 15px; font-size: 0.85rem; color: var(--ts); margin-bottom: 20px; border-top: 1px solid #f0f0f0; padding-top: 15px; }
+    .ws-meta i { color: var(--g700); margin-right: 5px; }
+    .spots-bar { height: 6px; background: #E2E8F0; border-radius: 10px; margin-bottom: 8px; overflow: hidden; }
+    .spots-fill { height: 100%; background: var(--clay); border-radius: 10px; }
+    .spots-text { font-size: 0.8rem; color: var(--ts); margin-bottom: 20px; display: block; }
+    .btn-ws { width: 100%; padding: 12px; background: var(--g700); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .btn-ws:hover { background: var(--g800); }
+    /* Modal */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 3000; }
+    .modal-box { background: white; width: 90%; max-width: 450px; padding: 30px; border-radius: 24px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.2); animation: slideUp 0.3s ease; }
+    .close-modal { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--ts); }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    /* PLANES */
     .plan-g{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
     .plan-c{background:#fff;border:1px solid var(--border);border-radius:var(--rlg);padding:36px;transition:all .3s;display:flex;flex-direction:column;align-items:center;text-align:center}
     .plan-c:hover{border-color:var(--g400);transform:translateY(-6px);box-shadow:var(--smd)}
@@ -149,7 +176,7 @@
     .plan-feat li{display:flex;align-items:center;gap:10px;font-size:.88rem;color:var(--tb);margin-bottom:10px;text-align:left;justify-content:center}
     .plan-feat i{color:var(--g600);font-size:.8rem}
 
-    /* PROGRAMAS (SIMPLIFICADO) */
+    /* PROGRAMAS */
     .como-g{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
     .como-img{border-radius:var(--rxl);overflow:hidden;aspect-ratio:3/4;box-shadow:var(--slg)}
     .como-img img{width:100%;height:100%;object-fit:cover}
@@ -219,7 +246,7 @@
 
     /* RESPONSIVE */
     @media(max-width:1100px){
-      .srv-g,.plan-g{grid-template-columns:1fr 1fr}
+      .srv-g,.plan-g,.ws-g{grid-template-columns:1fr 1fr}
       .f-grid{grid-template-columns:1.5fr 1fr 1fr}
     }
     @media(max-width:900px){
@@ -231,8 +258,8 @@
       .h-fl{display:none}
       .stats-in{grid-template-columns:repeat(2,1fr)}
       .st-d{display:none}
-      .sec,.sec-bg{padding:60px 24px}
-      .srv-g,.plan-g{grid-template-columns:1fr}
+      .sec,.sec-bg,.workshop-section{padding:60px 24px}
+      .srv-g,.plan-g,.ws-g{grid-template-columns:1fr}
       .como-g{grid-template-columns:1fr}
       .emp-in{grid-template-columns:1fr;gap:40px}
       .emp-sec{padding:60px 24px}
@@ -346,74 +373,15 @@
 
 <div class="stats">
   <div class="stats-in">
-    <div class="st"><span class="st-n" data-n="50" data-s="+">50+</span><span class="st-l">Especialistas verificados</span></div>
+    <div class="st"><span class="st-n">50+</span><span class="st-l">Especialistas verificados</span></div>
     <div class="st-d"></div>
-    <div class="st"><span class="st-n" data-n="500" data-s="+">500+</span><span class="st-l">Sesiones realizadas</span></div>
+    <div class="st"><span class="st-n">500+</span><span class="st-l">Sesiones realizadas</span></div>
     <div class="st-d"></div>
     <div class="st"><span class="st-n">4.8★</span><span class="st-l">Valoración promedio</span></div>
     <div class="st-d"></div>
     <div class="st"><span class="st-n">Tarifas</span><span class="st-l">Accesibles y flexibles</span></div>
   </div>
 </div>
-
-  <section id="talleres" class="workshop-section">
-    <div class="section-header">
-        <div style="background:var(--primary-light); color:var(--primary); padding:5px 15px; border-radius:20px; display:inline-block; font-weight:700; font-size:0.85rem; margin-bottom:15px;">
-            🎁 Talleres Gratuitos
-        </div>
-        <h2>Psicoeducación abierta para todos</h2>
-        <p>Espacios seguros de 1 hora para aprender herramientas prácticas. Sin costo.</p>
-    </div>
-
-    <div class="workshop-grid" id="talleresContainer">
-        <div style="grid-column:1/-1; text-align:center; padding:40px;">
-            <i class="fas fa-circle-notch fa-spin fa-2x" style="color:var(--text-soft);"></i>
-        </div>
-    </div>
-
-    <div style="text-align:center; margin-top:40px;">
-        <a href="#" style="color:var(--primary); font-weight:700; text-decoration:underline;">Ver calendario completo de actividades</a>
-    </div>
-  </section>
-
-  <div class="modal-overlay" id="modalInscripcion">
-    <div class="modal-box">
-        <button class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
-        
-        <h3 style="font-family:'Outfit'; font-size:1.5rem; margin-bottom:5px;">Asegura tu cupo</h3>
-        <p style="font-size:0.9rem; color:var(--text-soft); margin-bottom:20px;">
-            Inscribiéndote al taller: <strong id="modalTallerNombre">...</strong>
-        </p>
-
-        <form id="formInscripcion" onsubmit="inscribirseTaller(event)">
-            <input type="hidden" id="tallerId">
-            
-            <div style="margin-bottom:15px;">
-                <label style="font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px;">Nombre Completo</label>
-                <input type="text" id="userName" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px;">
-            </div>
-
-            <div style="margin-bottom:15px;">
-                <label style="font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px;">Correo Electrónico</label>
-                <input type="email" id="userEmail" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px;">
-            </div>
-
-            <div style="margin-bottom:20px;">
-                <label style="font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px;">WhatsApp (Para recordatorio)</label>
-                <input type="tel" id="userPhone" required placeholder="+51..." style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px;">
-            </div>
-
-            <div style="background:#F0FDF4; padding:10px; border-radius:8px; font-size:0.8rem; color:#166534; margin-bottom:20px; display:flex; gap:10px;">
-                <i class="fas fa-check-circle" style="margin-top:3px;"></i>
-                <span>Al inscribirte, crearemos automáticamente tu cuenta gratuita en Bitácora Mental para que accedas al link de Zoom.</span>
-            </div>
-
-            <button type="submit" class="btn-ws" id="btnSubmit">
-                Confirmar Inscripción
-            </button>
-        </form>
-    </div>
-  </div>
 
 <div id="servicios"><div class="sec">
   <div class="s-hd">
@@ -442,6 +410,58 @@
     </div>
   </div>
 </div></div>
+
+<section id="talleres" class="workshop-section">
+  <div class="section-header" style="text-align:center;margin-bottom:40px">
+    <div style="background:var(--g100); color:var(--g700); padding:5px 15px; border-radius:20px; display:inline-block; font-weight:700; font-size:0.85rem; margin-bottom:15px;">
+        🎁 Talleres Gratuitos
+    </div>
+    <h2 class="s-ti">Psicoeducación abierta<br><em>para toda la comunidad</em></h2>
+    <p class="s-sub" style="margin:0 auto">Espacios seguros de 1 hora para aprender herramientas prácticas. Sin costo.</p>
+  </div>
+
+  <div class="workshop-grid" id="talleresContainer">
+    <div style="grid-column:1/-1; text-align:center; padding:40px;">
+        <i class="fas fa-circle-notch fa-spin fa-2x" style="color:var(--ts);"></i>
+        <p style="margin-top:10px;color:var(--ts)">Cargando talleres...</p>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top:40px;">
+    <a href="#" style="color:var(--g700); font-weight:700; text-decoration:underline;">Ver calendario completo de actividades</a>
+  </div>
+</section>
+
+<div class="modal-overlay" id="modalInscripcion">
+  <div class="modal-box">
+    <button class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    <h3 style="font-family:var(--fd); font-size:1.5rem; margin-bottom:5px; color:var(--td)">Asegura tu cupo</h3>
+    <p style="font-size:0.9rem; color:var(--ts); margin-bottom:20px;">
+        Inscribiéndote al taller: <strong id="modalTallerNombre" style="color:var(--g700)">...</strong>
+    </p>
+
+    <form id="formInscripcion" onsubmit="inscribirseTaller(event)">
+      <input type="hidden" id="tallerId">
+      <div style="margin-bottom:15px;">
+        <label style="font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px; color:var(--td)">Nombre Completo</label>
+        <input type="text" id="userName" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; font-family:var(--fb)">
+      </div>
+      <div style="margin-bottom:15px;">
+        <label style="font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px; color:var(--td)">Correo Electrónico</label>
+        <input type="email" id="userEmail" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; font-family:var(--fb)">
+      </div>
+      <div style="margin-bottom:20px;">
+        <label style="font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px; color:var(--td)">WhatsApp (Para recordatorio)</label>
+        <input type="tel" id="userPhone" required placeholder="+51..." style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; font-family:var(--fb)">
+      </div>
+      <div style="background:#F0FDF4; padding:10px; border-radius:8px; font-size:0.8rem; color:#166534; margin-bottom:20px; display:flex; gap:10px;">
+        <i class="fas fa-check-circle" style="margin-top:3px;"></i>
+        <span>Al inscribirte, crearemos automáticamente tu cuenta gratuita en Bitácora Mental para que accedas al link de Zoom.</span>
+      </div>
+      <button type="submit" class="btn-ws" id="btnSubmit">Confirmar Inscripción</button>
+    </form>
+  </div>
+</div>
 
 <div class="sec-bg">
 <div class="sec">
@@ -595,6 +615,9 @@
   <a href="lineas-emergencia.html"> Ver más recursos →</a>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+
 <script>
   // Navbar scroll
   const nav = document.getElementById('nav');
@@ -632,150 +655,144 @@
       if (t) { e.preventDefault(); t.scrollIntoView({behavior:'smooth'}); closeM(); }
     });
   });
+
   // --- LÓGICA DE TALLERES GRATUITOS ---
   
-      // 1. Cargar Talleres al inicio
-      async function cargarTalleres() {
-          if (!window.sb) return;
-          
-          const container = document.getElementById('talleresContainer');
-          
-          // Traer talleres futuros
-          const { data: talleres, error } = await window.sb
-              .from('web_talleres')
-              .select('*')
-              .gte('fecha', new Date().toISOString()) // Solo futuros
-              .eq('visible', true)
-              .order('fecha', { ascending: true })
-              .limit(3);
-  
-          if (talleres && talleres.length > 0) {
-              container.innerHTML = talleres.map(t => {
-                  const fecha = new Date(t.fecha);
-                  const dia = fecha.getDate();
-                  const mes = fecha.toLocaleString('es-ES', { month: 'short' });
-                  const hora = fecha.toLocaleString('es-ES', { hour: '2-digit', minute: '2-digit' });
-                  
-                  // Calcular porcentaje de ocupación
-                  const porcentaje = (t.cupos_ocupados / t.cupos_totales) * 100;
-                  const disponibles = t.cupos_totales - t.cupos_ocupados;
-                  
-                  // Estilos según tipo
-                  const tagClass = t.tipo === 'Taller' ? 'tag-taller' : 'tag-psico';
-  
-                  return `
-                  <div class="workshop-card">
-                      <div class="date-badge">
-                          <span class="date-day">${dia}</span>
-                          <span class="date-month">${mes}</span>
+  // 1. Cargar Talleres al inicio
+  async function cargarTalleres() {
+      if (!window.sb) return;
+      
+      const container = document.getElementById('talleresContainer');
+      
+      // Traer talleres futuros
+      const { data: talleres, error } = await window.sb
+          .from('web_talleres')
+          .select('*')
+          .gte('fecha', new Date().toISOString()) // Solo futuros
+          .eq('visible', true)
+          .order('fecha', { ascending: true })
+          .limit(3);
+
+      if (talleres && talleres.length > 0) {
+          container.innerHTML = talleres.map(t => {
+              const fecha = new Date(t.fecha);
+              const dia = fecha.getDate();
+              const mes = fecha.toLocaleString('es-ES', { month: 'short' });
+              const hora = fecha.toLocaleString('es-ES', { hour: '2-digit', minute: '2-digit' });
+              
+              // Calcular porcentaje de ocupación
+              const porcentaje = (t.cupos_ocupados / t.cupos_totales) * 100;
+              const disponibles = t.cupos_totales - t.cupos_ocupados;
+              
+              // Estilos según tipo
+              const tagClass = t.tipo === 'Taller' ? 'tag-taller' : 'tag-psico';
+
+              return `
+              <div class="workshop-card">
+                  <div class="date-badge">
+                      <span class="date-day">${dia}</span>
+                      <span class="date-month">${mes}</span>
+                  </div>
+                  <div class="ws-content">
+                      <div>
+                          <span class="ws-tag ${tagClass}">${t.tipo} • ${t.duracion}</span>
+                          <h3 class="ws-title">${t.titulo}</h3>
+                          <p class="ws-desc">${t.descripcion}</p>
                       </div>
-                      <div class="ws-content">
-                          <div>
-                              <span class="ws-tag ${tagClass}">${t.tipo} • ${t.duracion}</span>
-                              <h3 class="ws-title">${t.titulo}</h3>
-                              <p class="ws-desc">${t.descripcion}</p>
-                          </div>
-                          
-                          <div class="ws-meta">
-                              <span><i class="far fa-clock"></i> ${hora}</span>
-                              <span><i class="fas fa-video"></i> Virtual</span>
-                              <span><i class="far fa-user"></i> ${t.especialista}</span>
-                          </div>
-  
-                          <div>
-                              <div class="spots-bar"><div class="spots-fill" style="width:${porcentaje}%"></div></div>
-                              <span class="spots-text">Quedan ${disponibles} cupos de ${t.cupos_totales}</span>
-                              <button onclick="openModal('${t.id}', '${t.titulo}')" class="btn-ws">Inscribirme gratis</button>
-                          </div>
+                      
+                      <div class="ws-meta">
+                          <span><i class="far fa-clock"></i> ${hora}</span>
+                          <span><i class="fas fa-video"></i> Virtual</span>
+                          <span><i class="far fa-user"></i> ${t.especialista}</span>
+                      </div>
+
+                      <div>
+                          <div class="spots-bar"><div class="spots-fill" style="width:${porcentaje}%"></div></div>
+                          <span class="spots-text">Quedan ${disponibles} cupos de ${t.cupos_totales}</span>
+                          <button onclick="openModal('${t.id}', '${t.titulo}')" class="btn-ws">Inscribirme gratis</button>
                       </div>
                   </div>
-                  `;
-              }).join('');
-          } else {
-              container.innerHTML = `<p style="text-align:center; color:var(--text-soft); grid-column:1/-1;">No hay talleres programados esta semana.</p>`;
-          }
+              </div>
+              `;
+          }).join('');
+      } else {
+          container.innerHTML = `<p style="text-align:center; color:var(--text-soft); grid-column:1/-1;">No hay talleres programados esta semana.</p>`;
       }
-  
-      // 2. Funciones del Modal
-      function openModal(id, titulo) {
-          document.getElementById('tallerId').value = id;
-          document.getElementById('modalTallerNombre').textContent = titulo;
-          document.getElementById('modalInscripcion').style.display = 'flex';
-      }
-  
-      function closeModal() {
-          document.getElementById('modalInscripcion').style.display = 'none';
-      }
-  
-      // 3. PROCESO DE INSCRIPCIÓN + REGISTRO AUTOMÁTICO
-      async function inscribirseTaller(e) {
-          e.preventDefault();
+  }
+
+  // 2. Funciones del Modal
+  function openModal(id, titulo) {
+      document.getElementById('tallerId').value = id;
+      document.getElementById('modalTallerNombre').textContent = titulo;
+      document.getElementById('modalInscripcion').style.display = 'flex';
+  }
+
+  function closeModal() {
+      document.getElementById('modalInscripcion').style.display = 'none';
+  }
+
+  // 3. PROCESO DE INSCRIPCIÓN + REGISTRO AUTOMÁTICO
+  async function inscribirseTaller(e) {
+      e.preventDefault();
+      
+      const btn = document.getElementById('btnSubmit');
+      const originalText = btn.textContent;
+      btn.textContent = "Procesando...";
+      btn.disabled = true;
+
+      const nombre = document.getElementById('userName').value;
+      const email = document.getElementById('userEmail').value;
+      const telefono = document.getElementById('userPhone').value;
+      const tallerId = document.getElementById('tallerId').value;
+
+      try {
+          // A) Intentar crear usuario en Supabase Auth (Contraseña temporal)
+          const tempPassword = "Bitacora" + Math.floor(Math.random() * 10000);
           
-          const btn = document.getElementById('btnSubmit');
-          const originalText = btn.textContent;
-          btn.textContent = "Procesando...";
-          btn.disabled = true;
-  
-          const nombre = document.getElementById('userName').value;
-          const email = document.getElementById('userEmail').value;
-          const telefono = document.getElementById('userPhone').value;
-          const tallerId = document.getElementById('tallerId').value;
-  
-          try {
-              // A) Intentar crear usuario en Supabase Auth (Contraseña temporal)
-              // Nota: En un caso real, usaríamos Magic Link, pero para simplificar usamos signup
-              const tempPassword = "Bitacora" + Math.floor(Math.random() * 10000);
-              
-              const { data: authData, error: authError } = await window.sb.auth.signUp({
-                  email: email,
-                  password: tempPassword,
-                  options: {
-                      data: {
-                          full_name: nombre,
-                          phone: telefono
-                      }
+          const { data: authData, error: authError } = await window.sb.auth.signUp({
+              email: email,
+              password: tempPassword,
+              options: {
+                  data: {
+                      full_name: nombre,
+                      phone: telefono
                   }
-              });
-  
-              // Si el usuario ya existe, authError dirá "User already registered". 
-              // En ese caso, procedemos igual a inscribirlo en la tabla.
-  
-              // B) Guardar la inscripción en la base de datos
-              const { error: dbError } = await window.sb
-                  .from('web_inscripciones')
-                  .insert([{
-                      taller_id: tallerId,
-                      nombre: nombre,
-                      email: email,
-                      telefono: telefono
-                  }]);
-  
-              if (dbError) throw dbError;
-  
-              // C) Actualizar cupos visualmente (opcional, requeriría recargar o update local)
-              
-              // D) Éxito
-              alert(`¡Listo, ${nombre}! Te has inscrito correctamente. Revisa tu correo (y spam) para confirmar tu cuenta y recibir el link de Zoom.`);
-              closeModal();
-              document.getElementById('formInscripcion').reset();
-  
-          } catch (err) {
-              console.error(err);
-              alert("Hubo un error al procesar tu solicitud. Intenta nuevamente.");
-          } finally {
-              btn.textContent = originalText;
-              btn.disabled = false;
-          }
+              }
+          });
+
+          // Si el usuario ya existe, authError dirá "User already registered". 
+          // En ese caso, procedemos igual a inscribirlo en la tabla.
+
+          // B) Guardar la inscripción en la base de datos
+          const { error: dbError } = await window.sb
+              .from('web_inscripciones')
+              .insert([{
+                  taller_id: tallerId,
+                  nombre: nombre,
+                  email: email,
+                  telefono: telefono
+              }]);
+
+          if (dbError) throw dbError;
+
+          // C) Éxito
+          alert(`¡Listo, ${nombre}! Te has inscrito correctamente. Revisa tu correo para confirmar tu cuenta.`);
+          closeModal();
+          document.getElementById('formInscripcion').reset();
+
+      } catch (err) {
+          console.error(err);
+          alert("Hubo un error al procesar tu solicitud. Intenta nuevamente.");
+      } finally {
+          btn.textContent = originalText;
+          btn.disabled = false;
       }
-  
-      // Agregar cargarTalleres() al inicio
-      document.addEventListener('DOMContentLoaded', async () => {
-          // ... tu código existente ...
-          cargarTalleres(); // <--- AGREGAR ESTO
-      });
+  }
 
-
-  
+  // INICIALIZACIÓN
+  document.addEventListener('DOMContentLoaded', async () => {
+      cargarTalleres(); 
+  });
 </script>
 </body>
 </html>
