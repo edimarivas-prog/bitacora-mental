@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="Soluciones de salud mental para empresas en Perú. Terapia online, talleres de bienestar y medición de clima para equipos de alto rendimiento.">
+  <title>Para Empresas — Bitácora Mental</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* REUTILIZANDO VARIABLES DEL SISTEMA */
+    :root {
+      --g900:#1a2e1c;--g800:#2d4a30;--g700:#4F6F52;--g600:#6a8f6d;--g400:#8aaa8d;--g200:#c8ddc9;--g100:#e3ede4;--g50:#f2f8f2;
+      --s50:#fdf9f4;--s100:#f5ede0;--clay:#c97b5a;--clay-l:#f0d5c8;
+      --td:#1a2e1c;--tb:#3d4f3e;--ts:#697a6a;--tl:#9aaa9b;
+      --white:#fff;--border:#dde8de;
+      --fd:'Fraunces',Georgia,serif;--fb:'Plus Jakarta Sans',sans-serif;
+      --rlg:24px;--rxl:36px;
+      --smd:0 6px 24px rgba(26,46,28,.10);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--fb);background:var(--white);color:var(--tb);line-height:1.6;overflow-x:hidden}
+    a{text-decoration:none;transition:all .25s ease}
+    img{max-width:100%;height:auto;display:block}
+
+    /* NAV (Igual al index) */
+    .nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+    .ni{max-width:1280px;margin:0 auto;padding:0 40px;height:76px;display:flex;align-items:center;justify-content:space-between}
+    .logo{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-size:1.5rem;font-weight:700;color:var(--g700);letter-spacing:-.5px}
+    .logo-ic{width:38px;height:38px;background:var(--g700);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem}
+    .nl{display:flex;align-items:center;gap:20px;list-style:none}
+    .nl a{color:var(--ts);font-weight:600;font-size:.9rem}
+    .nl a:hover{color:var(--g700)}
+    .btn-ct{padding:10px 22px;border-radius:50px;background:var(--g700);color:#fff;font-size:.88rem;font-weight:700}
+    .btn-ct:hover{background:var(--g800)}
+
+    /* HERO EMPRESAS */
+    .hero-b2b{padding:140px 40px 80px;background:var(--g900);color:#fff;position:relative;overflow:hidden}
+    .hero-b2b::before{content:'';position:absolute;top:0;right:0;width:600px;height:600px;background:radial-gradient(circle,rgba(255,255,255,.05) 0%,transparent 70%);pointer-events:none}
+    .h-grid{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+    .h-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:6px 14px;border-radius:50px;font-size:.75rem;font-weight:700;margin-bottom:24px;color:var(--g200)}
+    .hero-b2b h1{font-family:var(--fd);font-size:clamp(2.5rem,5vw,3.5rem);line-height:1.1;margin-bottom:24px}
+    .hero-b2b p{font-size:1.1rem;color:rgba(255,255,255,.8);margin-bottom:32px;max-width:500px}
+    .btn-w{background:#fff;color:var(--g900);padding:14px 28px;border-radius:50px;font-weight:700;display:inline-flex;align-items:center;gap:8px}
+    .btn-w:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,.2)}
+    .h-img{border-radius:var(--rxl);overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,.3)}
+
+    /* SECCIONES */
+    .sec{padding:100px 40px;max-width:1280px;margin:0 auto}
+    .sec-bg{padding:100px 40px;background:var(--g50)}
+    .sec-bg .sec{padding:0}
+    .s-head{text-align:center;max-width:700px;margin:0 auto 60px}
+    .s-ti{font-family:var(--fd);font-size:2.5rem;color:var(--td);margin-bottom:16px}
+    .s-sub{color:var(--ts);font-size:1.05rem}
+
+    /* BENEFICIOS GRID */
+    .ben-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+    .ben-card{background:#fff;padding:32px;border-radius:var(--rlg);border:1px solid var(--border);transition:all .3s}
+    .ben-card:hover{border-color:var(--g400);transform:translateY(-5px);box-shadow:var(--smd)}
+    .ben-ic{width:50px;height:50px;background:var(--g50);border-radius:12px;color:var(--g700);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:20px}
+    .ben-card h3{font-family:var(--fd);font-size:1.3rem;margin-bottom:12px;color:var(--td)}
+    .ben-card p{color:var(--ts);font-size:.95rem;line-height:1.6}
+
+    /* SOLUCIONES */
+    .sol-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;margin-bottom:80px}
+    .sol-img{border-radius:var(--rlg);overflow:hidden}
+    .sol-list{list-style:none;margin-top:24px}
+    .sol-list li{display:flex;align-items:center;gap:12px;margin-bottom:12px;color:var(--tb);font-weight:500}
+    .sol-list i{color:var(--g700);background:var(--g100);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem}
+
+    /* FORMULARIO */
+    .contact-sec{background:linear-gradient(135deg,var(--s50),#fff);border:1px solid var(--border);border-radius:var(--rxl);padding:60px;display:grid;grid-template-columns:1fr 1fr;gap:60px}
+    .form-group{margin-bottom:20px}
+    .form-label{display:block;font-size:.85rem;font-weight:700;color:var(--td);margin-bottom:8px}
+    .form-input{width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:10px;font-family:var(--fb);font-size:.95rem;transition:all .3s}
+    .form-input:focus{outline:none;border-color:var(--g700);box-shadow:0 0 0 3px var(--g100)}
+    .btn-submit{width:100%;padding:14px;background:var(--g700);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:1rem;cursor:pointer;transition:all .3s}
+    .btn-submit:hover{background:var(--g800)}
+
+    /* FOOTER SIMPLE */
+    footer{padding:40px;text-align:center;border-top:1px solid var(--border);color:var(--tl);font-size:.9rem}
+
+    @media(max-width:900px){
+      .h-grid,.contact-sec,.sol-grid,.ben-grid{grid-template-columns:1fr}
+      .nl{display:none}
+      .hero-b2b,.contact-sec{padding:40px 24px}
+      .h-img{order:-1}
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="ni">
+    <a href="index.html" class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</a>
+    <ul class="nl">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="programas/index.html">Programas</a></li>
+      <li><a href="especialistas-publico.html">Especialistas</a></li>
+    </ul>
+    <a href="#contacto" class="btn-ct">Cotizar plan</a>
+  </div>
+</nav>
+
+<header class="hero-b2b">
+  <div class="h-grid">
+    <div>
+      <div class="h-tag"><i class="fas fa-building"></i> Bienestar Corporativo</div>
+      <h1>Salud mental como<br>motor de <em>productividad</em></h1>
+      <p>Reducimos el burnout, mejoramos el clima laboral y ayudamos a tu equipo a rendir mejor a través del cuidado emocional preventivo y terapéutico.</p>
+      <a href="#contacto" class="btn-w">Solicitar una demo <i class="fas fa-arrow-right"></i></a>
+      <p style="font-size:.8rem;margin-top:16px;opacity:.6"><i class="fas fa-check"></i> Cumplimiento Ley 29783 SST</p>
+    </div>
+    <div class="h-img">
+      <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800" alt="Equipo de trabajo feliz">
+    </div>
+  </div>
+</header>
+
+<div class="sec">
+  <div class="s-head">
+    <h2 class="s-ti">¿Por qué invertir en<br><em>salud mental?</em></h2>
+    <p class="s-sub">El estrés laboral y los problemas emocionales son la principal causa de ausentismo y rotación en las empresas peruanas hoy en día.</p>
+  </div>
+  <div class="ben-grid">
+    <div class="ben-card">
+      <div class="ben-ic"><i class="fas fa-chart-line"></i></div>
+      <h3>Reduce la rotación</h3>
+      <p>Equipos que se sienten cuidados son más leales. Disminuye los costos de reclutamiento y capacitación reteniendo a tu talento clave.</p>
+    </div>
+    <div class="ben-card">
+      <div class="ben-ic"><i class="fas fa-brain"></i></div>
+      <h3>Previene el Burnout</h3>
+      <p>Identificamos riesgos psicosociales a tiempo. Equipos descansados y equilibrados toman mejores decisiones y son más creativos.</p>
+    </div>
+    <div class="ben-card">
+      <div class="ben-ic"><i class="fas fa-file-contract"></i></div>
+      <h3>Cumplimiento Normativo</h3>
+      <p>Te ayudamos a cumplir con las exigencias de monitoreo de salud mental de la Ley de Seguridad y Salud en el Trabajo.</p>
+    </div>
+  </div>
+</div>
+
+<div class="sec-bg">
+  <div class="sec">
+    <div class="sol-grid">
+      <div class="sol-img"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800" alt="Dashboard de bienestar"></div>
+      <div>
+        <div class="tag">Nuestra Solución</div>
+        <h2 class="s-ti">Tecnología + Humanidad<br><em>para tu empresa</em></h2>
+        <p class="s-sub" style="margin-bottom:20px">No somos solo un directorio. Somos un aliado estratégico que te entrega data para tomar decisiones.</p>
+        <ul class="sol-list">
+          <li><i class="fas fa-check"></i> <strong>Sesiones 1 a 1:</strong> Packs de terapia subvencionada o co-pagada.</li>
+          <li><i class="fas fa-check"></i> <strong>Dashboard HR:</strong> Reportes anónimos sobre el estado emocional de tu equipo.</li>
+          <li><i class="fas fa-check"></i> <strong>Talleres y Webinars:</strong> Manejo de estrés, liderazgo empático y soft skills.</li>
+          <li><i class="fas fa-check"></i> <strong>Confidencialidad total:</strong> Tus colaboradores se sienten seguros de usar el servicio.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="contacto">
+  <div class="contact-sec">
+    <div>
+      <h2 class="s-ti">Diseñemos un plan<br><em>a medida</em></h2>
+      <p style="color:var(--ts);margin-bottom:24px">Déjanos tus datos y un especialista en bienestar corporativo te contactará para entender las necesidades de tu organización y armar una propuesta.</p>
+      <div style="display:flex;gap:12px;color:var(--g700);font-weight:600;align-items:center">
+        <i class="fas fa-envelope"></i> empresas@bitacoramental.pe
+      </div>
+    </div>
+    <form action="#" onsubmit="event.preventDefault(); alert('Gracias por tu interés. Un asesor te contactará pronto.');">
+      <div class="form-group">
+        <label class="form-label">Nombre de la Empresa</label>
+        <input type="text" class="form-input" placeholder="Ej. Corporación SAC" required>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="form-group">
+          <label class="form-label">Tu Nombre</label>
+          <input type="text" class="form-input" placeholder="Tu nombre" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cargo</label>
+          <input type="text" class="form-input" placeholder="RRHH, Gerente..." required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Correo Corporativo</label>
+        <input type="email" class="form-input" placeholder="nombre@empresa.com" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Número de Colaboradores (Aprox)</label>
+        <select class="form-input">
+          <option>1 - 20</option>
+          <option>21 - 50</option>
+          <option>51 - 200</option>
+          <option>+200</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-submit">Solicitar Información</button>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Bitácora Mental. Hecho en Perú.</p>
+</footer>
+
+</body>
+</html>
