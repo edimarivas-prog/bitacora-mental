@@ -75,16 +75,13 @@
     .p-cat{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--g700);margin-bottom:10px;display:flex;align-items:center;gap:6px}
     .p-card h2{font-family:var(--fd);font-size:1.3rem;font-weight:600;color:var(--td);margin-bottom:10px;line-height:1.3}
     .p-card p{font-size:.9rem;color:var(--ts);line-height:1.65;margin-bottom:20px;flex:1}
-    .p-meta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+    .p-meta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border)}
     .p-meta-item{display:flex;align-items:center;gap:6px;font-size:.82rem;color:var(--ts)}
     .p-meta-item i{color:var(--g600);width:14px;text-align:center}
-    .p-footer{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .p-price{display:flex;flex-direction:column}
-    .p-price-old{font-size:.8rem;color:var(--tl);text-decoration:line-through}
-    .p-price-val{font-family:var(--fd);font-size:1.4rem;font-weight:700;color:var(--g700);line-height:1}
-    .p-price-label{font-size:.72rem;color:var(--ts)}
-    .btn-prg{padding:12px 22px;background:var(--g700);color:#fff;border-radius:50px;font-weight:700;font-size:.88rem;white-space:nowrap}
-    .btn-prg:hover{background:var(--g800);transform:translateY(-2px)}
+    /* Modificado: Footer de la card ahora solo tiene botón */
+    .p-footer{display:flex;justify-content:flex-end;margin-top:auto} /* Alineado a la derecha para dar idea de avance */
+    .btn-prg{padding:12px 24px;background:var(--g50);color:var(--g700);border:1px solid var(--g200);border-radius:50px;font-weight:700;font-size:.88rem;white-space:nowrap;transition:all .3s}
+    .btn-prg:hover{background:var(--g700);color:#fff;border-color:var(--g700)}
 
     /* CTA BOTTOM */
     .cta-bottom{background:var(--g50);padding:70px 40px;text-align:center;border-top:1px solid var(--border)}
@@ -143,7 +140,6 @@
   </div>
 </nav>
 
-<!-- HERO -->
 <div class="hero-prg">
   <div class="hero-prg-in">
     <div class="prg-badge"><i class="fas fa-layer-group"></i> Programas terapéuticos</div>
@@ -152,13 +148,11 @@
     <div class="prg-stats">
       <div class="prg-stat"><strong>6</strong><span>Programas disponibles</span></div>
       <div class="prg-stat"><strong>4-5</strong><span>Sesiones por programa</span></div>
-      <div class="prg-stat"><strong>S/460</strong><span>Desde por programa</span></div>
       <div class="prg-stat"><strong>100%</strong><span>Virtual y confidencial</span></div>
-    </div>
+      </div>
   </div>
 </div>
 
-<!-- FILTROS -->
 <div class="filtros">
   <div class="filtros-in">
     <button class="f-btn active" onclick="filtrar('todos', this)">Todos los programas</button>
@@ -170,11 +164,9 @@
   </div>
 </div>
 
-<!-- PROGRAMAS GRID -->
 <div class="prg-sec">
   <div class="prg-grid" id="grid">
 
-    <!-- 1. Ansiedad -->
     <div class="p-card" data-cat="bienestar">
       <div class="p-card-img">
         <img src="https://images.unsplash.com/photo-1512438248247-f0f2a5a8b7f0?q=80&w=700" alt="Programa Ansiedad" loading="lazy">
@@ -190,17 +182,11 @@
           <div class="p-meta-item"><i class="fas fa-user-friends"></i> 4 sesiones</div>
         </div>
         <div class="p-footer">
-          <div class="p-price">
-            <span class="p-price-old">S/520</span>
-            <span class="p-price-val">S/460</span>
-            <span class="p-price-label">pago único</span>
-          </div>
-          <a href="ansiedad.html" class="btn-prg">Ver programa</a>
+          <a href="ansiedad.html" class="btn-prg">Ver detalles <i class="fas fa-arrow-right" style="font-size:0.8em"></i></a>
         </div>
       </div>
     </div>
 
-    <!-- 2. Burnout -->
     <div class="p-card" data-cat="trabajo">
       <div class="p-card-img">
         <img src="https://images.unsplash.com/photo-1586473219010-2ffc57b0d282?q=80&w=700" alt="Estrés Laboral" loading="lazy">
@@ -216,17 +202,11 @@
           <div class="p-meta-item"><i class="fas fa-user-friends"></i> 4 sesiones</div>
         </div>
         <div class="p-footer">
-          <div class="p-price">
-            <span class="p-price-old">S/520</span>
-            <span class="p-price-val">S/460</span>
-            <span class="p-price-label">pago único</span>
-          </div>
-          <a href="estres-laboral.html" class="btn-prg">Ver programa</a>
+          <a href="estres-laboral.html" class="btn-prg">Ver detalles <i class="fas fa-arrow-right" style="font-size:0.8em"></i></a>
         </div>
       </div>
     </div>
 
-    <!-- 3. Autoestima -->
     <div class="p-card" data-cat="bienestar">
       <div class="p-card-img">
         <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=700" alt="Autoestima" loading="lazy">
@@ -242,17 +222,11 @@
           <div class="p-meta-item"><i class="fas fa-user-friends"></i> 4 sesiones</div>
         </div>
         <div class="p-footer">
-          <div class="p-price">
-            <span class="p-price-old">S/520</span>
-            <span class="p-price-val">S/460</span>
-            <span class="p-price-label">pago único</span>
-          </div>
-          <a href="autoestima.html" class="btn-prg">Ver programa</a>
+          <a href="autoestima.html" class="btn-prg">Ver detalles <i class="fas fa-arrow-right" style="font-size:0.8em"></i></a>
         </div>
       </div>
     </div>
 
-    <!-- 4. Vínculos y Maltrato -->
     <div class="p-card" data-cat="relaciones">
       <div class="p-card-img">
         <img src="https://images.unsplash.com/photo-1516534775068-ba3e7458af70?q=80&w=700" alt="Vínculos Sanos" loading="lazy">
@@ -268,17 +242,11 @@
           <div class="p-meta-item"><i class="fas fa-user-friends"></i> 5 sesiones</div>
         </div>
         <div class="p-footer">
-          <div class="p-price">
-            <span class="p-price-old">S/650</span>
-            <span class="p-price-val">S/575</span>
-            <span class="p-price-label">pago único</span>
-          </div>
-          <a href="vinculos.html" class="btn-prg">Ver programa</a>
+          <a href="vinculos.html" class="btn-prg">Ver detalles <i class="fas fa-arrow-right" style="font-size:0.8em"></i></a>
         </div>
       </div>
     </div>
 
-    <!-- 5. Redes Sociales -->
     <div class="p-card" data-cat="digital">
       <div class="p-card-img">
         <img src="https://images.unsplash.com/photo-1523367104040-627d5bde6240?q=80&w=700" alt="Desconexión Digital" loading="lazy">
@@ -294,17 +262,11 @@
           <div class="p-meta-item"><i class="fas fa-user-friends"></i> 4 sesiones</div>
         </div>
         <div class="p-footer">
-          <div class="p-price">
-            <span class="p-price-old">S/520</span>
-            <span class="p-price-val">S/460</span>
-            <span class="p-price-label">pago único</span>
-          </div>
-          <a href="redes-sociales.html" class="btn-prg">Ver programa</a>
+          <a href="redes-sociales.html" class="btn-prg">Ver detalles <i class="fas fa-arrow-right" style="font-size:0.8em"></i></a>
         </div>
       </div>
     </div>
 
-    <!-- 6. Duelo -->
     <div class="p-card" data-cat="perdida">
       <div class="p-card-img">
         <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=700" alt="Duelo" loading="lazy">
@@ -320,20 +282,13 @@
           <div class="p-meta-item"><i class="fas fa-user-friends"></i> 4 sesiones</div>
         </div>
         <div class="p-footer">
-          <div class="p-price">
-            <span class="p-price-old">S/520</span>
-            <span class="p-price-val">S/460</span>
-            <span class="p-price-label">pago único</span>
-          </div>
-          <a href="duelo.html" class="btn-prg">Ver programa</a>
+          <a href="duelo.html" class="btn-prg">Ver detalles <i class="fas fa-arrow-right" style="font-size:0.8em"></i></a>
         </div>
       </div>
     </div>
 
-  </div><!-- /grid -->
-</div>
+  </div></div>
 
-<!-- CTA -->
 <div class="cta-bottom">
   <h2>¿No sabes por cuál empezar?</h2>
   <p>Haz nuestro test de bienestar gratuito y te orientamos hacia el programa que mejor se adapta a lo que estás viviendo.</p>
@@ -343,7 +298,6 @@
   </div>
 </div>
 
-<!-- FOOTER MÍNIMO -->
 <footer>
   <div class="foot-min">
     <p>© 2026 Bitácora Mental · Lima, Perú 🇵🇪</p>
