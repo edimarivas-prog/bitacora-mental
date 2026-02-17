@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Talleres</title>
+    <link rel="stylesheet" href="../css/design-system.css">
+</head>
+<body style="padding:40px; background:#f4f4f4;">
+
+    <h1>Gestión de Talleres</h1>
+    
+    <div style="background:white; padding:30px; border-radius:12px; max-width:600px;">
+        <h3>Publicar Nuevo Taller</h3>
+        <form onsubmit="publicarTaller(event)" style="display:flex; flex-direction:column; gap:15px;">
+            <input type="text" id="tTitulo" placeholder="Título del Taller" required>
+            <textarea id="tDesc" placeholder="Descripción breve" required></textarea>
+            
+            <div style="display:flex; gap:10px;">
+                <select id="tTipo">
+                    <option value="Taller">Taller</option>
+                    <option value="Psicoeducación">Psicoeducación</option>
+                </select>
+                <input type="text" id="tDuracion" placeholder="Duración (ej: 1 hora)" required>
+            </div>
+
+            <div style="display:flex; gap:10px;">
+                <input type="datetime-local" id="tFecha" required>
+                <input type="number" id="tCupos" placeholder="Cupos" value="30" required>
+            </div>
+
+            <input type="text" id="tEsp" placeholder="Especialista (ej: Lic. Ana)" required>
+
+            <button type="submit" style="background:var(--primary); color:white; padding:10px; border:none; cursor:pointer;">Publicar Taller</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script>
+        async function publicarTaller(e) {
+            e.preventDefault();
+            
+            const taller = {
+                titulo: document.getElementById('tTitulo').value,
+                descripcion: document.getElementById('tDesc').value,
+                tipo: document.getElementById('tTipo').value,
+                duracion: document.getElementById('tDuracion').value,
+                fecha: new Date(document.getElementById('tFecha').value).toISOString(), // Formato correcto para Supabase
+                cupos_totales: document.getElementById('tCupos').value,
+                especialista: document.getElementById('tEsp').value,
+                visible: true
+            };
+
+            const { error } = await window.sb.from('web_talleres').insert([taller]);
+
+            if (error) {
+                alert("Error: " + error.message);
+            } else {
+                alert("Taller publicado exitosamente en la web.");
+                e.target.reset();
+            }
+        }
+    </script>
+</body>
+</html>
