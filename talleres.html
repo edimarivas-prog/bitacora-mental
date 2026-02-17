@@ -2,161 +2,171 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <meta name="description" content="Talleres y charlas gratuitas de salud mental en Perú. Psicoeducación online con psicólogos verificados de Bitácora Mental.">
-  <title>Talleres Gratuitos de Salud Mental — Bitácora Mental</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agenda de Talleres - Bitácora Mental</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="css/design-system.css"> <style>
-    /* Estilos específicos para Talleres (extendiendo design-system) */
-    .hero-talleres {
-        padding: 140px 40px 70px;
-        background: linear-gradient(135deg,var(--g900) 0%,var(--g700) 100%);
-        position: relative;
-        overflow: hidden;
-        color: white;
-        text-align: center;
+  
+  <style>
+    :root {
+      --g900:#1a2e1c; --g800:#2d4a30; --g700:#4F6F52; --g600:#6a8f6d; --g400:#8aaa8d; --g100:#e3ede4; --g50:#f2f8f2;
+      --clay:#c97b5a; --clay-l:#f0d5c8;
+      --td:#1a2e1c; --tb:#3d4f3e; --ts:#697a6a;
+      --white:#fff; --border:#dde8de;
+      --fd:'Fraunces',Georgia,serif; --fb:'Plus Jakarta Sans',sans-serif;
     }
-    .hero-talleres h1 { font-family: var(--fd); font-size: 3.5rem; margin-bottom: 20px; }
-    .hero-talleres p { max-width: 600px; margin: 0 auto; font-size: 1.1rem; opacity: 0.9; }
-
-    /* Filtros */
-    .filtros {
-        position: sticky; top: 76px; background: white; z-index: 90;
-        border-bottom: 1px solid var(--border); padding: 15px 0;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-    .filtros-in {
-        display: flex; gap: 10px; overflow-x: auto; padding: 0 5%;
-        max-width: 1200px; margin: 0 auto;
-    }
-    .f-btn {
-        padding: 8px 16px; border: 1px solid var(--border); border-radius: 50px;
-        background: white; cursor: pointer; white-space: nowrap; transition:0.2s;
-        font-family: var(--fb); font-size: 0.9rem;
-    }
-    .f-btn.active, .f-btn:hover { background: var(--g700); color: white; border-color: var(--g700); }
-
-    /* Lista de Talleres */
-    .main-container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; min-height: 50vh; }
     
-    .mes-block { margin-bottom: 50px; }
-    .mes-title {
-        font-family: var(--fd); font-size: 2rem; color: var(--td);
-        margin-bottom: 30px; border-bottom: 2px solid var(--g100); padding-bottom: 10px;
-        text-transform: capitalize;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--fb); background: #FAFAF9; color: var(--tb); line-height: 1.6; }
+    a { text-decoration: none; transition: 0.3s; }
 
-    /* Card Horizontal */
-    .taller-card {
-        display: grid; grid-template-columns: 120px 1fr auto;
-        background: white; border: 1px solid var(--border); border-radius: 20px;
-        overflow: hidden; margin-bottom: 25px; transition: 0.3s;
-        position: relative;
+    /* NAVBAR (Simplificado para consistencia) */
+    .nav { position: sticky; top: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 15px 5%; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-family: var(--fd); font-weight: 700; font-size: 1.4rem; color: var(--g700); display: flex; align-items: center; gap: 8px; }
+    .btn-back { font-size: 0.9rem; font-weight: 600; color: var(--ts); }
+    .btn-back:hover { color: var(--g700); }
+
+    /* HERO */
+    .hero { background: var(--g700); padding: 80px 20px 60px; text-align: center; color: white; border-radius: 0 0 40px 40px; margin-bottom: 40px; }
+    .hero h1 { font-family: var(--fd); font-size: 3rem; margin-bottom: 10px; }
+    .hero p { opacity: 0.9; max-width: 600px; margin: 0 auto; font-size: 1.1rem; }
+
+    /* FILTROS */
+    .filters { display: flex; justify-content: center; gap: 10px; margin-bottom: 50px; flex-wrap: wrap; padding: 0 20px; }
+    .filter-btn {
+        background: white; border: 1px solid var(--border); padding: 10px 24px; border-radius: 50px;
+        font-family: var(--fb); font-weight: 600; color: var(--ts); cursor: pointer; transition: 0.2s;
     }
-    .taller-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    .filter-btn:hover, .filter-btn.active { background: var(--g700); color: white; border-color: var(--g700); box-shadow: 0 4px 12px rgba(79, 111, 82, 0.3); }
+
+    /* CONTENEDOR AGENDA */
+    .container { max-width: 900px; margin: 0 auto; padding: 0 20px 80px; }
     
-    /* Fecha a la izquierda */
-    .t-date {
-        background: var(--g700); color: white;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        padding: 20px; text-align: center;
+    .month-group { margin-bottom: 50px; }
+    .month-title { 
+        font-family: var(--fd); font-size: 1.8rem; color: var(--td); margin-bottom: 25px; 
+        border-bottom: 2px solid var(--g100); padding-bottom: 10px; display: flex; align-items: center; gap: 10px;
     }
-    /* Colores dinámicos */
-    .t-date.psico { background: var(--clay); }
+
+    /* --- TARJETA HORIZONTAL (EL DISEÑO QUE QUERÍAS) --- */
+    .event-card {
+        display: grid; grid-template-columns: 140px 1fr 160px; /* Estructura fija */
+        background: white; border-radius: 20px; border: 1px solid var(--border);
+        overflow: hidden; margin-bottom: 24px; transition: 0.3s;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    }
+    .event-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); border-color: var(--g400); }
+
+    /* Columna Fecha (Izquierda) */
+    .ev-date {
+        background: var(--g50); display: flex; flex-direction: column; align-items: center; justify-content: center;
+        text-align: center; border-right: 1px solid var(--border); padding: 20px;
+    }
+    .ev-day { font-family: var(--fd); font-size: 2.2rem; font-weight: 700; line-height: 1; color: var(--g700); }
+    .ev-month { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--ts); margin-top: 4px; }
+    .ev-time { font-size: 0.8rem; background: white; padding: 4px 10px; border-radius: 6px; margin-top: 10px; border: 1px solid var(--border); font-weight: 600; color: var(--tb); }
+
+    /* Columna Info (Centro) */
+    .ev-info { padding: 25px; display: flex; flex-direction: column; justify-content: center; }
+    .ev-tag { 
+        display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+        color: var(--clay); margin-bottom: 8px;
+    }
+    .ev-title { font-family: var(--fd); font-size: 1.4rem; font-weight: 600; color: var(--td); margin-bottom: 10px; line-height: 1.3; }
+    .ev-desc { font-size: 0.95rem; color: var(--ts); margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .ev-meta { display: flex; gap: 20px; font-size: 0.85rem; color: var(--ts); }
+    .ev-meta i { color: var(--g600); margin-right: 6px; }
+
+    /* Columna Acción (Derecha) */
+    .ev-action {
+        padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        border-left: 1px solid var(--border); background: #FCFCFC;
+    }
+    .btn-book {
+        background: var(--g700); color: white; padding: 12px 20px; border-radius: 50px; font-weight: 700;
+        font-size: 0.9rem; border: none; cursor: pointer; transition: 0.2s; width: 100%; text-align: center;
+    }
+    .btn-book:hover { background: var(--g800); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(79,111,82,0.3); }
     
-    .t-day { font-family: var(--fd); font-size: 2.2rem; font-weight: 700; line-height: 1; }
-    .t-month { font-size: 0.8rem; text-transform: uppercase; font-weight: 700; opacity: 0.9; }
-    .t-time { font-size: 0.8rem; margin-top: 5px; background: rgba(0,0,0,0.2); padding: 2px 8px; border-radius: 4px; }
-
-    .t-info { padding: 25px; display: flex; flex-direction: column; justify-content: center; }
-    .t-tag { 
-        display: inline-block; font-size: 0.7rem; text-transform: uppercase; 
-        font-weight: 700; letter-spacing: 1px; color: var(--ts); margin-bottom: 8px;
-    }
-    .t-title { font-family: var(--fd); font-size: 1.4rem; color: var(--td); margin-bottom: 8px; line-height: 1.2; }
-    .t-desc { font-size: 0.95rem; color: var(--ts); margin-bottom: 15px; line-height: 1.5; }
-    .t-meta { display: flex; gap: 15px; font-size: 0.85rem; color: var(--ts); }
-    .t-meta i { color: var(--g700); }
-
-    .t-action {
-        padding: 25px; display: flex; align-items: center; justify-content: center;
-        border-left: 1px solid var(--border);
-    }
-    .btn-insc {
-        background: var(--g700); color: white; padding: 12px 24px; border-radius: 12px;
-        text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: 0.2s; border:none; cursor: pointer;
-    }
-    .btn-insc:hover { background: var(--g800); }
-    .btn-insc.full { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
+    .cupos-badge { font-size: 0.75rem; color: var(--ts); margin-top: 10px; display: flex; align-items: center; gap: 5px; }
+    .cupos-badge.low { color: #D97706; font-weight: 700; } /* Naranja si hay pocos */
 
     /* Modal */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 3000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-    .modal-box { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 500px; position: relative; animation: slideUp 0.3s; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; }
+    .modal-box { background: white; padding: 40px; border-radius: 24px; width: 90%; max-width: 450px; position: relative; animation: slideUp 0.3s ease; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
+    @keyframes slideUp { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1}}
     
-    @keyframes slideUp { from {transform: translateY(20px); opacity:0} to {transform: translateY(0); opacity:1}}
+    .inp-group { margin-bottom: 15px; }
+    .inp-group label { display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 6px; color: var(--td); }
+    .inp-field { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-family: var(--fb); font-size: 0.95rem; }
+    .inp-field:focus { outline: none; border-color: var(--g700); box-shadow: 0 0 0 3px var(--g100); }
+
+    /* Responsive */
     @media (max-width: 800px) {
-        .taller-card { grid-template-columns: 1fr; }
-        .t-date { flex-direction: row; gap: 10px; padding: 15px; justify-content: space-between; }
-        .t-action { border-left: none; border-top: 1px solid var(--border); padding: 15px; }
-        .btn-insc { width: 100%; }
+        .event-card { grid-template-columns: 1fr; }
+        .ev-date { flex-direction: row; gap: 15px; justify-content: space-between; border-right: none; border-bottom: 1px solid var(--border); padding: 15px 20px; }
+        .ev-time { margin-top: 0; }
+        .ev-action { border-left: none; border-top: 1px solid var(--border); flex-direction: row; justify-content: space-between; padding: 15px 20px; }
+        .btn-book { width: auto; padding: 10px 25px; }
+        .cupos-badge { margin-top: 0; }
     }
   </style>
 </head>
 <body>
 
   <nav class="nav">
-    <div class="ni">
-      <a href="index.html" class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</a>
-      <div class="na">
-        <a href="index.html" class="btn-li">Volver al inicio</a>
-      </div>
-    </div>
+    <a href="index.html" class="logo"><i class="fas fa-brain"></i> bitácora</a>
+    <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
   </nav>
 
-  <div class="hero-talleres">
+  <header class="hero">
     <h1>Agenda de Bienestar</h1>
-    <p>Conéctate a nuestras sesiones gratuitas de psicoeducación. <br>Aprende herramientas prácticas con especialistas verificados.</p>
+    <p>Conéctate a nuestras sesiones gratuitas de psicoeducación. Aprende herramientas prácticas con especialistas verificados.</p>
+  </header>
+
+  <div class="filters">
+    <button class="filter-btn active" onclick="filtrar('todos', this)">Todos</button>
+    <button class="filter-btn" onclick="filtrar('Taller', this)">Talleres (1h)</button>
+    <button class="filter-btn" onclick="filtrar('Psicoeducación', this)">Charlas (30min)</button>
   </div>
 
-  <div class="filtros">
-    <div class="filtros-in">
-        <button class="f-btn active" onclick="filtrar('todos', this)">Todos</button>
-        <button class="f-btn" onclick="filtrar('Taller', this)">Talleres (1h)</button>
-        <button class="f-btn" onclick="filtrar('Psicoeducación', this)">Charlas (30min)</button>
+  <main class="container" id="agendaContainer">
+    <div style="text-align:center; padding:60px; color:var(--ts);">
+        <i class="fas fa-circle-notch fa-spin fa-2x"></i>
+        <p style="margin-top:15px;">Cargando calendario...</p>
     </div>
-  </div>
+  </main>
 
-  <div class="main-container" id="talleresList">
-      <div style="text-align:center; padding: 60px;">
-          <i class="fas fa-circle-notch fa-spin fa-2x" style="color:var(--ts)"></i>
-          <p style="margin-top:10px; color:var(--ts)">Cargando agenda actualizada...</p>
-      </div>
-  </div>
-
-  <div class="modal-overlay" id="modalInscripcion">
+  <div class="modal-overlay" id="modal">
     <div class="modal-box">
-        <button onclick="closeModal()" style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
-        <h3 style="font-family:var(--fd); font-size:1.5rem; margin-bottom:10px;">Reserva tu lugar</h3>
-        <p style="color:var(--ts); margin-bottom:20px;">Para: <strong id="mTitulo" style="color:var(--g700)">...</strong></p>
+        <button onclick="closeModal()" style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:1.5rem; cursor:pointer; color:var(--ts);">&times;</button>
         
-        <form id="formInscripcion" onsubmit="confirmarInscripcion(event)">
+        <h3 style="font-family:var(--fd); font-size:1.5rem; margin-bottom:8px; color:var(--td);">Inscripción Gratuita</h3>
+        <p style="font-size:0.9rem; color:var(--ts); margin-bottom:25px;">Reservando cupo para: <strong id="mTitulo" style="color:var(--g700)">...</strong></p>
+
+        <form onsubmit="confirmarInscripcion(event)">
             <input type="hidden" id="mTallerId">
             
-            <div style="margin-bottom:15px;">
-                <label style="display:block; font-weight:700; font-size:0.9rem; margin-bottom:5px;">Nombre Completo</label>
-                <input type="text" id="mNombre" required style="width:100%; padding:10px; border:1px solid var(--border); border-radius:8px;">
+            <div class="inp-group">
+                <label>Nombre Completo</label>
+                <input type="text" id="mNombre" class="inp-field" required placeholder="Tu nombre">
             </div>
-            <div style="margin-bottom:15px;">
-                <label style="display:block; font-weight:700; font-size:0.9rem; margin-bottom:5px;">Email</label>
-                <input type="email" id="mEmail" required style="width:100%; padding:10px; border:1px solid var(--border); border-radius:8px;">
+            <div class="inp-group">
+                <label>Correo Electrónico</label>
+                <input type="email" id="mEmail" class="inp-field" required placeholder="tu@email.com">
             </div>
-            <div style="margin-bottom:20px;">
-                <label style="display:block; font-weight:700; font-size:0.9rem; margin-bottom:5px;">WhatsApp</label>
-                <input type="tel" id="mTel" required style="width:100%; padding:10px; border:1px solid var(--border); border-radius:8px;">
+            <div class="inp-group">
+                <label>WhatsApp</label>
+                <input type="tel" id="mTel" class="inp-field" required placeholder="+51...">
             </div>
-            
-            <button type="submit" id="mBtn" style="width:100%; padding:12px; background:var(--g700); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">Confirmar Inscripción</button>
+
+            <div style="background:var(--g50); padding:12px; border-radius:10px; display:flex; gap:10px; margin-bottom:20px;">
+                <i class="fas fa-gift" style="color:var(--g700); margin-top:3px;"></i>
+                <p style="font-size:0.8rem; color:var(--g800); line-height:1.4;">Al inscribirte, crearemos tu cuenta gratuita para que accedas al link de Zoom.</p>
+            </div>
+
+            <button type="submit" id="mBtn" class="btn-book">Confirmar Inscripción</button>
         </form>
     </div>
   </div>
@@ -165,9 +175,9 @@
   <script src="js/supabase-config.js"></script>
   
   <script>
-    let todosLosTalleres = [];
+    let allTalleres = [];
 
-    // 1. CARGAR TALLERES DE SUPABASE
+    // 1. Cargar datos
     async function cargarAgenda() {
         if (!window.sb) return;
 
@@ -175,114 +185,110 @@
             .from('web_talleres')
             .select('*')
             .eq('visible', true)
-            .gte('fecha', new Date().toISOString()) // Solo futuros
+            .gte('fecha', new Date().toISOString())
             .order('fecha', { ascending: true });
 
-        if (data) {
-            todosLosTalleres = data;
-            renderizarTalleres(data);
+        if (data && data.length > 0) {
+            allTalleres = data;
+            renderizar(data);
         } else {
-            document.getElementById('talleresList').innerHTML = '<p style="text-align:center">No hay talleres programados por ahora.</p>';
+            document.getElementById('agendaContainer').innerHTML = 
+                '<div style="text-align:center; padding:60px; color:var(--ts);">No hay talleres programados próximamente.</div>';
         }
     }
 
-    // 2. DIBUJAR EN PANTALLA (Agrupado por Mes)
-    function renderizarTalleres(talleres) {
-        const container = document.getElementById('talleresList');
+    // 2. Renderizar lista agrupada por mes
+    function renderizar(lista) {
+        const container = document.getElementById('agendaContainer');
         container.innerHTML = '';
 
-        if (talleres.length === 0) {
-            container.innerHTML = '<div style="text-align:center; padding:40px; color:var(--ts)">No se encontraron talleres con este filtro.</div>';
+        if (lista.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:60px; color:var(--ts);">No hay resultados para este filtro.</div>';
             return;
         }
 
-        // Agrupar por mes
+        // Agrupar
         const grupos = {};
-        talleres.forEach(t => {
+        lista.forEach(t => {
             const fecha = new Date(t.fecha);
             const mesNombre = fecha.toLocaleString('es-ES', { month: 'long', year: 'numeric' });
             if (!grupos[mesNombre]) grupos[mesNombre] = [];
             grupos[mesNombre].push(t);
         });
 
-        // Generar HTML
-        for (const [mes, lista] of Object.entries(grupos)) {
-            let html = `<div class="mes-block"><h2 class="mes-title">${mes}</h2>`;
+        // HTML
+        for (const [mes, talleres] of Object.entries(grupos)) {
+            let html = `<div class="month-group"><h2 class="month-title"><i class="far fa-calendar-alt"></i> ${mes}</h2>`;
             
-            lista.forEach(t => {
+            talleres.forEach(t => {
                 const fecha = new Date(t.fecha);
                 const dia = fecha.getDate();
                 const mesCorto = fecha.toLocaleString('es-ES', { month: 'short' });
                 const hora = fecha.toLocaleString('es-ES', { hour: '2-digit', minute: '2-digit' });
                 
-                const cuposLibres = t.cupos_totales - t.cupos_ocupados;
-                const estaLleno = cuposLibres <= 0;
-                const colorClase = t.tipo === 'Psicoeducación' ? 'psico' : '';
+                const libres = t.cupos_totales - t.cupos_ocupados;
+                const lleno = libres <= 0;
+                const badgeClass = libres < 5 ? 'low' : '';
 
                 html += `
-                <div class="taller-card">
-                    <div class="t-date ${colorClase}">
-                        <span class="t-day">${dia}</span>
-                        <span class="t-month">${mesCorto}</span>
-                        <span class="t-time">${hora}</span>
+                <div class="event-card">
+                    <div class="ev-date">
+                        <span class="ev-day">${dia}</span>
+                        <span class="ev-month">${mesCorto}</span>
+                        <span class="ev-time">${hora}</span>
                     </div>
-                    <div class="t-info">
-                        <span class="t-tag" style="color:${t.tipo === 'Psicoeducación' ? 'var(--clay)' : 'var(--g700)'}">
-                            <i class="fas fa-circle" style="font-size:6px; vertical-align:middle"></i> ${t.tipo} • ${t.duracion}
-                        </span>
-                        <h3 class="t-title">${t.titulo}</h3>
-                        <p class="t-desc">${t.descripcion}</p>
-                        <div class="t-meta">
-                            <span><i class="fas fa-video"></i> Virtual</span>
+                    <div class="ev-info">
+                        <span class="ev-tag"><i class="fas fa-circle" style="font-size:6px; vertical-align:middle; color:var(--g400)"></i> ${t.tipo}</span>
+                        <h3 class="ev-title">${t.titulo}</h3>
+                        <p class="ev-desc">${t.descripcion}</p>
+                        <div class="ev-meta">
                             <span><i class="fas fa-user-md"></i> ${t.especialista}</span>
-                            <span><i class="fas fa-chair"></i> ${estaLleno ? 'Agotado' : cuposLibres + ' cupos'}</span>
+                            <span><i class="fas fa-video"></i> Zoom</span>
                         </div>
                     </div>
-                    <div class="t-action">
+                    <div class="ev-action">
                         <button onclick="abrirModal('${t.id}', '${t.titulo}')" 
-                                class="btn-insc ${estaLleno ? 'full' : ''}" 
-                                ${estaLleno ? 'disabled' : ''}>
-                            ${estaLleno ? 'Cupos llenos' : 'Inscribirme Gratis'}
+                                class="btn-book" 
+                                style="${lleno ? 'background:#ccc; cursor:not-allowed' : ''}"
+                                ${lleno ? 'disabled' : ''}>
+                            ${lleno ? 'Agotado' : 'Inscribirme'}
                         </button>
+                        <div class="cupos-badge ${badgeClass}">
+                            <i class="fas fa-users"></i> ${lleno ? '0' : libres} cupos
+                        </div>
                     </div>
                 </div>`;
             });
-            
             html += `</div>`;
             container.innerHTML += html;
         }
     }
 
-    // 3. FILTRADO
+    // 3. Filtros
     function filtrar(tipo, btn) {
-        document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-
-        if (tipo === 'todos') {
-            renderizarTalleres(todosLosTalleres);
-        } else {
-            const filtrados = todosLosTalleres.filter(t => t.tipo === tipo);
-            renderizarTalleres(filtrados);
-        }
+        
+        if (tipo === 'todos') renderizar(allTalleres);
+        else renderizar(allTalleres.filter(t => t.tipo === tipo));
     }
 
-    // 4. LÓGICA MODAL E INSCRIPCIÓN
+    // 4. Modal
     function abrirModal(id, titulo) {
         document.getElementById('mTallerId').value = id;
         document.getElementById('mTitulo').textContent = titulo;
-        document.getElementById('modalInscripcion').style.display = 'flex';
+        document.getElementById('modal').style.display = 'flex';
     }
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    function closeModal() {
-        document.getElementById('modalInscripcion').style.display = 'none';
-    }
-
+    // 5. Submit
     async function confirmarInscripcion(e) {
         e.preventDefault();
         const btn = document.getElementById('mBtn');
+        const txt = btn.textContent;
         btn.textContent = "Procesando..."; btn.disabled = true;
 
-        const dataInsc = {
+        const data = {
             taller_id: document.getElementById('mTallerId').value,
             nombre: document.getElementById('mNombre').value,
             email: document.getElementById('mEmail').value,
@@ -290,31 +296,29 @@
         };
 
         try {
-            // A. Registrar usuario (Auth)
+            // A. Auth
             const pass = "Bitacora" + Math.floor(Math.random()*10000);
             await window.sb.auth.signUp({
-                email: dataInsc.email, password: pass,
-                options: { data: { full_name: dataInsc.nombre, phone: dataInsc.telefono } }
+                email: data.email, password: pass,
+                options: { data: { full_name: data.nombre, phone: data.telefono } }
             });
 
-            // B. Guardar inscripción (DB)
-            const { error } = await window.sb.from('web_inscripciones').insert([dataInsc]);
-            if (error) throw error;
+            // B. DB
+            const { error } = await window.sb.from('web_inscripciones').insert([data]);
+            if(error) throw error;
 
-            // C. Actualizar cupos (Opcional, visualmente)
-            alert("¡Inscripción exitosa! Revisa tu correo.");
+            alert("¡Inscripción confirmada! Revisa tu correo.");
             closeModal();
-            cargarAgenda(); // Recargar para actualizar cupos
+            cargarAgenda(); // Recargar cupos
 
         } catch (err) {
             console.error(err);
-            alert("Error al inscribir. Es posible que ya estés registrado.");
+            alert("Error: Es posible que ya estés registrado.");
         } finally {
-            btn.textContent = "Confirmar Inscripción"; btn.disabled = false;
+            btn.textContent = txt; btn.disabled = false;
         }
     }
 
-    // Iniciar
     document.addEventListener('DOMContentLoaded', cargarAgenda);
   </script>
 </body>
