@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="Talleres y charlas gratuitas de salud mental en Perú. Psicoeducación online con psicólogos verificados de Bitácora Mental.">
+  <title>Talleres Gratuitos de Salud Mental — Bitácora Mental</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/design-system.css"> <style>
+    /* Estilos específicos para Talleres (extendiendo design-system) */
+    .hero-talleres {
+        padding: 140px 40px 70px;
+        background: linear-gradient(135deg,var(--g900) 0%,var(--g700) 100%);
+        position: relative;
+        overflow: hidden;
+        color: white;
+        text-align: center;
+    }
+    .hero-talleres h1 { font-family: var(--fd); font-size: 3.5rem; margin-bottom: 20px; }
+    .hero-talleres p { max-width: 600px; margin: 0 auto; font-size: 1.1rem; opacity: 0.9; }
+
+    /* Filtros */
+    .filtros {
+        position: sticky; top: 76px; background: white; z-index: 90;
+        border-bottom: 1px solid var(--border); padding: 15px 0;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    .filtros-in {
+        display: flex; gap: 10px; overflow-x: auto; padding: 0 5%;
+        max-width: 1200px; margin: 0 auto;
+    }
+    .f-btn {
+        padding: 8px 16px; border: 1px solid var(--border); border-radius: 50px;
+        background: white; cursor: pointer; white-space: nowrap; transition:0.2s;
+        font-family: var(--fb); font-size: 0.9rem;
+    }
+    .f-btn.active, .f-btn:hover { background: var(--g700); color: white; border-color: var(--g700); }
+
+    /* Lista de Talleres */
+    .main-container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; min-height: 50vh; }
+    
+    .mes-block { margin-bottom: 50px; }
+    .mes-title {
+        font-family: var(--fd); font-size: 2rem; color: var(--td);
+        margin-bottom: 30px; border-bottom: 2px solid var(--g100); padding-bottom: 10px;
+        text-transform: capitalize;
+    }
+
+    /* Card Horizontal */
+    .taller-card {
+        display: grid; grid-template-columns: 120px 1fr auto;
+        background: white; border: 1px solid var(--border); border-radius: 20px;
+        overflow: hidden; margin-bottom: 25px; transition: 0.3s;
+        position: relative;
+    }
+    .taller-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    
+    /* Fecha a la izquierda */
+    .t-date {
+        background: var(--g700); color: white;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        padding: 20px; text-align: center;
+    }
+    /* Colores dinámicos */
+    .t-date.psico { background: var(--clay); }
+    
+    .t-day { font-family: var(--fd); font-size: 2.2rem; font-weight: 700; line-height: 1; }
+    .t-month { font-size: 0.8rem; text-transform: uppercase; font-weight: 700; opacity: 0.9; }
+    .t-time { font-size: 0.8rem; margin-top: 5px; background: rgba(0,0,0,0.2); padding: 2px 8px; border-radius: 4px; }
+
+    .t-info { padding: 25px; display: flex; flex-direction: column; justify-content: center; }
+    .t-tag { 
+        display: inline-block; font-size: 0.7rem; text-transform: uppercase; 
+        font-weight: 700; letter-spacing: 1px; color: var(--ts); margin-bottom: 8px;
+    }
+    .t-title { font-family: var(--fd); font-size: 1.4rem; color: var(--td); margin-bottom: 8px; line-height: 1.2; }
+    .t-desc { font-size: 0.95rem; color: var(--ts); margin-bottom: 15px; line-height: 1.5; }
+    .t-meta { display: flex; gap: 15px; font-size: 0.85rem; color: var(--ts); }
+    .t-meta i { color: var(--g700); }
+
+    .t-action {
+        padding: 25px; display: flex; align-items: center; justify-content: center;
+        border-left: 1px solid var(--border);
+    }
+    .btn-insc {
+        background: var(--g700); color: white; padding: 12px 24px; border-radius: 12px;
+        text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: 0.2s; border:none; cursor: pointer;
+    }
+    .btn-insc:hover { background: var(--g800); }
+    .btn-insc.full { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
+
+    /* Modal */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 3000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+    .modal-box { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 500px; position: relative; animation: slideUp 0.3s; }
+    
+    @keyframes slideUp { from {transform: translateY(20px); opacity:0} to {transform: translateY(0); opacity:1}}
+    @media (max-width: 800px) {
+        .taller-card { grid-template-columns: 1fr; }
+        .t-date { flex-direction: row; gap: 10px; padding: 15px; justify-content: space-between; }
+        .t-action { border-left: none; border-top: 1px solid var(--border); padding: 15px; }
+        .btn-insc { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="ni">
+      <a href="index.html" class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</a>
+      <div class="na">
+        <a href="index.html" class="btn-li">Volver al inicio</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="hero-talleres">
+    <h1>Agenda de Bienestar</h1>
+    <p>Conéctate a nuestras sesiones gratuitas de psicoeducación. <br>Aprende herramientas prácticas con especialistas verificados.</p>
+  </div>
+
+  <div class="filtros">
+    <div class="filtros-in">
+        <button class="f-btn active" onclick="filtrar('todos', this)">Todos</button>
+        <button class="f-btn" onclick="filtrar('Taller', this)">Talleres (1h)</button>
+        <button class="f-btn" onclick="filtrar('Psicoeducación', this)">Charlas (30min)</button>
+    </div>
+  </div>
+
+  <div class="main-container" id="talleresList">
+      <div style="text-align:center; padding: 60px;">
+          <i class="fas fa-circle-notch fa-spin fa-2x" style="color:var(--ts)"></i>
+          <p style="margin-top:10px; color:var(--ts)">Cargando agenda actualizada...</p>
+      </div>
+  </div>
+
+  <div class="modal-overlay" id="modalInscripcion">
+    <div class="modal-box">
+        <button onclick="closeModal()" style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+        <h3 style="font-family:var(--fd); font-size:1.5rem; margin-bottom:10px;">Reserva tu lugar</h3>
+        <p style="color:var(--ts); margin-bottom:20px;">Para: <strong id="mTitulo" style="color:var(--g700)">...</strong></p>
+        
+        <form id="formInscripcion" onsubmit="confirmarInscripcion(event)">
+            <input type="hidden" id="mTallerId">
+            
+            <div style="margin-bottom:15px;">
+                <label style="display:block; font-weight:700; font-size:0.9rem; margin-bottom:5px;">Nombre Completo</label>
+                <input type="text" id="mNombre" required style="width:100%; padding:10px; border:1px solid var(--border); border-radius:8px;">
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="display:block; font-weight:700; font-size:0.9rem; margin-bottom:5px;">Email</label>
+                <input type="email" id="mEmail" required style="width:100%; padding:10px; border:1px solid var(--border); border-radius:8px;">
+            </div>
+            <div style="margin-bottom:20px;">
+                <label style="display:block; font-weight:700; font-size:0.9rem; margin-bottom:5px;">WhatsApp</label>
+                <input type="tel" id="mTel" required style="width:100%; padding:10px; border:1px solid var(--border); border-radius:8px;">
+            </div>
+            
+            <button type="submit" id="mBtn" style="width:100%; padding:12px; background:var(--g700); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">Confirmar Inscripción</button>
+        </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  
+  <script>
+    let todosLosTalleres = [];
+
+    // 1. CARGAR TALLERES DE SUPABASE
+    async function cargarAgenda() {
+        if (!window.sb) return;
+
+        const { data, error } = await window.sb
+            .from('web_talleres')
+            .select('*')
+            .eq('visible', true)
+            .gte('fecha', new Date().toISOString()) // Solo futuros
+            .order('fecha', { ascending: true });
+
+        if (data) {
+            todosLosTalleres = data;
+            renderizarTalleres(data);
+        } else {
+            document.getElementById('talleresList').innerHTML = '<p style="text-align:center">No hay talleres programados por ahora.</p>';
+        }
+    }
+
+    // 2. DIBUJAR EN PANTALLA (Agrupado por Mes)
+    function renderizarTalleres(talleres) {
+        const container = document.getElementById('talleresList');
+        container.innerHTML = '';
+
+        if (talleres.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:40px; color:var(--ts)">No se encontraron talleres con este filtro.</div>';
+            return;
+        }
+
+        // Agrupar por mes
+        const grupos = {};
+        talleres.forEach(t => {
+            const fecha = new Date(t.fecha);
+            const mesNombre = fecha.toLocaleString('es-ES', { month: 'long', year: 'numeric' });
+            if (!grupos[mesNombre]) grupos[mesNombre] = [];
+            grupos[mesNombre].push(t);
+        });
+
+        // Generar HTML
+        for (const [mes, lista] of Object.entries(grupos)) {
+            let html = `<div class="mes-block"><h2 class="mes-title">${mes}</h2>`;
+            
+            lista.forEach(t => {
+                const fecha = new Date(t.fecha);
+                const dia = fecha.getDate();
+                const mesCorto = fecha.toLocaleString('es-ES', { month: 'short' });
+                const hora = fecha.toLocaleString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                
+                const cuposLibres = t.cupos_totales - t.cupos_ocupados;
+                const estaLleno = cuposLibres <= 0;
+                const colorClase = t.tipo === 'Psicoeducación' ? 'psico' : '';
+
+                html += `
+                <div class="taller-card">
+                    <div class="t-date ${colorClase}">
+                        <span class="t-day">${dia}</span>
+                        <span class="t-month">${mesCorto}</span>
+                        <span class="t-time">${hora}</span>
+                    </div>
+                    <div class="t-info">
+                        <span class="t-tag" style="color:${t.tipo === 'Psicoeducación' ? 'var(--clay)' : 'var(--g700)'}">
+                            <i class="fas fa-circle" style="font-size:6px; vertical-align:middle"></i> ${t.tipo} • ${t.duracion}
+                        </span>
+                        <h3 class="t-title">${t.titulo}</h3>
+                        <p class="t-desc">${t.descripcion}</p>
+                        <div class="t-meta">
+                            <span><i class="fas fa-video"></i> Virtual</span>
+                            <span><i class="fas fa-user-md"></i> ${t.especialista}</span>
+                            <span><i class="fas fa-chair"></i> ${estaLleno ? 'Agotado' : cuposLibres + ' cupos'}</span>
+                        </div>
+                    </div>
+                    <div class="t-action">
+                        <button onclick="abrirModal('${t.id}', '${t.titulo}')" 
+                                class="btn-insc ${estaLleno ? 'full' : ''}" 
+                                ${estaLleno ? 'disabled' : ''}>
+                            ${estaLleno ? 'Cupos llenos' : 'Inscribirme Gratis'}
+                        </button>
+                    </div>
+                </div>`;
+            });
+            
+            html += `</div>`;
+            container.innerHTML += html;
+        }
+    }
+
+    // 3. FILTRADO
+    function filtrar(tipo, btn) {
+        document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if (tipo === 'todos') {
+            renderizarTalleres(todosLosTalleres);
+        } else {
+            const filtrados = todosLosTalleres.filter(t => t.tipo === tipo);
+            renderizarTalleres(filtrados);
+        }
+    }
+
+    // 4. LÓGICA MODAL E INSCRIPCIÓN
+    function abrirModal(id, titulo) {
+        document.getElementById('mTallerId').value = id;
+        document.getElementById('mTitulo').textContent = titulo;
+        document.getElementById('modalInscripcion').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('modalInscripcion').style.display = 'none';
+    }
+
+    async function confirmarInscripcion(e) {
+        e.preventDefault();
+        const btn = document.getElementById('mBtn');
+        btn.textContent = "Procesando..."; btn.disabled = true;
+
+        const dataInsc = {
+            taller_id: document.getElementById('mTallerId').value,
+            nombre: document.getElementById('mNombre').value,
+            email: document.getElementById('mEmail').value,
+            telefono: document.getElementById('mTel').value
+        };
+
+        try {
+            // A. Registrar usuario (Auth)
+            const pass = "Bitacora" + Math.floor(Math.random()*10000);
+            await window.sb.auth.signUp({
+                email: dataInsc.email, password: pass,
+                options: { data: { full_name: dataInsc.nombre, phone: dataInsc.telefono } }
+            });
+
+            // B. Guardar inscripción (DB)
+            const { error } = await window.sb.from('web_inscripciones').insert([dataInsc]);
+            if (error) throw error;
+
+            // C. Actualizar cupos (Opcional, visualmente)
+            alert("¡Inscripción exitosa! Revisa tu correo.");
+            closeModal();
+            cargarAgenda(); // Recargar para actualizar cupos
+
+        } catch (err) {
+            console.error(err);
+            alert("Error al inscribir. Es posible que ya estés registrado.");
+        } finally {
+            btn.textContent = "Confirmar Inscripción"; btn.disabled = false;
+        }
+    }
+
+    // Iniciar
+    document.addEventListener('DOMContentLoaded', cargarAgenda);
+  </script>
+</body>
+</html>
