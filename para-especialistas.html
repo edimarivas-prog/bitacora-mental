@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="Únete a la red de psicólogos de Bitácora Mental. Gestiona tus pacientes online, asegura tus pagos y sé parte de la comunidad.">
+  <title>Para Especialistas — Bitácora Mental</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* REUTILIZANDO VARIABLES */
+    :root {
+      --g900:#1a2e1c;--g800:#2d4a30;--g700:#4F6F52;--g600:#6a8f6d;--g400:#8aaa8d;--g200:#c8ddc9;--g100:#e3ede4;--g50:#f2f8f2;
+      --s50:#fdf9f4;--s100:#f5ede0;--clay:#c97b5a;--clay-l:#f0d5c8;
+      --td:#1a2e1c;--tb:#3d4f3e;--ts:#697a6a;--tl:#9aaa9b;
+      --white:#fff;--border:#dde8de;
+      --fd:'Fraunces',Georgia,serif;--fb:'Plus Jakarta Sans',sans-serif;
+      --rlg:24px;--rxl:36px;
+      --smd:0 6px 24px rgba(26,46,28,.10);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--fb);background:var(--white);color:var(--tb);line-height:1.6;overflow-x:hidden}
+    a{text-decoration:none;transition:all .25s ease}
+    img{max-width:100%;height:auto;display:block}
+
+    /* NAV */
+    .nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+    .ni{max-width:1280px;margin:0 auto;padding:0 40px;height:76px;display:flex;align-items:center;justify-content:space-between}
+    .logo{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-size:1.5rem;font-weight:700;color:var(--g700);letter-spacing:-.5px}
+    .logo-ic{width:38px;height:38px;background:var(--g700);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem}
+    .back-lnk{font-weight:600;color:var(--ts);font-size:.9rem}
+    .back-lnk:hover{color:var(--g700)}
+
+    /* HERO */
+    .hero-sp{padding:120px 40px 80px;background:var(--s50);text-align:center}
+    .h-tag{display:inline-flex;align-items:center;gap:8px;background:var(--clay-l);color:var(--clay);padding:6px 14px;border-radius:50px;font-size:.75rem;font-weight:700;margin-bottom:20px;text-transform:uppercase;letter-spacing:1px}
+    .hero-sp h1{font-family:var(--fd);font-size:clamp(2.5rem,5vw,3.8rem);color:var(--td);margin-bottom:20px;line-height:1.1}
+    .hero-sp p{font-size:1.1rem;color:var(--ts);max-width:600px;margin:0 auto 32px}
+    .btn-p{background:var(--g700);color:#fff;padding:14px 32px;border-radius:50px;font-weight:700;display:inline-block;font-size:1rem;box-shadow:0 8px 20px rgba(79,111,82,.25)}
+    .btn-p:hover{transform:translateY(-2px);background:var(--g800)}
+
+    /* BENEFICIOS */
+    .sec{padding:80px 40px;max-width:1100px;margin:0 auto}
+    .ben-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+    .ben-c{text-align:center;padding:24px;border:1px solid var(--border);border-radius:var(--rlg);background:#fff}
+    .ben-ic{width:60px;height:60px;background:var(--g50);border-radius:50%;color:var(--g700);font-size:1.5rem;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+    .ben-c h3{font-family:var(--fd);font-size:1.2rem;color:var(--td);margin-bottom:10px}
+    .ben-c p{font-size:.9rem;color:var(--ts)}
+
+    /* REQUISITOS */
+    .req-sec{background:var(--g900);color:#fff;padding:80px 40px;border-radius:var(--rxl);margin:40px}
+    .req-in{max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+    .req-list{list-style:none;margin-top:20px}
+    .req-list li{display:flex;align-items:center;gap:12px;margin-bottom:16px;font-size:1rem}
+    .req-list i{color:var(--g400)}
+
+    /* FORM CTA */
+    .cta-form{max-width:600px;margin:0 auto;text-align:center;padding:80px 40px}
+    
+    @media(max-width:800px){
+      .ben-grid,.req-in{grid-template-columns:1fr}
+      .req-sec{margin:20px;padding:60px 24px}
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="ni">
+    <a href="index.html" class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</a>
+    <a href="index.html" class="back-lnk">Volver al inicio</a>
+  </div>
+</nav>
+
+<section class="hero-sp">
+  <div class="h-tag">Comunidad de Especialistas</div>
+  <h1>Enfócate en tus pacientes,<br><em>nosotros hacemos el resto</em></h1>
+  <p>Únete a la red de psicólogos más confiable de Perú. Te damos la tecnología, la gestión administrativa y el flujo de pacientes para que tú solo te preocupes por la terapia.</p>
+  <a href="#postular" class="btn-p">Quiero postular</a>
+</section>
+
+<div class="sec">
+  <div style="text-align:center;margin-bottom:40px">
+    <h2 style="font-family:var(--fd);font-size:2rem;color:var(--td)">¿Por qué unirte a Bitácora?</h2>
+  </div>
+  <div class="ben-grid">
+    <div class="ben-c">
+      <div class="ben-ic"><i class="fas fa-users"></i></div>
+      <h3>Flujo de Pacientes</h3>
+      <p>Nos encargamos del marketing y la captación. Recibe pacientes que encajan con tu especialidad.</p>
+    </div>
+    <div class="ben-c">
+      <div class="ben-ic"><i class="fas fa-calendar-check"></i></div>
+      <h3>Agenda Automatizada</h3>
+      <p>Gestiona tus horarios fácilmente. Recordatorios automáticos para ti y tus pacientes para reducir el ausentismo.</p>
+    </div>
+    <div class="ben-c">
+      <div class="ben-ic"><i class="fas fa-shield-alt"></i></div>
+      <h3>Pagos Garantizados</h3>
+      <p>Olvídate de cobrar. Nosotros procesamos los pagos antes de la sesión y te depositamos puntualmente.</p>
+    </div>
+  </div>
+</div>
+
+<div class="req-sec">
+  <div class="req-in">
+    <div>
+      <h2 style="font-family:var(--fd);font-size:2.2rem;margin-bottom:16px">Requisitos para unirte</h2>
+      <p style="opacity:.8;line-height:1.7">Para garantizar la calidad y seguridad de nuestros usuarios, somos muy rigurosos con nuestro proceso de selección.</p>
+    </div>
+    <ul class="req-list">
+      <li><i class="fas fa-check-circle"></i> Título de Psicólogo(a) y Colegiatura (C.Ps.P.) habilitada.</li>
+      <li><i class="fas fa-check-circle"></i> Formación psicoterapéutica (Maestría o especialización).</li>
+      <li><i class="fas fa-check-circle"></i> Mínimo 3 años de experiencia clínica comprobada.</li>
+      <li><i class="fas fa-check-circle"></i> Disponibilidad para atención online (buena conexión).</li>
+      <li><i class="fas fa-check-circle"></i> Pasar nuestra entrevista técnica y de habilidades blandas.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="cta-form" id="postular">
+  <h2 style="font-family:var(--fd);font-size:2rem;color:var(--td);margin-bottom:12px">¿Listo para crecer tu consulta?</h2>
+  <p style="color:var(--ts);margin-bottom:30px">Completa el formulario de pre-inscripción y nuestro equipo de selección te contactará si tu perfil califica.</p>
+  <a href="mailto:seleccion@bitacoramental.pe" class="btn-p">Enviar CV a Selección</a>
+  <p style="font-size:.85rem;margin-top:20px;color:var(--tl)">O escríbenos a seleccion@bitacoramental.pe</p>
+</div>
+
+<footer style="text-align:center;padding:40px;border-top:1px solid var(--border);color:var(--tl);font-size:.9rem">
+  <p>© 2026 Bitácora Mental. Todos los derechos reservados.</p>
+</footer>
+
+</body>
+</html>
