@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="Programa de 4 sesiones para la ansiedad por redes sociales y desconexión digital. Virtual. Bitácora Mental Perú.">
+  <title>Desconexión Digital — Bitácora Mental</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root{--g900:#1a2e1c;--g800:#2d4a30;--g700:#4F6F52;--g600:#6a8f6d;--g200:#c8ddc9;--g100:#e3ede4;--g50:#f2f8f2;--s50:#fdf9f4;--s100:#f5ede0;--clay:#c97b5a;--clay-l:#f0d5c8;--td:#1a2e1c;--tb:#3d4f3e;--ts:#697a6a;--tl:#9aaa9b;--white:#fff;--border:#dde8de;--accent:#0284c7;--accent-l:#e0f2fe;--fd:'Fraunces',Georgia,serif;--fb:'Plus Jakarta Sans',sans-serif;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--fb);background:var(--white);color:var(--tb);line-height:1.6;overflow-x:hidden}
+    a{text-decoration:none;transition:all .25s}
+    img{max-width:100%;height:auto;display:block}
+
+    /* NAV */
+    .nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid transparent;transition:all .3s}
+    .nav.sc{border-bottom-color:var(--border);box-shadow:0 2px 8px rgba(26,46,28,.08)}
+    .ni{max-width:1280px;margin:0 auto;padding:0 40px;height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .logo{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-size:1.5rem;font-weight:700;color:var(--g700);letter-spacing:-.5px}
+    .logo-ic{width:38px;height:38px;background:var(--g700);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem}
+    .nl{display:flex;align-items:center;gap:4px;list-style:none}
+    .nl-a{display:flex;align-items:center;gap:5px;padding:8px 14px;color:var(--ts);font-size:.9rem;font-weight:600;border-radius:10px;white-space:nowrap}
+    .nl-a:hover{background:var(--g50);color:var(--g700)}
+    .na{display:flex;align-items:center;gap:10px}
+    .btn-li{padding:9px 20px;border-radius:50px;border:2px solid var(--border);color:var(--tb);font-size:.88rem;font-weight:700}
+    .btn-li:hover{border-color:var(--g200);color:var(--g700)}
+    .btn-ct{padding:10px 22px;border-radius:50px;background:var(--g700);color:#fff;font-size:.88rem;font-weight:700}
+    .btn-ct:hover{background:var(--g800)}
+    .hbg{display:none;width:44px;height:44px;background:var(--g50);border:none;border-radius:10px;color:var(--g700);cursor:pointer;align-items:center;justify-content:center;font-size:1.2rem}
+
+    /* BREADCRUMB */
+    .bc{background:var(--g50);padding:16px 40px;border-bottom:1px solid var(--border);margin-top:76px}
+    .bc-in{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ts)}
+    .bc-in a{color:var(--ts)}
+    .bc-in a:hover{color:var(--g700)}
+    .bc-in i{font-size:.65rem;color:var(--tl)}
+
+    /* HERO */
+    .hero{background:linear-gradient(135deg,#0c2d4a 0%,#0369a1 100%);padding:70px 40px 60px}
+    .hero-in{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+    .h-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.2);color:rgba(255,255,255,.9);padding:7px 16px;border-radius:50px;font-size:.8rem;font-weight:700;margin-bottom:20px;border:1px solid rgba(255,255,255,.25)}
+    .hero h1{font-family:var(--fd);font-size:clamp(2.2rem,4vw,3rem);font-weight:500;color:#fff;line-height:1.15;letter-spacing:-.5px;margin-bottom:18px}
+    .hero h1 em{font-style:italic;color:rgba(255,255,255,.75)}
+    .hero-desc{font-size:1rem;color:rgba(255,255,255,.8);line-height:1.7;margin-bottom:30px;max-width:480px}
+    .hero-meta{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:32px}
+    .h-m{display:flex;align-items:center;gap:8px;font-size:.88rem;color:rgba(255,255,255,.85)}
+    .h-m i{color:rgba(255,255,255,.6)}
+    .h-cta{display:flex;gap:12px;flex-wrap:wrap}
+    .btn-hero{padding:14px 28px;border-radius:50px;background:#fff;color:#0c2d4a;font-weight:700;font-size:.95rem}
+    .btn-hero:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.15)}
+    .btn-hero2{padding:14px 28px;border-radius:50px;border:2px solid rgba(255,255,255,.4);color:#fff;font-weight:700;font-size:.95rem}
+    .btn-hero2:hover{border-color:rgba(255,255,255,.8)}
+    .hero-price{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:28px;text-align:center}
+    .hero-price .val{font-family:var(--fd);font-size:2rem;font-weight:700;color:#fff;line-height:1.2;margin-bottom:8px}
+    .hero-price .lbl{font-size:.85rem;color:rgba(255,255,255,.8);margin-bottom:16px}
+    .hero-includes{margin-top:20px;display:flex;flex-direction:column;gap:8px;padding-top:20px;border-top:1px solid rgba(255,255,255,.15)}
+    .h-inc{display:flex;align-items:center;gap:8px;font-size:.85rem;color:rgba(255,255,255,.9)}
+    .h-inc i{color:rgba(255,255,255,.6);width:16px;text-align:center}
+
+    /* MAIN CONTENT */
+    .main{max-width:1100px;margin:0 auto;padding:70px 40px;display:grid;grid-template-columns:1fr 360px;gap:60px;align-items:start}
+    .section-label{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--g700);display:flex;align-items:center;gap:8px;margin-bottom:16px}
+    .section-label::after{content:'';flex:1;height:1px;background:var(--g100)}
+    h2.sec-t{font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--td);margin-bottom:20px;letter-spacing:-.3px}
+    h2.sec-t em{font-style:italic;color:var(--g700)}
+    .desc-text{font-size:.97rem;color:var(--ts);line-height:1.75;margin-bottom:40px}
+
+    /* APRENDERÁS */
+    .learn-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:48px}
+    .learn-item{display:flex;gap:14px;padding:18px;background:var(--g50);border-radius:16px;border:1px solid var(--g100)}
+    .learn-item i{color:var(--g700);font-size:1.1rem;margin-top:2px;flex-shrink:0}
+    .learn-item span{font-size:.9rem;color:var(--tb);line-height:1.5}
+
+    /* SESIONES */
+    .sesiones{margin-bottom:48px}
+    .sesion-item{display:flex;gap:20px;padding:22px 0;border-bottom:1px solid var(--border)}
+    .sesion-item:last-child{border-bottom:none}
+    .ses-num{width:44px;height:44px;border-radius:50%;background:var(--g700);color:#fff;font-family:var(--fd);font-size:1rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .ses-content h4{font-weight:700;font-size:.97rem;color:var(--td);margin-bottom:4px}
+    .ses-content p{font-size:.88rem;color:var(--ts);line-height:1.6}
+
+    /* PARA QUIÉN */
+    .para-quien{background:var(--g50);border-radius:24px;padding:32px;margin-bottom:48px;border:1px solid var(--g100)}
+    .para-quien h3{font-family:var(--fd);font-size:1.2rem;color:var(--td);margin-bottom:16px}
+    .pq-list{display:flex;flex-direction:column;gap:10px}
+    .pq-item{display:flex;align-items:start;gap:10px;font-size:.9rem;color:var(--tb)}
+    .pq-item i{color:var(--g700);margin-top:3px;flex-shrink:0}
+
+    /* SIDEBAR */
+    .sidebar{position:sticky;top:100px}
+    .side-card{background:#fff;border:1px solid var(--border);border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(26,46,28,.08)}
+    .side-head{background:linear-gradient(135deg,#0c2d4a,#0369a1);padding:32px 28px;text-align:center}
+    .side-head .val{font-family:var(--fd);font-size:1.8rem;font-weight:500;color:#fff;line-height:1.2}
+    .side-body{padding:24px}
+    .side-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--g50);font-size:.9rem;color:var(--tb)}
+    .side-item:last-child{border-bottom:none}
+    .side-item i{color:var(--g700);width:18px;text-align:center}
+    .btn-buy{display:block;width:100%;padding:16px;background:var(--g700);color:#fff;border-radius:12px;text-align:center;font-weight:700;font-size:1rem;margin-top:20px;cursor:pointer;border:none;font-family:var(--fb)}
+    .btn-buy:hover{background:var(--g800)}
+    .side-note{text-align:center;margin-top:12px;font-size:.78rem;color:var(--tl)}
+    .side-guarantee{display:flex;align-items:center;gap:10px;background:var(--g50);border-radius:12px;padding:14px;margin-top:16px;font-size:.82rem;color:var(--ts)}
+    .side-guarantee i{color:var(--g700);flex-shrink:0}
+
+    /* OTROS PROGRAMAS */
+    .otros{background:var(--g50);padding:70px 40px;border-top:1px solid var(--border)}
+    .otros-in{max-width:1100px;margin:0 auto}
+    .otros h2{font-family:var(--fd);font-size:1.6rem;color:var(--td);margin-bottom:8px}
+    .otros p{color:var(--ts);font-size:.9rem;margin-bottom:32px}
+    .otros-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .otro-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px;transition:all .3s}
+    .otro-card:hover{border-color:var(--g200);box-shadow:0 4px 16px rgba(26,46,28,.08);transform:translateY(-3px)}
+    .otro-card h4{font-weight:700;font-size:.97rem;color:var(--td);margin:10px 0 6px}
+    .otro-card p{font-size:.82rem;color:var(--ts);line-height:1.5;margin-bottom:14px}
+    .otro-link{font-size:.82rem;font-weight:700;color:var(--g700);display:flex;align-items:center;gap:5px}
+    .otro-icon{width:40px;height:40px;border-radius:10px;background:var(--g50);display:flex;align-items:center;justify-content:center;color:var(--g700)}
+
+    /* FOOTER */
+    .foot-min{padding:30px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;max-width:1280px;margin:0 auto}
+    .foot-min p{font-size:.82rem;color:var(--tl)}
+    .foot-links{display:flex;gap:20px}
+    .foot-links a{font-size:.82rem;color:var(--tl)}
+    .foot-links a:hover{color:var(--g700)}
+    .em-bar{background:#FEF2F2;border-top:2px solid #FCA5A5;padding:12px 40px;text-align:center;font-size:.82rem;color:#7F1D1D}
+    .em-bar a{color:#991B1B;font-weight:700}
+
+    @media(max-width:960px){
+      .hero-in{grid-template-columns:1fr;gap:30px}
+      .main{grid-template-columns:1fr}
+      .learn-grid{grid-template-columns:1fr}
+      .sidebar{position:static}
+      .otros-grid{grid-template-columns:1fr 1fr}
+      .nl,.btn-li{display:none}
+      .hbg{display:flex}
+      .ni{padding:0 24px}
+      .bc,.hero,.otros{padding-left:24px;padding-right:24px}
+      .main{padding:50px 24px}
+      .foot-min{flex-direction:column;text-align:center;padding:24px}
+    }
+    @media(max-width:600px){
+      .otros-grid{grid-template-columns:1fr}
+      .h-cta{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="ni">
+    <a href="../index.html" class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</a>
+    <ul class="nl">
+      <li><a href="../index.html#servicios" class="nl-a">Servicios</a></li>
+      <li><a href="index.html" class="nl-a">Programas</a></li>
+      <li><a href="../especialistas-publico.html" class="nl-a">Directorio</a></li>
+      <li><a href="../empresas.html" class="nl-a">Para empresas</a></li>
+    </ul>
+    <div class="na">
+      <a href="../login.html" class="btn-li">Ingresar</a>
+      <a href="../registro.html" class="btn-ct">Crear cuenta</a>
+    </div>
+    <button class="hbg" onclick="window.location='../index.html'" aria-label="Menú"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<div class="bc">
+  <div class="bc-in">
+    <a href="../index.html">Inicio</a>
+    <i class="fas fa-chevron-right"></i>
+    <a href="index.html">Programas</a>
+    <i class="fas fa-chevron-right"></i>
+    <span style="color:var(--td);font-weight:600">Desconexión Digital</span>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-in">
+    <div>
+      <div class="h-tag"><i class="fas fa-mobile-alt"></i> Digital · Bienestar</div>
+      <h1>Tu atención es tuya,<br>no del <em>algoritmo</em></h1>
+      <p class="hero-desc">Comparación constante, validación externa, FOMO y ansiedad por las redes. Aprende a retomar el control de tu atención, tu tiempo y tu bienestar digital.</p>
+      <div class="hero-meta">
+        <div class="h-m"><i class="fas fa-video"></i> Virtual</div>
+        <div class="h-m"><i class="fas fa-calendar-alt"></i> 4 semanas</div>
+        <div class="h-m"><i class="fas fa-user-friends"></i> 4 sesiones individuales</div>
+        <div class="h-m"><i class="fas fa-clock"></i> 50 min por sesión</div>
+      </div>
+      <div class="h-cta">
+        <a href="../registro.html?programa=redes-sociales" class="btn-hero">Empezar este programa</a>
+        <a href="../especialistas-publico.html" class="btn-hero2">Ver especialistas</a>
+      </div>
+    </div>
+    <div>
+      <div class="hero-price">
+        <div class="val">Inicia tu cambio hoy</div>
+        <div class="lbl">Crea tu cuenta para ver opciones y agendar tu primera sesión.</div>
+        <div class="hero-includes">
+          <div class="h-inc"><i class="fas fa-check-circle"></i> Especialista asignado desde el inicio</div>
+          <div class="h-inc"><i class="fas fa-check-circle"></i> Estructura y objetivos claros</div>
+          <div class="h-inc"><i class="fas fa-check-circle"></i> Acceso al diario emocional</div>
+          <div class="h-inc"><i class="fas fa-check-circle"></i> Soporte entre sesiones</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="content">
+
+    <div class="section-label"><i class="fas fa-info-circle"></i> Sobre este programa</div>
+    <h2 class="sec-t">Las redes no son el problema.<br><em>La relación con ellas sí puede serlo</em></h2>
+    <p class="desc-text">Las redes sociales no son malas por definición, pero pueden convertirse en una fuente constante de comparación, ansiedad e insatisfacción cuando no tenemos una relación consciente con ellas. En Perú, donde el uso del celular es intenso y la validación social tiene mucho peso, muchas personas se sienten atrapadas en un scroll que no para aunque quieran parar. Este programa no busca que dejes las redes, sino que cambies tu relación con ellas: que las uses tú a ellas, no que ellas te usen a ti.</p>
+
+    <div class="section-label"><i class="fas fa-graduation-cap"></i> Lo que aprenderás</div>
+    <div class="learn-grid">
+      <div class="learn-item"><i class="fas fa-check-circle"></i><span>Entender cómo las redes afectan tu estado emocional</span></div>
+      <div class="learn-item"><i class="fas fa-check-circle"></i><span>Reconocer tus patrones de uso problemático</span></div>
+      <div class="learn-item"><i class="fas fa-check-circle"></i><span>Trabajar la comparación social y el FOMO</span></div>
+      <div class="learn-item"><i class="fas fa-check-circle"></i><span>Desconectar sin ansiedad de abstinencia</span></div>
+      <div class="learn-item"><i class="fas fa-check-circle"></i><span>Construir límites digitales que puedas mantener</span></div>
+      <div class="learn-item"><i class="fas fa-check-circle"></i><span>Recuperar actividades que las redes desplazaron</span></div>
+      <div class="learn-item"><i class="fas fa-check-circle"></i><span>Fortalecer la validación interna vs. la externa</span></div>
+      <div class="learn-item"><i class="fas fa-check-circle"></i><span>Diseñar un plan de uso consciente y saludable</span></div>
+    </div>
+
+    <div class="section-label"><i class="fas fa-calendar-check"></i> Estructura del programa</div>
+    <h2 class="sec-t" style="margin-bottom:8px">Sesión <em>por sesión</em></h2>
+    <p style="color:var(--ts);font-size:.9rem;margin-bottom:24px">Cada sesión tiene un enfoque específico. Tu especialista adapta el contenido a tu realidad.</p>
+    <div class="sesiones">
+      <div class="sesion-item">
+        <div class="ses-num">1</div>
+        <div class="ses-content"><h4>Diagnóstico de tu relación con las redes</h4><p>Mapeamos cómo usas las redes, qué te generan emocionalmente y qué rol juegan en tu vida. Sin juicio, con curiosidad.</p></div>
+      </div>
+      <div class="sesion-item">
+        <div class="ses-num">2</div>
+        <div class="ses-content"><h4>Comparación, FOMO y validación externa</h4><p>Trabajamos los mecanismos psicológicos detrás del uso compulsivo: la comparación social, el miedo a perderse algo y la búsqueda de aprobación.</p></div>
+      </div>
+      <div class="sesion-item">
+        <div class="ses-num">3</div>
+        <div class="ses-content"><h4>Límites digitales y desconexión</h4><p>Construimos herramientas prácticas para crear límites que puedas mantener y aprender a desconectar sin ansiedad.</p></div>
+      </div>
+      <div class="sesion-item">
+        <div class="ses-num">4</div>
+        <div class="ses-content"><h4>Vida offline y plan de uso consciente</h4><p>Reconectamos con actividades y relaciones fuera de pantalla y diseñamos tu plan de uso consciente de las redes.</p></div>
+      </div>
+    </div>
+
+    <div class="para-quien">
+      <h3><i class="fas fa-user-check" style="color:var(--g700);margin-right:8px"></i> ¿Este programa es para ti?</h3>
+      <div class="pq-list">
+        <div class="pq-item"><i class="fas fa-check"></i><span>Pasas más tiempo en redes del que quisieras y no puedes parar</span></div>
+        <div class="pq-item"><i class="fas fa-check"></i><span>Las redes te generan ansiedad, comparación o insatisfacción constante</span></div>
+        <div class="pq-item"><i class="fas fa-check"></i><span>Buscas validación en likes y comentarios para sentirte bien</span></div>
+        <div class="pq-item"><i class="fas fa-check"></i><span>Tienes FOMO (miedo a perderte algo) cuando no estás conectado</span></div>
+        <div class="pq-item"><i class="fas fa-check"></i><span>Las redes interfieren con tu sueño, concentración o relaciones</span></div>
+        <div class="pq-item"><i class="fas fa-check"></i><span>Quieres una relación más consciente con la tecnología</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sidebar">
+    <div class="side-card">
+      <div class="side-head">
+        <div class="val">Programa de 4 Semanas</div>
+      </div>
+      <div class="side-body">
+        <div class="side-item"><i class="fas fa-video"></i> Modalidad virtual</div>
+        <div class="side-item"><i class="fas fa-calendar-alt"></i> Duración: 4 semanas</div>
+        <div class="side-item"><i class="fas fa-user-friends"></i> 4 sesiones individuales</div>
+        <div class="side-item"><i class="fas fa-clock"></i> 50 minutos por sesión</div>
+        <div class="side-item"><i class="fas fa-user-md"></i> Especialista asignado</div>
+        <div class="side-item"><i class="fas fa-certificate"></i> Psicólogo colegiado (CPP)</div>
+        <div class="side-item"><i class="fas fa-shield-alt"></i> Confidencialidad garantizada</div>
+        <button class="btn-buy" onclick="window.location='../registro.html?programa=redes-sociales'">
+          Crear cuenta para empezar <i class="fas fa-arrow-right" style="margin-left:5px"></i>
+        </button>
+        <p class="side-note">Regístrate gratis para ver tarifas y horarios</p>
+        <div class="side-guarantee">
+          <i class="fas fa-shield-alt"></i>
+          Garantía de satisfacción en tu primera sesión con tu especialista.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="otros">
+  <div class="otros-in">
+    <h2>Otros programas</h2>
+    <p>Explora más opciones que pueden complementar tu proceso terapéutico.</p>
+    <div class="otros-grid">
+      <div class="otro-card">
+        <div class="otro-icon"><i class="fas fa-wind"></i></div>
+        <h4>Manejo de Ansiedad</h4>
+        <p>Reduce la ansiedad digital</p>
+        <a href="ansiedad.html" class="otro-link">Ver programa <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="otro-card">
+        <div class="otro-icon"><i class="fas fa-shield-alt"></i></div>
+        <h4>Autoestima</h4>
+        <p>Valida desde adentro, no afuera</p>
+        <a href="autoestima.html" class="otro-link">Ver programa <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="otro-card">
+        <div class="otro-icon"><i class="fas fa-fire"></i></div>
+        <h4>Estrés Laboral</h4>
+        <p>Equilibrio trabajo-vida</p>
+        <a href="estres-laboral.html" class="otro-link">Ver programa <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-min">
+    <p>© 2026 Bitácora Mental · Lima, Perú 🇵🇪</p>
+    <nav class="foot-links">
+      <a href="../index.html">Inicio</a>
+      <a href="index.html">Programas</a>
+      <a href="../faq.html">FAQ</a>
+      <a href="../contacto.html">Contacto</a>
+    </nav>
+  </div>
+</footer>
+<div class="em-bar">🚨 Crisis: <strong>Línea 113</strong> (MINSA) · <strong>Línea 100</strong> (MIMP). Gratuitas 24h. <a href="../lineas-emergencia.html">Más recursos →</a></div>
+
+<script>
+  window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('sc',window.scrollY>30),{passive:true});
+</script>
+</body>
+</html>
