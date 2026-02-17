@@ -356,6 +356,65 @@
   </div>
 </div>
 
+  <section id="talleres" class="workshop-section">
+    <div class="section-header">
+        <div style="background:var(--primary-light); color:var(--primary); padding:5px 15px; border-radius:20px; display:inline-block; font-weight:700; font-size:0.85rem; margin-bottom:15px;">
+            🎁 Talleres Gratuitos
+        </div>
+        <h2>Psicoeducación abierta para todos</h2>
+        <p>Espacios seguros de 1 hora para aprender herramientas prácticas. Sin costo.</p>
+    </div>
+
+    <div class="workshop-grid" id="talleresContainer">
+        <div style="grid-column:1/-1; text-align:center; padding:40px;">
+            <i class="fas fa-circle-notch fa-spin fa-2x" style="color:var(--text-soft);"></i>
+        </div>
+    </div>
+
+    <div style="text-align:center; margin-top:40px;">
+        <a href="#" style="color:var(--primary); font-weight:700; text-decoration:underline;">Ver calendario completo de actividades</a>
+    </div>
+  </section>
+
+  <div class="modal-overlay" id="modalInscripcion">
+    <div class="modal-box">
+        <button class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
+        
+        <h3 style="font-family:'Outfit'; font-size:1.5rem; margin-bottom:5px;">Asegura tu cupo</h3>
+        <p style="font-size:0.9rem; color:var(--text-soft); margin-bottom:20px;">
+            Inscribiéndote al taller: <strong id="modalTallerNombre">...</strong>
+        </p>
+
+        <form id="formInscripcion" onsubmit="inscribirseTaller(event)">
+            <input type="hidden" id="tallerId">
+            
+            <div style="margin-bottom:15px;">
+                <label style="font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px;">Nombre Completo</label>
+                <input type="text" id="userName" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px;">
+            </div>
+
+            <div style="margin-bottom:15px;">
+                <label style="font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px;">Correo Electrónico</label>
+                <input type="email" id="userEmail" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px;">
+            </div>
+
+            <div style="margin-bottom:20px;">
+                <label style="font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px;">WhatsApp (Para recordatorio)</label>
+                <input type="tel" id="userPhone" required placeholder="+51..." style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px;">
+            </div>
+
+            <div style="background:#F0FDF4; padding:10px; border-radius:8px; font-size:0.8rem; color:#166534; margin-bottom:20px; display:flex; gap:10px;">
+                <i class="fas fa-check-circle" style="margin-top:3px;"></i>
+                <span>Al inscribirte, crearemos automáticamente tu cuenta gratuita en Bitácora Mental para que accedas al link de Zoom.</span>
+            </div>
+
+            <button type="submit" class="btn-ws" id="btnSubmit">
+                Confirmar Inscripción
+            </button>
+        </form>
+    </div>
+  </div>
+
 <div id="servicios"><div class="sec">
   <div class="s-hd">
     <div class="tag"><i class="fas fa-star"></i> Nuestros servicios</div>
