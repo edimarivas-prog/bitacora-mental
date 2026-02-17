@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <meta name="description" content="Bitácora Mental — Plataforma peruana de terapia online. Psicólogos colegiados verificados desde S/115 por sesión. Sin traslados, sin listas de espera.">
+  <meta name="description" content="Bitácora Mental — Plataforma peruana de terapia online. Psicólogos colegiados verificados. Sin traslados, sin listas de espera.">
   <meta name="theme-color" content="#4F6F52">
   <title>Bitácora Mental — Tu bienestar emocional comienza aquí</title>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -133,10 +133,20 @@
     .ic-s{background:var(--s100);color:var(--s600)}
     .srv-c h3{font-family:var(--fd);font-size:1.3rem;font-weight:600;color:var(--td);margin-bottom:10px}
     .srv-c p{font-size:.92rem;color:var(--ts);line-height:1.65;margin-bottom:24px}
-    .srv-pr{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:700;color:var(--g700);background:var(--g50);padding:6px 14px;border-radius:50px;margin-bottom:20px}
     .srv-lk{display:inline-flex;align-items:center;gap:6px;color:var(--g700);font-weight:700;font-size:.9rem}
     .srv-lk i{transition:transform .3s}
     .srv-lk:hover i{transform:translateX(5px)}
+
+    /* PLANES (NUEVA SECCIÓN) */
+    .plan-g{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+    .plan-c{background:#fff;border:1px solid var(--border);border-radius:var(--rlg);padding:36px;transition:all .3s;display:flex;flex-direction:column;align-items:center;text-align:center}
+    .plan-c:hover{border-color:var(--g400);transform:translateY(-6px);box-shadow:var(--smd)}
+    .plan-ic{width:64px;height:64px;border-radius:50%;background:var(--g50);color:var(--g700);display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:20px}
+    .plan-ti{font-family:var(--fd);font-size:1.4rem;color:var(--td);margin-bottom:12px;font-weight:600}
+    .plan-desc{font-size:.9rem;color:var(--ts);line-height:1.6;margin-bottom:24px}
+    .plan-feat{list-style:none;margin-bottom:30px;width:100%}
+    .plan-feat li{display:flex;align-items:center;gap:10px;font-size:.88rem;color:var(--tb);margin-bottom:10px;text-align:left;justify-content:center}
+    .plan-feat i{color:var(--g600);font-size:.8rem}
 
     /* PROGRAMAS */
     .prg-g{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
@@ -150,11 +160,9 @@
     .prg-mt{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;font-size:.82rem;color:var(--ts)}
     .prg-mt span{display:flex;align-items:center;gap:5px}
     .prg-mt i{color:var(--g600)}
-    .prg-pr{display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid var(--border)}
-    .pv{font-family:var(--fd);font-size:1.3rem;font-weight:700;color:var(--g700)}
-    .po{font-size:.85rem;color:var(--tl);text-decoration:line-through;margin-right:6px}
-    .btn-prg{padding:10px 20px;background:var(--g700);color:#fff;border-radius:50px;font-size:.85rem;font-weight:700}
-    .btn-prg:hover{background:#2d4a30}
+    .prg-pr{display:flex;align-items:center;justify-content:flex-end;padding-top:16px;border-top:1px solid var(--border)}
+    .btn-prg{padding:10px 20px;background:var(--g50);color:var(--g700);border:1px solid var(--g200);border-radius:50px;font-size:.85rem;font-weight:700;transition:all .25s}
+    .btn-prg:hover{background:var(--g700);color:#fff;border-color:var(--g700)}
 
     /* CÓMO FUNCIONA */
     .como-g{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
@@ -176,7 +184,6 @@
     .esp-tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
     .esp-tag{font-size:.72rem;background:var(--g50);color:var(--g700);padding:3px 10px;border-radius:50px;font-weight:600}
     .esp-pr{font-size:.85rem;color:var(--ts);margin-bottom:14px}
-    .esp-pr strong{color:var(--g700);font-size:1rem}
     .btn-esp{width:100%;padding:10px;background:var(--g50);color:var(--g700);border-radius:10px;font-weight:700;font-size:.85rem;border:2px solid var(--g100);cursor:pointer;transition:all .3s}
     .btn-esp:hover{background:var(--g700);color:#fff;border-color:var(--g700)}
 
@@ -263,7 +270,7 @@
 
     /* RESPONSIVE */
     @media(max-width:1100px){
-      .srv-g,.prg-g{grid-template-columns:1fr 1fr}
+      .srv-g,.prg-g,.plan-g{grid-template-columns:1fr 1fr}
       .esp-g{grid-template-columns:repeat(2,1fr)}
       .test-g{grid-template-columns:1fr 1fr}
       .f-grid{grid-template-columns:1.5fr 1fr 1fr}
@@ -278,7 +285,7 @@
       .stats-in{grid-template-columns:repeat(2,1fr)}
       .st-d{display:none}
       .sec,.sec-bg{padding:60px 24px}
-      .srv-g,.prg-g,.esp-g,.test-g{grid-template-columns:1fr}
+      .srv-g,.prg-g,.esp-g,.test-g,.plan-g{grid-template-columns:1fr}
       .como-g{grid-template-columns:1fr}
       .como-img{display:none}
       .emp-in{grid-template-columns:1fr;gap:40px}
@@ -299,7 +306,6 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
 <nav class="nav" id="nav">
   <div class="ni">
     <a href="index.html" class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</a>
@@ -309,7 +315,7 @@
         <div class="dd wide">
           <span class="dd-lbl">Atención profesional</span>
           <div class="dd-grid">
-            <a href="especialistas-publico.html" class="dd-a"><div class="ic"><i class="fas fa-user-md"></i></div><div><strong>Terapia Psicológica</strong><small style="color:var(--tl);font-size:.75rem">Desde S/115</small></div></a>
+            <a href="especialistas-publico.html" class="dd-a"><div class="ic"><i class="fas fa-user-md"></i></div><div><strong>Terapia Psicológica</strong><small style="color:var(--tl);font-size:.75rem">Online</small></div></a>
             <a href="especialistas-publico.html" class="dd-a"><div class="ic"><i class="fas fa-rocket"></i></div><div><strong>Coaching Emocional</strong><small style="color:var(--tl);font-size:.75rem">Metas y hábitos</small></div></a>
             <a href="especialistas-publico.html" class="dd-a"><div class="ic"><i class="fas fa-users"></i></div><div><strong>Terapia de Pareja</strong><small style="color:var(--tl);font-size:.75rem">Vínculos sanos</small></div></a>
             <a href="especialistas-publico.html" class="dd-a"><div class="ic"><i class="fas fa-child"></i></div><div><strong>Psicología Familiar</strong><small style="color:var(--tl);font-size:.75rem">Dinámica familiar</small></div></a>
@@ -373,13 +379,12 @@
   </div>
 </div>
 
-<!-- HERO -->
 <section class="hero">
   <div class="h-in">
     <div>
       <div class="h-badge"><span class="dot"></span> Plataforma 100% peruana</div>
       <h1>Tu salud mental<br>merece un espacio<br><em>de verdad</em></h1>
-      <p class="h-sub">Conectamos personas en Perú con psicólogos y coaches verificados. Sesiones online seguras desde S/115 — sin traslados, sin listas de espera.</p>
+      <p class="h-sub">Conectamos personas en Perú con psicólogos y coaches verificados. Sesiones online seguras y accesibles — sin traslados, sin listas de espera.</p>
       <div class="h-act">
         <a href="registro.html" class="btn-p">Empezar ahora <i class="fas fa-arrow-right"></i></a>
         <a href="especialistas-publico.html" class="btn-s"><i class="fas fa-search"></i> Ver especialistas</a>
@@ -397,7 +402,6 @@
   </div>
 </section>
 
-<!-- STATS -->
 <div class="stats">
   <div class="stats-in">
     <div class="st"><span class="st-n" data-n="50" data-s="+">50+</span><span class="st-l">Especialistas verificados</span></div>
@@ -406,11 +410,10 @@
     <div class="st-d"></div>
     <div class="st"><span class="st-n">4.8★</span><span class="st-l">Valoración promedio</span></div>
     <div class="st-d"></div>
-    <div class="st"><span class="st-n">S/115</span><span class="st-l">Desde por sesión</span></div>
+    <div class="st"><span class="st-n">Tarifas</span><span class="st-l">Accesibles y flexibles</span></div>
   </div>
 </div>
 
-<!-- SERVICIOS -->
 <div id="servicios"><div class="sec">
   <div class="s-hd">
     <div class="tag"><i class="fas fa-star"></i> Nuestros servicios</div>
@@ -422,28 +425,69 @@
       <div class="srv-ic ic-g"><i class="fas fa-user-md"></i></div>
       <h3>Terapia Psicológica Online</h3>
       <p>Un espacio seguro para hablar, procesar y sanar. Conecta con un psicólogo colegiado que te entienda, sin juicios, desde donde estés.</p>
-      <div class="srv-pr"><i class="fas fa-tag"></i> Desde S/115 por sesión</div>
       <a href="especialistas-publico.html" class="srv-lk">Ver psicólogos <i class="fas fa-arrow-right"></i></a>
     </div>
     <div class="srv-c">
       <div class="srv-ic ic-c"><i class="fas fa-rocket"></i></div>
       <h3>Coaching Emocional</h3>
       <p>¿Sientes que te estancaste? El coaching te ayuda a tomar decisiones, construir hábitos y diseñar la vida que quieres vivir. Orientado a resultados.</p>
-      <div class="srv-pr"><i class="fas fa-tag"></i> Desde S/115 por sesión</div>
       <a href="especialistas-publico.html" class="srv-lk">Ver coaches <i class="fas fa-arrow-right"></i></a>
     </div>
     <div class="srv-c">
       <div class="srv-ic ic-s"><i class="fas fa-users"></i></div>
       <h3>Terapia de Pareja y Familia</h3>
       <p>Comunicación, vínculos sanos y resolución de conflictos. Para parejas en crisis, familias o personas que salen de relaciones difíciles.</p>
-      <div class="srv-pr"><i class="fas fa-tag"></i> Desde S/130 por sesión</div>
       <a href="especialistas-publico.html" class="srv-lk">Ver especialistas <i class="fas fa-arrow-right"></i></a>
     </div>
   </div>
 </div></div>
 
-<!-- PROGRAMAS -->
-<div class="sec-bg" id="programas"><div class="sec">
+<div class="sec-bg">
+  <div class="sec">
+    <div class="s-hd c">
+      <div class="tag"><i class="fas fa-wallet"></i> Nuestras modalidades</div>
+      <h2 class="s-ti">Elige cómo quieres<br><em>empezar tu proceso</em></h2>
+      <p class="s-sub">Opciones flexibles que se adaptan a tu tiempo y presupuesto. Regístrate gratis para ver las tarifas detalladas de cada especialista.</p>
+    </div>
+    <div class="plan-g">
+      <div class="plan-c">
+        <div class="plan-ic"><i class="fas fa-user"></i></div>
+        <div class="plan-ti">Sesión Individual</div>
+        <div class="plan-desc">Ideal para empezar o si buscas flexibilidad total. Pagas por sesión sin compromisos a largo plazo.</div>
+        <ul class="plan-feat">
+          <li><i class="fas fa-check"></i> 50 minutos de sesión</li>
+          <li><i class="fas fa-check"></i> Agenda flexible</li>
+          <li><i class="fas fa-check"></i> Elige a tu especialista</li>
+        </ul>
+        <a href="registro.html" class="btn-s" style="margin-top:auto">Crear cuenta</a>
+      </div>
+      <div class="plan-c" style="border-color:var(--g700);background:#fcfdfc">
+        <div class="tag" style="margin-bottom:16px">Más popular</div>
+        <div class="plan-ti">Programas Temáticos</div>
+        <div class="plan-desc">Paquetes de sesiones enfocados en objetivos concretos (ansiedad, burnout, etc).</div>
+        <ul class="plan-feat">
+          <li><i class="fas fa-check"></i> 4 a 5 sesiones estructuradas</li>
+          <li><i class="fas fa-check"></i> Precio con descuento</li>
+          <li><i class="fas fa-check"></i> Material complementario</li>
+        </ul>
+        <a href="registro.html" class="btn-p" style="margin-top:auto">Ver opciones</a>
+      </div>
+      <div class="plan-c">
+        <div class="plan-ic"><i class="fas fa-building"></i></div>
+        <div class="plan-ti">Plan Corporativo</div>
+        <div class="plan-desc">Para empresas que cuidan la salud mental de sus equipos. Beneficios exclusivos.</div>
+        <ul class="plan-feat">
+          <li><i class="fas fa-check"></i> Sesiones para colaboradores</li>
+          <li><i class="fas fa-check"></i> Dashboard de bienestar</li>
+          <li><i class="fas fa-check"></i> Talleres grupales</li>
+        </ul>
+        <a href="empresas.html" class="btn-s" style="margin-top:auto">Para empresas</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="programas"><div class="sec">
   <div class="s-hd">
     <div class="tag"><i class="fas fa-layer-group"></i> Programas</div>
     <h2 class="s-ti">Programas diseñados para<br>la <em>realidad peruana</em></h2>
@@ -457,7 +501,7 @@
         <h3>Manejo de Ansiedad</h3>
         <p>Aprende a reconocer tus patrones, identificar detonantes y construir herramientas para regularte sin que te paralice el día a día.</p>
         <div class="prg-mt"><span><i class="fas fa-video"></i> Virtual</span><span><i class="fas fa-calendar"></i> 4 semanas</span><span><i class="fas fa-user"></i> 4 sesiones</span></div>
-        <div class="prg-pr"><div><span class="po">S/520</span><span class="pv">S/460</span></div><a href="programas/ansiedad.html" class="btn-prg">Ver programa</a></div>
+        <div class="prg-pr"><a href="programas/ansiedad.html" class="btn-prg">Ver detalles</a></div>
       </div>
     </div>
     <div class="prg-c">
@@ -467,7 +511,7 @@
         <h3>Estrés Laboral y Burnout</h3>
         <p>Para quienes se sienten agotados y al límite. Estrategias prácticas para recuperar el equilibrio entre el trabajo y tu vida personal.</p>
         <div class="prg-mt"><span><i class="fas fa-video"></i> Virtual</span><span><i class="fas fa-calendar"></i> 4 semanas</span><span><i class="fas fa-user"></i> 4 sesiones</span></div>
-        <div class="prg-pr"><div><span class="po">S/520</span><span class="pv">S/460</span></div><a href="programas/estres-laboral.html" class="btn-prg">Ver programa</a></div>
+        <div class="prg-pr"><a href="programas/estres-laboral.html" class="btn-prg">Ver detalles</a></div>
       </div>
     </div>
     <div class="prg-c">
@@ -477,7 +521,7 @@
         <h3>Autoestima y Autoconcepto</h3>
         <p>¿Tu voz interna te sabotea? Este programa trabaja la imagen que tienes de ti mismo y cómo afecta tus relaciones y decisiones.</p>
         <div class="prg-mt"><span><i class="fas fa-video"></i> Virtual</span><span><i class="fas fa-calendar"></i> 4 semanas</span><span><i class="fas fa-user"></i> 4 sesiones</span></div>
-        <div class="prg-pr"><div><span class="po">S/520</span><span class="pv">S/460</span></div><a href="programas/pareja.html" class="btn-prg">Ver programa</a></div>
+        <div class="prg-pr"><a href="programas/pareja.html" class="btn-prg">Ver detalles</a></div>
       </div>
     </div>
     <div class="prg-c">
@@ -487,7 +531,7 @@
         <h3>Vínculos Sanos y Maltrato</h3>
         <p>Para quienes vivieron o viven situaciones de maltrato en el hogar o en pareja. Reconocer patrones, sanar y construir relaciones sanas.</p>
         <div class="prg-mt"><span><i class="fas fa-video"></i> Virtual</span><span><i class="fas fa-calendar"></i> 5 semanas</span><span><i class="fas fa-user"></i> 5 sesiones</span></div>
-        <div class="prg-pr"><div><span class="po">S/650</span><span class="pv">S/575</span></div><a href="programas/pareja.html" class="btn-prg">Ver programa</a></div>
+        <div class="prg-pr"><a href="programas/pareja.html" class="btn-prg">Ver detalles</a></div>
       </div>
     </div>
     <div class="prg-c">
@@ -497,7 +541,7 @@
         <h3>Desconexión Digital</h3>
         <p>Comparación constante, validación externa, FOMO y ansiedad por las redes. Retoma el control de tu atención y tu bienestar.</p>
         <div class="prg-mt"><span><i class="fas fa-video"></i> Virtual</span><span><i class="fas fa-calendar"></i> 4 semanas</span><span><i class="fas fa-user"></i> 4 sesiones</span></div>
-        <div class="prg-pr"><div><span class="po">S/520</span><span class="pv">S/460</span></div><a href="programas/redes-sociales.html" class="btn-prg">Ver programa</a></div>
+        <div class="prg-pr"><a href="programas/redes-sociales.html" class="btn-prg">Ver detalles</a></div>
       </div>
     </div>
     <div class="prg-c">
@@ -507,14 +551,14 @@
         <h3>Duelo y Pérdidas</h3>
         <p>Perder a alguien o algo importante forma parte de la vida, pero no tienes que atravesarlo solo. Procesar, despedirte y continuar.</p>
         <div class="prg-mt"><span><i class="fas fa-video"></i> Virtual</span><span><i class="fas fa-calendar"></i> 4 semanas</span><span><i class="fas fa-user"></i> 4 sesiones</span></div>
-        <div class="prg-pr"><div><span class="po">S/520</span><span class="pv">S/460</span></div><a href="programas/index.html" class="btn-prg">Ver programa</a></div>
+        <div class="prg-pr"><a href="programas/index.html" class="btn-prg">Ver detalles</a></div>
       </div>
     </div>
   </div>
   <div style="text-align:center;margin-top:36px"><a href="programas/index.html" class="btn-s"><i class="fas fa-th-large"></i> Ver todos los programas</a></div>
 </div></div>
 
-<!-- CÓMO FUNCIONA -->
+<div class="sec-bg">
 <div class="sec">
   <div class="como-g">
     <div>
@@ -522,7 +566,7 @@
       <h2 class="s-ti" style="margin-bottom:40px">Tres pasos para<br><em>empezar tu proceso</em></h2>
       <div class="steps">
         <div class="step"><div class="step-n">1</div><div><h3>Crea tu cuenta gratis</h3><p>Regístrate en minutos. Te hacemos algunas preguntas para entender qué tipo de ayuda buscas y cuáles son tus preferencias.</p></div></div>
-        <div class="step"><div class="step-n">2</div><div><h3>Elige a tu especialista</h3><p>Explora nuestro directorio de psicólogos y coaches verificados. Filtra por especialidad, precio y disponibilidad.</p></div></div>
+        <div class="step"><div class="step-n">2</div><div><h3>Elige a tu especialista</h3><p>Explora nuestro directorio de psicólogos y coaches verificados. Filtra por especialidad y disponibilidad.</p></div></div>
         <div class="step"><div class="step-n">3</div><div><h3>Agenda tu primera sesión</h3><p>Selecciona el horario que mejor te convenga y conéctate desde donde estés. Sin traslados, sin sala de espera.</p></div></div>
       </div>
       <div style="margin-top:40px"><a href="registro.html" class="btn-p">Empezar ahora <i class="fas fa-arrow-right"></i></a></div>
@@ -530,24 +574,23 @@
     <div class="como-img"><img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=700" alt="Terapia online" loading="lazy"></div>
   </div>
 </div>
+</div>
 
-<!-- DIRECTORIO PREVIEW -->
-<div class="sec-bg"><div class="sec">
+<div class="sec">
   <div class="s-hd c">
     <div class="tag"><i class="fas fa-search"></i> Directorio</div>
     <h2 class="s-ti">Conoce a nuestros<br><em>especialistas</em></h2>
     <p class="s-sub">Todos verificados, con colegiatura activa y experiencia comprobada en salud mental.</p>
   </div>
   <div class="esp-g">
-    <div class="esp-c"><div class="esp-av">M</div><div class="esp-nm">Mg. María Torres</div><div class="esp-sp">Psicóloga Clínica</div><div class="esp-tags"><span class="esp-tag">Ansiedad</span><span class="esp-tag">Trauma</span><span class="esp-tag">Adultos</span></div><div class="esp-pr">Desde <strong>S/115</strong></div><button class="btn-esp" onclick="location.href='especialistas-publico.html'">Ver perfil</button></div>
-    <div class="esp-c"><div class="esp-av">C</div><div class="esp-nm">Lic. Carlos Ramos</div><div class="esp-sp">Psicólogo Clínico</div><div class="esp-tags"><span class="esp-tag">Pareja</span><span class="esp-tag">Familia</span><span class="esp-tag">Adultos</span></div><div class="esp-pr">Desde <strong>S/120</strong></div><button class="btn-esp" onclick="location.href='especialistas-publico.html'">Ver perfil</button></div>
-    <div class="esp-c"><div class="esp-av">L</div><div class="esp-nm">Ps. Lucía Vargas</div><div class="esp-sp">Coach Emocional</div><div class="esp-tags"><span class="esp-tag">Burnout</span><span class="esp-tag">Estrés</span><span class="esp-tag">Carrera</span></div><div class="esp-pr">Desde <strong>S/115</strong></div><button class="btn-esp" onclick="location.href='especialistas-publico.html'">Ver perfil</button></div>
-    <div class="esp-c"><div class="esp-av">A</div><div class="esp-nm">Mg. Ana Quispe</div><div class="esp-sp">Psicóloga Clínica</div><div class="esp-tags"><span class="esp-tag">Autoestima</span><span class="esp-tag">Maltrato</span><span class="esp-tag">Mujeres</span></div><div class="esp-pr">Desde <strong>S/120</strong></div><button class="btn-esp" onclick="location.href='especialistas-publico.html'">Ver perfil</button></div>
+    <div class="esp-c"><div class="esp-av">M</div><div class="esp-nm">Mg. María Torres</div><div class="esp-sp">Psicóloga Clínica</div><div class="esp-tags"><span class="esp-tag">Ansiedad</span><span class="esp-tag">Trauma</span><span class="esp-tag">Adultos</span></div><div class="esp-pr">Tarifas disponibles al registrarse</div><button class="btn-esp" onclick="location.href='especialistas-publico.html'">Ver perfil</button></div>
+    <div class="esp-c"><div class="esp-av">C</div><div class="esp-nm">Lic. Carlos Ramos</div><div class="esp-sp">Psicólogo Clínico</div><div class="esp-tags"><span class="esp-tag">Pareja</span><span class="esp-tag">Familia</span><span class="esp-tag">Adultos</span></div><div class="esp-pr">Tarifas disponibles al registrarse</div><button class="btn-esp" onclick="location.href='especialistas-publico.html'">Ver perfil</button></div>
+    <div class="esp-c"><div class="esp-av">L</div><div class="esp-nm">Ps. Lucía Vargas</div><div class="esp-sp">Coach Emocional</div><div class="esp-tags"><span class="esp-tag">Burnout</span><span class="esp-tag">Estrés</span><span class="esp-tag">Carrera</span></div><div class="esp-pr">Tarifas disponibles al registrarse</div><button class="btn-esp" onclick="location.href='especialistas-publico.html'">Ver perfil</button></div>
+    <div class="esp-c"><div class="esp-av">A</div><div class="esp-nm">Mg. Ana Quispe</div><div class="esp-sp">Psicóloga Clínica</div><div class="esp-tags"><span class="esp-tag">Autoestima</span><span class="esp-tag">Maltrato</span><span class="esp-tag">Mujeres</span></div><div class="esp-pr">Tarifas disponibles al registrarse</div><button class="btn-esp" onclick="location.href='especialistas-publico.html'">Ver perfil</button></div>
   </div>
   <div style="text-align:center"><a href="especialistas-publico.html" class="btn-p"><i class="fas fa-search"></i> Ver todos los especialistas</a></div>
-</div></div>
+</div>
 
-<!-- TEST CALLOUT -->
 <div class="sec" style="padding-top:0">
   <div class="test-bn">
     <div><h2>¿Cómo estás<br>emocionalmente?</h2><p>Responde 5 preguntas en 2 minutos y recibe orientación sobre tu bienestar. Es completamente gratis.</p></div>
@@ -555,7 +598,6 @@
   </div>
 </div>
 
-<!-- TESTIMONIOS -->
 <div class="sec-bg"><div class="sec">
   <div class="s-hd c">
     <div class="tag"><i class="fas fa-comment-dots"></i> Testimonios</div>
@@ -568,7 +610,6 @@
   </div>
 </div></div>
 
-<!-- EMPRESAS -->
 <div class="emp-sec">
   <div class="emp-in">
     <div>
@@ -593,7 +634,6 @@
   </div>
 </div>
 
-<!-- ESP CALLOUT -->
 <div class="sec">
   <div class="esp-cl">
     <div><h2>¿Eres psicólogo o coach?</h2><p>Únete a nuestra red de especialistas, amplía tu cartera de pacientes y gestiona tu agenda de forma sencilla. Te damos la tecnología para que te enfoques en lo que sabes hacer.</p></div>
@@ -604,7 +644,6 @@
   </div>
 </div>
 
-<!-- FAQ -->
 <div class="sec-bg"><div class="sec">
   <div class="s-hd c">
     <div class="tag"><i class="fas fa-question-circle"></i> Preguntas frecuentes</div>
@@ -613,7 +652,7 @@
   <div class="faq-l">
     <div class="faq-i"><button class="faq-q" onclick="toggleF(this)">¿Cómo funciona la terapia online en Bitácora Mental? <i class="fas fa-chevron-down"></i></button><div class="faq-a"><div class="faq-ai">Las sesiones se realizan por videollamada en una sala privada y cifrada. Agendas tu cita, el día indicado ingresas desde tu dispositivo y te conectas directamente con tu especialista. Es como una sesión presencial, pero desde donde estés.</div></div></div>
     <div class="faq-i"><button class="faq-q" onclick="toggleF(this)">¿Los psicólogos están colegiados en Perú? <i class="fas fa-chevron-down"></i></button><div class="faq-a"><div class="faq-ai">Sí. Todos nuestros especialistas están colegiados en el Colegio de Psicólogos del Perú (CPP) con colegiatura activa y verificada. Antes de unirse a la plataforma pasan por un proceso de validación de credenciales y experiencia.</div></div></div>
-    <div class="faq-i"><button class="faq-q" onclick="toggleF(this)">¿Cuánto cuesta una sesión? <i class="fas fa-chevron-down"></i></button><div class="faq-a"><div class="faq-ai">Las sesiones individuales van desde S/115 hasta S/130, dependiendo del especialista. También ofrecemos programas temáticos de 4-5 sesiones con descuento, que incluyen especialista asignado y un proceso estructurado.</div></div></div>
+    <div class="faq-i"><button class="faq-q" onclick="toggleF(this)">¿Cuánto cuesta una sesión? <i class="fas fa-chevron-down"></i></button><div class="faq-a"><div class="faq-ai">Manejamos tarifas accesibles y paquetes con descuento. Para ver los precios detallados de cada especialista y programa, <a href="registro.html" style="color:var(--g700);font-weight:700">crea tu cuenta gratuita</a>. No te cobraremos nada por registrarte.</div></div></div>
     <div class="faq-i"><button class="faq-q" onclick="toggleF(this)">¿Mis sesiones y mi diario son completamente privados? <i class="fas fa-chevron-down"></i></button><div class="faq-a"><div class="faq-ai">Absolutamente. Tu diario emocional está encriptado y es solo tuyo — ni tu especialista puede verlo a menos que decidas compartir algo en sesión. Las videollamadas son cifradas de extremo a extremo y no se graban sin tu consentimiento.</div></div></div>
     <div class="faq-i"><button class="faq-q" onclick="toggleF(this)">¿Atienden casos de violencia familiar o maltrato en pareja? <i class="fas fa-chevron-down"></i></button><div class="faq-a"><div class="faq-ai">Sí, tenemos especialistas con experiencia en violencia de género, maltrato psicológico y relaciones difíciles. También tenemos el Programa de Vínculos Sanos para un proceso más estructurado. Si estás en peligro inmediato, llama a la Línea 100 (MIMP, gratuita 24h).</div></div></div>
     <div class="faq-i"><button class="faq-q" onclick="toggleF(this)">¿Puedo cambiar de especialista si no me adapto? <i class="fas fa-chevron-down"></i></button><div class="faq-a"><div class="faq-ai">Sí, sin costo adicional. La relación terapéutica es fundamental y lo entendemos. Si sientes que no hay buena conexión, puedes solicitar un cambio de especialista en cualquier momento.</div></div></div>
@@ -621,7 +660,6 @@
   <div style="text-align:center;margin-top:36px"><a href="faq.html" class="btn-s">Ver todas las preguntas</a></div>
 </div></div>
 
-<!-- FOOTER -->
 <footer class="footer">
   <div class="f-grid">
     <div>
