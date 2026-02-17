@@ -138,33 +138,6 @@
     .srv-lk i{transition:transform .3s}
     .srv-lk:hover i{transform:translateX(5px)}
 
-    /* --- ESTILOS TALLERES GRATUITOS (LO QUE FALTABA) --- */
-    .workshop-section { background: #F0FDF4; padding: 100px 5%; }
-    .workshop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
-    .workshop-card { background: white; border-radius: 20px; border: 1px solid var(--border); overflow: hidden; position: relative; transition: 0.3s; display: flex; flex-direction: column; }
-    .workshop-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
-    .date-badge { position: absolute; top: 20px; right: 20px; background: white; border-radius: 12px; text-align: center; padding: 8px 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid var(--border); min-width: 60px; }
-    .date-day { font-size: 1.4rem; font-weight: 800; color: var(--g700); line-height: 1; display: block; }
-    .date-month { font-size: 0.8rem; text-transform: uppercase; color: var(--ts); font-weight: 700; }
-    .ws-content { padding: 30px 25px 25px; flex: 1; display: flex; flex-direction: column; }
-    .ws-tag { display: inline-block; padding: 5px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 15px; }
-    .tag-taller { background: #E0E7FF; color: #4338CA; } 
-    .tag-psico { background: #FEF3C7; color: #92400E; }
-    .ws-title { font-family: var(--fd); font-size: 1.3rem; margin-bottom: 10px; color: var(--td); line-height: 1.3; }
-    .ws-desc { font-size: 0.95rem; color: var(--ts); margin-bottom: 20px; flex: 1; }
-    .ws-meta { display: flex; gap: 15px; font-size: 0.85rem; color: var(--ts); margin-bottom: 20px; border-top: 1px solid #f0f0f0; padding-top: 15px; }
-    .ws-meta i { color: var(--g700); margin-right: 5px; }
-    .spots-bar { height: 6px; background: #E2E8F0; border-radius: 10px; margin-bottom: 8px; overflow: hidden; }
-    .spots-fill { height: 100%; background: var(--clay); border-radius: 10px; }
-    .spots-text { font-size: 0.8rem; color: var(--ts); margin-bottom: 20px; display: block; }
-    .btn-ws { width: 100%; padding: 12px; background: var(--g700); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-    .btn-ws:hover { background: var(--g800); }
-    /* Modal */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 3000; }
-    .modal-box { background: white; width: 90%; max-width: 450px; padding: 30px; border-radius: 24px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.2); animation: slideUp 0.3s ease; }
-    .close-modal { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--ts); }
-    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
     /* PLANES */
     .plan-g{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
     .plan-c{background:#fff;border:1px solid var(--border);border-radius:var(--rlg);padding:36px;transition:all .3s;display:flex;flex-direction:column;align-items:center;text-align:center}
@@ -244,9 +217,56 @@
     @keyframes fiu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
     @keyframes fir{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
 
-    /* RESPONSIVE */
+    /* --- TALLERES COLORIDOS (DISEÑO SOLICITADO) --- */
+    .workshop-section { background: #FDFBF7; padding: 100px 5%; }
+    .workshop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; max-width: 1280px; margin: 0 auto; }
+    
+    .workshop-card {
+        border-radius: 20px; overflow: hidden; position: relative; transition: transform 0.3s ease;
+        background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        display: flex; flex-direction: column; border: 1px solid rgba(0,0,0,0.05);
+    }
+    .workshop-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+
+    /* Encabezado Colorido */
+    .ws-header { padding: 25px; text-align: center; color: white; position: relative; }
+    .ws-card-1 .ws-header { background-color: #4F6F52; } /* Verde */
+    .ws-card-2 .ws-header { background-color: #C97B5A; } /* Marrón/Naranja */
+    .ws-card-3 .ws-header { background-color: #0077B6; } /* Azul */
+
+    .date-big { font-family: var(--fd); font-size: 2.5rem; font-weight: 700; line-height: 1; display: block; margin-bottom: 5px; }
+    .month-big { font-size: 0.9rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.9; }
+
+    .ws-body { padding: 30px 25px; background: white; flex: 1; display: flex; flex-direction: column; }
+    .ws-type { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--ts); letter-spacing: 1px; margin-bottom: 12px; display: block; }
+    .ws-title { font-family: var(--fd); font-size: 1.4rem; color: var(--td); margin-bottom: 15px; line-height: 1.3; font-weight: 700; }
+    .ws-desc { font-size: 0.95rem; color: var(--ts); line-height: 1.6; margin-bottom: 25px; flex: 1; }
+
+    .ws-details { list-style: none; margin-bottom: 25px; border-top: 1px solid #f0f0f0; padding-top: 15px; }
+    .ws-details li { font-size: 0.9rem; color: var(--ts); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+    .ws-details i { color: var(--g600); width: 16px; text-align: center; }
+
+    .spots-pill { background: #F3F4F6; color: var(--g700); padding: 8px 15px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-align: center; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    
+    .btn-ws { width: 100%; padding: 14px; border: none; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.2s; color: white; font-size: 0.95rem; }
+    .ws-card-1 .btn-ws { background-color: #4F6F52; } .ws-card-1 .btn-ws:hover { background-color: #3d5640; }
+    .ws-card-2 .btn-ws { background-color: #C97B5A; } .ws-card-2 .btn-ws:hover { background-color: #a86548; }
+    .ws-card-3 .btn-ws { background-color: #0077B6; } .ws-card-3 .btn-ws:hover { background-color: #005f91; }
+
+    .btn-cal { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: white; border: 1px solid var(--border); border-radius: 50px; color: var(--g700); font-weight: 700; margin-top: 50px; transition: 0.3s; }
+    .btn-cal:hover { border-color: var(--g700); transform: translateY(-2px); }
+
+    /* Modal */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 9999; display: none; align-items: center; justify-content: center; }
+    .modal-box { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 500px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
+    .close-modal { position: absolute; top: 20px; right: 20px; background: transparent; border: none; font-size: 1.5rem; cursor: pointer; color: #999; }
+    .inp-g{margin-bottom:16px}
+    .inp-l{display:block;font-size:.85rem;font-weight:700;color:var(--td);margin-bottom:6px}
+    .inp{width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:10px;font-family:var(--fb);font-size:.95rem;transition:.2s}
+    
+    @media(max-width:1000px){ .workshop-grid { grid-template-columns: 1fr; max-width: 500px; } }
     @media(max-width:1100px){
-      .srv-g,.plan-g,.ws-g{grid-template-columns:1fr 1fr}
+      .srv-g,.plan-g{grid-template-columns:1fr 1fr}
       .f-grid{grid-template-columns:1.5fr 1fr 1fr}
     }
     @media(max-width:900px){
@@ -259,7 +279,7 @@
       .stats-in{grid-template-columns:repeat(2,1fr)}
       .st-d{display:none}
       .sec,.sec-bg,.workshop-section{padding:60px 24px}
-      .srv-g,.plan-g,.ws-g{grid-template-columns:1fr}
+      .srv-g,.plan-g{grid-template-columns:1fr}
       .como-g{grid-template-columns:1fr}
       .emp-in{grid-template-columns:1fr;gap:40px}
       .emp-sec{padding:60px 24px}
@@ -412,56 +432,21 @@
 </div></div>
 
 <section id="talleres" class="workshop-section">
-  <div class="section-header" style="text-align:center;margin-bottom:40px">
-    <div style="background:var(--g100); color:var(--g700); padding:5px 15px; border-radius:20px; display:inline-block; font-weight:700; font-size:0.85rem; margin-bottom:15px;">
-        🎁 Talleres Gratuitos
-    </div>
+  <div class="s-hd c">
     <h2 class="s-ti">Psicoeducación abierta<br><em>para toda la comunidad</em></h2>
-    <p class="s-sub" style="margin:0 auto">Espacios seguros de 1 hora para aprender herramientas prácticas. Sin costo.</p>
+    <p class="s-sub" style="margin:0 auto">Cada semana ofrecemos talleres y charlas gratuitas sobre temas de salud mental. 1 hora de contenido práctico, sin costo y sin compromisos.</p>
   </div>
 
   <div class="workshop-grid" id="talleresContainer">
-    <div style="grid-column:1/-1; text-align:center; padding:40px;">
+    <div style="grid-column:1/-1; text-align:center; padding:60px;">
         <i class="fas fa-circle-notch fa-spin fa-2x" style="color:var(--ts);"></i>
-        <p style="margin-top:10px;color:var(--ts)">Cargando talleres...</p>
     </div>
   </div>
 
-  <div style="text-align:center; margin-top:40px;">
-    <a href="#" style="color:var(--g700); font-weight:700; text-decoration:underline;">Ver calendario completo de actividades</a>
+  <div style="text-align:center;">
+    <a href="talleres.html" class="btn-cal">Ver calendario completo de talleres</a>
   </div>
 </section>
-
-<div class="modal-overlay" id="modalInscripcion">
-  <div class="modal-box">
-    <button class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
-    <h3 style="font-family:var(--fd); font-size:1.5rem; margin-bottom:5px; color:var(--td)">Asegura tu cupo</h3>
-    <p style="font-size:0.9rem; color:var(--ts); margin-bottom:20px;">
-        Inscribiéndote al taller: <strong id="modalTallerNombre" style="color:var(--g700)">...</strong>
-    </p>
-
-    <form id="formInscripcion" onsubmit="inscribirseTaller(event)">
-      <input type="hidden" id="tallerId">
-      <div style="margin-bottom:15px;">
-        <label style="font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px; color:var(--td)">Nombre Completo</label>
-        <input type="text" id="userName" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; font-family:var(--fb)">
-      </div>
-      <div style="margin-bottom:15px;">
-        <label style="font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px; color:var(--td)">Correo Electrónico</label>
-        <input type="email" id="userEmail" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; font-family:var(--fb)">
-      </div>
-      <div style="margin-bottom:20px;">
-        <label style="font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px; color:var(--td)">WhatsApp (Para recordatorio)</label>
-        <input type="tel" id="userPhone" required placeholder="+51..." style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; font-family:var(--fb)">
-      </div>
-      <div style="background:#F0FDF4; padding:10px; border-radius:8px; font-size:0.8rem; color:#166534; margin-bottom:20px; display:flex; gap:10px;">
-        <i class="fas fa-check-circle" style="margin-top:3px;"></i>
-        <span>Al inscribirte, crearemos automáticamente tu cuenta gratuita en Bitácora Mental para que accedas al link de Zoom.</span>
-      </div>
-      <button type="submit" class="btn-ws" id="btnSubmit">Confirmar Inscripción</button>
-    </form>
-  </div>
-</div>
 
 <div class="sec-bg">
 <div class="sec">
@@ -610,9 +595,35 @@
   </div>
 </footer>
 
-<div class="em-bar">
-  🚨 Si tú o alguien que conoces está en crisis, llama gratis a la <strong>Línea 113</strong> (MINSA) o <strong>Línea 100</strong> (MIMP - violencia familiar). Disponibles las 24 horas.
-  <a href="lineas-emergencia.html"> Ver más recursos →</a>
+<div class="modal-overlay" id="modalWs">
+  <div class="modal-box">
+    <button class="close-modal" onclick="closeWsModal()"><i class="fas fa-times"></i></button>
+    <h3 style="font-family:var(--fd);font-size:1.6rem;color:var(--td);margin-bottom:8px">Asegura tu cupo</h3>
+    <p style="font-size:.9rem;color:var(--ts);margin-bottom:24px">Inscribiéndote a: <strong id="mdWsTitle" style="color:var(--g700)">...</strong></p>
+    
+    <form id="formWs" onsubmit="submitWs(event)">
+      <input type="hidden" id="wsId">
+      <div class="inp-g">
+        <label class="inp-l">Nombre Completo</label>
+        <input type="text" id="wsName" class="inp" required placeholder="Tu nombre">
+      </div>
+      <div class="inp-g">
+        <label class="inp-l">Correo Electrónico</label>
+        <input type="email" id="wsEmail" class="inp" required placeholder="tu@correo.com">
+      </div>
+      <div class="inp-g">
+        <label class="inp-l">WhatsApp (Para recordatorios)</label>
+        <input type="tel" id="wsPhone" class="inp" required placeholder="+51 999...">
+      </div>
+
+      <div class="info-bx" style="background:var(--g50);padding:16px;border-radius:12px;display:flex;gap:12px;margin-bottom:24px">
+        <i class="fas fa-check-circle" style="color:var(--g700);margin-top:2px"></i>
+        <p style="font-size:.85rem;color:var(--tb);line-height:1.5"><strong>Cuenta automática:</strong> Al inscribirte, crearemos tu cuenta gratuita en Bitácora para que accedas al link de Zoom y materiales.</p>
+      </div>
+
+      <button type="submit" class="btn-ws" id="wsBtn">Confirmar inscripción gratis</button>
+    </form>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -656,142 +667,113 @@
     });
   });
 
-  // --- LÓGICA DE TALLERES GRATUITOS ---
+  // --- LÓGICA TALLERES (DISEÑO COLORIDO) ---
   
-  // 1. Cargar Talleres al inicio
   async function cargarTalleres() {
       if (!window.sb) return;
       
       const container = document.getElementById('talleresContainer');
       
-      // Traer talleres futuros
-      const { data: talleres, error } = await window.sb
+      const { data: talleres } = await window.sb
           .from('web_talleres')
           .select('*')
-          .gte('fecha', new Date().toISOString()) // Solo futuros
+          .gte('fecha', new Date().toISOString())
           .eq('visible', true)
           .order('fecha', { ascending: true })
           .limit(3);
 
       if (talleres && talleres.length > 0) {
-          container.innerHTML = talleres.map(t => {
+          container.innerHTML = talleres.map((t, index) => {
               const fecha = new Date(t.fecha);
               const dia = fecha.getDate();
-              const mes = fecha.toLocaleString('es-ES', { month: 'short' });
+              const mes = fecha.toLocaleString('es-ES', { month: 'short' }).toUpperCase().replace('.', '');
               const hora = fecha.toLocaleString('es-ES', { hour: '2-digit', minute: '2-digit' });
               
-              // Calcular porcentaje de ocupación
-              const porcentaje = (t.cupos_ocupados / t.cupos_totales) * 100;
               const disponibles = t.cupos_totales - t.cupos_ocupados;
-              
-              // Estilos según tipo
-              const tagClass = t.tipo === 'Taller' ? 'tag-taller' : 'tag-psico';
+              const colorClass = `ws-card-${(index % 3) + 1}`; 
+              const options = { weekday: 'long', day: 'numeric', month: 'short' };
+              const fechaTexto = fecha.toLocaleDateString('es-ES', options);
 
               return `
-              <div class="workshop-card">
-                  <div class="date-badge">
-                      <span class="date-day">${dia}</span>
-                      <span class="date-month">${mes}</span>
+              <div class="workshop-card ${colorClass}">
+                  <div class="ws-header">
+                      <span class="date-big">${dia}</span>
+                      <span class="month-big">${mes}</span>
                   </div>
-                  <div class="ws-content">
-                      <div>
-                          <span class="ws-tag ${tagClass}">${t.tipo} • ${t.duracion}</span>
-                          <h3 class="ws-title">${t.titulo}</h3>
-                          <p class="ws-desc">${t.descripcion}</p>
-                      </div>
+                  <div class="ws-body">
+                      <span class="ws-type">= ${t.tipo.toUpperCase()} • ${t.duracion.toUpperCase()}</span>
+                      <h3 class="ws-title">${t.titulo}</h3>
+                      <p class="ws-desc">${t.descripcion}</p>
                       
-                      <div class="ws-meta">
-                          <span><i class="far fa-clock"></i> ${hora}</span>
-                          <span><i class="fas fa-video"></i> Virtual</span>
-                          <span><i class="far fa-user"></i> ${t.especialista}</span>
+                      <ul class="ws-details">
+                          <li><i class="far fa-calendar"></i> ${fechaTexto} • ${hora}</li>
+                          <li><i class="fas fa-video"></i> Virtual (Zoom)</li>
+                          <li><i class="far fa-user"></i> ${t.especialista}</li>
+                      </ul>
+
+                      <div class="spots-pill">
+                          <i class="far fa-check-circle"></i> ${disponibles} cupos disponibles de ${t.cupos_totales}
                       </div>
 
-                      <div>
-                          <div class="spots-bar"><div class="spots-fill" style="width:${porcentaje}%"></div></div>
-                          <span class="spots-text">Quedan ${disponibles} cupos de ${t.cupos_totales}</span>
-                          <button onclick="openModal('${t.id}', '${t.titulo}')" class="btn-ws">Inscribirme gratis</button>
-                      </div>
+                      <button onclick="openWsModal('${t.id}', '${t.titulo}')" class="btn-ws">Inscribirme gratis</button>
                   </div>
               </div>
               `;
           }).join('');
       } else {
-          container.innerHTML = `<p style="text-align:center; color:var(--text-soft); grid-column:1/-1;">No hay talleres programados esta semana.</p>`;
+          container.innerHTML = `<p style="text-align:center; color:var(--ts); grid-column:1/-1; padding:40px;">No hay talleres programados esta semana.</p>`;
       }
   }
 
-  // 2. Funciones del Modal
-  function openModal(id, titulo) {
-      document.getElementById('tallerId').value = id;
-      document.getElementById('modalTallerNombre').textContent = titulo;
-      document.getElementById('modalInscripcion').style.display = 'flex';
+  // Modal Control
+  function openWsModal(id, titulo) {
+    document.getElementById('wsId').value = id;
+    document.getElementById('mdWsTitle').textContent = titulo;
+    document.getElementById('modalWs').classList.add('show');
+  }
+  function closeWsModal() {
+    document.getElementById('modalWs').classList.remove('show');
   }
 
-  function closeModal() {
-      document.getElementById('modalInscripcion').style.display = 'none';
-  }
+  // Submit Logic
+  async function submitWs(e) {
+    e.preventDefault();
+    const btn = document.getElementById('wsBtn');
+    const txt = btn.textContent;
+    btn.textContent = "Procesando..."; btn.disabled = true;
 
-  // 3. PROCESO DE INSCRIPCIÓN + REGISTRO AUTOMÁTICO
-  async function inscribirseTaller(e) {
-      e.preventDefault();
+    const datos = {
+      nombre: document.getElementById('wsName').value,
+      email: document.getElementById('wsEmail').value,
+      telefono: document.getElementById('wsPhone').value,
+      taller_id: document.getElementById('wsId').value
+    };
+
+    try {
+      const passTemp = "Bitacora" + Math.floor(Math.random()*10000);
+      await window.sb.auth.signUp({
+        email: datos.email, password: passTemp,
+        options: { data: { full_name: datos.nombre, phone: datos.telefono } }
+      });
+
+      const { error } = await window.sb.from('web_inscripciones').insert([datos]);
+      if (error) throw error;
       
-      const btn = document.getElementById('btnSubmit');
-      const originalText = btn.textContent;
-      btn.textContent = "Procesando...";
-      btn.disabled = true;
+      alert(`¡Inscripción exitosa! Hemos enviado el acceso a ${datos.email}.`);
+      closeWsModal();
+      document.getElementById('formWs').reset();
 
-      const nombre = document.getElementById('userName').value;
-      const email = document.getElementById('userEmail').value;
-      const telefono = document.getElementById('userPhone').value;
-      const tallerId = document.getElementById('tallerId').value;
-
-      try {
-          // A) Intentar crear usuario en Supabase Auth (Contraseña temporal)
-          const tempPassword = "Bitacora" + Math.floor(Math.random() * 10000);
-          
-          const { data: authData, error: authError } = await window.sb.auth.signUp({
-              email: email,
-              password: tempPassword,
-              options: {
-                  data: {
-                      full_name: nombre,
-                      phone: telefono
-                  }
-              }
-          });
-
-          // Si el usuario ya existe, authError dirá "User already registered". 
-          // En ese caso, procedemos igual a inscribirlo en la tabla.
-
-          // B) Guardar la inscripción en la base de datos
-          const { error: dbError } = await window.sb
-              .from('web_inscripciones')
-              .insert([{
-                  taller_id: tallerId,
-                  nombre: nombre,
-                  email: email,
-                  telefono: telefono
-              }]);
-
-          if (dbError) throw dbError;
-
-          // C) Éxito
-          alert(`¡Listo, ${nombre}! Te has inscrito correctamente. Revisa tu correo para confirmar tu cuenta.`);
-          closeModal();
-          document.getElementById('formInscripcion').reset();
-
-      } catch (err) {
-          console.error(err);
-          alert("Hubo un error al procesar tu solicitud. Intenta nuevamente.");
-      } finally {
-          btn.textContent = originalText;
-          btn.disabled = false;
-      }
+    } catch (err) {
+      console.error(err);
+      alert("Ocurrió un error. Es posible que ya estés inscrito o registrado.");
+    } finally {
+      btn.textContent = txt; btn.disabled = false;
+    }
   }
 
-  // INICIALIZACIÓN
-  document.addEventListener('DOMContentLoaded', async () => {
-      cargarTalleres(); 
+  // Init
+  document.addEventListener('DOMContentLoaded', () => {
+    cargarTalleres();
   });
 </script>
 </body>
