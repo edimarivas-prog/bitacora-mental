@@ -2,324 +2,675 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agenda de Talleres - Bitácora Mental</title>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="Talleres y charlas gratuitas de salud mental en Perú. Psicoeducación online con psicólogos verificados de Bitácora Mental.">
+  <title>Talleres Gratuitos de Salud Mental — Bitácora Mental</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
   <style>
     :root {
-      --g900:#1a2e1c; --g800:#2d4a30; --g700:#4F6F52; --g600:#6a8f6d; --g400:#8aaa8d; --g100:#e3ede4; --g50:#f2f8f2;
-      --clay:#c97b5a; --clay-l:#f0d5c8;
-      --td:#1a2e1c; --tb:#3d4f3e; --ts:#697a6a;
-      --white:#fff; --border:#dde8de;
-      --fd:'Fraunces',Georgia,serif; --fb:'Plus Jakarta Sans',sans-serif;
+      --g900:#1a2e1c;--g800:#2d4a30;--g700:#4F6F52;--g600:#6a8f6d;--g400:#8aaa8d;--g200:#c8ddc9;--g100:#e3ede4;--g50:#f2f8f2;
+      --clay:#c97b5a;--clay-l:#f0d5c8;
+      --blue:#0284c7;--blue-l:#e0f2fe;
+      --purple:#7c3aed;--purple-l:#ede9fe;
+      --red:#dc2626;--red-l:#fee2e2;
+      --td:#1a2e1c;--tb:#3d4f3e;--ts:#697a6a;--tl:#9aaa9b;
+      --white:#fff;--border:#dde8de;
+      --fd:'Fraunces',Georgia,serif;--fb:'Plus Jakarta Sans',sans-serif;
     }
-    
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: var(--fb); background: #FAFAF9; color: var(--tb); line-height: 1.6; }
-    a { text-decoration: none; transition: 0.3s; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--fb);background:var(--white);color:var(--tb);line-height:1.6;overflow-x:hidden}
+    img{max-width:100%;height:auto;display:block}
+    a{text-decoration:none;transition:all .25s ease}
 
-    /* NAVBAR (Simplificado para consistencia) */
-    .nav { position: sticky; top: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 15px 5%; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-family: var(--fd); font-weight: 700; font-size: 1.4rem; color: var(--g700); display: flex; align-items: center; gap: 8px; }
-    .btn-back { font-size: 0.9rem; font-weight: 600; color: var(--ts); }
-    .btn-back:hover { color: var(--g700); }
+    /* NAV */
+    .nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid transparent;transition:all .3s}
+    .nav.sc{border-bottom-color:var(--border);box-shadow:0 2px 8px rgba(26,46,28,.08)}
+    .ni{max-width:1280px;margin:0 auto;padding:0 40px;height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .logo{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-size:1.5rem;font-weight:700;color:var(--g700);letter-spacing:-.5px}
+    .logo-ic{width:38px;height:38px;background:var(--g700);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem}
+    .nl{display:flex;align-items:center;gap:4px;list-style:none}
+    .nl-a{display:flex;align-items:center;gap:5px;padding:8px 14px;color:var(--ts);font-size:.9rem;font-weight:600;border-radius:10px;white-space:nowrap}
+    .nl-a:hover{background:var(--g50);color:var(--g700)}
+    .na{display:flex;align-items:center;gap:10px}
+    .btn-li{padding:9px 20px;border-radius:50px;border:2px solid var(--border);color:var(--tb);font-size:.88rem;font-weight:700}
+    .btn-li:hover{border-color:var(--g400);color:var(--g700)}
+    .btn-ct{padding:10px 22px;border-radius:50px;background:var(--g700);color:#fff;font-size:.88rem;font-weight:700}
+    .btn-ct:hover{background:var(--g800)}
+    .hbg{display:none;width:44px;height:44px;background:var(--g50);border:none;border-radius:10px;color:var(--g700);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center}
 
     /* HERO */
-    .hero { background: var(--g700); padding: 80px 20px 60px; text-align: center; color: white; border-radius: 0 0 40px 40px; margin-bottom: 40px; }
-    .hero h1 { font-family: var(--fd); font-size: 3rem; margin-bottom: 10px; }
-    .hero p { opacity: 0.9; max-width: 600px; margin: 0 auto; font-size: 1.1rem; }
+    .hero{padding:140px 40px 70px;background:linear-gradient(135deg,var(--g900) 0%,var(--g700) 100%);position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;top:-150px;right:-150px;width:500px;height:500px;background:radial-gradient(circle,rgba(201,123,90,.12) 0%,transparent 70%);pointer-events:none}
+    .hero-in{max-width:1100px;margin:0 auto;text-align:center;position:relative;z-index:1}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(201,123,90,.2);color:#f0c4a8;border:1px solid rgba(201,123,90,.3);padding:8px 18px;border-radius:50px;font-size:.82rem;font-weight:700;margin-bottom:24px}
+    .hero h1{font-family:var(--fd);font-size:clamp(2.5rem,5vw,3.5rem);font-weight:500;color:#fff;line-height:1.15;letter-spacing:-1px;margin-bottom:18px}
+    .hero h1 em{font-style:italic;color:#a8c9aa}
+    .hero-sub{font-size:1.05rem;color:rgba(255,255,255,.75);max-width:600px;margin:0 auto 40px;line-height:1.7}
+    .hero-stats{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;margin-top:50px}
+    .hero-stat{text-align:center}
+    .hero-stat strong{display:block;font-family:var(--fd);font-size:2rem;font-weight:700;color:#fff;line-height:1;margin-bottom:6px}
+    .hero-stat span{font-size:.85rem;color:rgba(255,255,255,.65)}
 
     /* FILTROS */
-    .filters { display: flex; justify-content: center; gap: 10px; margin-bottom: 50px; flex-wrap: wrap; padding: 0 20px; }
-    .filter-btn {
-        background: white; border: 1px solid var(--border); padding: 10px 24px; border-radius: 50px;
-        font-family: var(--fb); font-weight: 600; color: var(--ts); cursor: pointer; transition: 0.2s;
-    }
-    .filter-btn:hover, .filter-btn.active { background: var(--g700); color: white; border-color: var(--g700); box-shadow: 0 4px 12px rgba(79, 111, 82, 0.3); }
+    .filtros{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:76px;z-index:100;box-shadow:0 2px 8px rgba(26,46,28,.04)}
+    .filtros-in{max-width:1100px;margin:0 auto;padding:0 40px;display:flex;gap:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-top:20px;padding-bottom:20px;align-items:center}
+    .filtros-in::-webkit-scrollbar{display:none}
+    .filtros-label{font-size:.85rem;font-weight:700;color:var(--ts);white-space:nowrap;margin-right:8px}
+    .f-btn{padding:10px 22px;border-radius:50px;border:2px solid var(--border);color:var(--ts);font-size:.88rem;font-weight:600;white-space:nowrap;cursor:pointer;background:#fff;transition:all .25s;display:flex;align-items:center;gap:6px}
+    .f-btn:hover{border-color:var(--g400);color:var(--g700)}
+    .f-btn.active{background:var(--g700);color:#fff;border-color:var(--g700)}
+    .f-btn i{font-size:.75rem}
 
-    /* CONTENEDOR AGENDA */
-    .container { max-width: 900px; margin: 0 auto; padding: 0 20px 80px; }
-    
-    .month-group { margin-bottom: 50px; }
-    .month-title { 
-        font-family: var(--fd); font-size: 1.8rem; color: var(--td); margin-bottom: 25px; 
-        border-bottom: 2px solid var(--g100); padding-bottom: 10px; display: flex; align-items: center; gap: 10px;
-    }
+    /* MAIN */
+    .main{max-width:1100px;margin:0 auto;padding:70px 40px}
 
-    /* --- TARJETA HORIZONTAL (EL DISEÑO QUE QUERÍAS) --- */
-    .event-card {
-        display: grid; grid-template-columns: 140px 1fr 160px; /* Estructura fija */
-        background: white; border-radius: 20px; border: 1px solid var(--border);
-        overflow: hidden; margin-bottom: 24px; transition: 0.3s;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-    }
-    .event-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); border-color: var(--g400); }
+    /* MES HEADER */
+    .mes-header{margin-bottom:36px}
+    .mes-titulo{font-family:var(--fd);font-size:2rem;color:var(--td);margin-bottom:6px;display:flex;align-items:center;gap:12px}
+    .mes-count{font-size:.85rem;color:var(--ts);font-weight:500}
 
-    /* Columna Fecha (Izquierda) */
-    .ev-date {
-        background: var(--g50); display: flex; flex-direction: column; align-items: center; justify-content: center;
-        text-align: center; border-right: 1px solid var(--border); padding: 20px;
-    }
-    .ev-day { font-family: var(--fd); font-size: 2.2rem; font-weight: 700; line-height: 1; color: var(--g700); }
-    .ev-month { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--ts); margin-top: 4px; }
-    .ev-time { font-size: 0.8rem; background: white; padding: 4px 10px; border-radius: 6px; margin-top: 10px; border: 1px solid var(--border); font-weight: 600; color: var(--tb); }
+    /* TALLERES GRID */
+    .talleres-list{display:flex;flex-direction:column;gap:20px;margin-bottom:60px}
 
-    /* Columna Info (Centro) */
-    .ev-info { padding: 25px; display: flex; flex-direction: column; justify-content: center; }
-    .ev-tag { 
-        display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-        color: var(--clay); margin-bottom: 8px;
-    }
-    .ev-title { font-family: var(--fd); font-size: 1.4rem; font-weight: 600; color: var(--td); margin-bottom: 10px; line-height: 1.3; }
-    .ev-desc { font-size: 0.95rem; color: var(--ts); margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .ev-meta { display: flex; gap: 20px; font-size: 0.85rem; color: var(--ts); }
-    .ev-meta i { color: var(--g600); margin-right: 6px; }
+    /* TALLER CARD HORIZONTAL */
+    .taller-h{background:#fff;border:1px solid var(--border);border-radius:20px;overflow:hidden;display:grid;grid-template-columns:140px 1fr auto;transition:all .3s;position:relative}
+    .taller-h::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--g700);transform:scaleY(0);transition:transform .3s}
+    .taller-h:hover{border-color:var(--g200);box-shadow:0 6px 24px rgba(26,46,28,.1);transform:translateX(8px)}
+    .taller-h:hover::before{transform:scaleY(1)}
 
-    /* Columna Acción (Derecha) */
-    .ev-action {
-        padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-        border-left: 1px solid var(--border); background: #FCFCFC;
-    }
-    .btn-book {
-        background: var(--g700); color: white; padding: 12px 20px; border-radius: 50px; font-weight: 700;
-        font-size: 0.9rem; border: none; cursor: pointer; transition: 0.2s; width: 100%; text-align: center;
-    }
-    .btn-book:hover { background: var(--g800); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(79,111,82,0.3); }
-    
-    .cupos-badge { font-size: 0.75rem; color: var(--ts); margin-top: 10px; display: flex; align-items: center; gap: 5px; }
-    .cupos-badge.low { color: #D97706; font-weight: 700; } /* Naranja si hay pocos */
+    .taller-date-h{background:var(--g700);color:#fff;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px}
+    .taller-date-h.clay{background:var(--clay)}
+    .taller-date-h.blue{background:var(--blue)}
+    .taller-date-h.purple{background:var(--purple)}
+    .taller-date-h.red{background:var(--red)}
+    .taller-day-h{font-family:var(--fd);font-size:2.5rem;font-weight:700;line-height:1}
+    .taller-month-h{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;opacity:.85}
+    .taller-time-h{font-size:.75rem;opacity:.75;margin-top:6px}
 
-    /* Modal */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; }
-    .modal-box { background: white; padding: 40px; border-radius: 24px; width: 90%; max-width: 450px; position: relative; animation: slideUp 0.3s ease; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
-    @keyframes slideUp { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1}}
-    
-    .inp-group { margin-bottom: 15px; }
-    .inp-group label { display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 6px; color: var(--td); }
-    .inp-field { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-family: var(--fb); font-size: 0.95rem; }
-    .inp-field:focus { outline: none; border-color: var(--g700); box-shadow: 0 0 0 3px var(--g100); }
+    .taller-body-h{padding:24px;display:flex;flex-direction:column;gap:10px;flex:1}
+    .taller-type-h{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--g700);display:flex;align-items:center;gap:6px}
+    .taller-type-h i{font-size:.7rem}
+    .taller-type-h.tipo-taller{color:var(--g700)}
+    .taller-type-h.tipo-psico{color:var(--clay)}
+    .taller-titulo-h{font-family:var(--fd);font-size:1.25rem;font-weight:600;color:var(--td);line-height:1.3;margin-bottom:4px}
+    .taller-desc-h{font-size:.9rem;color:var(--ts);line-height:1.6;margin-bottom:8px}
+    .taller-meta-h{display:flex;gap:16px;flex-wrap:wrap;font-size:.82rem;color:var(--ts)}
+    .taller-meta-h span{display:flex;align-items:center;gap:6px}
+    .taller-meta-h i{color:var(--g600);width:14px}
+    .taller-spots-h{display:flex;align-items:center;gap:6px;font-size:.82rem;color:var(--g700);font-weight:600;background:var(--g50);padding:6px 12px;border-radius:8px;width:fit-content}
 
-    /* Responsive */
-    @media (max-width: 800px) {
-        .event-card { grid-template-columns: 1fr; }
-        .ev-date { flex-direction: row; gap: 15px; justify-content: space-between; border-right: none; border-bottom: 1px solid var(--border); padding: 15px 20px; }
-        .ev-time { margin-top: 0; }
-        .ev-action { border-left: none; border-top: 1px solid var(--border); flex-direction: row; justify-content: space-between; padding: 15px 20px; }
-        .btn-book { width: auto; padding: 10px 25px; }
-        .cupos-badge { margin-top: 0; }
+    .taller-action-h{padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;border-left:1px solid var(--border)}
+    .btn-inscribir{padding:14px 24px;background:var(--g700);color:#fff;border:none;border-radius:12px;font-weight:700;font-size:.9rem;cursor:pointer;white-space:nowrap;font-family:var(--fb);transition:all .3s}
+    .btn-inscribir:hover{background:var(--g800);transform:translateY(-2px)}
+    .btn-inscribir.lleno{background:var(--border);color:var(--tl);cursor:not-allowed}
+    .btn-inscribir.lleno:hover{transform:none}
+
+    /* ESTADO TAGS */
+    .estado-tag{font-size:.75rem;font-weight:700;padding:4px 10px;border-radius:50px;white-space:nowrap}
+    .estado-tag.disponible{background:var(--g100);color:var(--g700)}
+    .estado-tag.pocos{background:#fef3c7;color:#92400e}
+    .estado-tag.lleno{background:var(--red-l);color:var(--red)}
+    .estado-tag.pasado{background:var(--border);color:var(--tl)}
+
+    /* EMPTY STATE */
+    .empty-state{text-align:center;padding:80px 20px;color:var(--ts)}
+    .empty-state i{font-size:3rem;color:var(--g200);margin-bottom:16px}
+    .empty-state h3{font-family:var(--fd);font-size:1.3rem;color:var(--td);margin-bottom:8px}
+    .empty-state p{font-size:.9rem;max-width:400px;margin:0 auto}
+
+    /* CTA BOTTOM */
+    .cta-bottom{background:var(--g50);padding:60px 40px;text-align:center;border-radius:24px;margin-top:60px}
+    .cta-bottom h2{font-family:var(--fd);font-size:1.8rem;color:var(--td);margin-bottom:12px}
+    .cta-bottom p{color:var(--ts);margin-bottom:28px;font-size:.95rem}
+    .btn-p{display:inline-flex;align-items:center;gap:8px;padding:15px 30px;background:var(--g700);color:#fff;border-radius:50px;font-weight:700;font-size:.95rem}
+    .btn-p:hover{background:var(--g800);transform:translateY(-2px)}
+
+    /* MODAL */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:3000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+    .modal-overlay.show{display:flex}
+    .modal-inscripcion{background:#fff;border-radius:24px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;position:relative;animation:modalSlideIn .3s ease}
+    @keyframes modalSlideIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    .modal-close{position:absolute;top:20px;right:20px;width:36px;height:36px;border:none;background:var(--g50);border-radius:50%;color:var(--ts);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;z-index:1}
+    .modal-close:hover{background:var(--g100);color:var(--td)}
+    .modal-header{padding:40px 40px 24px;text-align:center;border-bottom:1px solid var(--border)}
+    .modal-header i{font-size:2.5rem;color:var(--g700);margin-bottom:12px}
+    .modal-header h2{font-family:var(--fd);font-size:1.6rem;color:var(--td);margin-bottom:6px}
+    .modal-header p{color:var(--ts);font-size:.92rem}
+    .modal-form{padding:32px 40px 40px}
+    .form-group{margin-bottom:20px}
+    .form-group label{display:block;font-weight:600;margin-bottom:8px;color:var(--td);font-size:.9rem}
+    .form-group input[type="text"],.form-group input[type="email"],.form-group input[type="tel"]{width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:10px;font-family:var(--fb);font-size:.95rem;transition:all .3s}
+    .form-group input:focus{outline:none;border-color:var(--g700);box-shadow:0 0 0 3px var(--g50)}
+    .form-group small{display:block;margin-top:5px;font-size:.8rem;color:var(--tl)}
+    .btn-modal-submit{width:100%;padding:16px;background:var(--g700);color:#fff;border:none;border-radius:12px;font-weight:700;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .3s;font-family:var(--fb)}
+    .btn-modal-submit:hover{background:var(--g800);transform:translateY(-2px)}
+
+    /* FOOTER MINI */
+    .foot-min{padding:30px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;max-width:1280px;margin:0 auto}
+    .foot-min p{font-size:.82rem;color:var(--tl)}
+    .foot-links{display:flex;gap:20px}
+    .foot-links a{font-size:.82rem;color:var(--tl)}
+    .foot-links a:hover{color:var(--g700)}
+
+    /* RESPONSIVE */
+    @media(max-width:900px){
+      .nl,.btn-li{display:none}
+      .hbg{display:flex}
+      .ni,.filtros-in,.main{padding-left:24px;padding-right:24px}
+      .hero{padding:120px 24px 60px}
+      .hero-stats{flex-direction:column;gap:20px}
+      .taller-h{grid-template-columns:1fr;gap:0}
+      .taller-date-h{padding:16px;flex-direction:row;justify-content:space-between}
+      .taller-day-h{font-size:2rem}
+      .taller-action-h{flex-direction:row;border-left:none;border-top:1px solid var(--border);padding:16px 24px}
+      .btn-inscribir{flex:1}
+      .foot-min{flex-direction:column;text-align:center;padding:24px}
+      .modal-header{padding:30px 24px 20px}
+      .modal-form{padding:24px}
     }
   </style>
 </head>
 <body>
 
-  <nav class="nav">
-    <a href="index.html" class="logo"><i class="fas fa-brain"></i> bitácora</a>
-    <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
-  </nav>
-
-  <header class="hero">
-    <h1>Agenda de Bienestar</h1>
-    <p>Conéctate a nuestras sesiones gratuitas de psicoeducación. Aprende herramientas prácticas con especialistas verificados.</p>
-  </header>
-
-  <div class="filters">
-    <button class="filter-btn active" onclick="filtrar('todos', this)">Todos</button>
-    <button class="filter-btn" onclick="filtrar('Taller', this)">Talleres (1h)</button>
-    <button class="filter-btn" onclick="filtrar('Psicoeducación', this)">Charlas (30min)</button>
-  </div>
-
-  <main class="container" id="agendaContainer">
-    <div style="text-align:center; padding:60px; color:var(--ts);">
-        <i class="fas fa-circle-notch fa-spin fa-2x"></i>
-        <p style="margin-top:15px;">Cargando calendario...</p>
+<nav class="nav" id="nav">
+  <div class="ni">
+    <a href="index.html" class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</a>
+    <ul class="nl">
+      <li><a href="index.html#servicios" class="nl-a">Servicios</a></li>
+      <li><a href="programas/index.html" class="nl-a">Programas</a></li>
+      <li><a href="talleres.html" class="nl-a" style="background:var(--g50);color:var(--g700)">Talleres</a></li>
+      <li><a href="especialistas-publico.html" class="nl-a">Directorio</a></li>
+    </ul>
+    <div class="na">
+      <a href="login.html" class="btn-li">Ingresar</a>
+      <a href="registro.html" class="btn-ct">Crear cuenta</a>
     </div>
-  </main>
+    <button class="hbg" onclick="window.location='index.html'" aria-label="Menú"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
 
-  <div class="modal-overlay" id="modal">
-    <div class="modal-box">
-        <button onclick="closeModal()" style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:1.5rem; cursor:pointer; color:var(--ts);">&times;</button>
-        
-        <h3 style="font-family:var(--fd); font-size:1.5rem; margin-bottom:8px; color:var(--td);">Inscripción Gratuita</h3>
-        <p style="font-size:0.9rem; color:var(--ts); margin-bottom:25px;">Reservando cupo para: <strong id="mTitulo" style="color:var(--g700)">...</strong></p>
-
-        <form onsubmit="confirmarInscripcion(event)">
-            <input type="hidden" id="mTallerId">
-            
-            <div class="inp-group">
-                <label>Nombre Completo</label>
-                <input type="text" id="mNombre" class="inp-field" required placeholder="Tu nombre">
-            </div>
-            <div class="inp-group">
-                <label>Correo Electrónico</label>
-                <input type="email" id="mEmail" class="inp-field" required placeholder="tu@email.com">
-            </div>
-            <div class="inp-group">
-                <label>WhatsApp</label>
-                <input type="tel" id="mTel" class="inp-field" required placeholder="+51...">
-            </div>
-
-            <div style="background:var(--g50); padding:12px; border-radius:10px; display:flex; gap:10px; margin-bottom:20px;">
-                <i class="fas fa-gift" style="color:var(--g700); margin-top:3px;"></i>
-                <p style="font-size:0.8rem; color:var(--g800); line-height:1.4;">Al inscribirte, crearemos tu cuenta gratuita para que accedas al link de Zoom.</p>
-            </div>
-
-            <button type="submit" id="mBtn" class="btn-book">Confirmar Inscripción</button>
-        </form>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-in">
+    <div class="hero-badge"><i class="fas fa-gift"></i> Psicoeducación gratuita</div>
+    <h1>Talleres y charlas <em>sin costo</em><br>para toda la comunidad</h1>
+    <p class="hero-sub">Cada semana ofrecemos espacios educativos gratuitos sobre salud mental, liderados por nuestros psicólogos y coaches verificados. Inscríbete, aprende y comparte.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><strong>12</strong><span>Talleres este mes</span></div>
+      <div class="hero-stat"><strong>350+</strong><span>Personas inscritas</span></div>
+      <div class="hero-stat"><strong>100%</strong><span>Gratis y virtual</span></div>
     </div>
   </div>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js"></script>
-  
-  <script>
-    let allTalleres = [];
+<!-- FILTROS -->
+<div class="filtros">
+  <div class="filtros-in">
+    <span class="filtros-label">Filtrar:</span>
+    <button class="f-btn active" onclick="filtrar('todos', this)">Todos</button>
+    <button class="f-btn" onclick="filtrar('febrero', this)"><i class="far fa-calendar"></i> Febrero</button>
+    <button class="f-btn" onclick="filtrar('marzo', this)"><i class="far fa-calendar"></i> Marzo</button>
+    <button class="f-btn" onclick="filtrar('taller', this)"><i class="fas fa-users"></i> Talleres (1h)</button>
+    <button class="f-btn" onclick="filtrar('psicoeducacion', this)"><i class="fas fa-lightbulb"></i> Psicoeducación (30min)</button>
+  </div>
+</div>
 
-    // 1. Cargar datos
-    async function cargarAgenda() {
-        if (!window.sb) return;
+<!-- MAIN -->
+<div class="main">
 
-        const { data, error } = await window.sb
-            .from('web_talleres')
-            .select('*')
-            .eq('visible', true)
-            .gte('fecha', new Date().toISOString())
-            .order('fecha', { ascending: true });
+  <!-- FEBRERO 2026 -->
+  <div class="mes-section" data-mes="febrero">
+    <div class="mes-header">
+      <h2 class="mes-titulo">
+        <i class="far fa-calendar-alt" style="color:var(--g700)"></i>
+        Febrero 2026
+      </h2>
+      <p class="mes-count">8 talleres disponibles</p>
+    </div>
 
-        if (data && data.length > 0) {
-            allTalleres = data;
-            renderizar(data);
+    <div class="talleres-list">
+
+      <!-- Taller 1 -->
+      <div class="taller-h" data-tipo="taller" data-mes="febrero">
+        <div class="taller-date-h">
+          <div class="taller-day-h">25</div>
+          <div class="taller-month-h">FEB</div>
+          <div class="taller-time-h">7:00pm</div>
+        </div>
+        <div class="taller-body-h">
+          <div class="taller-type-h tipo-taller"><i class="fas fa-users"></i> Taller · 1 hora</div>
+          <h3 class="taller-titulo-h">Manejo de la Ansiedad en el Trabajo</h3>
+          <p class="taller-desc-h">Técnicas prácticas para regular la ansiedad laboral, manejar la presión y evitar el burnout. Ideal para profesionales que sienten que el estrés los está sobrepasando.</p>
+          <div class="taller-meta-h">
+            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
+            <span><i class="fas fa-user-md"></i> Ps. María Torres</span>
+            <span><i class="fas fa-tags"></i> Ansiedad, Trabajo</span>
+          </div>
+          <div class="taller-spots-h"><i class="fas fa-users"></i> 8 cupos de 30</div>
+        </div>
+        <div class="taller-action-h">
+          <span class="estado-tag disponible">Disponible</span>
+          <button class="btn-inscribir" onclick="abrirInscripcion('ansiedad-trabajo')">Inscribirme</button>
+        </div>
+      </div>
+
+      <!-- Taller 2 -->
+      <div class="taller-h" data-tipo="taller" data-mes="febrero">
+        <div class="taller-date-h clay">
+          <div class="taller-day-h">26</div>
+          <div class="taller-month-h">FEB</div>
+          <div class="taller-time-h">8:00pm</div>
+        </div>
+        <div class="taller-body-h">
+          <div class="taller-type-h tipo-taller"><i class="fas fa-users"></i> Taller · 1 hora</div>
+          <h3 class="taller-titulo-h">Comunicación Asertiva en Pareja</h3>
+          <p class="taller-desc-h">Aprende a expresar lo que necesitas sin atacar ni someterte. Herramientas para mejorar la comunicación con tu pareja, prevenir conflictos y construir confianza.</p>
+          <div class="taller-meta-h">
+            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
+            <span><i class="fas fa-user-md"></i> Ps. Carlos Ramos</span>
+            <span><i class="fas fa-tags"></i> Pareja, Comunicación</span>
+          </div>
+          <div class="taller-spots-h"><i class="fas fa-users"></i> 3 cupos de 30</div>
+        </div>
+        <div class="taller-action-h">
+          <span class="estado-tag pocos">Últimos cupos</span>
+          <button class="btn-inscribir" onclick="abrirInscripcion('comunicacion-pareja')">Inscribirme</button>
+        </div>
+      </div>
+
+      <!-- Taller 3 -->
+      <div class="taller-h" data-tipo="psicoeducacion" data-mes="febrero">
+        <div class="taller-date-h purple">
+          <div class="taller-day-h">27</div>
+          <div class="taller-month-h">FEB</div>
+          <div class="taller-time-h">7:30pm</div>
+        </div>
+        <div class="taller-body-h">
+          <div class="taller-type-h tipo-psico"><i class="fas fa-lightbulb"></i> Psicoeducación · 30 min</div>
+          <h3 class="taller-titulo-h">¿Qué es la Depresión? Mitos y Realidades</h3>
+          <p class="taller-desc-h">Charla educativa sobre la depresión: cómo reconocerla, qué NO es depresión, cuándo pedir ayuda profesional y recursos disponibles en Perú.</p>
+          <div class="taller-meta-h">
+            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
+            <span><i class="fas fa-user-md"></i> Mg. Ana Quispe</span>
+            <span><i class="fas fa-tags"></i> Depresión, Educación</span>
+          </div>
+          <div class="taller-spots-h"><i class="fas fa-users"></i> 22 cupos de 30</div>
+        </div>
+        <div class="taller-action-h">
+          <span class="estado-tag disponible">Disponible</span>
+          <button class="btn-inscribir" onclick="abrirInscripcion('depresion-mitos')">Inscribirme</button>
+        </div>
+      </div>
+
+      <!-- Taller 4 -->
+      <div class="taller-h" data-tipo="psicoeducacion" data-mes="febrero">
+        <div class="taller-date-h clay">
+          <div class="taller-day-h">28</div>
+          <div class="taller-month-h">FEB</div>
+          <div class="taller-time-h">8:00pm</div>
+        </div>
+        <div class="taller-body-h">
+          <div class="taller-type-h tipo-psico"><i class="fas fa-lightbulb"></i> Psicoeducación · 30 min</div>
+          <h3 class="taller-titulo-h">Relaciones Tóxicas: Señales de Alerta</h3>
+          <p class="taller-desc-h">Aprende a identificar patrones de maltrato psicológico, dependencia emocional y señales de alerta en tus relaciones de pareja o familiares.</p>
+          <div class="taller-meta-h">
+            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
+            <span><i class="fas fa-user-md"></i> Ps. Ana Quispe</span>
+            <span><i class="fas fa-tags"></i> Relaciones, Maltrato</span>
+          </div>
+          <div class="taller-spots-h"><i class="fas fa-users"></i> 15 cupos de 30</div>
+        </div>
+        <div class="taller-action-h">
+          <span class="estado-tag disponible">Disponible</span>
+          <button class="btn-inscribir" onclick="abrirInscripcion('relaciones-toxicas')">Inscribirme</button>
+        </div>
+      </div>
+
+    </div><!-- /talleres-list -->
+  </div><!-- /febrero -->
+
+  <!-- MARZO 2026 -->
+  <div class="mes-section" data-mes="marzo">
+    <div class="mes-header">
+      <h2 class="mes-titulo">
+        <i class="far fa-calendar-alt" style="color:var(--g700)"></i>
+        Marzo 2026
+      </h2>
+      <p class="mes-count">6 talleres programados</p>
+    </div>
+
+    <div class="talleres-list">
+
+      <!-- Taller 5 -->
+      <div class="taller-h" data-tipo="taller" data-mes="marzo">
+        <div class="taller-date-h blue">
+          <div class="taller-day-h">3</div>
+          <div class="taller-month-h">MAR</div>
+          <div class="taller-time-h">7:30pm</div>
+        </div>
+        <div class="taller-body-h">
+          <div class="taller-type-h tipo-taller"><i class="fas fa-users"></i> Taller · 1 hora</div>
+          <h3 class="taller-titulo-h">Límites con las Redes Sociales</h3>
+          <p class="taller-desc-h">Estrategias concretas para retomar el control de tu atención, reducir la comparación social y construir una relación más sana con Instagram, TikTok y el celular.</p>
+          <div class="taller-meta-h">
+            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
+            <span><i class="fas fa-user-md"></i> Coach Lucía Vargas</span>
+            <span><i class="fas fa-tags"></i> Digital, Redes sociales</span>
+          </div>
+          <div class="taller-spots-h"><i class="fas fa-users"></i> 22 cupos de 30</div>
+        </div>
+        <div class="taller-action-h">
+          <span class="estado-tag disponible">Disponible</span>
+          <button class="btn-inscribir" onclick="abrirInscripcion('redes-sociales')">Inscribirme</button>
+        </div>
+      </div>
+
+      <!-- Taller 6 -->
+      <div class="taller-h" data-tipo="taller" data-mes="marzo">
+        <div class="taller-date-h">
+          <div class="taller-day-h">5</div>
+          <div class="taller-month-h">MAR</div>
+          <div class="taller-time-h">7:00pm</div>
+        </div>
+        <div class="taller-body-h">
+          <div class="taller-type-h tipo-taller"><i class="fas fa-users"></i> Taller · 1 hora</div>
+          <h3 class="taller-titulo-h">Crianza Positiva sin Violencia</h3>
+          <p class="taller-desc-h">Herramientas para educar a tus hijos sin gritos, golpes ni amenazas. Alternativas al castigo físico y psicológico basadas en límites firmes pero respetuosos.</p>
+          <div class="taller-meta-h">
+            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
+            <span><i class="fas fa-user-md"></i> Ps. María Torres</span>
+            <span><i class="fas fa-tags"></i> Crianza, Familia</span>
+          </div>
+          <div class="taller-spots-h"><i class="fas fa-users"></i> 18 cupos de 30</div>
+        </div>
+        <div class="taller-action-h">
+          <span class="estado-tag disponible">Disponible</span>
+          <button class="btn-inscribir" onclick="abrirInscripcion('crianza-positiva')">Inscribirme</button>
+        </div>
+      </div>
+
+      <!-- Taller 7 -->
+      <div class="taller-h" data-tipo="psicoeducacion" data-mes="marzo">
+        <div class="taller-date-h purple">
+          <div class="taller-day-h">8</div>
+          <div class="taller-month-h">MAR</div>
+          <div class="taller-time-h">8:00pm</div>
+        </div>
+        <div class="taller-body-h">
+          <div class="taller-type-h tipo-psico"><i class="fas fa-lightbulb"></i> Psicoeducación · 30 min</div>
+          <h3 class="taller-titulo-h">Duelo: Procesos y Etapas</h3>
+          <p class="taller-desc-h">Charla sobre el proceso de duelo: qué es normal, qué no lo es, cuánto dura y cuándo buscar ayuda profesional. Para quienes atraviesan una pérdida.</p>
+          <div class="taller-meta-h">
+            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
+            <span><i class="fas fa-user-md"></i> Ps. Carlos Ramos</span>
+            <span><i class="fas fa-tags"></i> Duelo, Pérdida</span>
+          </div>
+          <div class="taller-spots-h"><i class="fas fa-users"></i> 27 cupos de 30</div>
+        </div>
+        <div class="taller-action-h">
+          <span class="estado-tag disponible">Disponible</span>
+          <button class="btn-inscribir" onclick="abrirInscripcion('duelo-etapas')">Inscribirme</button>
+        </div>
+      </div>
+
+      <!-- Taller 8 -->
+      <div class="taller-h" data-tipo="taller" data-mes="marzo">
+        <div class="taller-date-h clay">
+          <div class="taller-day-h">12</div>
+          <div class="taller-month-h">MAR</div>
+          <div class="taller-time-h">7:30pm</div>
+        </div>
+        <div class="taller-body-h">
+          <div class="taller-type-h tipo-taller"><i class="fas fa-users"></i> Taller · 1 hora</div>
+          <h3 class="taller-titulo-h">Autoestima: De la Crítica a la Autocompasión</h3>
+          <p class="taller-desc-h">¿Tu voz interna te sabotea? Aprende a identificar el diálogo interno negativo, reconocer tus fortalezas y desarrollar una relación más compasiva contigo mismo.</p>
+          <div class="taller-meta-h">
+            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
+            <span><i class="fas fa-user-md"></i> Mg. Ana Quispe</span>
+            <span><i class="fas fa-tags"></i> Autoestima, Autocompasión</span>
+          </div>
+          <div class="taller-spots-h"><i class="fas fa-users"></i> 25 cupos de 30</div>
+        </div>
+        <div class="taller-action-h">
+          <span class="estado-tag disponible">Disponible</span>
+          <button class="btn-inscribir" onclick="abrirInscripcion('autoestima')">Inscribirme</button>
+        </div>
+      </div>
+
+      <!-- Taller 9 -->
+      <div class="taller-h" data-tipo="taller" data-mes="marzo">
+        <div class="taller-date-h blue">
+          <div class="taller-day-h">15</div>
+          <div class="taller-month-h">MAR</div>
+          <div class="taller-time-h">8:00pm</div>
+        </div>
+        <div class="taller-body-h">
+          <div class="taller-type-h tipo-taller"><i class="fas fa-users"></i> Taller · 1 hora</div>
+          <h3 class="taller-titulo-h">Mindfulness para la Vida Diaria</h3>
+          <p class="taller-desc-h">Introducción práctica al mindfulness: qué es, cómo se practica y cómo integrarlo a tu día a día para reducir el estrés y mejorar tu bienestar emocional.</p>
+          <div class="taller-meta-h">
+            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
+            <span><i class="fas fa-user-md"></i> Coach Lucía Vargas</span>
+            <span><i class="fas fa-tags"></i> Mindfulness, Estrés</span>
+          </div>
+          <div class="taller-spots-h"><i class="fas fa-users"></i> 12 cupos de 30</div>
+        </div>
+        <div class="taller-action-h">
+          <span class="estado-tag disponible">Disponible</span>
+          <button class="btn-inscribir" onclick="abrirInscripcion('mindfulness')">Inscribirme</button>
+        </div>
+      </div>
+
+      <!-- Taller 10 -->
+      <div class="taller-h" data-tipo="psicoeducacion" data-mes="marzo">
+        <div class="taller-date-h purple">
+          <div class="taller-day-h">19</div>
+          <div class="taller-month-h">MAR</div>
+          <div class="taller-time-h">7:00pm</div>
+        </div>
+        <div class="taller-body-h">
+          <div class="taller-type-h tipo-psico"><i class="fas fa-lightbulb"></i> Psicoeducación · 30 min</div>
+          <h3 class="taller-titulo-h">Primeros Auxilios Psicológicos</h3>
+          <p class="taller-desc-h">Qué hacer y qué NO hacer cuando alguien cercano está en crisis emocional. Herramientas básicas para acompañar sin reemplazar la ayuda profesional.</p>
+          <div class="taller-meta-h">
+            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
+            <span><i class="fas fa-user-md"></i> Ps. María Torres</span>
+            <span><i class="fas fa-tags"></i> Crisis, Apoyo</span>
+          </div>
+          <div class="taller-spots-h"><i class="fas fa-users"></i> 30 cupos de 30</div>
+        </div>
+        <div class="taller-action-h">
+          <span class="estado-tag disponible">Disponible</span>
+          <button class="btn-inscribir" onclick="abrirInscripcion('primeros-auxilios')">Inscribirme</button>
+        </div>
+      </div>
+
+    </div><!-- /talleres-list -->
+  </div><!-- /marzo -->
+
+  <!-- EMPTY STATE (oculto por defecto) -->
+  <div class="empty-state" id="emptyState" style="display:none">
+    <i class="fas fa-calendar-times"></i>
+    <h3>No hay talleres con ese filtro</h3>
+    <p>Prueba seleccionando otra categoría o mes</p>
+  </div>
+
+  <!-- CTA BOTTOM -->
+  <div class="cta-bottom">
+    <h2>¿Quieres proponer un tema?</h2>
+    <p>Si hay un tema de salud mental del que te gustaría que hiciéramos un taller, cuéntanos. Escuchamos a nuestra comunidad.</p>
+    <a href="contacto.html?ref=talleres" class="btn-p"><i class="fas fa-lightbulb"></i> Proponer tema de taller</a>
+  </div>
+
+</div><!-- /main -->
+
+<!-- MODAL DE INSCRIPCIÓN -->
+<div class="modal-overlay" id="modalInscripcion" onclick="cerrarInscripcion()">
+  <div class="modal-inscripcion" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="cerrarInscripcion()"><i class="fas fa-times"></i></button>
+    
+    <div class="modal-header">
+      <i class="fas fa-calendar-check"></i>
+      <h2 id="modalTitulo">Inscríbete al taller</h2>
+      <p id="modalSubtitulo">Completa el formulario para reservar tu cupo</p>
+    </div>
+
+    <form class="modal-form" onsubmit="procesarInscripcion(event)">
+      <input type="hidden" id="tallerSlug" name="taller_slug">
+      
+      <div class="form-group">
+        <label>Nombre completo *</label>
+        <input type="text" name="nombre" required placeholder="Ej: María García">
+      </div>
+
+      <div class="form-group">
+        <label>Email *</label>
+        <input type="email" name="email" required placeholder="tu@email.com">
+        <small>Te enviaremos el link de Zoom a este correo</small>
+      </div>
+
+      <div class="form-group">
+        <label>Teléfono (WhatsApp) *</label>
+        <input type="tel" name="telefono" required placeholder="+51 999 999 999">
+        <small>Para recordatorios y soporte el día del taller</small>
+      </div>
+
+      <div class="form-group">
+        <label style="display:flex;align-items:start;gap:10px;cursor:pointer;font-weight:400">
+          <input type="checkbox" required style="margin-top:4px;width:auto">
+          <span style="font-size:.88rem">
+            Al inscribirme, acepto los <a href="terminos.html" style="color:var(--g700);font-weight:600" target="_blank">términos</a> y la <a href="privacidad.html" style="color:var(--g700);font-weight:600" target="_blank">política de privacidad</a>. Recibiré recordatorios del taller por email y WhatsApp.
+          </span>
+        </label>
+      </div>
+
+      <button type="submit" class="btn-modal-submit">
+        <i class="fas fa-check-circle"></i> Confirmar inscripción gratuita
+      </button>
+
+      <p style="text-align:center;font-size:.82rem;color:var(--tl);margin-top:12px">
+        🎁 Al inscribirte también creas tu cuenta en Bitácora Mental
+      </p>
+    </form>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-min">
+    <p>© 2026 Bitácora Mental · Lima, Perú 🇵🇪</p>
+    <nav class="foot-links">
+      <a href="index.html">Inicio</a>
+      <a href="programas/index.html">Programas</a>
+      <a href="faq.html">FAQ</a>
+      <a href="contacto.html">Contacto</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('sc', window.scrollY > 30);
+  }, {passive:true});
+
+  // Datos de talleres
+  const talleresData = {
+    'ansiedad-trabajo': { titulo: 'Manejo de la Ansiedad en el Trabajo', fecha: 'Martes 25 de febrero · 7:00pm', especialista: 'Ps. María Torres' },
+    'comunicacion-pareja': { titulo: 'Comunicación Asertiva en Pareja', fecha: 'Miércoles 26 de febrero · 8:00pm', especialista: 'Ps. Carlos Ramos' },
+    'depresion-mitos': { titulo: '¿Qué es la Depresión? Mitos y Realidades', fecha: 'Jueves 27 de febrero · 7:30pm', especialista: 'Mg. Ana Quispe' },
+    'relaciones-toxicas': { titulo: 'Relaciones Tóxicas: Señales de Alerta', fecha: 'Viernes 28 de febrero · 8:00pm', especialista: 'Ps. Ana Quispe' },
+    'redes-sociales': { titulo: 'Límites con las Redes Sociales', fecha: 'Lunes 3 de marzo · 7:30pm', especialista: 'Coach Lucía Vargas' },
+    'crianza-positiva': { titulo: 'Crianza Positiva sin Violencia', fecha: 'Miércoles 5 de marzo · 7:00pm', especialista: 'Ps. María Torres' },
+    'duelo-etapas': { titulo: 'Duelo: Procesos y Etapas', fecha: 'Sábado 8 de marzo · 8:00pm', especialista: 'Ps. Carlos Ramos' },
+    'autoestima': { titulo: 'Autoestima: De la Crítica a la Autocompasión', fecha: 'Miércoles 12 de marzo · 7:30pm', especialista: 'Mg. Ana Quispe' },
+    'mindfulness': { titulo: 'Mindfulness para la Vida Diaria', fecha: 'Sábado 15 de marzo · 8:00pm', especialista: 'Coach Lucía Vargas' },
+    'primeros-auxilios': { titulo: 'Primeros Auxilios Psicológicos', fecha: 'Miércoles 19 de marzo · 7:00pm', especialista: 'Ps. María Torres' }
+  };
+
+  // Filtrado
+  function filtrar(cat, btn) {
+    document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    let visible = 0;
+
+    if (cat === 'todos') {
+      document.querySelectorAll('.mes-section').forEach(m => m.style.display = 'block');
+      document.querySelectorAll('.taller-h').forEach(t => {
+        t.style.display = 'grid';
+        visible++;
+      });
+    } else if (cat === 'febrero' || cat === 'marzo') {
+      document.querySelectorAll('.mes-section').forEach(m => {
+        if (m.dataset.mes === cat) {
+          m.style.display = 'block';
+          m.querySelectorAll('.taller-h').forEach(t => {
+            t.style.display = 'grid';
+            visible++;
+          });
         } else {
-            document.getElementById('agendaContainer').innerHTML = 
-                '<div style="text-align:center; padding:60px; color:var(--ts);">No hay talleres programados próximamente.</div>';
+          m.style.display = 'none';
         }
-    }
-
-    // 2. Renderizar lista agrupada por mes
-    function renderizar(lista) {
-        const container = document.getElementById('agendaContainer');
-        container.innerHTML = '';
-
-        if (lista.length === 0) {
-            container.innerHTML = '<div style="text-align:center; padding:60px; color:var(--ts);">No hay resultados para este filtro.</div>';
-            return;
+      });
+    } else if (cat === 'taller' || cat === 'psicoeducacion') {
+      document.querySelectorAll('.mes-section').forEach(m => m.style.display = 'block');
+      document.querySelectorAll('.taller-h').forEach(t => {
+        if (t.dataset.tipo === cat) {
+          t.style.display = 'grid';
+          visible++;
+        } else {
+          t.style.display = 'none';
         }
-
-        // Agrupar
-        const grupos = {};
-        lista.forEach(t => {
-            const fecha = new Date(t.fecha);
-            const mesNombre = fecha.toLocaleString('es-ES', { month: 'long', year: 'numeric' });
-            if (!grupos[mesNombre]) grupos[mesNombre] = [];
-            grupos[mesNombre].push(t);
-        });
-
-        // HTML
-        for (const [mes, talleres] of Object.entries(grupos)) {
-            let html = `<div class="month-group"><h2 class="month-title"><i class="far fa-calendar-alt"></i> ${mes}</h2>`;
-            
-            talleres.forEach(t => {
-                const fecha = new Date(t.fecha);
-                const dia = fecha.getDate();
-                const mesCorto = fecha.toLocaleString('es-ES', { month: 'short' });
-                const hora = fecha.toLocaleString('es-ES', { hour: '2-digit', minute: '2-digit' });
-                
-                const libres = t.cupos_totales - t.cupos_ocupados;
-                const lleno = libres <= 0;
-                const badgeClass = libres < 5 ? 'low' : '';
-
-                html += `
-                <div class="event-card">
-                    <div class="ev-date">
-                        <span class="ev-day">${dia}</span>
-                        <span class="ev-month">${mesCorto}</span>
-                        <span class="ev-time">${hora}</span>
-                    </div>
-                    <div class="ev-info">
-                        <span class="ev-tag"><i class="fas fa-circle" style="font-size:6px; vertical-align:middle; color:var(--g400)"></i> ${t.tipo}</span>
-                        <h3 class="ev-title">${t.titulo}</h3>
-                        <p class="ev-desc">${t.descripcion}</p>
-                        <div class="ev-meta">
-                            <span><i class="fas fa-user-md"></i> ${t.especialista}</span>
-                            <span><i class="fas fa-video"></i> Zoom</span>
-                        </div>
-                    </div>
-                    <div class="ev-action">
-                        <button onclick="abrirModal('${t.id}', '${t.titulo}')" 
-                                class="btn-book" 
-                                style="${lleno ? 'background:#ccc; cursor:not-allowed' : ''}"
-                                ${lleno ? 'disabled' : ''}>
-                            ${lleno ? 'Agotado' : 'Inscribirme'}
-                        </button>
-                        <div class="cupos-badge ${badgeClass}">
-                            <i class="fas fa-users"></i> ${lleno ? '0' : libres} cupos
-                        </div>
-                    </div>
-                </div>`;
-            });
-            html += `</div>`;
-            container.innerHTML += html;
-        }
+      });
     }
 
-    // 3. Filtros
-    function filtrar(tipo, btn) {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        
-        if (tipo === 'todos') renderizar(allTalleres);
-        else renderizar(allTalleres.filter(t => t.tipo === tipo));
-    }
+    document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
+  }
 
-    // 4. Modal
-    function abrirModal(id, titulo) {
-        document.getElementById('mTallerId').value = id;
-        document.getElementById('mTitulo').textContent = titulo;
-        document.getElementById('modal').style.display = 'flex';
-    }
-    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+  // Modal
+  function abrirInscripcion(tallerSlug) {
+    const taller = talleresData[tallerSlug];
+    if (!taller) return;
+    document.getElementById('modalTitulo').textContent = taller.titulo;
+    document.getElementById('modalSubtitulo').textContent = `${taller.fecha} · ${taller.especialista}`;
+    document.getElementById('tallerSlug').value = tallerSlug;
+    document.getElementById('modalInscripcion').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
 
-    // 5. Submit
-    async function confirmarInscripcion(e) {
-        e.preventDefault();
-        const btn = document.getElementById('mBtn');
-        const txt = btn.textContent;
-        btn.textContent = "Procesando..."; btn.disabled = true;
+  function cerrarInscripcion() {
+    document.getElementById('modalInscripcion').classList.remove('show');
+    document.body.style.overflow = '';
+  }
 
-        const data = {
-            taller_id: document.getElementById('mTallerId').value,
-            nombre: document.getElementById('mNombre').value,
-            email: document.getElementById('mEmail').value,
-            telefono: document.getElementById('mTel').value
-        };
+  function procesarInscripcion(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+    const tallerSlug = data.get('taller_slug');
+    const taller = talleresData[tallerSlug];
+    const btn = form.querySelector('.btn-modal-submit');
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
 
-        try {
-            // A. Auth
-            const pass = "Bitacora" + Math.floor(Math.random()*10000);
-            await window.sb.auth.signUp({
-                email: data.email, password: pass,
-                options: { data: { full_name: data.nombre, phone: data.telefono } }
-            });
+    setTimeout(() => {
+      cerrarInscripcion();
+      alert(`✅ ¡Inscripción confirmada!\n\n${taller.titulo}\n${taller.fecha}\n\nTe hemos enviado un email a ${data.get('email')} con el link de Zoom.\n\n¡Nos vemos!`);
+      form.reset();
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-check-circle"></i> Confirmar inscripción gratuita';
+    }, 1500);
 
-            // B. DB
-            const { error } = await window.sb.from('web_inscripciones').insert([data]);
-            if(error) throw error;
+    return false;
+  }
 
-            alert("¡Inscripción confirmada! Revisa tu correo.");
-            closeModal();
-            cargarAgenda(); // Recargar cupos
-
-        } catch (err) {
-            console.error(err);
-            alert("Error: Es posible que ya estés registrado.");
-        } finally {
-            btn.textContent = txt; btn.disabled = false;
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', cargarAgenda);
-  </script>
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') cerrarInscripcion();
+  });
+</script>
 </body>
 </html>
