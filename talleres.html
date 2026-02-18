@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* ... (TUS ESTILOS CSS ORIGINALES SE MANTIENEN IGUAL) ... */
     :root {
       --g900:#1a2e1c;--g800:#2d4a30;--g700:#4F6F52;--g600:#6a8f6d;--g400:#8aaa8d;--g200:#c8ddc9;--g100:#e3ede4;--g50:#f2f8f2;
       --clay:#c97b5a;--clay-l:#f0d5c8;
@@ -64,11 +65,11 @@
     .f-btn i{font-size:.75rem}
 
     /* MAIN */
-    .main{max-width:1100px;margin:0 auto;padding:70px 40px}
+    .main{max-width:1100px;margin:0 auto;padding:70px 40px;min-height:500px}
 
     /* MES HEADER */
     .mes-header{margin-bottom:36px}
-    .mes-titulo{font-family:var(--fd);font-size:2rem;color:var(--td);margin-bottom:6px;display:flex;align-items:center;gap:12px}
+    .mes-titulo{font-family:var(--fd);font-size:2rem;color:var(--td);margin-bottom:6px;display:flex;align-items:center;gap:12px;text-transform: capitalize;}
     .mes-count{font-size:.85rem;color:var(--ts);font-weight:500}
 
     /* TALLERES GRID */
@@ -115,7 +116,7 @@
     .estado-tag.pasado{background:var(--border);color:var(--tl)}
 
     /* EMPTY STATE */
-    .empty-state{text-align:center;padding:80px 20px;color:var(--ts)}
+    .empty-state{text-align:center;padding:80px 20px;color:var(--ts); display: none;}
     .empty-state i{font-size:3rem;color:var(--g200);margin-bottom:16px}
     .empty-state h3{font-family:var(--fd);font-size:1.3rem;color:var(--td);margin-bottom:8px}
     .empty-state p{font-size:.9rem;max-width:400px;margin:0 auto}
@@ -191,363 +192,87 @@
   </div>
 </nav>
 
-<!-- HERO -->
 <div class="hero">
   <div class="hero-in">
     <div class="hero-badge"><i class="fas fa-gift"></i> Psicoeducación gratuita</div>
     <h1>Talleres y charlas <em>sin costo</em><br>para toda la comunidad</h1>
     <p class="hero-sub">Cada semana ofrecemos espacios educativos gratuitos sobre salud mental, liderados por nuestros psicólogos y coaches verificados. Inscríbete, aprende y comparte.</p>
     <div class="hero-stats">
-      <div class="hero-stat"><strong>12</strong><span>Talleres este mes</span></div>
+      <div class="hero-stat"><strong><span id="totalTalleres">...</span></strong><span>Talleres activos</span></div>
       <div class="hero-stat"><strong>350+</strong><span>Personas inscritas</span></div>
       <div class="hero-stat"><strong>100%</strong><span>Gratis y virtual</span></div>
     </div>
   </div>
 </div>
 
-<!-- FILTROS -->
 <div class="filtros">
   <div class="filtros-in">
     <span class="filtros-label">Filtrar:</span>
     <button class="f-btn active" onclick="filtrar('todos', this)">Todos</button>
-    <button class="f-btn" onclick="filtrar('febrero', this)"><i class="far fa-calendar"></i> Febrero</button>
-    <button class="f-btn" onclick="filtrar('marzo', this)"><i class="far fa-calendar"></i> Marzo</button>
-    <button class="f-btn" onclick="filtrar('taller', this)"><i class="fas fa-users"></i> Talleres (1h)</button>
-    <button class="f-btn" onclick="filtrar('psicoeducacion', this)"><i class="fas fa-lightbulb"></i> Psicoeducación (30min)</button>
+    <button class="f-btn" onclick="filtrar('Taller', this)"><i class="fas fa-users"></i> Talleres (1h)</button>
+    <button class="f-btn" onclick="filtrar('Psicoeducación', this)"><i class="fas fa-lightbulb"></i> Psicoeducación (30min)</button>
   </div>
 </div>
 
-<!-- MAIN -->
-<div class="main">
-
-  <!-- FEBRERO 2026 -->
-  <div class="mes-section" data-mes="febrero">
-    <div class="mes-header">
-      <h2 class="mes-titulo">
-        <i class="far fa-calendar-alt" style="color:var(--g700)"></i>
-        Febrero 2026
-      </h2>
-      <p class="mes-count">8 talleres disponibles</p>
+<div class="main" id="mainContainer">
+    <div style="text-align:center; padding:60px;">
+        <i class="fas fa-circle-notch fa-spin fa-2x" style="color:var(--ts)"></i>
+        <p style="margin-top:15px; color:var(--ts)">Cargando agenda de talleres...</p>
     </div>
+</div>
 
-    <div class="talleres-list">
-
-      <!-- Taller 1 -->
-      <div class="taller-h" data-tipo="taller" data-mes="febrero">
-        <div class="taller-date-h">
-          <div class="taller-day-h">25</div>
-          <div class="taller-month-h">FEB</div>
-          <div class="taller-time-h">7:00pm</div>
-        </div>
-        <div class="taller-body-h">
-          <div class="taller-type-h tipo-taller"><i class="fas fa-users"></i> Taller · 1 hora</div>
-          <h3 class="taller-titulo-h">Manejo de la Ansiedad en el Trabajo</h3>
-          <p class="taller-desc-h">Técnicas prácticas para regular la ansiedad laboral, manejar la presión y evitar el burnout. Ideal para profesionales que sienten que el estrés los está sobrepasando.</p>
-          <div class="taller-meta-h">
-            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
-            <span><i class="fas fa-user-md"></i> Ps. María Torres</span>
-            <span><i class="fas fa-tags"></i> Ansiedad, Trabajo</span>
-          </div>
-          <div class="taller-spots-h"><i class="fas fa-users"></i> 8 cupos de 30</div>
-        </div>
-        <div class="taller-action-h">
-          <span class="estado-tag disponible">Disponible</span>
-          <button class="btn-inscribir" onclick="abrirInscripcion('ansiedad-trabajo')">Inscribirme</button>
-        </div>
-      </div>
-
-      <!-- Taller 2 -->
-      <div class="taller-h" data-tipo="taller" data-mes="febrero">
-        <div class="taller-date-h clay">
-          <div class="taller-day-h">26</div>
-          <div class="taller-month-h">FEB</div>
-          <div class="taller-time-h">8:00pm</div>
-        </div>
-        <div class="taller-body-h">
-          <div class="taller-type-h tipo-taller"><i class="fas fa-users"></i> Taller · 1 hora</div>
-          <h3 class="taller-titulo-h">Comunicación Asertiva en Pareja</h3>
-          <p class="taller-desc-h">Aprende a expresar lo que necesitas sin atacar ni someterte. Herramientas para mejorar la comunicación con tu pareja, prevenir conflictos y construir confianza.</p>
-          <div class="taller-meta-h">
-            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
-            <span><i class="fas fa-user-md"></i> Ps. Carlos Ramos</span>
-            <span><i class="fas fa-tags"></i> Pareja, Comunicación</span>
-          </div>
-          <div class="taller-spots-h"><i class="fas fa-users"></i> 3 cupos de 30</div>
-        </div>
-        <div class="taller-action-h">
-          <span class="estado-tag pocos">Últimos cupos</span>
-          <button class="btn-inscribir" onclick="abrirInscripcion('comunicacion-pareja')">Inscribirme</button>
-        </div>
-      </div>
-
-      <!-- Taller 3 -->
-      <div class="taller-h" data-tipo="psicoeducacion" data-mes="febrero">
-        <div class="taller-date-h purple">
-          <div class="taller-day-h">27</div>
-          <div class="taller-month-h">FEB</div>
-          <div class="taller-time-h">7:30pm</div>
-        </div>
-        <div class="taller-body-h">
-          <div class="taller-type-h tipo-psico"><i class="fas fa-lightbulb"></i> Psicoeducación · 30 min</div>
-          <h3 class="taller-titulo-h">¿Qué es la Depresión? Mitos y Realidades</h3>
-          <p class="taller-desc-h">Charla educativa sobre la depresión: cómo reconocerla, qué NO es depresión, cuándo pedir ayuda profesional y recursos disponibles en Perú.</p>
-          <div class="taller-meta-h">
-            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
-            <span><i class="fas fa-user-md"></i> Mg. Ana Quispe</span>
-            <span><i class="fas fa-tags"></i> Depresión, Educación</span>
-          </div>
-          <div class="taller-spots-h"><i class="fas fa-users"></i> 22 cupos de 30</div>
-        </div>
-        <div class="taller-action-h">
-          <span class="estado-tag disponible">Disponible</span>
-          <button class="btn-inscribir" onclick="abrirInscripcion('depresion-mitos')">Inscribirme</button>
-        </div>
-      </div>
-
-      <!-- Taller 4 -->
-      <div class="taller-h" data-tipo="psicoeducacion" data-mes="febrero">
-        <div class="taller-date-h clay">
-          <div class="taller-day-h">28</div>
-          <div class="taller-month-h">FEB</div>
-          <div class="taller-time-h">8:00pm</div>
-        </div>
-        <div class="taller-body-h">
-          <div class="taller-type-h tipo-psico"><i class="fas fa-lightbulb"></i> Psicoeducación · 30 min</div>
-          <h3 class="taller-titulo-h">Relaciones Tóxicas: Señales de Alerta</h3>
-          <p class="taller-desc-h">Aprende a identificar patrones de maltrato psicológico, dependencia emocional y señales de alerta en tus relaciones de pareja o familiares.</p>
-          <div class="taller-meta-h">
-            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
-            <span><i class="fas fa-user-md"></i> Ps. Ana Quispe</span>
-            <span><i class="fas fa-tags"></i> Relaciones, Maltrato</span>
-          </div>
-          <div class="taller-spots-h"><i class="fas fa-users"></i> 15 cupos de 30</div>
-        </div>
-        <div class="taller-action-h">
-          <span class="estado-tag disponible">Disponible</span>
-          <button class="btn-inscribir" onclick="abrirInscripcion('relaciones-toxicas')">Inscribirme</button>
-        </div>
-      </div>
-
-    </div><!-- /talleres-list -->
-  </div><!-- /febrero -->
-
-  <!-- MARZO 2026 -->
-  <div class="mes-section" data-mes="marzo">
-    <div class="mes-header">
-      <h2 class="mes-titulo">
-        <i class="far fa-calendar-alt" style="color:var(--g700)"></i>
-        Marzo 2026
-      </h2>
-      <p class="mes-count">6 talleres programados</p>
-    </div>
-
-    <div class="talleres-list">
-
-      <!-- Taller 5 -->
-      <div class="taller-h" data-tipo="taller" data-mes="marzo">
-        <div class="taller-date-h blue">
-          <div class="taller-day-h">3</div>
-          <div class="taller-month-h">MAR</div>
-          <div class="taller-time-h">7:30pm</div>
-        </div>
-        <div class="taller-body-h">
-          <div class="taller-type-h tipo-taller"><i class="fas fa-users"></i> Taller · 1 hora</div>
-          <h3 class="taller-titulo-h">Límites con las Redes Sociales</h3>
-          <p class="taller-desc-h">Estrategias concretas para retomar el control de tu atención, reducir la comparación social y construir una relación más sana con Instagram, TikTok y el celular.</p>
-          <div class="taller-meta-h">
-            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
-            <span><i class="fas fa-user-md"></i> Coach Lucía Vargas</span>
-            <span><i class="fas fa-tags"></i> Digital, Redes sociales</span>
-          </div>
-          <div class="taller-spots-h"><i class="fas fa-users"></i> 22 cupos de 30</div>
-        </div>
-        <div class="taller-action-h">
-          <span class="estado-tag disponible">Disponible</span>
-          <button class="btn-inscribir" onclick="abrirInscripcion('redes-sociales')">Inscribirme</button>
-        </div>
-      </div>
-
-      <!-- Taller 6 -->
-      <div class="taller-h" data-tipo="taller" data-mes="marzo">
-        <div class="taller-date-h">
-          <div class="taller-day-h">5</div>
-          <div class="taller-month-h">MAR</div>
-          <div class="taller-time-h">7:00pm</div>
-        </div>
-        <div class="taller-body-h">
-          <div class="taller-type-h tipo-taller"><i class="fas fa-users"></i> Taller · 1 hora</div>
-          <h3 class="taller-titulo-h">Crianza Positiva sin Violencia</h3>
-          <p class="taller-desc-h">Herramientas para educar a tus hijos sin gritos, golpes ni amenazas. Alternativas al castigo físico y psicológico basadas en límites firmes pero respetuosos.</p>
-          <div class="taller-meta-h">
-            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
-            <span><i class="fas fa-user-md"></i> Ps. María Torres</span>
-            <span><i class="fas fa-tags"></i> Crianza, Familia</span>
-          </div>
-          <div class="taller-spots-h"><i class="fas fa-users"></i> 18 cupos de 30</div>
-        </div>
-        <div class="taller-action-h">
-          <span class="estado-tag disponible">Disponible</span>
-          <button class="btn-inscribir" onclick="abrirInscripcion('crianza-positiva')">Inscribirme</button>
-        </div>
-      </div>
-
-      <!-- Taller 7 -->
-      <div class="taller-h" data-tipo="psicoeducacion" data-mes="marzo">
-        <div class="taller-date-h purple">
-          <div class="taller-day-h">8</div>
-          <div class="taller-month-h">MAR</div>
-          <div class="taller-time-h">8:00pm</div>
-        </div>
-        <div class="taller-body-h">
-          <div class="taller-type-h tipo-psico"><i class="fas fa-lightbulb"></i> Psicoeducación · 30 min</div>
-          <h3 class="taller-titulo-h">Duelo: Procesos y Etapas</h3>
-          <p class="taller-desc-h">Charla sobre el proceso de duelo: qué es normal, qué no lo es, cuánto dura y cuándo buscar ayuda profesional. Para quienes atraviesan una pérdida.</p>
-          <div class="taller-meta-h">
-            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
-            <span><i class="fas fa-user-md"></i> Ps. Carlos Ramos</span>
-            <span><i class="fas fa-tags"></i> Duelo, Pérdida</span>
-          </div>
-          <div class="taller-spots-h"><i class="fas fa-users"></i> 27 cupos de 30</div>
-        </div>
-        <div class="taller-action-h">
-          <span class="estado-tag disponible">Disponible</span>
-          <button class="btn-inscribir" onclick="abrirInscripcion('duelo-etapas')">Inscribirme</button>
-        </div>
-      </div>
-
-      <!-- Taller 8 -->
-      <div class="taller-h" data-tipo="taller" data-mes="marzo">
-        <div class="taller-date-h clay">
-          <div class="taller-day-h">12</div>
-          <div class="taller-month-h">MAR</div>
-          <div class="taller-time-h">7:30pm</div>
-        </div>
-        <div class="taller-body-h">
-          <div class="taller-type-h tipo-taller"><i class="fas fa-users"></i> Taller · 1 hora</div>
-          <h3 class="taller-titulo-h">Autoestima: De la Crítica a la Autocompasión</h3>
-          <p class="taller-desc-h">¿Tu voz interna te sabotea? Aprende a identificar el diálogo interno negativo, reconocer tus fortalezas y desarrollar una relación más compasiva contigo mismo.</p>
-          <div class="taller-meta-h">
-            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
-            <span><i class="fas fa-user-md"></i> Mg. Ana Quispe</span>
-            <span><i class="fas fa-tags"></i> Autoestima, Autocompasión</span>
-          </div>
-          <div class="taller-spots-h"><i class="fas fa-users"></i> 25 cupos de 30</div>
-        </div>
-        <div class="taller-action-h">
-          <span class="estado-tag disponible">Disponible</span>
-          <button class="btn-inscribir" onclick="abrirInscripcion('autoestima')">Inscribirme</button>
-        </div>
-      </div>
-
-      <!-- Taller 9 -->
-      <div class="taller-h" data-tipo="taller" data-mes="marzo">
-        <div class="taller-date-h blue">
-          <div class="taller-day-h">15</div>
-          <div class="taller-month-h">MAR</div>
-          <div class="taller-time-h">8:00pm</div>
-        </div>
-        <div class="taller-body-h">
-          <div class="taller-type-h tipo-taller"><i class="fas fa-users"></i> Taller · 1 hora</div>
-          <h3 class="taller-titulo-h">Mindfulness para la Vida Diaria</h3>
-          <p class="taller-desc-h">Introducción práctica al mindfulness: qué es, cómo se practica y cómo integrarlo a tu día a día para reducir el estrés y mejorar tu bienestar emocional.</p>
-          <div class="taller-meta-h">
-            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
-            <span><i class="fas fa-user-md"></i> Coach Lucía Vargas</span>
-            <span><i class="fas fa-tags"></i> Mindfulness, Estrés</span>
-          </div>
-          <div class="taller-spots-h"><i class="fas fa-users"></i> 12 cupos de 30</div>
-        </div>
-        <div class="taller-action-h">
-          <span class="estado-tag disponible">Disponible</span>
-          <button class="btn-inscribir" onclick="abrirInscripcion('mindfulness')">Inscribirme</button>
-        </div>
-      </div>
-
-      <!-- Taller 10 -->
-      <div class="taller-h" data-tipo="psicoeducacion" data-mes="marzo">
-        <div class="taller-date-h purple">
-          <div class="taller-day-h">19</div>
-          <div class="taller-month-h">MAR</div>
-          <div class="taller-time-h">7:00pm</div>
-        </div>
-        <div class="taller-body-h">
-          <div class="taller-type-h tipo-psico"><i class="fas fa-lightbulb"></i> Psicoeducación · 30 min</div>
-          <h3 class="taller-titulo-h">Primeros Auxilios Psicológicos</h3>
-          <p class="taller-desc-h">Qué hacer y qué NO hacer cuando alguien cercano está en crisis emocional. Herramientas básicas para acompañar sin reemplazar la ayuda profesional.</p>
-          <div class="taller-meta-h">
-            <span><i class="fas fa-video"></i> Virtual (Zoom)</span>
-            <span><i class="fas fa-user-md"></i> Ps. María Torres</span>
-            <span><i class="fas fa-tags"></i> Crisis, Apoyo</span>
-          </div>
-          <div class="taller-spots-h"><i class="fas fa-users"></i> 30 cupos de 30</div>
-        </div>
-        <div class="taller-action-h">
-          <span class="estado-tag disponible">Disponible</span>
-          <button class="btn-inscribir" onclick="abrirInscripcion('primeros-auxilios')">Inscribirme</button>
-        </div>
-      </div>
-
-    </div><!-- /talleres-list -->
-  </div><!-- /marzo -->
-
-  <!-- EMPTY STATE (oculto por defecto) -->
-  <div class="empty-state" id="emptyState" style="display:none">
+<div class="empty-state" id="emptyState">
     <i class="fas fa-calendar-times"></i>
     <h3>No hay talleres con ese filtro</h3>
-    <p>Prueba seleccionando otra categoría o mes</p>
-  </div>
+    <p>Prueba seleccionando otra categoría.</p>
+</div>
 
-  <!-- CTA BOTTOM -->
-  <div class="cta-bottom">
-    <h2>¿Quieres proponer un tema?</h2>
-    <p>Si hay un tema de salud mental del que te gustaría que hiciéramos un taller, cuéntanos. Escuchamos a nuestra comunidad.</p>
-    <a href="contacto.html?ref=talleres" class="btn-p"><i class="fas fa-lightbulb"></i> Proponer tema de taller</a>
-  </div>
+<div class="cta-bottom" style="max-width:1100px; margin:0 auto; margin-bottom:60px;">
+  <h2>¿Quieres proponer un tema?</h2>
+  <p>Si hay un tema de salud mental del que te gustaría que hiciéramos un taller, cuéntanos.</p>
+  <a href="contacto.html?ref=talleres" class="btn-p"><i class="fas fa-lightbulb"></i> Proponer tema</a>
+</div>
 
-</div><!-- /main -->
-
-<!-- MODAL DE INSCRIPCIÓN -->
-<div class="modal-overlay" id="modalInscripcion" onclick="cerrarInscripcion()">
-  <div class="modal-inscripcion" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="cerrarInscripcion()"><i class="fas fa-times"></i></button>
+<div class="modal-overlay" id="modalInscripcion">
+  <div class="modal-inscripcion">
+    <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
     
     <div class="modal-header">
       <i class="fas fa-calendar-check"></i>
       <h2 id="modalTitulo">Inscríbete al taller</h2>
-      <p id="modalSubtitulo">Completa el formulario para reservar tu cupo</p>
+      <p>Reservando para: <strong id="modalSubtitulo" style="color:var(--g700)">...</strong></p>
     </div>
 
-    <form class="modal-form" onsubmit="procesarInscripcion(event)">
-      <input type="hidden" id="tallerSlug" name="taller_slug">
+    <form class="modal-form" onsubmit="inscribirseTaller(event)">
+      <input type="hidden" id="tallerId">
       
       <div class="form-group">
         <label>Nombre completo *</label>
-        <input type="text" name="nombre" required placeholder="Ej: María García">
+        <input type="text" id="mNombre" required placeholder="Ej: María García">
       </div>
 
       <div class="form-group">
         <label>Email *</label>
-        <input type="email" name="email" required placeholder="tu@email.com">
+        <input type="email" id="mEmail" required placeholder="tu@email.com">
         <small>Te enviaremos el link de Zoom a este correo</small>
       </div>
 
       <div class="form-group">
         <label>Teléfono (WhatsApp) *</label>
-        <input type="tel" name="telefono" required placeholder="+51 999 999 999">
-        <small>Para recordatorios y soporte el día del taller</small>
+        <input type="tel" id="mTel" required placeholder="+51 999 999 999">
       </div>
 
       <div class="form-group">
         <label style="display:flex;align-items:start;gap:10px;cursor:pointer;font-weight:400">
           <input type="checkbox" required style="margin-top:4px;width:auto">
           <span style="font-size:.88rem">
-            Al inscribirme, acepto los <a href="terminos.html" style="color:var(--g700);font-weight:600" target="_blank">términos</a> y la <a href="privacidad.html" style="color:var(--g700);font-weight:600" target="_blank">política de privacidad</a>. Recibiré recordatorios del taller por email y WhatsApp.
+            Acepto los términos y la política de privacidad.
           </span>
         </label>
       </div>
 
-      <button type="submit" class="btn-modal-submit">
-        <i class="fas fa-check-circle"></i> Confirmar inscripción gratuita
+      <button type="submit" class="btn-modal-submit" id="btnSubmit">
+        Confirmar inscripción gratuita
       </button>
 
       <p style="text-align:center;font-size:.82rem;color:var(--tl);margin-top:12px">
@@ -557,7 +282,6 @@
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer>
   <div class="foot-min">
     <p>© 2026 Bitácora Mental · Lima, Perú 🇵🇪</p>
@@ -570,107 +294,194 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+
 <script>
-  // Navbar scroll
-  window.addEventListener('scroll', () => {
-    document.getElementById('nav').classList.toggle('sc', window.scrollY > 30);
-  }, {passive:true});
+  let allTalleres = [];
 
-  // Datos de talleres
-  const talleresData = {
-    'ansiedad-trabajo': { titulo: 'Manejo de la Ansiedad en el Trabajo', fecha: 'Martes 25 de febrero · 7:00pm', especialista: 'Ps. María Torres' },
-    'comunicacion-pareja': { titulo: 'Comunicación Asertiva en Pareja', fecha: 'Miércoles 26 de febrero · 8:00pm', especialista: 'Ps. Carlos Ramos' },
-    'depresion-mitos': { titulo: '¿Qué es la Depresión? Mitos y Realidades', fecha: 'Jueves 27 de febrero · 7:30pm', especialista: 'Mg. Ana Quispe' },
-    'relaciones-toxicas': { titulo: 'Relaciones Tóxicas: Señales de Alerta', fecha: 'Viernes 28 de febrero · 8:00pm', especialista: 'Ps. Ana Quispe' },
-    'redes-sociales': { titulo: 'Límites con las Redes Sociales', fecha: 'Lunes 3 de marzo · 7:30pm', especialista: 'Coach Lucía Vargas' },
-    'crianza-positiva': { titulo: 'Crianza Positiva sin Violencia', fecha: 'Miércoles 5 de marzo · 7:00pm', especialista: 'Ps. María Torres' },
-    'duelo-etapas': { titulo: 'Duelo: Procesos y Etapas', fecha: 'Sábado 8 de marzo · 8:00pm', especialista: 'Ps. Carlos Ramos' },
-    'autoestima': { titulo: 'Autoestima: De la Crítica a la Autocompasión', fecha: 'Miércoles 12 de marzo · 7:30pm', especialista: 'Mg. Ana Quispe' },
-    'mindfulness': { titulo: 'Mindfulness para la Vida Diaria', fecha: 'Sábado 15 de marzo · 8:00pm', especialista: 'Coach Lucía Vargas' },
-    'primeros-auxilios': { titulo: 'Primeros Auxilios Psicológicos', fecha: 'Miércoles 19 de marzo · 7:00pm', especialista: 'Ps. María Torres' }
-  };
+  // 1. Cargar Talleres desde la Base de Datos
+  async function cargarAgenda() {
+      if (!window.sb) return;
 
-  // Filtrado
-  function filtrar(cat, btn) {
-    document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+      const container = document.getElementById('mainContainer');
+      
+      // Traer solo talleres visibles y futuros, ordenados por fecha
+      const { data: talleres, error } = await window.sb
+          .from('web_talleres')
+          .select('*')
+          .eq('visible', true)
+          .gte('fecha', new Date().toISOString())
+          .order('fecha', { ascending: true });
 
-    let visible = 0;
+      if (talleres && talleres.length > 0) {
+          allTalleres = talleres;
+          document.getElementById('totalTalleres').textContent = talleres.length;
+          renderizarTalleres(talleres);
+      } else {
+          container.innerHTML = '<div class="empty-state" style="display:block"><i class="far fa-calendar"></i><h3>No hay talleres programados</h3><p>Vuelve pronto para ver nuevas fechas.</p></div>';
+          document.getElementById('totalTalleres').textContent = "0";
+      }
+  }
 
-    if (cat === 'todos') {
-      document.querySelectorAll('.mes-section').forEach(m => m.style.display = 'block');
-      document.querySelectorAll('.taller-h').forEach(t => {
-        t.style.display = 'grid';
-        visible++;
+  // 2. Renderizar (Agrupado por Mes)
+  function renderizarTalleres(lista) {
+      const container = document.getElementById('mainContainer');
+      container.innerHTML = '';
+
+      if (lista.length === 0) {
+          document.getElementById('emptyState').style.display = 'block';
+          return;
+      } else {
+          document.getElementById('emptyState').style.display = 'none';
+      }
+
+      // Agrupar por mes
+      const grupos = {};
+      lista.forEach(t => {
+          const fecha = new Date(t.fecha);
+          // Nombre del mes en español (Ej: "Febrero 2026")
+          const mesNombre = fecha.toLocaleString('es-ES', { month: 'long', year: 'numeric' });
+          if (!grupos[mesNombre]) grupos[mesNombre] = [];
+          grupos[mesNombre].push(t);
       });
-    } else if (cat === 'febrero' || cat === 'marzo') {
-      document.querySelectorAll('.mes-section').forEach(m => {
-        if (m.dataset.mes === cat) {
-          m.style.display = 'block';
-          m.querySelectorAll('.taller-h').forEach(t => {
-            t.style.display = 'grid';
-            visible++;
+
+      // Generar HTML
+      for (const [mes, talleres] of Object.entries(grupos)) {
+          let html = `<div class="mes-section"><div class="mes-header"><h2 class="mes-titulo"><i class="far fa-calendar-alt" style="color:var(--g700)"></i> ${mes}</h2></div><div class="talleres-list">`;
+          
+          talleres.forEach((t, index) => {
+              const fecha = new Date(t.fecha);
+              const dia = fecha.getDate();
+              const mesCorto = fecha.toLocaleString('es-ES', { month: 'short' }).toUpperCase().replace('.','');
+              const hora = fecha.toLocaleString('es-ES', { hour: '2-digit', minute: '2-digit' });
+              
+              const cuposLibres = t.cupos_totales - t.cupos_ocupados;
+              const estaLleno = cuposLibres <= 0;
+              
+              // Colores rotativos para las fechas (Verde, Arcilla, Azul, Morado)
+              const colores = ['', 'clay', 'blue', 'purple']; 
+              const colorClase = colores[index % 4];
+              
+              // Icono según tipo
+              const iconoTipo = t.tipo === 'Psicoeducación' ? 'fa-lightbulb' : 'fa-users';
+              const claseTipo = t.tipo === 'Psicoeducación' ? 'tipo-psico' : 'tipo-taller';
+
+              html += `
+              <div class="taller-h">
+                  <div class="taller-date-h ${colorClase}">
+                      <div class="taller-day-h">${dia}</div>
+                      <div class="taller-month-h">${mesCorto}</div>
+                      <div class="taller-time-h">${hora}</div>
+                  </div>
+                  <div class="taller-body-h">
+                      <div class="taller-type-h ${claseTipo}"><i class="fas ${iconoTipo}"></i> ${t.tipo} · ${t.duracion}</div>
+                      <h3 class="taller-titulo-h">${t.titulo}</h3>
+                      <p class="taller-desc-h">${t.descripcion}</p>
+                      <div class="taller-meta-h">
+                          <span><i class="fas fa-video"></i> Virtual</span>
+                          <span><i class="fas fa-user-md"></i> ${t.especialista}</span>
+                      </div>
+                      <div class="taller-spots-h"><i class="fas fa-users"></i> ${estaLleno ? 'Agotado' : cuposLibres + ' lugares disponibles'}</div>
+                  </div>
+                  <div class="taller-action-h">
+                      <span class="estado-tag ${estaLleno ? 'lleno' : (cuposLibres < 5 ? 'pocos' : 'disponible')}">
+                          ${estaLleno ? 'Cupos Llenos' : (cuposLibres < 5 ? 'Últimos cupos' : 'Disponible')}
+                      </span>
+                      <button class="btn-inscribir ${estaLleno ? 'lleno' : ''}" 
+                              onclick="abrirModal('${t.id}', '${t.titulo}')"
+                              ${estaLleno ? 'disabled' : ''}>
+                          ${estaLleno ? 'Cerrado' : 'Inscribirme'}
+                      </button>
+                  </div>
+              </div>`;
           });
-        } else {
-          m.style.display = 'none';
-        }
-      });
-    } else if (cat === 'taller' || cat === 'psicoeducacion') {
-      document.querySelectorAll('.mes-section').forEach(m => m.style.display = 'block');
-      document.querySelectorAll('.taller-h').forEach(t => {
-        if (t.dataset.tipo === cat) {
-          t.style.display = 'grid';
-          visible++;
-        } else {
-          t.style.display = 'none';
-        }
-      });
-    }
-
-    document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
+          
+          html += `</div></div>`; // Cerrar lista y sección
+          container.innerHTML += html;
+      }
   }
 
-  // Modal
-  function abrirInscripcion(tallerSlug) {
-    const taller = talleresData[tallerSlug];
-    if (!taller) return;
-    document.getElementById('modalTitulo').textContent = taller.titulo;
-    document.getElementById('modalSubtitulo').textContent = `${taller.fecha} · ${taller.especialista}`;
-    document.getElementById('tallerSlug').value = tallerSlug;
-    document.getElementById('modalInscripcion').classList.add('show');
-    document.body.style.overflow = 'hidden';
+  // 3. Filtros
+  function filtrar(tipo, btn) {
+      document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (tipo === 'todos') {
+          renderizarTalleres(allTalleres);
+      } else {
+          const filtrados = allTalleres.filter(t => t.tipo === tipo);
+          renderizarTalleres(filtrados);
+      }
   }
 
-  function cerrarInscripcion() {
-    document.getElementById('modalInscripcion').classList.remove('show');
-    document.body.style.overflow = '';
+  // 4. Lógica Modal
+  function abrirModal(id, titulo) {
+      document.getElementById('tallerId').value = id;
+      document.getElementById('modalSubtitulo').textContent = titulo;
+      document.getElementById('modalInscripcion').classList.add('show');
+      document.body.style.overflow = 'hidden';
   }
 
-  function procesarInscripcion(e) {
-    e.preventDefault();
-    const form = e.target;
-    const data = new FormData(form);
-    const tallerSlug = data.get('taller_slug');
-    const taller = talleresData[tallerSlug];
-    const btn = form.querySelector('.btn-modal-submit');
-    
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
-
-    setTimeout(() => {
-      cerrarInscripcion();
-      alert(`✅ ¡Inscripción confirmada!\n\n${taller.titulo}\n${taller.fecha}\n\nTe hemos enviado un email a ${data.get('email')} con el link de Zoom.\n\n¡Nos vemos!`);
-      form.reset();
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-check-circle"></i> Confirmar inscripción gratuita';
-    }, 1500);
-
-    return false;
+  function closeModal() {
+      document.getElementById('modalInscripcion').classList.remove('show');
+      document.body.style.overflow = '';
   }
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') cerrarInscripcion();
-  });
+  // 5. Submit a Supabase (LA PARTE CLAVE PARA EL CORREO)
+  async function inscribirseTaller(e) {
+      e.preventDefault();
+      
+      const btn = document.getElementById('btnSubmit');
+      const originalText = btn.textContent;
+      btn.textContent = "Procesando...";
+      btn.disabled = true;
+
+      const nombre = document.getElementById('mNombre').value;
+      const email = document.getElementById('mEmail').value;
+      const telefono = document.getElementById('mTel').value;
+      const tallerId = document.getElementById('tallerId').value;
+
+      try {
+          // A) Crear Usuario en Auth (Esto permite login futuro)
+          const tempPassword = "Bitacora" + Math.floor(Math.random() * 10000);
+          await window.sb.auth.signUp({
+              email: email,
+              password: tempPassword,
+              options: {
+                  data: { full_name: nombre, phone: telefono }
+              }
+          });
+
+          // B) Guardar Inscripción en Base de Datos (Esto dispara el Webhook de Make -> Correo)
+          const { error: dbError } = await window.sb
+              .from('web_inscripciones')
+              .insert([{
+                  taller_id: tallerId,
+                  nombre: nombre,
+                  email: email,
+                  telefono: telefono
+              }]);
+
+          if (dbError) throw dbError;
+
+          // C) Feedback Exitoso
+          alert(`✅ ¡Listo, ${nombre.split(' ')[0]}!\n\nTe has inscrito correctamente. En breve recibirás un correo con el link de Zoom.`);
+          closeModal();
+          document.querySelector('.modal-form').reset();
+          cargarAgenda(); // Recargar para actualizar cupos
+
+      } catch (err) {
+          console.error(err);
+          alert("Hubo un error. Es posible que ya estés inscrito o registrado con este correo.");
+      } finally {
+          btn.textContent = originalText;
+          btn.disabled = false;
+      }
+  }
+
+  // Iniciar
+  document.addEventListener('DOMContentLoaded', cargarAgenda);
 </script>
 </body>
 </html>
