@@ -397,6 +397,25 @@
     }
 
     document.addEventListener('DOMContentLoaded', inicializarEditor);
+  // 5. MAGIA SHOPIFY: Vista Previa en Vivo (Sin guardar)
+    function enviarVistaPrevia() {
+      const iframe = document.getElementById('livePreview');
+      if(!iframe.contentWindow) return;
+      
+      const config = {};
+      document.querySelectorAll('#cmsForm [data-key]').forEach(input => {
+        config[input.getAttribute('data-key')] = input.value;
+      });
+      
+      // Enviamos un mensaje interno al iframe con lo que estás tecleando
+      iframe.contentWindow.postMessage({ tipo: 'LIVE_PREVIEW', config: config }, '*');
+    }
+
+    // Le decimos a cada caja de texto que dispare la vista previa CADA VEZ que tecleas
+    document.querySelectorAll('#cmsForm [data-key]').forEach(input => {
+      input.addEventListener('input', enviarVistaPrevia);
+    });
+  
   </script>
 </body>
 </html>
