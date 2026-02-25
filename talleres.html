@@ -428,7 +428,7 @@
       document.body.style.overflow = '';
   }
 
-  // 5. Submit a Supabase (A PRUEBA DE BALAS ✅)
+  // 5. Submit a Supabase (Simplificado y Automático)
   async function inscribirseTaller(e) {
       e.preventDefault();
       
@@ -443,34 +443,29 @@
       const tallerId = document.getElementById('tallerId').value;
 
       try {
-          // A) GUARDAR INSCRIPCIÓN PRIMERO (Esto dispara Make.com y envía el correo)
-          const { error: dbError } = await window.sb
+          // A) GUARDAR INSCRIPCIÓN (Esto dispara Make.com y el correo automáticamente)
+          const { data: dbData, error: dbError } = await window.sb
               .from('web_inscripciones')
               .insert([{
-                  taller_id: parseInt(tallerId),
+                  taller_id: tallerId, // Sin parseInt, por si el ID tiene letras
                   nombre: nombre,
                   email: email,
                   telefono: telefono
-              }]);
+              }]).select();
 
-          if (dbError) throw dbError; // Si esto falla, sí detenemos todo.
+          if (dbError) throw dbError;
+          
+          // La base de datos ya sumó el cupo sola gracias al Trigger SQL ✅
 
-          // B) RESTAR EL CUPO
-          await window.sb.rpc('incrementar_cupo', { p_taller_id: parseInt(tallerId) });
-
-          // C) INTENTAR CREAR CUENTA EN SEGUNDO PLANO (No bloquea la inscripción)
+          // B) INTENTAR CREAR CUENTA EN SEGUNDO PLANO
           const tempPassword = "Bitacora.2026!#" + Math.floor(Math.random() * 10000);
-          const { error: authError } = await window.sb.auth.signUp({
+          await window.sb.auth.signUp({
               email: email,
               password: tempPassword,
               options: { data: { full_name: nombre, phone: telefono } }
           });
-          
-          if (authError) {
-              console.log("Aviso: El usuario ya tiene cuenta o hay límite de IP. (No afecta la inscripción).");
-          }
 
-          // D) ÉXITO TOTAL
+          // C) ÉXITO TOTAL
           alert(`✅ ¡Listo, ${nombre.split(' ')[0]}!\n\nTe has inscrito correctamente. En breve recibirás un correo con el link de Zoom.`);
           closeModal();
           document.querySelector('.modal-form').reset();
