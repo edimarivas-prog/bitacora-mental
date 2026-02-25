@@ -428,7 +428,7 @@
       document.body.style.overflow = '';
   }
 
-  // 5. Submit a Supabase (LA PARTE CLAVE PARA EL CORREO)
+  // 5. Submit a Supabase
   async function inscribirseTaller(e) {
       e.preventDefault();
       
@@ -465,7 +465,11 @@
 
           if (dbError) throw dbError;
 
-          // C) Feedback Exitoso
+          // ¡LA CORRECCIÓN ESTÁ AQUÍ! 👇 
+          // C) Incrementar el cupo usando la variable correcta (tallerId)
+          await window.sb.rpc('incrementar_cupo', { p_taller_id: tallerId });
+
+          // D) Feedback Exitoso
           alert(`✅ ¡Listo, ${nombre.split(' ')[0]}!\n\nTe has inscrito correctamente. En breve recibirás un correo con el link de Zoom.`);
           closeModal();
           document.querySelector('.modal-form').reset();
@@ -479,8 +483,6 @@
           btn.disabled = false;
       }
   }
-  // Llamamos a la función matemática que acabamos de crear en Supabase
-  await window.sb.rpc('incrementar_cupo', { p_taller_id: id_del_taller_aqui });
 
   // Iniciar
   document.addEventListener('DOMContentLoaded', cargarAgenda);
