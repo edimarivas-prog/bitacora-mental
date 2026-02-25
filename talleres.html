@@ -428,7 +428,7 @@
       document.body.style.overflow = '';
   }
 
-  // 5. Submit a Supabase
+  // 5. Submit a Supabase (A PRUEBA DE BALAS ✅)
   async function inscribirseTaller(e) {
       e.preventDefault();
       
@@ -443,38 +443,42 @@
       const tallerId = document.getElementById('tallerId').value;
 
       try {
-          // A) Crear Usuario en Auth (Esto permite login futuro)
-          const tempPassword = "Bitacora" + Math.floor(Math.random() * 10000);
-          await window.sb.auth.signUp({
-              email: email,
-              password: tempPassword,
-              options: {
-                  data: { full_name: nombre, phone: telefono }
-              }
-          });
-
-          // B) Guardar Inscripción en Base de Datos (Esto dispara el Webhook de Make -> Correo)
+          // A) GUARDAR INSCRIPCIÓN PRIMERO (Esto dispara Make.com y envía el correo)
           const { error: dbError } = await window.sb
               .from('web_inscripciones')
               .insert([{
-                  taller_id: tallerId,
+                  taller_id: parseInt(tallerId),
                   nombre: nombre,
                   email: email,
                   telefono: telefono
               }]);
 
-          if (dbError) throw dbError;
+          if (dbError) throw dbError; // Si esto falla, sí detenemos todo.
 
+          // B) RESTAR EL CUPO
+          await window.sb.rpc('incrementar_cupo', { p_taller_id: parseInt(tallerId) });
+
+          // C) INTENTAR CREAR CUENTA EN SEGUNDO PLANO (No bloquea la inscripción)
+          const tempPassword = "Bitacora.2026!#" + Math.floor(Math.random() * 10000);
+          const { error: authError } = await window.sb.auth.signUp({
+              email: email,
+              password: tempPassword,
+              options: { data: { full_name: nombre, phone: telefono } }
+          });
           
-          // C) Feedback Exitoso
+          if (authError) {
+              console.log("Aviso: El usuario ya tiene cuenta o hay límite de IP. (No afecta la inscripción).");
+          }
+
+          // D) ÉXITO TOTAL
           alert(`✅ ¡Listo, ${nombre.split(' ')[0]}!\n\nTe has inscrito correctamente. En breve recibirás un correo con el link de Zoom.`);
           closeModal();
           document.querySelector('.modal-form').reset();
-          cargarAgenda(); // Recargar para actualizar cupos
+          cargarAgenda(); // Recargar para actualizar los cupos visualmente
 
       } catch (err) {
-          console.error(err);
-          alert("Hubo un error. Es posible que ya estés inscrito o registrado con este correo.");
+          console.error("Error grave en inscripción:", err);
+          alert("Hubo un problema de conexión al guardar tu inscripción. Por favor, intenta nuevamente.");
       } finally {
           btn.textContent = originalText;
           btn.disabled = false;
