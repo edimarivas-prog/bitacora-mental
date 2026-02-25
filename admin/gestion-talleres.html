@@ -1,65 +1,292 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Admin Talleres</title>
-    <link rel="stylesheet" href="../css/design-system.css">
-</head>
-<body style="padding:40px; background:#f4f4f4;">
+  <meta charset="UTF-8">
+  <title>Gestión de Talleres - Admin Bitácora Mental</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root { --sidebar-bg: #1F2933; --accent: #4F6F52; --bg: #F3F4F6; --border: #E5E7EB; --text: #374151; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); display: flex; height: 100vh; overflow: hidden; color: var(--text); }
 
-    <h1>Gestión de Talleres</h1>
+    /* SIDEBAR */
+    .sidebar { width: 280px; background: white; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+    .header { padding: 20px; border-bottom: 1px solid var(--border); font-family: 'Outfit'; font-weight: 700; color: var(--sidebar-bg); }
+    .menu { flex: 1; padding: 15px; overflow-y: auto; }
+    .menu-btn { width: 100%; text-align: left; padding: 12px; margin-bottom: 5px; border-radius: 8px; border: 1px solid transparent; background: transparent; cursor: pointer; color: #4B5563; font-weight: 500; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .menu-btn:hover, .menu-btn.active { background: #EEF2FF; color: var(--accent); font-weight: 600; }
+
+    /* MAIN CONTENT */
+    .main-content { flex: 1; padding: 40px; overflow-y: auto; }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .page-title { font-family: 'Outfit'; font-size: 1.8rem; color: #1F2933; }
+    .btn-primary { background: var(--accent); color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    .btn-primary:hover { background: #3d5640; }
+
+    /* TABLE */
+    .table-card { background: white; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+    th { background: #F9FAFB; font-weight: 600; font-size: 0.85rem; color: #6B7280; text-transform: uppercase; letter-spacing: 0.5px; }
+    td { font-size: 0.95rem; }
+    .badge { padding: 4px 8px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; }
+    .badge-active { background: #D1FAE5; color: #065F46; }
+    .badge-inactive { background: #FEE2E2; color: #991B1B; }
+    .action-btn { background: none; border: none; cursor: pointer; font-size: 1.1rem; margin-right: 10px; color: #6B7280; }
+    .action-btn.edit:hover { color: #3B82F6; }
+    .action-btn.delete:hover { color: #EF4444; }
+
+    /* MODAL */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; align-items: center; justify-content: center; }
+    .modal-overlay.show { display: flex; }
+    .modal { background: white; width: 100%; max-width: 600px; border-radius: 12px; padding: 30px; max-height: 90vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .modal-title { font-family: 'Outfit'; font-size: 1.4rem; }
+    .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #6B7280; }
     
-    <div style="background:white; padding:30px; border-radius:12px; max-width:600px;">
-        <h3>Publicar Nuevo Taller</h3>
-        <form onsubmit="publicarTaller(event)" style="display:flex; flex-direction:column; gap:15px;">
-            <input type="text" id="tTitulo" placeholder="Título del Taller" required>
-            <textarea id="tDesc" placeholder="Descripción breve" required></textarea>
-            
-            <div style="display:flex; gap:10px;">
-                <select id="tTipo">
-                    <option value="Taller">Taller</option>
-                    <option value="Psicoeducación">Psicoeducación</option>
-                </select>
-                <input type="text" id="tDuracion" placeholder="Duración (ej: 1 hora)" required>
-            </div>
+    /* FORM */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .form-group { margin-bottom: 15px; }
+    .form-group.full { grid-column: span 2; }
+    label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #374151; }
+    input, select, textarea { width: 100%; padding: 10px; border: 1px solid #D1D5DB; border-radius: 6px; font-family: inherit; }
+    textarea { resize: vertical; }
+    .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+    .checkbox-group input { width: auto; }
+    
+  </style>
+</head>
+<body>
 
-            <div style="display:flex; gap:10px;">
-                <input type="datetime-local" id="tFecha" required>
-                <input type="number" id="tCupos" placeholder="Cupos" value="30" required>
-            </div>
+  <aside class="sidebar">
+    <div class="header"><i class="fas fa-brain"></i> ADMIN BITÁCORA</div>
+    <div class="menu">
+        <a href="cms-editor.html" class="menu-btn"><i class="fas fa-edit"></i> Editor CMS</a>
+        <a href="gestion-talleres.html" class="menu-btn active"><i class="fas fa-calendar-alt"></i> Gestión Talleres</a>
+        </div>
+  </aside>
 
-            <input type="text" id="tEsp" placeholder="Especialista (ej: Lic. Ana)" required>
-
-            <button type="submit" style="background:var(--primary); color:white; padding:10px; border:none; cursor:pointer;">Publicar Taller</button>
-        </form>
+  <main class="main-content">
+    <div class="top-bar">
+      <h1 class="page-title">Talleres y Charlas</h1>
+      <button class="btn-primary" onclick="abrirModal()"><i class="fas fa-plus"></i> Nuevo Taller</button>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/supabase-config.js"></script>
-    <script>
-        async function publicarTaller(e) {
-            e.preventDefault();
-            
-            const taller = {
-                titulo: document.getElementById('tTitulo').value,
-                descripcion: document.getElementById('tDesc').value,
-                tipo: document.getElementById('tTipo').value,
-                duracion: document.getElementById('tDuracion').value,
-                fecha: new Date(document.getElementById('tFecha').value).toISOString(), // Formato correcto para Supabase
-                cupos_totales: document.getElementById('tCupos').value,
-                especialista: document.getElementById('tEsp').value,
-                visible: true
-            };
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Título</th>
+            <th>Tipo</th>
+            <th>Especialista</th>
+            <th>Cupos</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tablaTalleres">
+          <tr><td colspan="7" style="text-align:center;">Cargando talleres...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
 
-            const { error } = await window.sb.from('web_talleres').insert([taller]);
+  <div class="modal-overlay" id="modalTaller">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Nuevo Taller</h2>
+        <button class="close-btn" onclick="cerrarModal()">&times;</button>
+      </div>
+      <form id="formTaller" onsubmit="guardarTaller(event)">
+        <input type="hidden" id="tallerId">
+        
+        <div class="form-group full">
+          <label>Título del Taller</label>
+          <input type="text" id="tTitulo" required placeholder="Ej: Manejo de la Ansiedad">
+        </div>
+        
+        <div class="form-group full">
+          <label>Descripción corta</label>
+          <textarea id="tDesc" rows="3" required placeholder="¿De qué trata el taller?"></textarea>
+        </div>
 
-            if (error) {
-                alert("Error: " + error.message);
-            } else {
-                alert("Taller publicado exitosamente en la web.");
-                e.target.reset();
-            }
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Fecha y Hora</label>
+            <input type="datetime-local" id="tFecha" required>
+          </div>
+          <div class="form-group">
+            <label>Duración</label>
+            <input type="text" id="tDuracion" required placeholder="Ej: 1 hora">
+          </div>
+          <div class="form-group">
+            <label>Tipo</label>
+            <select id="tTipo" required>
+              <option value="Taller">Taller</option>
+              <option value="Psicoeducación">Psicoeducación</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Especialista a cargo</label>
+            <input type="text" id="tEspecialista" required placeholder="Nombre del psicólogo">
+          </div>
+          <div class="form-group">
+            <label>Cupos Totales</label>
+            <input type="number" id="tCupos" required min="1" value="30">
+          </div>
+          <div class="form-group">
+            <label>Opciones</label>
+            <div class="checkbox-group">
+              <input type="checkbox" id="tVisible" checked>
+              <label for="tVisible" style="margin:0;">Visible en la web</label>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+          <button type="button" class="btn-primary" style="background:#6B7280;" onclick="cerrarModal()">Cancelar</button>
+          <button type="submit" class="btn-primary" id="btnGuardar">Guardar Taller</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script> 
+
+  <script>
+    // 1. Cargar la tabla
+    async function cargarTabla() {
+      if(!window.sb) return setTimeout(cargarTabla, 500);
+
+      const tbody = document.getElementById('tablaTalleres');
+      
+      const { data, error } = await window.sb
+        .from('web_talleres')
+        .select('*')
+        .order('fecha', { ascending: false });
+
+      if (error) {
+        console.error(error);
+        tbody.innerHTML = `<tr><td colspan="7">Error cargando datos.</td></tr>`;
+        return;
+      }
+
+      if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No hay talleres registrados.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = '';
+      data.forEach(t => {
+        const fecha = new Date(t.fecha).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' });
+        const ocupados = t.cupos_ocupados || 0;
+        
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${fecha}</td>
+          <td><strong>${t.titulo}</strong></td>
+          <td>${t.tipo}</td>
+          <td>${t.especialista}</td>
+          <td>${ocupados} / ${t.cupos_totales}</td>
+          <td><span class="badge ${t.visible ? 'badge-active' : 'badge-inactive'}">${t.visible ? 'Visible' : 'Oculto'}</span></td>
+          <td>
+            <button class="action-btn edit" onclick='editarTaller(${JSON.stringify(t).replace(/'/g, "&#39;")})' title="Editar"><i class="fas fa-edit"></i></button>
+            <button class="action-btn delete" onclick="eliminarTaller('${t.id}')" title="Eliminar"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // 2. Lógica del Modal
+    function abrirModal() {
+      document.getElementById('formTaller').reset();
+      document.getElementById('tallerId').value = '';
+      document.getElementById('modalTitle').innerText = 'Nuevo Taller';
+      document.getElementById('modalTaller').classList.add('show');
+    }
+
+    function cerrarModal() {
+      document.getElementById('modalTaller').classList.remove('show');
+    }
+
+    function editarTaller(taller) {
+      document.getElementById('tallerId').value = taller.id;
+      document.getElementById('tTitulo').value = taller.titulo;
+      document.getElementById('tDesc').value = taller.descripcion;
+      
+      // Formatear fecha para el input datetime-local
+      const fechaLocal = new Date(taller.fecha);
+      fechaLocal.setMinutes(fechaLocal.getMinutes() - fechaLocal.getTimezoneOffset());
+      document.getElementById('tFecha').value = fechaLocal.toISOString().slice(0, 16);
+      
+      document.getElementById('tDuracion').value = taller.duracion;
+      document.getElementById('tTipo').value = taller.tipo;
+      document.getElementById('tEspecialista').value = taller.especialista;
+      document.getElementById('tCupos').value = taller.cupos_totales;
+      document.getElementById('tVisible').checked = taller.visible;
+
+      document.getElementById('modalTitle').innerText = 'Editar Taller';
+      document.getElementById('modalTaller').classList.add('show');
+    }
+
+    // 3. Guardar / Actualizar
+    async function guardarTaller(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnGuardar');
+      btn.innerText = 'Guardando...';
+      btn.disabled = true;
+
+      const id = document.getElementById('tallerId').value;
+      const datos = {
+        titulo: document.getElementById('tTitulo').value,
+        descripcion: document.getElementById('tDesc').value,
+        fecha: new Date(document.getElementById('tFecha').value).toISOString(),
+        duracion: document.getElementById('tDuracion').value,
+        tipo: document.getElementById('tTipo').value,
+        especialista: document.getElementById('tEspecialista').value,
+        cupos_totales: parseInt(document.getElementById('tCupos').value),
+        visible: document.getElementById('tVisible').checked
+      };
+
+      try {
+        if (id) {
+          // Actualizar
+          const { error } = await window.sb.from('web_talleres').update(datos).eq('id', id);
+          if (error) throw error;
+        } else {
+          // Crear nuevo
+          const { error } = await window.sb.from('web_talleres').insert([datos]);
+          if (error) throw error;
         }
-    </script>
+        
+        cerrarModal();
+        cargarTabla();
+      } catch (err) {
+        alert('Error al guardar: ' + err.message);
+      } finally {
+        btn.innerText = 'Guardar Taller';
+        btn.disabled = false;
+      }
+    }
+
+    // 4. Eliminar
+    async function eliminarTaller(id) {
+      if(confirm('¿Estás seguro de que deseas eliminar este taller? Esta acción no se puede deshacer.')) {
+        const { error } = await window.sb.from('web_talleres').delete().eq('id', id);
+        if (error) {
+          alert('Error al eliminar: ' + error.message);
+        } else {
+          cargarTabla();
+        }
+      }
+    }
+
+    // Iniciar
+    document.addEventListener('DOMContentLoaded', cargarTabla);
+  </script>
 </body>
 </html>
