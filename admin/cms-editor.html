@@ -3,138 +3,282 @@
 <head>
   <meta charset="UTF-8">
   <title>Editor Visual - Bitácora Mental</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root { --sidebar-bg: #1F2933; --accent: #4F6F52; --bg: #F3F4F6; --border: #E5E7EB; }
+    :root { --bg: #F4F6F8; --sidebar: #1A1D20; --primary: #008060; --text: #202223; --border: #C9CCCF; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); display: flex; height: 100vh; overflow: hidden; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); display: flex; height: 100vh; color: var(--text); }
 
-    /* SIDEBAR */
-    .sidebar { width: 280px; background: white; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
-    .header { padding: 20px; border-bottom: 1px solid var(--border); font-family: 'Outfit'; font-weight: 700; color: var(--sidebar-bg); }
-    .menu { flex: 1; padding: 15px; overflow-y: auto; }
-    .menu-btn { width: 100%; text-align: left; padding: 12px; margin-bottom: 5px; border-radius: 8px; border: 1px solid transparent; background: transparent; cursor: pointer; color: #4B5563; font-weight: 500; display: flex; align-items: center; gap: 10px; }
-    .menu-btn:hover, .menu-btn.active { background: #EEF2FF; color: var(--accent); font-weight: 600; }
+    /* BARRA LATERAL OSCURA (Navegación Admin) */
+    .admin-nav { width: 60px; background: var(--sidebar); display: flex; flex-direction: column; align-items: center; padding: 15px 0; z-index: 100; }
+    .admin-nav a { color: #A6AAB4; font-size: 1.2rem; margin-bottom: 25px; transition: 0.2s; text-decoration: none; }
+    .admin-nav a:hover, .admin-nav a.active { color: white; }
 
-    /* EDITOR AREA */
-    .editor { flex: 1; padding: 40px; overflow-y: auto; }
-    .editor-card { background: white; padding: 30px; border-radius: 16px; border: 1px solid var(--border); max-width: 800px; margin: 0 auto; }
-    .section-title { font-family: 'Outfit'; font-size: 1.4rem; margin-bottom: 24px; color: #1F2933; }
-    .form-group { margin-bottom: 20px; }
-    .label { display: block; font-size: 0.85rem; font-weight: 700; color: #374151; margin-bottom: 8px; }
-    .input, .textarea { width: 100%; padding: 12px; border: 1px solid #D1D5DB; border-radius: 8px; font-family: inherit; }
-    .btn-success { background: #10B981; color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; position: fixed; bottom: 20px; right: 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    .color-input { width: 100px; height: 40px; cursor: pointer; }
+    /* PANEL DEL EDITOR (Estilo Shopify) */
+    .editor-panel { width: 400px; background: white; border-right: 1px solid var(--border); display: flex; flex-direction: column; box-shadow: 2px 0 10px rgba(0,0,0,0.05); z-index: 10; }
+    .ep-header { padding: 20px; border-bottom: 1px solid var(--border); background: #F9FAFB; }
+    .ep-header h2 { font-size: 1.1rem; font-weight: 700; color: #202223; margin-bottom: 5px; }
+    .ep-header p { font-size: 0.85rem; color: #6D7175; }
+    
+    .ep-tabs { display: flex; overflow-x: auto; background: white; border-bottom: 1px solid var(--border); }
+    .tab-btn { flex: 1; min-width: 100px; padding: 12px 10px; border: none; background: none; font-size: 0.85rem; font-weight: 600; color: #6D7175; cursor: pointer; border-bottom: 3px solid transparent; }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    .ep-content { flex: 1; overflow-y: auto; padding: 20px; background: #F4F6F8; }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+    
+    .card-form { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid transparent; }
+    .card-form h3 { font-size: 0.95rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; color: #202223; }
+    
+    .input-group { margin-bottom: 15px; }
+    label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px; color: #202223; }
+    input[type="text"], input[type="url"], textarea { width: 100%; padding: 10px 12px; border: 1px solid #BABEC3; border-radius: 4px; font-family: inherit; font-size: 0.9rem; transition: 0.2s; }
+    input:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(0, 128, 96, 0.2); }
+    textarea { min-height: 80px; resize: vertical; }
+    .help-text { display: block; font-size: 0.75rem; color: #6D7175; margin-top: 5px; line-height: 1.4; }
+
+    /* ZONA DE VISTA PREVIA */
+    .preview-area { flex: 1; display: flex; flex-direction: column; background: #E4E5E7; position: relative; }
+    .preview-toolbar { height: 60px; background: white; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+    .device-toggles button { background: none; border: none; font-size: 1.2rem; color: #6D7175; margin-right: 15px; cursor: pointer; }
+    .device-toggles button.active { color: var(--primary); }
+    
+    .btn-save { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 4px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .btn-save:hover { background: #006e52; }
+
+    .iframe-wrapper { flex: 1; display: flex; justify-content: center; align-items: flex-start; padding: 20px; overflow: hidden; }
+    iframe { width: 100%; height: 100%; border: none; background: white; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: width 0.3s ease; }
+    iframe.mobile-view { width: 375px; }
+
+    /* ALERTAS */
+    .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: #202223; color: white; padding: 12px 24px; border-radius: 50px; font-weight: 500; font-size: 0.9rem; opacity: 0; transition: 0.3s; z-index: 9999; display: flex; align-items: center; gap: 10px; }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
   </style>
 </head>
 <body>
 
-  <aside class="sidebar">
-    <div class="header"><i class="fas fa-edit"></i> EDITOR CMS</div>
-    <div class="menu">
-        <button class="menu-btn active" onclick="loadSection('hero')"><i class="fas fa-home"></i> Inicio (Hero)</button>
-        <button class="menu-btn" onclick="loadSection('branding')"><i class="fas fa-palette"></i> Colores y Marca</button>
-        <button class="menu-btn" onclick="loadSection('contact')"><i class="fas fa-envelope"></i> Contacto</button>
+  <nav class="admin-nav">
+    <a href="panel-admin.html" title="Volver al Inicio"><i class="fas fa-arrow-left"></i></a>
+    <a href="cms-editor.html" class="active" title="Diseño y Contenido"><i class="fas fa-paint-brush"></i></a>
+    <a href="gestion-talleres.html" title="Talleres"><i class="fas fa-calendar-alt"></i></a>
+  </nav>
+
+  <div class="editor-panel">
+    <div class="ep-header">
+      <h2>Editor de Tienda / Landing</h2>
+      <p>Los cambios se reflejarán inmediatamente en tu web.</p>
     </div>
-  </aside>
 
-  <main class="editor" id="mainEditor">
-    <div class="editor-card"><h2>Cargando editor...</h2></div>
-  </main>
+    <div class="ep-tabs">
+      <button class="tab-btn active" onclick="switchTab('tab-inicio', this)">1. Inicio (Hero)</button>
+      <button class="tab-btn" onclick="switchTab('tab-secciones', this)">2. Secciones</button>
+      <button class="tab-btn" onclick="switchTab('tab-footer', this)">3. Footer</button>
+    </div>
 
-  <button class="btn-success" onclick="saveAllChanges()" id="saveBtn"><i class="fas fa-save"></i> Guardar Cambios</button>
+    <div class="ep-content">
+      <form id="cmsForm">
+        
+        <div id="tab-inicio" class="tab-pane active">
+          <div class="card-form">
+            <h3><i class="fas fa-image"></i> Sección Principal (Hero)</h3>
+            <div class="input-group">
+              <label>Etiqueta Superior</label>
+              <input type="text" data-key="hero_badge" placeholder="Ej: Plataforma 100% peruana">
+              <span class="help-text">El pequeño globo de texto sobre el título principal.</span>
+            </div>
+            <div class="input-group">
+              <label>Título Principal (H1)</label>
+              <textarea data-key="hero_titulo" rows="3"></textarea>
+              <span class="help-text">Escribe <code>&lt;br&gt;</code> para forzar un salto de línea. Escribe <code>&lt;em&gt;palabra&lt;/em&gt;</code> para pintarla de verde.</span>
+            </div>
+            <div class="input-group">
+              <label>Subtítulo descriptivo</label>
+              <textarea data-key="hero_sub" rows="3"></textarea>
+              <span class="help-text">El texto gris que explica de qué trata la plataforma.</span>
+            </div>
+            <div class="input-group">
+              <label>Foto Principal (URL)</label>
+              <input type="url" data-key="hero_img">
+              <span class="help-text">Pega el link de la imagen. Recomendado: Vertical (4:5).</span>
+            </div>
+          </div>
+
+          <div class="card-form">
+            <h3><i class="fas fa-chart-bar"></i> Estadísticas (Barra Verde)</h3>
+            <div style="display:grid; grid-template-columns: 1fr 2fr; gap:10px; margin-bottom:10px;">
+              <input type="text" data-key="stat1_num" placeholder="N° (Ej: 50+)">
+              <input type="text" data-key="stat1_txt" placeholder="Texto descriptivo">
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 2fr; gap:10px;">
+              <input type="text" data-key="stat2_num" placeholder="N°">
+              <input type="text" data-key="stat2_txt" placeholder="Texto descriptivo">
+            </div>
+            <span class="help-text" style="margin-top:10px;">Aparecen en la barra verde horizontal debajo del inicio.</span>
+          </div>
+        </div>
+
+        <div id="tab-secciones" class="tab-pane">
+          <div class="card-form">
+            <h3><i class="fas fa-hand-holding-heart"></i> Módulo: Servicios</h3>
+            <div class="input-group">
+              <label>Título de la sección</label>
+              <input type="text" data-key="srv_ti">
+            </div>
+            <div class="input-group">
+              <label>Subtítulo</label>
+              <textarea data-key="srv_sub" rows="2"></textarea>
+            </div>
+            <hr style="border:0; border-top:1px solid #eee; margin: 15px 0;">
+            <label style="color:var(--primary)">Tarjeta 1 (Terapia)</label>
+            <input type="text" data-key="srv1_ti" style="margin-bottom:5px;">
+            <textarea data-key="srv1_desc" rows="2"></textarea>
+            
+            <label style="color:var(--primary); margin-top:15px;">Tarjeta 2 (Coaching)</label>
+            <input type="text" data-key="srv2_ti" style="margin-bottom:5px;">
+            <textarea data-key="srv2_desc" rows="2"></textarea>
+          </div>
+
+          <div class="card-form">
+            <h3><i class="fas fa-list-ol"></i> Módulo: El Proceso (3 Pasos)</h3>
+            <div class="input-group">
+              <label>Título de la sección</label>
+              <input type="text" data-key="pasos_ti">
+            </div>
+            <hr style="border:0; border-top:1px solid #eee; margin: 15px 0;">
+            <label style="color:var(--primary)">Paso 1</label>
+            <input type="text" data-key="paso1_ti" style="margin-bottom:5px;">
+            <textarea data-key="paso1_desc" rows="2"></textarea>
+
+            <label style="color:var(--primary); margin-top:15px;">Paso 2</label>
+            <input type="text" data-key="paso2_ti" style="margin-bottom:5px;">
+            <textarea data-key="paso2_desc" rows="2"></textarea>
+
+            <label style="color:var(--primary); margin-top:15px;">Paso 3</label>
+            <input type="text" data-key="paso3_ti" style="margin-bottom:5px;">
+            <textarea data-key="paso3_desc" rows="2"></textarea>
+
+            <div class="input-group" style="margin-top:15px;">
+              <label>Imagen Lateral (URL)</label>
+              <input type="url" data-key="pasos_img">
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-footer" class="tab-pane">
+          <div class="card-form">
+            <h3><i class="fas fa-address-card"></i> Datos de Contacto</h3>
+            <div class="input-group">
+              <label>Teléfono Oficial</label>
+              <input type="text" data-key="contacto_tel" placeholder="+51 999 999 999">
+            </div>
+            <div class="input-group">
+              <label>Correo Electrónico</label>
+              <input type="email" data-key="contacto_email">
+            </div>
+            <div class="input-group">
+              <label>Link de WhatsApp</label>
+              <input type="url" data-key="social_wa" placeholder="https://wa.me/...">
+              <span class="help-text">El enlace directo para que el botón abra el chat.</span>
+            </div>
+            <div class="input-group">
+              <label>Link de Instagram</label>
+              <input type="url" data-key="social_ig">
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <div class="preview-area">
+    <div class="preview-toolbar">
+      <div class="device-toggles">
+        <button class="active" onclick="toggleDevice('desktop', this)" title="Vista Computadora"><i class="fas fa-desktop"></i></button>
+        <button onclick="toggleDevice('mobile', this)" title="Vista Celular"><i class="fas fa-mobile-alt"></i></button>
+      </div>
+      <button class="btn-save" onclick="guardarTodo()"><i class="fas fa-save"></i> Guardar Cambios</button>
+    </div>
+    <div class="iframe-wrapper">
+      <iframe id="livePreview" src="../index.html"></iframe>
+    </div>
+  </div>
+
+  <div class="toast" id="toastMsg"><i class="fas fa-check-circle" style="color:#20dc8e"></i> Cambios publicados con éxito</div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../js/supabase-config.js"></script> 
+  <script src="../js/supabase-config.js"></script>
 
   <script>
-    let configData = {};
-
-    // 1. Cargar configuración al iniciar
-    async function loadConfig() {
-      if(!window.sb) return setTimeout(loadConfig, 500);
-      
-      const { data } = await window.sb.from('config_web').select('*');
-      if (data) {
-        data.forEach(item => configData[item.clave] = item.valor);
-        loadSection('hero'); // Cargar primera sección por defecto
-      }
+    // 1. Manejo de Pestañas
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
     }
 
-    // 2. Renderizar Secciones
-    function loadSection(section) {
-      document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
-      event.currentTarget.classList.add('active');
-      const editor = document.getElementById('mainEditor');
-
-      if(section === 'hero') {
-        editor.innerHTML = `
-          <div class="editor-card">
-            <h2 class="section-title">Sección Principal (Hero)</h2>
-            <div class="form-group">
-              <label class="label">Badge (Ej: Plataforma peruana)</label>
-              <input type="text" class="input" data-key="hero_badge" value="${configData.hero_badge || ''}">
-            </div>
-            <div class="form-group">
-              <label class="label">Título Principal (H1)</label>
-              <textarea class="textarea" rows="3" data-key="hero_titulo">${configData.hero_titulo || ''}</textarea>
-              <small>Usa &lt;em&gt;texto&lt;/em&gt; para ponerlo en cursiva/color.</small>
-            </div>
-            <div class="form-group">
-              <label class="label">Subtítulo</label>
-              <textarea class="textarea" rows="2" data-key="hero_subtitulo">${configData.hero_subtitulo || ''}</textarea>
-            </div>
-          </div>`;
-      } else if(section === 'branding') {
-        editor.innerHTML = `
-          <div class="editor-card">
-            <h2 class="section-title">Colores de Marca</h2>
-            <div class="form-group">
-              <label class="label">Color Principal (Verde)</label>
-              <input type="color" class="color-input" data-key="color_primary" value="${configData.color_primary || '#4F6F52'}">
-            </div>
-            <div class="form-group">
-              <label class="label">Color Acento (Terracota)</label>
-              <input type="color" class="color-input" data-key="color_accent" value="${configData.color_accent || '#c97b5a'}">
-            </div>
-          </div>`;
-      } else if(section === 'contact') {
-        editor.innerHTML = `
-          <div class="editor-card">
-            <h2 class="section-title">Contacto</h2>
-            <div class="form-group">
-              <label class="label">Teléfono</label>
-              <input type="text" class="input" data-key="contact_phone" value="${configData.contact_phone || ''}">
-            </div>
-          </div>`;
-      }
+    // 2. Manejo de Dispositivo (Desktop/Mobile)
+    function toggleDevice(type, btn) {
+      document.querySelectorAll('.device-toggles button').forEach(el => el.classList.remove('active'));
+      btn.classList.add('active');
+      const iframe = document.getElementById('livePreview');
+      iframe.className = (type === 'mobile') ? 'mobile-view' : '';
     }
 
-    // 3. Guardar Cambios
-    async function saveAllChanges() {
-      const btn = document.getElementById('saveBtn');
-      btn.innerText = 'Guardando...';
-      
-      const inputs = document.querySelectorAll('[data-key]');
-      const updates = [];
+    // 3. Cargar datos desde la Base de Datos al abrir
+    async function inicializarEditor() {
+      if(!window.sb) return setTimeout(inicializarEditor, 500);
+
+      const { data, error } = await window.sb.from('config_web').select('*');
+      if (error) return console.error(error);
+
+      // Llena automáticamente todos los campos que tengan un "data-key"
+      data.forEach(item => {
+        const input = document.querySelector(`[data-key="${item.clave}"]`);
+        if (input) input.value = item.valor;
+      });
+    }
+
+    // 4. Guardar todos los cambios en bloque
+    async function guardarTodo() {
+      const btn = document.querySelector('.btn-save');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+      btn.disabled = true;
+
+      const inputs = document.querySelectorAll('#cmsForm [data-key]');
+      const paqueteDatos = [];
 
       inputs.forEach(input => {
-        const key = input.dataset.key;
-        const val = input.value;
-        configData[key] = val; // Actualizar local
-        
-        // Preparar subida a Supabase
-        updates.push(window.sb.from('config_web').upsert({ clave: key, valor: val }));
+        paqueteDatos.push({
+          clave: input.getAttribute('data-key'),
+          valor: input.value,
+          updated_at: new Date()
+        });
       });
 
-      await Promise.all(updates);
-      btn.innerHTML = '<i class="fas fa-check"></i> ¡Guardado!';
-      setTimeout(() => btn.innerHTML = '<i class="fas fa-save"></i> Guardar Cambios', 2000);
+      // Upsert guarda y actualiza masivamente
+      const { error } = await window.sb.from('config_web').upsert(paqueteDatos, { onConflict: 'clave' });
+
+      btn.innerHTML = '<i class="fas fa-save"></i> Guardar Cambios';
+      btn.disabled = false;
+
+      if (!error) {
+        // Mostrar alerta verde
+        const toast = document.getElementById('toastMsg');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+        
+        // Recargar el celular virtual para ver los cambios
+        document.getElementById('livePreview').src = document.getElementById('livePreview').src;
+      } else {
+        alert("Hubo un error al guardar: " + error.message);
+      }
     }
 
-    // Iniciar
-    document.addEventListener('DOMContentLoaded', loadConfig);
+    document.addEventListener('DOMContentLoaded', inicializarEditor);
   </script>
 </body>
 </html>
