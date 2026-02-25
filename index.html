@@ -776,64 +776,245 @@
     cargarTalleres();
   });
 </script>
- <script>
-async function cargarConfiguracionCMS() {
-  // 1. Esperamos a que Supabase esté conectado
-  if (!window.sb) {
-    setTimeout(cargarConfiguracionCMS, 500);
-    return;
-  }
 
+<script>
+// ESTA FUNCIÓN APLICA TODOS LOS CAMBIOS VISUALES A LA PÁGINA
+function aplicarConfiguracion(c) {
+    // 1. COLORES
+    if(c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
+    if(c.color_accent) { 
+      document.documentElement.style.setProperty('--clay', c.color_accent); 
+      document.documentElement.style.setProperty('--clay-l', c.color_accent + '33'); 
+    }
+
+    // 2. HERO (INICIO)
+    if(c.hero_badge) { let b = document.querySelector('.h-badge'); if(b) b.innerHTML = `<span class="dot"></span> ${c.hero_badge}`; }
+    if(c.hero_titulo) { let t = document.querySelector('.hero h1'); if(t) t.innerHTML = c.hero_titulo; }
+    if(c.hero_sub) { let s = document.querySelector('.hero .h-sub'); if(s) s.textContent = c.hero_sub; }
+    if(c.hero_img) { let i = document.querySelector('.h-img img'); if(i) i.src = c.hero_img; }
+    if(c.hero_btn1_txt) { let b = document.querySelector('.h-act .btn-p'); if(b) { b.innerHTML = `${c.hero_btn1_txt} <i class="fas fa-arrow-right"></i>`; b.href = c.hero_btn1_url || '#'; } }
+    if(c.hero_btn2_txt) { let b = document.querySelector('.h-act .btn-s'); if(b) { b.innerHTML = `<i class="fas fa-search"></i> ${c.hero_btn2_txt}`; b.href = c.hero_btn2_url || '#'; } }
+    if(c.hero_f1_tit) { let t = document.querySelector('.h-fl.f1 .f-tx strong'); if(t) t.textContent = c.hero_f1_tit; }
+    if(c.hero_f1_sub) { let s = document.querySelector('.h-fl.f1 .f-tx span'); if(s) s.textContent = c.hero_f1_sub; }
+    if(c.hero_f2_tit) { let t = document.querySelector('.h-fl.f2 .f-tx strong'); if(t) t.textContent = c.hero_f2_tit; }
+    if(c.hero_f2_sub) { let s = document.querySelector('.h-fl.f2 .f-tx span'); if(s) s.textContent = c.hero_f2_sub; }
+
+    // 3. ESTADÍSTICAS
+    let sts = document.querySelectorAll('.stats .st');
+    if(sts.length >= 4) {
+      if(c.st1_n) sts[0].querySelector('.st-n').textContent = c.st1_n;
+      if(c.st1_t) sts[0].querySelector('.st-l').textContent = c.st1_t;
+      if(c.st2_n) sts[1].querySelector('.st-n').textContent = c.st2_n;
+      if(c.st2_t) sts[1].querySelector('.st-l').textContent = c.st2_t;
+      if(c.st3_n) sts[2].querySelector('.st-n').textContent = c.st3_n;
+      if(c.st3_t) sts[2].querySelector('.st-l').textContent = c.st3_t;
+      if(c.st4_n) sts[3].querySelector('.st-n').textContent = c.st4_n;
+      if(c.st4_t) sts[3].querySelector('.st-l').textContent = c.st4_t;
+    }
+
+    // 4. SERVICIOS
+    let srvSec = document.querySelector('#servicios');
+    if(srvSec) {
+        if(c.srv_tag) { let t = srvSec.querySelector('.tag'); if(t) t.innerHTML = `<i class="fas fa-star"></i> ${c.srv_tag}`; }
+        if(c.srv_tit) { let t = srvSec.querySelector('.s-ti'); if(t) t.innerHTML = c.srv_tit; }
+        if(c.srv_sub) { let s = srvSec.querySelector('.s-sub'); if(s) s.textContent = c.srv_sub; }
+        
+        let srvs = srvSec.querySelectorAll('.srv-c');
+        if(srvs.length >= 3) {
+          if(c.srv1_ic) srvs[0].querySelector('.srv-ic i').className = `fas ${c.srv1_ic}`;
+          if(c.srv1_tit) srvs[0].querySelector('h3').textContent = c.srv1_tit;
+          if(c.srv1_desc) srvs[0].querySelector('p').textContent = c.srv1_desc;
+          if(c.srv1_btn_txt) { let a=srvs[0].querySelector('a'); a.innerHTML = `${c.srv1_btn_txt} <i class="fas fa-arrow-right"></i>`; a.href = c.srv1_btn_url || '#'; }
+          
+          if(c.srv2_ic) srvs[1].querySelector('.srv-ic i').className = `fas ${c.srv2_ic}`;
+          if(c.srv2_tit) srvs[1].querySelector('h3').textContent = c.srv2_tit;
+          if(c.srv2_desc) srvs[1].querySelector('p').textContent = c.srv2_desc;
+          if(c.srv2_btn_txt) { let a=srvs[1].querySelector('a'); a.innerHTML = `${c.srv2_btn_txt} <i class="fas fa-arrow-right"></i>`; a.href = c.srv2_btn_url || '#'; }
+          
+          if(c.srv3_ic) srvs[2].querySelector('.srv-ic i').className = `fas ${c.srv3_ic}`;
+          if(c.srv3_tit) srvs[2].querySelector('h3').textContent = c.srv3_tit;
+          if(c.srv3_desc) srvs[2].querySelector('p').textContent = c.srv3_desc;
+          if(c.srv3_btn_txt) { let a=srvs[2].querySelector('a'); a.innerHTML = `${c.srv3_btn_txt} <i class="fas fa-arrow-right"></i>`; a.href = c.srv3_btn_url || '#'; }
+        }
+    }
+
+    // 5. TALLERES
+    let talSec = document.querySelector('#talleres');
+    if (talSec) {
+        if(c.tal_tit) { let t = talSec.querySelector('.s-ti'); if(t) t.innerHTML = c.tal_tit; }
+        if(c.tal_sub) { let s = talSec.querySelector('.s-sub'); if(s) s.textContent = c.tal_sub; }
+        if(c.tal_btn_txt) { let b = talSec.querySelector('.btn-cal'); if(b) b.textContent = c.tal_btn_txt; }
+    }
+
+    // 6. EL PROCESO
+    let pasosSec = document.querySelectorAll('.sec-bg')[0]; 
+    if(pasosSec) {
+       if(c.paso_tag) { let t = pasosSec.querySelector('.tag'); if(t) t.innerHTML = `<i class="fas fa-map"></i> ${c.paso_tag}`; }
+       if(c.paso_tit) { let t = pasosSec.querySelector('.s-ti'); if(t) t.innerHTML = c.paso_tit; }
+       if(c.paso_img) { let i = pasosSec.querySelector('.como-img img'); if(i) i.src = c.paso_img; }
+       let steps = pasosSec.querySelectorAll('.step');
+       if(steps.length >= 3) {
+         if(c.p1_tit) steps[0].querySelector('h3').textContent = c.p1_tit;
+         if(c.p1_desc) steps[0].querySelector('p').textContent = c.p1_desc;
+         if(c.p2_tit) steps[1].querySelector('h3').textContent = c.p2_tit;
+         if(c.p2_desc) steps[1].querySelector('p').textContent = c.p2_desc;
+         if(c.p3_tit) steps[2].querySelector('h3').textContent = c.p3_tit;
+         if(c.p3_desc) steps[2].querySelector('p').textContent = c.p3_desc;
+       }
+       if(c.paso_btn_txt) { let btn = pasosSec.querySelector('.btn-p'); if(btn) { btn.innerHTML = `${c.paso_btn_txt} <i class="fas fa-arrow-right"></i>`; btn.href = c.paso_btn_url || '#'; } }
+    }
+
+    // 7. MODALIDADES (PLANES)
+    let allSecs = document.querySelectorAll('.sec');
+    let planSec = Array.from(allSecs).find(s => s.querySelector('.tag i.fa-wallet'));
+    if(planSec) {
+      if(c.mod_tag) { let t=planSec.querySelector('.tag'); if(t) t.innerHTML = `<i class="fas fa-wallet"></i> ${c.mod_tag}`; }
+      if(c.mod_tit) { let t=planSec.querySelector('.s-ti'); if(t) t.innerHTML = c.mod_tit; }
+      if(c.mod_sub) { let s=planSec.querySelector('.s-sub'); if(s) s.textContent = c.mod_sub; }
+      
+      let planes = planSec.querySelectorAll('.plan-c');
+      if(planes.length >= 3) {
+        if(c.m1_ic) planes[0].querySelector('.plan-ic i').className = `fas ${c.m1_ic}`;
+        if(c.m1_tit) planes[0].querySelector('.plan-ti').textContent = c.m1_tit;
+        if(c.m1_desc) planes[0].querySelector('.plan-desc').textContent = c.m1_desc;
+        let p1li = planes[0].querySelectorAll('li');
+        if(c.m1_f1 && p1li[0]) p1li[0].innerHTML = `<i class="fas fa-check"></i> ${c.m1_f1}`;
+        if(c.m1_f2 && p1li[1]) p1li[1].innerHTML = `<i class="fas fa-check"></i> ${c.m1_f2}`;
+        if(c.m1_f3 && p1li[2]) p1li[2].innerHTML = `<i class="fas fa-check"></i> ${c.m1_f3}`;
+        if(c.m1_btn_txt) { planes[0].querySelector('a').textContent = c.m1_btn_txt; planes[0].querySelector('a').href = c.m1_btn_url || '#'; }
+
+        if(c.m2_tag) { let t=planes[1].querySelector('.tag'); if(t) t.textContent = c.m2_tag; }
+        if(c.m2_tit) planes[1].querySelector('.plan-ti').textContent = c.m2_tit;
+        if(c.m2_desc) planes[1].querySelector('.plan-desc').textContent = c.m2_desc;
+        let p2li = planes[1].querySelectorAll('li');
+        if(c.m2_f1 && p2li[0]) p2li[0].innerHTML = `<i class="fas fa-check"></i> ${c.m2_f1}`;
+        if(c.m2_f2 && p2li[1]) p2li[1].innerHTML = `<i class="fas fa-check"></i> ${c.m2_f2}`;
+        if(c.m2_f3 && p2li[2]) p2li[2].innerHTML = `<i class="fas fa-check"></i> ${c.m2_f3}`;
+        if(c.m2_btn_txt) { planes[1].querySelector('a').textContent = c.m2_btn_txt; planes[1].querySelector('a').href = c.m2_btn_url || '#'; }
+
+        if(c.m3_ic) planes[2].querySelector('.plan-ic i').className = `fas ${c.m3_ic}`;
+        if(c.m3_tit) planes[2].querySelector('.plan-ti').textContent = c.m3_tit;
+        if(c.m3_desc) planes[2].querySelector('.plan-desc').textContent = c.m3_desc;
+        let p3li = planes[2].querySelectorAll('li');
+        if(c.m3_f1 && p3li[0]) p3li[0].innerHTML = `<i class="fas fa-check"></i> ${c.m3_f1}`;
+        if(c.m3_f2 && p3li[1]) p3li[1].innerHTML = `<i class="fas fa-check"></i> ${c.m3_f2}`;
+        if(c.m3_f3 && p3li[2]) p3li[2].innerHTML = `<i class="fas fa-check"></i> ${c.m3_f3}`;
+        if(c.m3_btn_txt) { planes[2].querySelector('a').textContent = c.m3_btn_txt; planes[2].querySelector('a').href = c.m3_btn_url || '#'; }
+      }
+    }
+
+    // 8. PROGRAMAS TEMÁTICOS
+    let progSec = document.querySelector('#programas');
+    if(progSec) {
+      if(c.pro_tag) { let t = progSec.querySelector('.tag'); if(t) t.innerHTML = `<i class="fas fa-layer-group"></i> ${c.pro_tag}`; }
+      if(c.pro_tit) { let t = progSec.querySelector('.s-ti'); if(t) t.innerHTML = c.pro_tit; }
+      let ps = progSec.querySelectorAll('.s-sub');
+      if(ps.length >= 2) {
+        if(c.pro_s1) ps[0].textContent = c.pro_s1;
+        if(c.pro_s2) ps[1].textContent = c.pro_s2;
+      }
+      if(c.pro_btn_txt) { let a = progSec.querySelector('.btn-p'); if(a) { a.textContent = c.pro_btn_txt; a.href = c.pro_btn_url || '#'; } }
+      if(c.pro_img) { let i = progSec.querySelector('.como-img img'); if(i) i.src = c.pro_img; }
+    }
+
+    // 9. EMPRESAS
+    let empSec = document.querySelector('.emp-sec');
+    if(empSec) {
+      if(c.emp_tag) { let t = empSec.querySelector('.tag'); if(t) t.innerHTML = `<i class="fas fa-building"></i> ${c.emp_tag}`; }
+      if(c.emp_tit) { let t = empSec.querySelector('.s-ti'); if(t) t.innerHTML = c.emp_tit; }
+      if(c.emp_sub) { let s = empSec.querySelector('.s-sub'); if(s) s.textContent = c.emp_sub; }
+      let bens = empSec.querySelectorAll('.ben');
+      if(bens.length >= 4) {
+        if(c.emp_b1) bens[0].innerHTML = `<i class="fas fa-chart-line"></i> ${c.emp_b1}`;
+        if(c.emp_b2) bens[1].innerHTML = `<i class="fas fa-users"></i> ${c.emp_b2}`;
+        if(c.emp_b3) bens[2].innerHTML = `<i class="fas fa-file-alt"></i> ${c.emp_b3}`;
+        if(c.emp_b4) bens[3].innerHTML = `<i class="fas fa-shield-alt"></i> ${c.emp_b4}`;
+      }
+      if(c.emp_btn_txt) { let a = empSec.querySelector('.emp-in > div:first-child .btn-p'); if(a) { a.innerHTML = `${c.emp_btn_txt} <i class="fas fa-arrow-right"></i>`; a.href = c.emp_btn_url || '#'; } }
+      
+      let card = empSec.querySelector('.emp-card');
+      if(card) {
+        if(c.emp_c_tit) { let h = card.querySelector('h3'); if(h) h.textContent = c.emp_c_tit; }
+        let eps = card.querySelectorAll('.ep');
+        if(eps.length >= 3) {
+          if(c.emp_cp1_t) eps[0].querySelector('h4').textContent = c.emp_cp1_t;
+          if(c.emp_cp1_d) eps[0].querySelector('p').textContent = c.emp_cp1_d;
+          if(c.emp_cp2_t) eps[1].querySelector('h4').textContent = c.emp_cp2_t;
+          if(c.emp_cp2_d) eps[1].querySelector('p').textContent = c.emp_cp2_d;
+          if(c.emp_cp3_t) eps[2].querySelector('h4').textContent = c.emp_cp3_t;
+          if(c.emp_cp3_d) eps[2].querySelector('p').textContent = c.emp_cp3_d;
+        }
+        if(c.emp_c_btn_txt) { let a = card.querySelector('.btn-emp'); if(a) { a.textContent = c.emp_c_btn_txt; a.href = c.emp_c_btn_url || '#'; } }
+      }
+    }
+
+    // 10. FAQ
+    let faqSec = Array.from(document.querySelectorAll('.sec')).find(s => s.querySelector('.faq-l'));
+    if(faqSec) {
+      if(c.faq_tag) { let t = faqSec.querySelector('.tag'); if(t) t.innerHTML = `<i class="fas fa-question-circle"></i> ${c.faq_tag}`; }
+      if(c.faq_tit) { let t = faqSec.querySelector('.s-ti'); if(t) t.innerHTML = c.faq_tit; }
+      let faqs = faqSec.querySelectorAll('.faq-i');
+      if(faqs.length >= 6) {
+        if(c.faq1_q) faqs[0].querySelector('.faq-q').innerHTML = `${c.faq1_q} <i class="fas fa-chevron-down"></i>`;
+        if(c.faq1_a) faqs[0].querySelector('.faq-ai').innerHTML = c.faq1_a;
+        if(c.faq2_q) faqs[1].querySelector('.faq-q').innerHTML = `${c.faq2_q} <i class="fas fa-chevron-down"></i>`;
+        if(c.faq2_a) faqs[1].querySelector('.faq-ai').innerHTML = c.faq2_a;
+        if(c.faq3_q) faqs[2].querySelector('.faq-q').innerHTML = `${c.faq3_q} <i class="fas fa-chevron-down"></i>`;
+        if(c.faq3_a) faqs[2].querySelector('.faq-ai').innerHTML = c.faq3_a;
+        if(c.faq4_q) faqs[3].querySelector('.faq-q').innerHTML = `${c.faq4_q} <i class="fas fa-chevron-down"></i>`;
+        if(c.faq4_a) faqs[3].querySelector('.faq-ai').innerHTML = c.faq4_a;
+        if(c.faq5_q) faqs[4].querySelector('.faq-q').innerHTML = `${c.faq5_q} <i class="fas fa-chevron-down"></i>`;
+        if(c.faq5_a) faqs[4].querySelector('.faq-ai').innerHTML = c.faq5_a;
+        if(c.faq6_q) faqs[5].querySelector('.faq-q').innerHTML = `${c.faq6_q} <i class="fas fa-chevron-down"></i>`;
+        if(c.faq6_a) faqs[5].querySelector('.faq-ai').innerHTML = c.faq6_a;
+      }
+    }
+
+    // 11. FOOTER
+    let footer = document.querySelector('.footer');
+    if(footer) {
+      if(c.foot_desc) { let tg = footer.querySelector('.f-tg'); if(tg) tg.textContent = c.foot_desc; }
+      
+      let contacts = footer.querySelectorAll('.f-co a');
+      if(c.foot_tel && contacts[0]) { contacts[0].innerHTML = `<i class="fas fa-phone"></i> ${c.foot_tel}`; contacts[0].href = `tel:${c.foot_tel.replace(/ /g,'')}`; }
+      if(c.foot_mail && contacts[1]) { contacts[1].innerHTML = `<i class="fas fa-envelope"></i> ${c.foot_mail}`; contacts[1].href = `mailto:${c.foot_mail}`; }
+      if(c.foot_wa && contacts[2]) contacts[2].href = c.foot_wa;
+      if(c.foot_loc) { let span = footer.querySelector('.f-co span'); if(span) span.innerHTML = `<i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> ${c.foot_loc}`; }
+      
+      let soc = footer.querySelectorAll('.f-soc a');
+      if(c.soc_ig && soc[0]) soc[0].href = c.soc_ig;
+      if(c.soc_tk && soc[1]) soc[1].href = c.soc_tk;
+      if(c.soc_in && soc[2]) soc[2].href = c.soc_in;
+      if(c.soc_fb && soc[3]) soc[3].href = c.soc_fb;
+
+      if(c.foot_copy) { let p = footer.querySelector('.f-bot p'); if(p) p.textContent = c.foot_copy; }
+    }
+}
+
+// CARGA NORMAL (Lectura desde la Base de Datos)
+async function cargarConfiguracionCMS() {
+  if (!window.sb) { setTimeout(cargarConfiguracionCMS, 500); return; }
   try {
-    // 2. Traemos todos los textos de la base de datos
     const { data, error } = await window.sb.from('config_web').select('*');
     if (error) throw error;
     if (!data) return;
 
-    // 3. Convertimos la lista en un formato fácil de usar
     const config = {};
     data.forEach(item => config[item.clave] = item.valor);
-
-    // 4. ¡APLICAMOS LA MAGIA A LA PÁGINA! ✨
     
-    // --> COLORES GLOBALES
-    if (config.color_primary) {
-      document.documentElement.style.setProperty('--g700', config.color_primary);
-    }
-    if (config.color_accent) {
-      document.documentElement.style.setProperty('--clay', config.color_accent);
-      document.documentElement.style.setProperty('--clay-l', config.color_accent + '33'); // Versión clara
-    }
-
-    // --> TEXTOS DEL HERO (Inicio)
-    const badgeEl = document.querySelector('.h-badge');
-    if (badgeEl && config.hero_badge) {
-      badgeEl.innerHTML = `<span class="dot"></span> ${config.hero_badge}`;
-    }
-
-    const tituloEl = document.querySelector('.hero h1');
-    if (tituloEl && config.hero_titulo) {
-      tituloEl.innerHTML = config.hero_titulo;
-    }
-
-    const subEl = document.querySelector('.h-sub');
-    if (subEl && config.hero_subtitulo) {
-      subEl.textContent = config.hero_subtitulo;
-    }
-
-    // --> CONTACTO (Si tienes los links en el footer)
-    const phoneEl = document.querySelector('a[href^="tel:"]');
-    if (phoneEl && config.contact_phone) {
-      phoneEl.textContent = config.contact_phone;
-      phoneEl.href = `tel:${config.contact_phone.replace(/\s+/g, '')}`;
-    }
-
+    aplicarConfiguracion(config);
   } catch (err) {
     console.error("Error conectando con el CMS:", err);
   }
 }
 
-// Arrancar el motor apenas cargue la página
+// MODO EDITOR (Escucha los cambios en tiempo real del cms-editor.html)
+window.addEventListener('message', (event) => {
+  if (event.data && event.data.tipo === 'LIVE_PREVIEW') {
+    aplicarConfiguracion(event.data.config);
+  }
+});
+
 document.addEventListener('DOMContentLoaded', cargarConfiguracionCMS);
 </script>
   
