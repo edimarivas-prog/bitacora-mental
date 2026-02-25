@@ -112,6 +112,11 @@
           <textarea id="tDesc" rows="3" required placeholder="¿De qué trata el taller?"></textarea>
         </div>
 
+        <div class="form-group full">
+          <label><i class="fas fa-link"></i> Link de la Reunión (Meet/Zoom)</label>
+          <input type="url" id="tLink" required placeholder="Ej: https://meet.google.com/abc-defg-hij">
+        </div>
+
         <div class="form-grid">
           <div class="form-group">
             <label>Fecha y Hora</label>
@@ -217,6 +222,7 @@
       document.getElementById('tallerId').value = taller.id;
       document.getElementById('tTitulo').value = taller.titulo;
       document.getElementById('tDesc').value = taller.descripcion;
+      document.getElementById('tLink').value = taller.link_reunion || '';
       
       // Formatear fecha para el input datetime-local
       const fechaLocal = new Date(taller.fecha);
@@ -244,6 +250,7 @@
       const datos = {
         titulo: document.getElementById('tTitulo').value,
         descripcion: document.getElementById('tDesc').value,
+        link_reunion: document.getElementById('tLink').value,
         fecha: new Date(document.getElementById('tFecha').value).toISOString(),
         duracion: document.getElementById('tDuracion').value,
         tipo: document.getElementById('tTipo').value,
