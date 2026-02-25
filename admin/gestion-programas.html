@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de Programas - CMS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root { 
+      --sidebar-bg: #1F2933; --primary: #4F6F52; --bg: #F3F4F6; 
+      --border: #E5E7EB; --white: #fff; --text: #1F2933;
+      --danger: #EF4444; --success: #10B981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); display: flex; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar { width: 260px; background: var(--sidebar-bg); color: white; padding: 24px; position: fixed; height: 100%; overflow-y: auto; }
+    .logo { font-family: 'Outfit'; font-weight: 700; color: white; font-size: 1.3rem; margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
+    .nav-section { margin-bottom: 20px; }
+    .nav-title { font-size: 0.7rem; text-transform: uppercase; color: #94A3B8; font-weight: 700; margin-bottom: 8px; letter-spacing: 1px; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: #CBD5E1; text-decoration: none; border-radius: 12px; margin-bottom: 5px; transition: 0.2s; }
+    .nav-item:hover, .nav-item.active { background: var(--primary); color: white; }
+    .nav-item i { width: 18px; }
+
+    /* MAIN */
+    .main { flex: 1; padding: 30px; margin-left: 260px; }
+    
+    /* TOOLBAR */
+    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+    .search { padding: 10px 15px; border: 1px solid var(--border); border-radius: 8px; width: 300px; }
+    .btn { padding: 12px 24px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-primary { background: var(--sidebar-bg); color: white; }
+    .btn-primary:hover { background: #334155; }
+    .btn-success { background: var(--success); color: white; }
+    .btn-danger { background: var(--danger); color: white; }
+    
+    /* CARDS GRID */
+    .programs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+    
+    .program-card { background: white; border-radius: 16px; overflow: hidden; border: 1px solid var(--border); transition: 0.3s; display: flex; flex-direction: column; }
+    .program-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    
+    .program-header { padding: 20px; position: relative; }
+    .color-bar { position: absolute; top: 0; left: 0; right: 0; height: 5px; }
+    .program-title { font-family: 'Outfit'; font-size: 1.3rem; margin-bottom: 8px; color: var(--text); margin-top: 5px; }
+    .program-meta { display: flex; gap: 15px; font-size: 0.85rem; color: #64748B; margin-bottom: 12px; flex-wrap: wrap; }
+    .program-meta span { display: flex; align-items: center; gap: 5px; }
+    .program-desc { font-size: 0.9rem; color: #64748B; line-height: 1.5; }
+    
+    .program-body { padding: 0 20px 20px; flex: 1; }
+    .outcomes-preview { font-size: 0.85rem; color: #64748B; }
+    
+    .program-footer { padding: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; }
+    .program-status { display: flex; align-items: center; gap: 8px; }
+    .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+    .badge-active { background: #DBEAFE; color: #1E40AF; }
+    .badge-draft { background: #FEE2E2; color: #B91C1C; }
+    
+    .program-actions { display: flex; gap: 8px; }
+    .btn-icon { width: 36px; height: 36px; border-radius: 8px; border: none; cursor: pointer; background: white; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+    .btn-icon:hover { background: #F1F5F9; }
+    .btn-icon.danger:hover { background: #FEE2E2; color: var(--danger); }
+
+    /* MODAL */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal.show { display: flex; }
+    .modal-content { background: white; border-radius: 16px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; }
+    .modal-header { padding: 30px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: white; z-index: 1; }
+    .modal-header h2 { font-family: 'Outfit'; font-size: 1.6rem; margin: 0; }
+    .modal-body { padding: 30px; }
+    .modal-footer { padding: 20px 30px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; background: #F8FAFC; position: sticky; bottom: 0; }
+
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem; color: var(--text); }
+    input, textarea, select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 0.95rem; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 111, 82, 0.1); }
+    textarea { min-height: 100px; resize: vertical; }
+    
+    .color-input { width: 100px; height: 45px; cursor: pointer; }
+    
+    /* SESSIONS BUILDER */
+    .sessions-builder { border: 1px solid var(--border); border-radius: 12px; padding: 20px; background: #F8FAFC; }
+    .session-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 12px; }
+    .session-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .session-number { font-weight: 700; color: var(--primary); }
+    .btn-remove-session { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1.1rem; }
+    .session-input { margin-bottom: 8px; }
+    .btn-add-session { margin-top: 10px; }
+
+    /* OUTCOMES BUILDER */
+    .outcomes-list { list-style: none; padding: 0; }
+    .outcome-item { display: flex; gap: 10px; margin-bottom: 10px; }
+    .outcome-item input { flex: 1; }
+
+    /* EMPTY STATE */
+    .empty-state { text-align: center; padding: 80px 20px; color: #94A3B8; }
+    .empty-state i { font-size: 4rem; margin-bottom: 20px; opacity: 0.5; }
+
+    @media(max-width:900px){ 
+      .sidebar{display:none} 
+      .main{margin-left:0; padding:20px} 
+      .programs-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="logo"><i class="fas fa-brain"></i> ADMIN</div>
+    
+    <div class="nav-section">
+      <div class="nav-title">Panel</div>
+      <a href="panel-admin.html" class="nav-item"><i class="fas fa-chart-pie"></i> Resumen</a>
+      <a href="monitoreo.html" class="nav-item"><i class="fas fa-desktop"></i> Monitoreo</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-title">Gestión de Contenido</div>
+      <a href="gestion-programas.html" class="nav-item active"><i class="fas fa-layer-group"></i> Programas</a>
+      <a href="gestion-talleres.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Talleres</a>
+      <a href="recursos.html" class="nav-item"><i class="fas fa-folder-open"></i> Recursos</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-title">Usuarios</div>
+      <a href="verificacion.html" class="nav-item"><i class="fas fa-user-check"></i> Verificación</a>
+      <a href="gestion-usuarios.html" class="nav-item"><i class="fas fa-users"></i> Usuarios</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-title">Configuración</div>
+      <a href="cms-editor.html" class="nav-item"><i class="fas fa-edit"></i> Editor Web</a>
+    </div>
+
+    <div style="margin-top:auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+      <a href="../app/dashboard.html" class="nav-item"><i class="fas fa-arrow-left"></i> Volver a App</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div style="margin-bottom: 30px;">
+      <h1 style="font-family:'Outfit'; font-size:2rem; margin-bottom:5px;">Gestión de Programas</h1>
+      <p style="color:#64748B;">Crea y administra los programas temáticos de 4-5 sesiones</p>
+    </div>
+    
+    <div class="toolbar">
+      <input type="text" id="searchBox" class="search" placeholder="Buscar programas...">
+      <button class="btn btn-primary" onclick="openModal()"><i class="fas fa-plus"></i> Nuevo Programa</button>
+    </div>
+
+    <div id="programsGrid" class="programs-grid">
+      <div style="grid-column: 1/-1; text-align:center; padding:40px;">
+        <i class="fas fa-spinner fa-spin fa-2x" style="color:#CBD5E1;"></i>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Nuevo Programa</h2>
+      </div>
+      
+      <form id="programForm" onsubmit="saveProgram(event)">
+        <div class="modal-body">
+          <input type="hidden" id="programId">
+          
+          <!-- INFORMACIÓN BÁSICA -->
+          <h3 style="margin-bottom:20px; font-size:1.1rem; color:#64748B; text-transform:uppercase; letter-spacing:1px; font-weight:700;">Información Básica</h3>
+          
+          <div class="form-group">
+            <label>Nombre del Programa *</label>
+            <input type="text" id="nombre" required placeholder="Ej: Manejo de la Ansiedad">
+          </div>
+
+          <div class="form-group">
+            <label>Slug (URL amigable) *</label>
+            <input type="text" id="slug" required placeholder="ansiedad" pattern="[a-z0-9-]+" title="Solo letras minúsculas, números y guiones">
+            <small style="color:#64748B; font-size:0.8rem;">Se usará en la URL: /programas/<strong>slug</strong>.html</small>
+          </div>
+
+          <div class="form-group">
+            <label>Descripción Corta *</label>
+            <textarea id="descripcion" required placeholder="Descripción que aparece en la tarjeta del programa (max 150 caracteres)"></textarea>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:15px;">
+            <div class="form-group">
+              <label>Duración</label>
+              <input type="text" id="duracion" value="4 semanas" placeholder="4 semanas">
+            </div>
+            <div class="form-group">
+              <label>Número de Sesiones</label>
+              <input type="number" id="num_sesiones" value="5" min="1" max="20">
+            </div>
+            <div class="form-group">
+              <label>Modalidad</label>
+              <select id="modalidad">
+                <option value="Online">Online</option>
+                <option value="Presencial">Presencial</option>
+                <option value="Híbrida">Híbrida</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+            <div class="form-group">
+              <label>Precio (S/)</label>
+              <input type="number" id="precio" value="460" min="0" step="10">
+            </div>
+            <div class="form-group">
+              <label>Precio con Descuento (S/)</label>
+              <input type="number" id="precio_descuento" placeholder="Opcional">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Color Temático</label>
+            <input type="color" id="color" class="color-input" value="#4F6F52">
+            <small style="color:#64748B; font-size:0.8rem; display:block; margin-top:5px;">Color que identifica al programa en la web</small>
+          </div>
+
+          <div class="form-group">
+            <label>Estado</label>
+            <select id="activo">
+              <option value="true">Activo (visible en web)</option>
+              <option value="false">Borrador (oculto)</option>
+            </select>
+          </div>
+
+          <!-- OBJETIVOS DE APRENDIZAJE -->
+          <h3 style="margin:40px 0 20px; font-size:1.1rem; color:#64748B; text-transform:uppercase; letter-spacing:1px; font-weight:700;">Objetivos de Aprendizaje (8 máx)</h3>
+          
+          <div class="form-group">
+            <label>¿Qué aprenderán los participantes?</label>
+            <div id="outcomesList" class="outcomes-list">
+              <!-- Se llenan dinámicamente -->
+            </div>
+            <button type="button" class="btn btn-primary btn-add-session" onclick="addOutcome()"><i class="fas fa-plus"></i> Agregar Objetivo</button>
+          </div>
+
+          <!-- ESTRUCTURA DE SESIONES -->
+          <h3 style="margin:40px 0 20px; font-size:1.1rem; color:#64748B; text-transform:uppercase; letter-spacing:1px; font-weight:700;">Estructura de Sesiones</h3>
+          
+          <div class="sessions-builder" id="sessionsBuilder">
+            <!-- Se llenan dinámicamente -->
+          </div>
+          <button type="button" class="btn btn-primary btn-add-session" onclick="addSession()"><i class="fas fa-plus"></i> Agregar Sesión</button>
+
+          <!-- ¿PARA QUIÉN ES? -->
+          <h3 style="margin:40px 0 20px; font-size:1.1rem; color:#64748B; text-transform:uppercase; letter-spacing:1px; font-weight:700;">¿Para Quién Es?</h3>
+          
+          <div class="form-group">
+            <label>Describe el perfil ideal del participante</label>
+            <textarea id="para_quien" placeholder="Este programa es ideal si..."></textarea>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn" onclick="closeModal()" style="background:#E5E7EB">Cancelar</button>
+          <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar Programa</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script>
+    let allPrograms = [];
+    let sessionsCount = 0;
+    let outcomesCount = 0;
+
+    // Auth Guard
+    async function checkAdmin() {
+      if (!window.sb) return setTimeout(checkAdmin, 100);
+      const { data: { session } } = await window.sb.auth.getSession();
+      if (!session) return window.location.href = '../login.html';
+      const { data: profile } = await window.sb.from('users_profile').select('rol').eq('id', session.user.id).single();
+      if (profile.rol !== 'admin') return window.location.href = '../app/dashboard.html';
+      loadPrograms();
+    }
+    checkAdmin();
+
+    // Load Programs
+    async function loadPrograms() {
+      const { data } = await window.sb.from('programas').select('*').order('created_at', {ascending: false});
+      allPrograms = data || [];
+      renderGrid(allPrograms);
+    }
+
+    // Render Grid
+    function renderGrid(programs) {
+      const grid = document.getElementById('programsGrid');
+      
+      if (!programs.length) {
+        grid.innerHTML = `
+          <div class="empty-state" style="grid-column:1/-1;">
+            <i class="fas fa-layer-group"></i>
+            <h3 style="font-family:'Outfit'; color:var(--text); margin-bottom:10px;">No hay programas creados</h3>
+            <p>Crea tu primer programa temático haciendo clic en "Nuevo Programa"</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = programs.map(p => `
+        <div class="program-card">
+          <div class="program-header">
+            <div class="color-bar" style="background:${p.color || '#4F6F52'}"></div>
+            <h3 class="program-title">${p.nombre}</h3>
+            <div class="program-meta">
+              <span><i class="far fa-clock"></i> ${p.duracion || '4 semanas'}</span>
+              <span><i class="fas fa-list"></i> ${p.num_sesiones || 5} sesiones</span>
+              <span><i class="fas fa-dollar-sign"></i> S/${p.precio || 460}</span>
+            </div>
+            <p class="program-desc">${p.descripcion?.substring(0, 120)}${p.descripcion?.length > 120 ? '...' : ''}</p>
+          </div>
+          
+          <div class="program-body">
+            <div class="outcomes-preview">
+              <strong>Objetivos:</strong> ${(p.objetivos || []).length} definidos
+            </div>
+          </div>
+          
+          <div class="program-footer">
+            <div class="program-status">
+              <span class="badge ${p.activo ? 'badge-active' : 'badge-draft'}">${p.activo ? 'Activo' : 'Borrador'}</span>
+            </div>
+            <div class="program-actions">
+              <button class="btn-icon" onclick="editProgram('${p.id}')" title="Editar"><i class="fas fa-edit"></i></button>
+              <button class="btn-icon" onclick="duplicateProgram('${p.id}')" title="Duplicar"><i class="fas fa-copy"></i></button>
+              <button class="btn-icon danger" onclick="deleteProgram('${p.id}')" title="Eliminar"><i class="fas fa-trash"></i></button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Open Modal
+    function openModal() {
+      document.getElementById('modal').classList.add('show');
+      document.getElementById('modalTitle').textContent = 'Nuevo Programa';
+      document.getElementById('programForm').reset();
+      document.getElementById('programId').value = '';
+      
+      // Reset builders
+      sessionsCount = 0;
+      outcomesCount = 0;
+      document.getElementById('sessionsBuilder').innerHTML = '';
+      document.getElementById('outcomesList').innerHTML = '';
+      
+      // Add initial items
+      for(let i = 0; i < 5; i++) addSession();
+      for(let i = 0; i < 8; i++) addOutcome();
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('show');
+    }
+
+    // Add Session
+    function addSession() {
+      const container = document.getElementById('sessionsBuilder');
+      sessionsCount++;
+      const sessionHtml = `
+        <div class="session-item" id="session-${sessionsCount}">
+          <div class="session-header">
+            <span class="session-number">Sesión ${sessionsCount}</span>
+            <button type="button" class="btn-remove-session" onclick="removeSession('session-${sessionsCount}')">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <input type="text" class="session-input" name="session_titulo_${sessionsCount}" placeholder="Título de la sesión" required>
+          <textarea class="session-input" name="session_contenido_${sessionsCount}" placeholder="Contenido de la sesión" rows="2" required></textarea>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', sessionHtml);
+    }
+
+    function removeSession(id) {
+      if (document.querySelectorAll('.session-item').length > 1) {
+        document.getElementById(id).remove();
+      } else {
+        alert('Debe haber al menos 1 sesión');
+      }
+    }
+
+    // Add Outcome
+    function addOutcome() {
+      const container = document.getElementById('outcomesList');
+      outcomesCount++;
+      const outcomeHtml = `
+        <div class="outcome-item" id="outcome-${outcomesCount}">
+          <input type="text" name="outcome_${outcomesCount}" placeholder="Ej: Identificar los detonantes de tu ansiedad">
+          <button type="button" class="btn-remove-session" onclick="removeOutcome('outcome-${outcomesCount}')">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', outcomeHtml);
+    }
+
+    function removeOutcome(id) {
+      if (document.querySelectorAll('.outcome-item').length > 1) {
+        document.getElementById(id).remove();
+      }
+    }
+
+    // Save Program
+    async function saveProgram(e) {
+      e.preventDefault();
+      const form = e.target;
+      const id = document.getElementById('programId').value;
+
+      // Collect sessions
+      const sessions = [];
+      const sessionItems = document.querySelectorAll('.session-item');
+      sessionItems.forEach((item, index) => {
+        const titulo = form.querySelector(`[name="session_titulo_${index + 1}"]`)?.value;
+        const contenido = form.querySelector(`[name="session_contenido_${index + 1}"]`)?.value;
+        if (titulo && contenido) {
+          sessions.push({ numero: index + 1, titulo, contenido });
+        }
+      });
+
+      // Collect outcomes
+      const objetivos = [];
+      const outcomeItems = document.querySelectorAll('.outcome-item input');
+      outcomeItems.forEach(input => {
+        if (input.value.trim()) objetivos.push(input.value.trim());
+      });
+
+      const data = {
+        nombre: document.getElementById('nombre').value,
+        slug: document.getElementById('slug').value,
+        descripcion: document.getElementById('descripcion').value,
+        duracion: document.getElementById('duracion').value,
+        num_sesiones: parseInt(document.getElementById('num_sesiones').value),
+        modalidad: document.getElementById('modalidad').value,
+        precio: parseFloat(document.getElementById('precio').value),
+        precio_descuento: document.getElementById('precio_descuento').value ? parseFloat(document.getElementById('precio_descuento').value) : null,
+        color: document.getElementById('color').value,
+        activo: document.getElementById('activo').value === 'true',
+        objetivos: objetivos,
+        sesiones: sessions,
+        para_quien: document.getElementById('para_quien').value
+      };
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+      try {
+        if (id) {
+          await window.sb.from('programas').update(data).eq('id', id);
+        } else {
+          await window.sb.from('programas').insert(data);
+        }
+
+        closeModal();
+        loadPrograms();
+        alert('Programa guardado exitosamente');
+      } catch (error) {
+        alert('Error al guardar: ' + error.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-save"></i> Guardar Programa';
+      }
+    }
+
+    // Edit Program
+    async function editProgram(id) {
+      const program = allPrograms.find(p => p.id === id);
+      if (!program) return;
+
+      document.getElementById('programId').value = id;
+      document.getElementById('nombre').value = program.nombre;
+      document.getElementById('slug').value = program.slug;
+      document.getElementById('descripcion').value = program.descripcion;
+      document.getElementById('duracion').value = program.duracion;
+      document.getElementById('num_sesiones').value = program.num_sesiones;
+      document.getElementById('modalidad').value = program.modalidad;
+      document.getElementById('precio').value = program.precio;
+      document.getElementById('precio_descuento').value = program.precio_descuento || '';
+      document.getElementById('color').value = program.color || '#4F6F52';
+      document.getElementById('activo').value = program.activo;
+      document.getElementById('para_quien').value = program.para_quien || '';
+
+      // Reset and populate sessions
+      sessionsCount = 0;
+      document.getElementById('sessionsBuilder').innerHTML = '';
+      (program.sesiones || []).forEach(session => {
+        addSession();
+        const form = document.getElementById('programForm');
+        form.querySelector(`[name="session_titulo_${sessionsCount}"]`).value = session.titulo;
+        form.querySelector(`[name="session_contenido_${sessionsCount}"]`).value = session.contenido;
+      });
+
+      // Reset and populate outcomes
+      outcomesCount = 0;
+      document.getElementById('outcomesList').innerHTML = '';
+      (program.objetivos || []).forEach(objetivo => {
+        addOutcome();
+        document.querySelector(`[name="outcome_${outcomesCount}"]`).value = objetivo;
+      });
+
+      document.getElementById('modalTitle').textContent = 'Editar Programa';
+      document.getElementById('modal').classList.add('show');
+    }
+
+    // Duplicate Program
+    async function duplicateProgram(id) {
+      if (!confirm('¿Crear una copia de este programa?')) return;
+      
+      const program = allPrograms.find(p => p.id === id);
+      if (!program) return;
+
+      const copy = { ...program };
+      delete copy.id;
+      copy.nombre = `${copy.nombre} (Copia)`;
+      copy.slug = `${copy.slug}-copia`;
+      copy.activo = false;
+
+      await window.sb.from('programas').insert(copy);
+      loadPrograms();
+      alert('Programa duplicado como borrador');
+    }
+
+    // Delete Program
+    async function deleteProgram(id) {
+      if (!confirm('¿Estás segura de eliminar este programa? Esta acción no se puede deshacer.')) return;
+      
+      await window.sb.from('programas').delete().eq('id', id);
+      loadPrograms();
+    }
+
+    // Search
+    document.getElementById('searchBox').addEventListener('keyup', (e) => {
+      const term = e.target.value.toLowerCase();
+      const filtered = allPrograms.filter(p => 
+        p.nombre.toLowerCase().includes(term) || 
+        p.descripcion.toLowerCase().includes(term)
+      );
+      renderGrid(filtered);
+    });
+
+    // Auto-generate slug from name
+    document.getElementById('nombre').addEventListener('input', (e) => {
+      const slug = e.target.value
+        .toLowerCase()
+        .replace(/[áàäâ]/g, 'a')
+        .replace(/[éèëê]/g, 'e')
+        .replace(/[íìïî]/g, 'i')
+        .replace(/[óòöô]/g, 'o')
+        .replace(/[úùüû]/g, 'u')
+        .replace(/[ñ]/g, 'n')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+      
+      if (!document.getElementById('programId').value) { // Solo auto-generar si es nuevo
+        document.getElementById('slug').value = slug;
+      }
+    });
+  </script>
+</body>
+</html>
