@@ -258,6 +258,7 @@
 
     /* Modal */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 9999; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.show { display: flex; }
     .modal-box { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 500px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
     .close-modal { position: absolute; top: 20px; right: 20px; background: transparent; border: none; font-size: 1.5rem; cursor: pointer; color: #999; }
     .inp-g{margin-bottom:16px}
@@ -715,7 +716,7 @@
                           <i class="far fa-check-circle"></i> ${disponibles} cupos disponibles de ${t.cupos_totales}
                       </div>
 
-                      <button onclick="openWsModal('${t.id}', '${t.titulo}')" class="btn-ws">Inscribirme gratis</button>
+                      <button onclick="openWsModal('${t.id}', '${t.titulo.replace(/'/g, "&apos;")}')" class="btn-ws">Inscribirme gratis</button>
                   </div>
               </div>
               `;
