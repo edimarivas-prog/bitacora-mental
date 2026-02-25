@@ -465,11 +465,8 @@
 
           if (dbError) throw dbError;
 
-          // ¡LA CORRECCIÓN ESTÁ AQUÍ! 👇 
-          // C) Incrementar el cupo usando la variable correcta (tallerId)
-          await window.sb.rpc('incrementar_cupo', { p_taller_id: tallerId });
-
-          // D) Feedback Exitoso
+          
+          // C) Feedback Exitoso
           alert(`✅ ¡Listo, ${nombre.split(' ')[0]}!\n\nTe has inscrito correctamente. En breve recibirás un correo con el link de Zoom.`);
           closeModal();
           document.querySelector('.modal-form').reset();
