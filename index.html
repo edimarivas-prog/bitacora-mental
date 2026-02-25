@@ -776,56 +776,65 @@
     cargarTalleres();
   });
 </script>
-  <script>
+ <script>
 async function cargarConfiguracionCMS() {
-  if (!window.sb) return; // Espera a que Supabase cargue
-
-  const { data, error } = await window.sb.from('config_web').select('*');
-  if (error || !data) {
-      console.error("Error cargando CMS:", error);
-      return;
+  // 1. Esperamos a que Supabase esté conectado
+  if (!window.sb) {
+    setTimeout(cargarConfiguracionCMS, 500);
+    return;
   }
 
-  // Convertir la lista en un objeto fácil de usar
-  const config = {};
-  data.forEach(item => config[item.clave] = item.valor);
+  try {
+    // 2. Traemos todos los textos de la base de datos
+    const { data, error } = await window.sb.from('config_web').select('*');
+    if (error) throw error;
+    if (!data) return;
 
-  // 1. APLICAR COLORES A TODA LA WEB (Magia CSS)
-  if (config.color_primary) {
+    // 3. Convertimos la lista en un formato fácil de usar
+    const config = {};
+    data.forEach(item => config[item.clave] = item.valor);
+
+    // 4. ¡APLICAMOS LA MAGIA A LA PÁGINA! ✨
+    
+    // --> COLORES GLOBALES
+    if (config.color_primary) {
       document.documentElement.style.setProperty('--g700', config.color_primary);
-  }
-  if (config.color_accent) {
+    }
+    if (config.color_accent) {
       document.documentElement.style.setProperty('--clay', config.color_accent);
-  }
+      document.documentElement.style.setProperty('--clay-l', config.color_accent + '33'); // Versión clara
+    }
 
-  // 2. APLICAR TEXTOS AL HERO (Si los elementos existen en el HTML)
-  const badgeEl = document.querySelector('.hero-badge');
-  if (badgeEl && config.hero_badge) badgeEl.innerHTML = `<i class="fas fa-gift"></i> ${config.hero_badge}`;
+    // --> TEXTOS DEL HERO (Inicio)
+    const badgeEl = document.querySelector('.h-badge');
+    if (badgeEl && config.hero_badge) {
+      badgeEl.innerHTML = `<span class="dot"></span> ${config.hero_badge}`;
+    }
 
-  const tituloEl = document.querySelector('.hero h1');
-  if (tituloEl && config.hero_titulo) tituloEl.innerHTML = config.hero_titulo;
+    const tituloEl = document.querySelector('.hero h1');
+    if (tituloEl && config.hero_titulo) {
+      tituloEl.innerHTML = config.hero_titulo;
+    }
 
-  const subEl = document.querySelector('.hero-sub');
-  if (subEl && config.hero_subtitulo) subEl.textContent = config.hero_subtitulo;
+    const subEl = document.querySelector('.h-sub');
+    if (subEl && config.hero_subtitulo) {
+      subEl.textContent = config.hero_subtitulo;
+    }
 
-  // 3. APLICAR ESTADÍSTICAS
-  const stats = document.querySelectorAll('.hero-stat');
-  if (stats.length >= 3) {
-      if (config.stat1_numero) stats[0].querySelector('strong').textContent = config.stat1_numero;
-      if (config.stat1_label) stats[0].querySelector('span').textContent = config.stat1_label;
-      
-      if (config.stat2_numero) stats[1].querySelector('strong').textContent = config.stat2_numero;
-      if (config.stat2_label) stats[1].querySelector('span').textContent = config.stat2_label;
-      
-      if (config.stat3_numero) stats[2].querySelector('strong').textContent = config.stat3_numero;
-      if (config.stat3_label) stats[2].querySelector('span').textContent = config.stat3_label;
+    // --> CONTACTO (Si tienes los links en el footer)
+    const phoneEl = document.querySelector('a[href^="tel:"]');
+    if (phoneEl && config.contact_phone) {
+      phoneEl.textContent = config.contact_phone;
+      phoneEl.href = `tel:${config.contact_phone.replace(/\s+/g, '')}`;
+    }
+
+  } catch (err) {
+    console.error("Error conectando con el CMS:", err);
   }
 }
 
-// Ejecutar apenas cargue la página
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(cargarConfiguracionCMS, 500); // Pequeño delay para asegurar que window.sb esté listo
-});
+// Arrancar el motor apenas cargue la página
+document.addEventListener('DOMContentLoaded', cargarConfiguracionCMS);
 </script>
   
 </body>
