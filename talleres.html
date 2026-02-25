@@ -479,6 +479,8 @@
           btn.disabled = false;
       }
   }
+  // Llamamos a la función matemática que acabamos de crear en Supabase
+  await window.sb.rpc('incrementar_cupo', { p_taller_id: id_del_taller_aqui });
 
   // Iniciar
   document.addEventListener('DOMContentLoaded', cargarAgenda);
