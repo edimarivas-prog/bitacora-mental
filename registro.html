@@ -26,18 +26,19 @@
     
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
-    body { font-family: var(--fb); background: var(--g50); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    body { font-family: var(--fb); background: var(--g50); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; position: relative;}
     
-    .login-container { background: white; width: 100%; max-width: 1100px; min-height: 650px; border-radius: var(--rxl); box-shadow: var(--slg); display: flex; overflow: hidden; border: 1px solid var(--border);}
+    /* BOTÓN FLOTANTE FUERA DE LA CAJA BLANCA */
+    .back-link-float { position: absolute; top: 40px; left: 40px; display: inline-flex; align-items: center; gap: 8px; color: var(--ts); text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: 0.3s; padding: 10px 20px; border-radius: 50px; background: white; box-shadow: var(--ssm); z-index: 50;}
+    .back-link-float:hover { color: var(--g700); transform: translateX(-5px); box-shadow: var(--smd); }
+
+    .login-container { background: white; width: 100%; max-width: 1100px; min-height: 650px; border-radius: var(--rxl); box-shadow: var(--slg); display: flex; overflow: hidden; border: 1px solid var(--border); margin-top: 30px;}
     
     /* =========================================
        Lado Izquierdo (Formulario)
        ========================================= */
     .form-side { flex: 1; padding: 50px 80px; display: flex; flex-direction: column; justify-content: center; position: relative; max-height: 90vh; overflow-y: auto;}
     
-    .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--ts); text-decoration: none; font-weight: 600; font-size: 0.9rem; margin-bottom: 20px; transition: 0.3s; align-self: flex-start; padding: 8px 16px; border-radius: 50px; background: var(--g50); }
-    .back-link:hover { color: var(--g700); background: var(--g100); transform: translateX(-5px); }
-
     .logo { color: var(--g700); font-family: var(--fd); font-weight: 700; font-size: 1.6rem; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; margin-bottom: 25px; letter-spacing: -0.5px;}
     .logo-ic { width:38px; height:38px; background:var(--g700); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.1rem; }
     
@@ -109,6 +110,7 @@
       .visual-side { display: none; } 
       .form-side { padding: 40px 30px; }
       .login-container { max-width: 500px; min-height: auto; } 
+      .back-link-float { top: 15px; left: 15px; padding: 8px 15px; font-size: 0.85rem;}
     }
   </style>
 </head>
@@ -120,11 +122,11 @@
       <p style="color:var(--ts); margin-top:10px;">Preparando tu espacio seguro.</p>
   </div>
 
+  <a href="index.html" class="back-link-float"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+
   <div class="login-container">
     
     <div class="form-side">
-      <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
-
       <div class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</div>
       
       <h1 id="regTitle">Crea tu cuenta</h1>
@@ -193,25 +195,21 @@
 
     // --- LÓGICA CRÍTICA DE VALIDACIÓN ---
     document.addEventListener('DOMContentLoaded', async () => {
-        // UX: Si vienen del Test de Bienestar
         if (sessionStorage.getItem('temp_entrevista')) {
             document.getElementById('regTitle').textContent = "Guarda tu perfil";
             document.getElementById('regSubtitle').textContent = "Crea una cuenta gratuita para no perder tus resultados.";
         }
 
-        // Si hay sesión activa (porque Google acaba de redirigir aquí)
         if (window.sb) {
             const { data: { session } } = await window.sb.auth.getSession();
             
             if (session) {
-                loadingOverlay.style.display = 'flex'; // Mostrar pantalla de carga bonita
+                loadingOverlay.style.display = 'flex';
 
-                // Verificamos CUÁNDO se creó el usuario
                 const createdAt = new Date(session.user.created_at).getTime();
                 const now = new Date().getTime();
                 const differenceInSeconds = (now - createdAt) / 1000;
 
-                // Si la cuenta tiene más de 60 segundos, ES VIEJA. Google nos dejó entrar, pero lo sacamos.
                 if (differenceInSeconds > 60) {
                     await window.sb.auth.signOut();
                     loadingOverlay.style.display = 'none';
@@ -221,20 +219,15 @@
                         <a href="login.html" style="color:#B91C1C; font-weight:700; text-decoration:underline; margin-top:8px; display:block;">👉 Haz clic aquí para Iniciar Sesión</a>
                     `);
                 } else {
-                    // ES NUEVA (Recién creada hace segundos). ¡Bienvenido!
                     handleNewUser(session.user);
                 }
             }
         }
     });
 
-    // --- GOOGLE BTN MODIFICADO ---
     document.getElementById('googleBtn').addEventListener('click', async () => {
       try {
         if (!window.sb) throw new Error("Error de conexión con la base de datos.");
-        
-        // TRUCO: Redirigimos A ESTA MISMA PÁGINA (registro.html)
-        // Así el código de arriba puede filtrar si es usuario viejo o nuevo al volver.
         const currentURL = window.location.href.split('#')[0]; 
 
         await window.sb.auth.signInWithOAuth({
@@ -244,8 +237,6 @@
       } catch (err) { showError("Ocurrió un error al intentar conectar con Google."); }
     });
 
-
-    // --- REGISTRO EMAIL ---
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       errorBox.style.display = 'none';
@@ -268,12 +259,10 @@
         
         if (error) throw error;
 
-        // Caso: Requiere confirmar email
         if (data.user && !data.session) {
             alert("¡Registro casi listo! Te hemos enviado un enlace a tu correo para confirmarlo.");
             window.location.href = 'login.html';
         } else if (data.user) {
-            // Caso: Entra directo
             handleNewUser(data.user);
         }
 
@@ -284,21 +273,17 @@
       }
     });
 
-    // --- FUNCIÓN CENTRAL DE BIENVENIDA ---
     async function handleNewUser(user) {
-        // Rescate de la entrevista (Si vienen de hacer el test)
         const temp = sessionStorage.getItem('temp_entrevista');
         if (temp) {
             await window.sb.from('users_profile').update(JSON.parse(temp)).eq('id', user.id);
             sessionStorage.removeItem('temp_entrevista');
         }
         
-        // Activar Tour de bienvenida para el Dashboard
         sessionStorage.setItem('show_onboarding', 'true');
         window.location.href = 'app/dashboard.html';
     }
 
-    // Funciones Auxiliares Visuales
     function togglePass(id) {
       const input = document.getElementById(id);
       const icon = input.parentElement.querySelector('.toggle-pass i');
