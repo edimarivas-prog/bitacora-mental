@@ -73,26 +73,47 @@
     .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1500}
     .overlay.show{display:block}
 
-    /* ESTILOS DE CONTACTO (CENTRADOS Y LIMPIOS) */
-    .container { max-width: 900px; margin: 0 auto; padding: 160px 20px 100px; }
-    
-    .page-header { text-align: center; margin-bottom: 60px; }
+    /* =========================================
+       ESTILOS DE CABECERA Y CONTACTO (NUEVO)
+       ========================================= */
+    .pg-head { padding: 140px 40px 60px; background: linear-gradient(160deg,var(--s50) 0%,var(--g50) 100%); text-align: center; border-bottom: 1px solid var(--border); }
+    .pg-ti { font-family: var(--fd); font-size: clamp(2.5rem, 5vw, 3.5rem); color: var(--td); margin-bottom: 16px; line-height: 1.2; letter-spacing: -1px; }
+    .pg-sub { font-size: 1.1rem; color: var(--ts); max-width: 600px; margin: 0 auto; line-height: 1.6; }
     .tag{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--g700);background:var(--g100);padding:6px 14px;border-radius:50px;margin-bottom:20px}
-    .page-header h1 { font-family: var(--fd); font-size: clamp(2.5rem, 5vw, 3.5rem); color: var(--td); margin-bottom: 15px; letter-spacing: -1px;}
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px 100px; }
     
-    .contact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .contact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
     
-    .info-card { background: var(--s50); padding: 40px 30px; border-radius: var(--rlg); border: 1px solid var(--border); transition: 0.3s; text-align: center; display: flex; flex-direction: column; align-items: center;}
-    .info-card:hover { transform: translateY(-5px); box-shadow: var(--smd); border-color: var(--g400);}
-    .card-icon { width: 64px; height: 64px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: var(--primary); margin-bottom: 20px; box-shadow: var(--ssm); }
+    /* TARJETA NORMAL */
+    .info-card { background: white; padding: 40px 30px; border-radius: var(--rlg); border: 1px solid var(--border); transition: 0.3s; text-align: center; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.03);}
+    .info-card:hover { transform: translateY(-8px); box-shadow: var(--smd); border-color: var(--g200);}
+    .card-icon { width: 64px; height: 64px; background: var(--g50); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: var(--primary); margin-bottom: 20px; }
     .info-card h3 { font-size: 1.3rem; margin-bottom: 10px; color: var(--td); font-family: var(--fd); font-weight: 600;}
     .info-card p { color: var(--text-soft); margin: 0; line-height: 1.6; font-size: 0.95rem; }
-    .contact-link { display: inline-block; margin-top: 15px; padding: 10px 24px; background: white; color: var(--primary); font-weight: 700; border-radius: 50px; border: 1px solid var(--border); transition: 0.2s;}
-    .contact-link:hover { background: var(--primary); color: white; border-color: var(--primary); }
+    
+    .contact-link { display: inline-block; margin-top: auto; padding: 12px 24px; background: white; color: var(--primary); font-weight: 700; border-radius: 50px; border: 2px solid var(--border); transition: 0.2s; width: 100%;}
+    .contact-link:hover { border-color: var(--primary); background: var(--g50); }
 
-    .location-box { margin-top: 40px; background: white; border: 1px solid var(--border); border-radius: var(--rxl); padding: 30px; display: flex; align-items: center; justify-content: center; gap: 15px; box-shadow: var(--ssm); }
-    .location-box i { font-size: 1.5rem; color: var(--g600); }
-    .location-box p { font-size: 1.1rem; color: var(--td); font-weight: 500; }
+    /* TARJETA DESTACADA (WHATSAPP) */
+    .info-card.highlight { background: linear-gradient(145deg, var(--g700), var(--g800)); color: white; border: none; transform: scale(1.05); box-shadow: var(--smd); }
+    .info-card.highlight:hover { transform: scale(1.05) translateY(-5px); box-shadow: var(--slg); }
+    .info-card.highlight h3 { color: white; }
+    .info-card.highlight p { color: rgba(255,255,255,0.9); }
+    .info-card.highlight .card-icon { background: rgba(255,255,255,0.15); color: white; }
+    .info-card.highlight .contact-link { background: white; color: var(--g800); border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    .info-card.highlight .contact-link:hover { transform: translateY(-2px); }
+
+    .location-box { margin-top: 50px; background: white; border: 1px solid var(--border); border-radius: var(--rxl); padding: 30px; display: flex; align-items: center; justify-content: center; gap: 15px; box-shadow: var(--ssm); }
+    .location-box i { font-size: 1.5rem; color: var(--clay); }
+    .location-box p { font-size: 1.05rem; color: var(--td); font-weight: 500; margin: 0;}
+
+    /* CTA INFERIOR */
+    .cta-box { background: linear-gradient(135deg, var(--clay), #a35d3d); color: white; padding: 50px 40px; border-radius: 20px; text-align: center; margin-top: 60px; box-shadow: var(--smd); }
+    .cta-box h2 { font-family: var(--fd); font-size: 2.2rem; margin-bottom: 15px; font-weight: 500;}
+    .cta-box p { color: rgba(255,255,255,0.9); margin-bottom: 30px; font-size: 1.1rem; }
+    .btn-white { background: white; color: var(--clay); padding: 14px 32px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
 
     /* FOOTER */
     .footer{background:var(--s50);padding:80px 40px 40px;border-top:1px solid var(--border)}
@@ -119,11 +140,15 @@
 
     /* RESPONSIVE MÓVIL */
     @media (max-width: 900px) { 
-      .contact-grid { grid-template-columns: 1fr; } 
+      .contact-grid { grid-template-columns: 1fr; gap: 20px;} 
+      .info-card.highlight { transform: none; margin: 20px 0;}
+      .info-card.highlight:hover { transform: translateY(-5px); }
       .nl, .btn-li { display: none; }
       .hbg { display: flex; }
       .f-grid { grid-template-columns: 1fr; }
       .f-bot { flex-direction: column; text-align: center; }
+      .pg-head { padding: 120px 20px 40px; }
+      .cta-box { padding: 40px 20px; }
     }
   </style>
 </head>
@@ -185,40 +210,51 @@
     </div>
   </div>
 
+  <header class="pg-head">
+    <div class="tag"><i class="fas fa-envelope"></i> Estamos para ti</div>
+    <h1 class="pg-ti">Hablemos</h1>
+    <p class="pg-sub">Si tienes dudas sobre nuestros especialistas o necesitas ayuda para agendar tu primera sesión, escríbenos directamente.</p>
+  </header>
+
   <div class="container">
-    <div class="page-header">
-      <div class="tag"><i class="fas fa-envelope"></i> Estamos para ti</div>
-      <h1>Hablemos</h1>
-      <p style="color: var(--text-soft); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Si tienes dudas sobre nuestros especialistas o necesitas ayuda para agendar tu primera sesión, escríbenos directamente.</p>
-    </div>
-
     <div class="contact-grid">
-      <div class="info-card">
-        <div class="card-icon"><i class="fab fa-whatsapp"></i></div>
-        <h3>WhatsApp</h3>
-        <p>Escríbenos para una respuesta rápida. Horario: 9am - 7pm.</p>
-        <a href="https://wa.me/51999999999" class="contact-link" target="_blank">Abrir chat</a>
-      </div>
-
-      <div class="info-card">
-        <div class="card-icon"><i class="fas fa-envelope"></i></div>
-        <h3>Correo Electrónico</h3>
-        <p>Para consultas detalladas o temas corporativos.</p>
-        <a href="mailto:hola@bitacoramental.pe" class="contact-link">Enviar correo</a>
-      </div>
-
-      <div class="info-card">
+      
+      <div class="info-card" style="margin-top: 15px;">
         <div class="card-icon"><i class="fas fa-phone"></i></div>
         <h3>Llámanos</h3>
-        <p>Atención directa de lunes a viernes en horario de oficina.</p>
+        <p style="margin-bottom: 25px;">Atención directa de lunes a viernes en horario de oficina.</p>
         <a href="tel:+51999999999" class="contact-link">Llamar ahora</a>
       </div>
+
+      <div class="info-card highlight">
+        <div class="card-icon"><i class="fab fa-whatsapp"></i></div>
+        <h3>WhatsApp</h3>
+        <p style="margin-bottom: 25px;">Escríbenos para una respuesta súper rápida. Horario: 9am - 7pm.</p>
+        <a href="https://wa.me/51999999999" class="contact-link" target="_blank">Abrir chat de WhatsApp</a>
+      </div>
+
+      <div class="info-card" style="margin-top: 15px;">
+        <div class="card-icon"><i class="fas fa-envelope"></i></div>
+        <h3>Correo Electrónico</h3>
+        <p style="margin-bottom: 25px;">Para consultas detalladas o temas de planes corporativos.</p>
+        <a href="mailto:hola@bitacoramental.pe" class="contact-link">Enviar un correo</a>
+      </div>
+
     </div>
 
     <div class="location-box">
       <i class="fas fa-map-marker-alt"></i>
-      <p>Nuestros especialistas atienden online desde toda Latinoamérica. Oficina central: Lima, Perú.</p>
+      <p>Nuestros especialistas atienden 100% online desde toda Latinoamérica. Nuestra base operativa está en Lima, Perú.</p>
     </div>
+
+    <div class="cta-box">
+      <h2>¿Buscas un psicólogo?</h2>
+      <p>Explora nuestro directorio y encuentra al especialista ideal para ti hoy mismo.</p>
+      <a href="especialistas-publico.html" class="btn-white">
+        Ver directorio de psicólogos <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+
   </div>
 
   <footer class="footer">
