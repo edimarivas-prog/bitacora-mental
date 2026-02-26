@@ -111,41 +111,122 @@
     .f-grid{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:40px;margin-bottom:60px}
     .f-logo{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-size:1.5rem;font-weight:700;color:var(--g700);margin-bottom:16px}
     .f-logo .logo-ic{width:34px;height:34px;font-size:.95rem}
-    .f<body>
+    .f-tg{font-size:.88rem;color:var(--ts);line-height:1.7;margin-bottom:20px}
+    .f-co{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+    .f-co a{display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ts)}
+    .f-co a:hover{color:var(--g700)}
+    .f-co i{color:var(--g600);width:16px}
+    .f-soc{display:flex;gap:10px}
+    .f-soc a{width:38px;height:38px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;color:var(--g700);transition:all .3s}
+    .f-soc a:hover{background:var(--g700);color:#fff;transform:translateY(-3px)}
+    .f-col h5{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--td);margin-bottom:16px}
+    .f-lk{list-style:none;display:flex;flex-direction:column;gap:10px}
+    .f-lk a{font-size:.88rem;color:var(--ts)}
+    .f-lk a:hover{color:var(--g700)}
+    .f-bot{max-width:1280px;margin:0 auto;padding-top:30px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+    .f-bot p{font-size:.82rem;color:var(--tl)}
+    .f-leg{display:flex;gap:20px}
+    .f-leg a{font-size:.82rem;color:var(--tl)}
+    .f-leg a:hover{color:var(--g700)}
+
+    /* RESPONSIVE MÓVIL */
+    @media (max-width: 900px) { 
+      .contact-grid { grid-template-columns: 1fr; } 
+      .nl, .btn-li { display: none; }
+      .hbg { display: flex; }
+      .f-grid { grid-template-columns: 1fr; }
+      .f-bot { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav" id="nav">
+    <div class="ni">
+      <a href="index.html" class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</a>
+      <ul class="nl">
+        <li class="ni-item">
+          <a href="index.html#servicios" class="nl-a">Servicios <i class="fas fa-chevron-down"></i></a>
+          <div class="dd wide">
+            <span class="dd-lbl">Atención profesional</span>
+            <div class="dd-grid">
+              <a href="servicios/terapia-psicologica.html" class="dd-a"><div class="ic"><i class="fas fa-user-md"></i></div><div><strong>Terapia Psicológica</strong><small style="color:var(--tl);font-size:.75rem">Online</small></div></a>
+              <a href="servicios/coaching-emocional.html" class="dd-a"><div class="ic"><i class="fas fa-rocket"></i></div><div><strong>Coaching Emocional</strong><small style="color:var(--tl);font-size:.75rem">Metas y hábitos</small></div></a>
+              <a href="servicios/terapia-de-pareja.html" class="dd-a"><div class="ic"><i class="fas fa-users"></i></div><div><strong>Terapia de Pareja</strong><small style="color:var(--tl);font-size:.75rem">Vínculos sanos</small></div></a>
+              <a href="servicios/psicologia-familiar.html" class="dd-a"><div class="ic"><i class="fas fa-child"></i></div><div><strong>Psicología Familiar</strong><small style="color:var(--tl);font-size:.75rem">Dinámica familiar</small></div></a>
+            </div>
+          </div>
+        </li>
+        <li class="ni-item">
+          <a href="index.html#programas" class="nl-a">Programas <i class="fas fa-chevron-down"></i></a>
+          <div class="dd">
+            <span class="dd-lbl">Programas temáticos</span>
+            <a href="programas/ansiedad.html" class="dd-a"><div class="ic"><i class="fas fa-wind"></i></div> Manejo de Ansiedad</a>
+            <a href="programas/estres-laboral.html" class="dd-a"><div class="ic"><i class="fas fa-briefcase"></i></div> Estrés y Burnout</a>
+            <a href="programas/pareja.html" class="dd-a"><div class="ic"><i class="fas fa-shield-alt"></i></div> Autoestima y Vínculos</a>
+            <a href="programas/redes-sociales.html" class="dd-a"><div class="ic"><i class="fas fa-mobile-alt"></i></div> Desconexión Digital</a>
+          </div>
+        </li>
+        <li class="ni-item"><a href="especialistas-publico.html" class="nl-a">Directorio</a></li>
+        <li class="ni-item"><a href="empresas.html" class="nl-a">Para empresas</a></li>
+      </ul>
+      <div class="na">
+        <a href="login.html" class="btn-li">Ingresar</a>
+        <a href="registro.html" class="btn-ct">Crear cuenta</a>
+      </div>
+      <button class="hbg" onclick="openM()" aria-label="Menú"><i class="fas fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <div class="overlay" id="ov" onclick="closeM()"></div>
+  <div class="mmenu" id="mm">
+    <div class="mm-hd">
+      <span class="logo" style="font-size:1.3rem"><div class="logo-ic" style="width:32px;height:32px;font-size:.9rem"><i class="fas fa-brain"></i></div>bitácora</span>
+      <button class="mm-cl" onclick="closeM()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="mm-body">
+      <div class="mm-sec">
+        <div class="mm-lbl">Navegación</div>
+        <a href="index.html" class="mm-a" onclick="closeM()"><i class="fas fa-home"></i> Inicio</a>
+        <a href="especialistas-publico.html" class="mm-a" onclick="closeM()"><i class="fas fa-search"></i> Directorio de especialistas</a>
+      </div>
+    </div>
+    <div class="mm-act">
+      <a href="login.html" class="btn-m1" onclick="closeM()">Iniciar sesión</a>
+      <a href="registro.html" class="btn-m2" onclick="closeM()">Crear cuenta gratis</a>
+    </div>
+  </div>
+
   <div class="container">
     <div class="page-header">
+      <div class="tag"><i class="fas fa-envelope"></i> Estamos para ti</div>
       <h1>Contáctanos</h1>
-      <p style="color: var(--text-soft); font-size: 1.1rem;">Estamos aquí para ayudarte</p>
+      <p style="color: var(--text-soft); font-size: 1.1rem;">Si tienes alguna duda o necesitas ayuda, escríbenos. Te responderemos lo antes posible.</p>
     </div>
 
     <div class="contact-grid">
       <div class="contact-info">
         <div class="info-card">
           <h3><i class="fas fa-envelope"></i> Email</h3>
-          <p><a href="mailto:hola@bitacoramental.pe" style="color: var(--primary); text-decoration: none;">hola@bitacoramental.pe</a></p>
-          <p style="margin-top: 10px; font-size: 0.9rem;">Respondemos en menos de 24 horas</p>
+          <p><a href="mailto:hola@bitacoramental.pe" style="color: var(--primary); font-weight:600;">hola@bitacoramental.pe</a></p>
+          <p style="margin-top: 5px; font-size: 0.85rem;">Respondemos en menos de 24 horas</p>
         </div>
 
         <div class="info-card">
           <h3><i class="fas fa-phone"></i> Teléfono</h3>
-          <p><a href="tel:+51999999999" style="color: var(--primary); text-decoration: none;">+51 999 999 999</a></p>
-          <p style="margin-top: 10px; font-size: 0.9rem;">Lun - Vie: 9am - 6pm</p>
+          <p><a href="tel:+51999999999" style="color: var(--primary); font-weight:600;">+51 999 999 999</a></p>
+          <p style="margin-top: 5px; font-size: 0.85rem;">Lun - Vie: 9am - 6pm</p>
         </div>
 
         <div class="info-card">
           <h3><i class="fab fa-whatsapp"></i> WhatsApp</h3>
-          <p><a href="https://wa.me/51999999999" style="color: var(--primary); text-decoration: none;" target="_blank">Abrir chat</a></p>
-          <p style="margin-top: 10px; font-size: 0.9rem;">Respuesta inmediata</p>
-        </div>
-
-        <div class="info-card">
-          <h3><i class="fas fa-map-marker-alt"></i> Ubicación</h3>
-          <p>Lima, Perú</p>
+          <p><a href="https://wa.me/51999999999" style="color: var(--primary); font-weight:600;" target="_blank">Abrir chat</a></p>
+          <p style="margin-top: 5px; font-size: 0.85rem;">Respuesta rápida</p>
         </div>
       </div>
 
       <div class="form-card">
-        <h2 style="margin-top: 0; margin-bottom: 25px; font-family: 'Outfit', sans-serif;">Envíanos un mensaje</h2>
+        <h2 style="margin-top: 0; margin-bottom: 30px; font-family: var(--fd); font-size: 1.8rem; color: var(--td);">Envíanos un mensaje</h2>
         <form id="contactForm" onsubmit="handleSubmit(event)">
           <div class="form-group">
             <label>Nombre completo *</label>
@@ -160,7 +241,7 @@
           <div class="form-group">
             <label>Asunto *</label>
             <select required>
-              <option value="">Selecciona...</option>
+              <option value="">Selecciona un asunto...</option>
               <option>Consulta sobre servicios</option>
               <option>Planes y precios</option>
               <option>Soporte técnico</option>
@@ -175,14 +256,63 @@
           </div>
 
           <button type="submit" class="btn-submit">
-            <i class="fas fa-paper-plane"></i> Enviar mensaje
+            Enviar mensaje <i class="fas fa-paper-plane"></i>
           </button>
         </form>
       </div>
     </div>
   </div>
 
+  <footer class="footer">
+    <div class="f-grid">
+      <div>
+        <div class="f-logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora mental</div>
+        <p class="f-tg">Plataforma peruana de bienestar emocional. Conectamos personas con psicólogos y coaches verificados para sesiones online accesibles y confidenciales.</p>
+        <div class="f-co">
+          <a href="tel:+51999999999"><i class="fas fa-phone"></i> +51 999 999 999</a>
+          <a href="mailto:hola@bitacoramental.pe"><i class="fas fa-envelope"></i> hola@bitacoramental.pe</a>
+          <span style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ts)"><i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> Lima, Perú</span>
+        </div>
+        <div class="f-soc">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+      <div class="f-col"><h5>Servicios</h5><ul class="f-lk"><li><a href="servicios/terapia-psicologica.html">Terapia Psicológica</a></li><li><a href="servicios/coaching-emocional.html">Coaching Emocional</a></li><li><a href="servicios/terapia-de-pareja.html">Terapia de Pareja</a></li></ul></div>
+      <div class="f-col"><h5>Programas</h5><ul class="f-lk"><li><a href="programas/ansiedad.html">Ansiedad</a></li><li><a href="programas/estres-laboral.html">Estrés y Burnout</a></li><li><a href="programas/pareja.html">Autoestima y Vínculos</a></li></ul></div>
+      <div class="f-col"><h5>Plataforma</h5><ul class="f-lk"><li><a href="especialistas-publico.html">Directorio</a></li><li><a href="empresas.html">Para empresas</a></li><li><a href="para-especialistas.html">Para especialistas</a></li></ul></div>
+      <div class="f-col"><h5>Ayuda</h5><ul class="f-lk"><li><a href="contacto.html">Contacto</a></li><li><a href="faq.html">Preguntas frecuentes</a></li><li><a href="lineas-emergencia.html">Líneas de emergencia</a></li></ul></div>
+    </div>
+    <div class="f-bot">
+      <p>© 2026 Bitácora Mental. Todos los derechos reservados. Hecho en Perú 🇵🇪</p>
+      <nav class="f-leg"><a href="privacidad.html">Privacidad</a><a href="terminos.html">Términos</a><a href="libro-reclamaciones.html">Reclamaciones</a></nav>
+    </div>
+  </footer>
+
   <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('sc', window.scrollY > 10);
+    });
+
+    // Mobile menu functions
+    function openM() {
+      const mm = document.getElementById('mm');
+      mm.style.display = 'flex';
+      document.getElementById('ov').classList.add('show');
+      setTimeout(() => mm.classList.add('open'), 10);
+      document.body.style.overflow = 'hidden';
+    }
+    function closeM() {
+      const mm = document.getElementById('mm');
+      mm.classList.remove('open');
+      document.getElementById('ov').classList.remove('show');
+      setTimeout(() => mm.style.display = 'none', 300);
+      document.body.style.overflow = '';
+    }
+
+    // Form submission
     function handleSubmit(e) {
       e.preventDefault();
       const btn = e.target.querySelector('.btn-submit');
@@ -190,10 +320,10 @@
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
       
       setTimeout(() => {
-        alert('¡Mensaje enviado! Te responderemos pronto.');
+        alert('¡Mensaje enviado! Te responderemos pronto a tu correo.');
         e.target.reset();
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar mensaje';
+        btn.innerHTML = 'Enviar mensaje <i class="fas fa-paper-plane"></i>';
       }, 1500);
     }
   </script>
