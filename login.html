@@ -29,9 +29,13 @@
     /* =========================================
        Lado Izquierdo (Formulario)
        ========================================= */
-    .form-side { flex: 1; padding: 60px 80px; display: flex; flex-direction: column; justify-content: center; position: relative; }
+    .form-side { flex: 1; padding: 50px 80px; display: flex; flex-direction: column; justify-content: center; position: relative; }
     
-    .logo { color: var(--g700); font-family: var(--fd); font-weight: 700; font-size: 1.6rem; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; margin-bottom: 40px; letter-spacing: -0.5px;}
+    /* BOTÓN VOLVER */
+    .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--ts); text-decoration: none; font-weight: 600; font-size: 0.9rem; margin-bottom: 30px; transition: 0.3s; align-self: flex-start; padding: 8px 16px; border-radius: 50px; background: var(--g50); }
+    .back-link:hover { color: var(--g700); background: var(--g100); transform: translateX(-5px); }
+
+    .logo { color: var(--g700); font-family: var(--fd); font-weight: 700; font-size: 1.6rem; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; margin-bottom: 30px; letter-spacing: -0.5px;}
     .logo-ic { width:38px; height:38px; background:var(--g700); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.1rem; }
     
     h1 { font-family: var(--fd); font-size: 2.2rem; color: var(--td); margin-bottom: 10px; font-weight: 600; line-height: 1.2; letter-spacing: -0.5px;}
@@ -81,7 +85,7 @@
 
     @media (max-width: 950px) { 
       .visual-side { display: none; } 
-      .form-side { padding: 50px 30px; }
+      .form-side { padding: 40px 30px; }
       .login-container { max-width: 500px; min-height: auto; } 
     }
   </style>
@@ -91,7 +95,9 @@
   <div class="login-container">
     
     <div class="form-side">
-      <a href="index.html" class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</a>
+      <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+
+      <div class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</div>
       
       <h1>Bienvenido de nuevo</h1>
       <p class="subtitle">Ingresa tus credenciales para continuar tu proceso.</p>
@@ -175,13 +181,10 @@
 
             // 3. Redirección INTELIGENTE
             if (profile && profile.rol === 'admin') {
-                console.log("👑 Admin detectado");
                 window.location.href = 'admin/panel-admin.html';
             } else if (profile && profile.rol === 'psicologo') {
-                console.log("🧠 Psicólogo detectado");
                 window.location.href = 'pro/dashboard.html';
             } else {
-                console.log("👤 Paciente detectado");
                 window.location.href = 'app/dashboard.html';
             }
         } catch (err) {
@@ -223,8 +226,6 @@
         if (!window.sb) throw new Error("Error de conexión.");
         sessionStorage.setItem('show_welcome_back', 'true');
         
-        // Google siempre redirige al Dashboard primero.
-        // El "rebote" al admin lo hará el dashboard.html
         await window.sb.auth.signInWithOAuth({
           provider: 'google',
           options: { redirectTo: window.location.origin + '/bitacora-mental/app/dashboard.html' }
