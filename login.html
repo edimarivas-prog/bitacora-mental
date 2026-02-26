@@ -22,81 +22,83 @@
     
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
-    body { font-family: var(--fb); background: var(--g50); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    body { font-family: var(--fb); background: var(--g50); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; position: relative;}
     
-    .login-container { background: white; width: 100%; max-width: 1100px; min-height: 650px; border-radius: var(--rxl); box-shadow: var(--slg); display: flex; overflow: hidden; border: 1px solid var(--border);}
+    /* BOTÓN FLOTANTE FUERA DE LA CAJA BLANCA */
+    .back-link-float { position: absolute; top: 30px; left: 30px; display: inline-flex; align-items: center; gap: 8px; color: var(--ts); text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: 0.3s; padding: 10px 20px; border-radius: 50px; background: white; box-shadow: var(--ssm); z-index: 50;}
+    .back-link-float:hover { color: var(--g700); transform: translateX(-5px); box-shadow: var(--smd); }
+
+    /* CONTENEDOR PRINCIPAL COMPACTO */
+    .login-container { background: white; width: 100%; max-width: 1050px; min-height: 550px; border-radius: var(--rxl); box-shadow: var(--slg); display: flex; overflow: hidden; border: 1px solid var(--border); margin-top: 10px;}
     
     /* =========================================
        Lado Izquierdo (Formulario)
        ========================================= */
-    .form-side { flex: 1; padding: 50px 80px; display: flex; flex-direction: column; justify-content: center; position: relative; }
+    .form-side { flex: 1; padding: 40px 60px; display: flex; flex-direction: column; justify-content: center; position: relative; }
     
-    /* BOTÓN VOLVER */
-    .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--ts); text-decoration: none; font-weight: 600; font-size: 0.9rem; margin-bottom: 30px; transition: 0.3s; align-self: flex-start; padding: 8px 16px; border-radius: 50px; background: var(--g50); }
-    .back-link:hover { color: var(--g700); background: var(--g100); transform: translateX(-5px); }
-
-    .logo { color: var(--g700); font-family: var(--fd); font-weight: 700; font-size: 1.6rem; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; margin-bottom: 30px; letter-spacing: -0.5px;}
-    .logo-ic { width:38px; height:38px; background:var(--g700); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.1rem; }
+    .logo { color: var(--g700); font-family: var(--fd); font-weight: 700; font-size: 1.5rem; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; margin-bottom: 25px; letter-spacing: -0.5px;}
+    .logo-ic { width:34px; height:34px; background:var(--g700); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.05rem; }
     
-    h1 { font-family: var(--fd); font-size: 2.2rem; color: var(--td); margin-bottom: 10px; font-weight: 600; line-height: 1.2; letter-spacing: -0.5px;}
-    p.subtitle { color: var(--ts); margin-bottom: 35px; font-size: 1.05rem;}
+    h1 { font-family: var(--fd); font-size: 2rem; color: var(--td); margin-bottom: 5px; font-weight: 600; line-height: 1.2; letter-spacing: -0.5px;}
+    p.subtitle { color: var(--ts); margin-bottom: 25px; font-size: 1rem;}
     
-    .input-group { position: relative; margin-bottom: 20px; }
-    .input-group i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--tl); font-size: 1.1rem;}
+    .input-group { position: relative; margin-bottom: 18px; }
+    .input-group i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--tl); font-size: 1.05rem;}
     
-    input { width: 100%; padding: 15px 18px 15px 50px; border: 1px solid var(--border); border-radius: 12px; font-size: 1rem; outline: none; transition: 0.3s; font-family: inherit; color: var(--td); background: #fff;}
+    input { width: 100%; padding: 14px 16px 14px 45px; border: 1px solid var(--border); border-radius: 12px; font-size: 0.95rem; outline: none; transition: 0.3s; font-family: inherit; color: var(--td); background: #fff;}
     input::placeholder { color: var(--tl); }
-    input:focus { border-color: var(--g700); box-shadow: 0 0 0 4px var(--g100); }
+    input:focus { border-color: var(--g700); box-shadow: 0 0 0 3px var(--g100); }
     
-    .toggle-pass { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--tl); background: none; border: none; font-size: 1.1rem;}
+    .toggle-pass { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--tl); background: none; border: none; font-size: 1.05rem;}
     .toggle-pass:hover { color: var(--g700); }
 
-    .actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; font-size: 0.95rem; }
+    .actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; font-size: 0.9rem; }
     .actions label { color: var(--tb); font-weight: 500; }
     .forgot { color: var(--g700); text-decoration: none; font-weight: 700; transition: 0.2s; }
     .forgot:hover { color: var(--g800); }
     
-    .btn { width: 100%; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; border: none; font-size: 1rem; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .btn { width: 100%; padding: 14px; border-radius: 50px; font-weight: 700; cursor: pointer; border: none; font-size: 0.95rem; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
     .btn-primary { background: var(--g700); color: white; box-shadow: 0 4px 14px rgba(79,111,82,.3); }
     .btn-primary:hover { background: var(--g800); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(79,111,82,.4); }
     .btn-primary:disabled { background: var(--g400); cursor: not-allowed; transform: none; box-shadow: none; }
     
-    .divider { display: flex; align-items: center; gap: 15px; margin: 30px 0; color: var(--ts); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
+    .divider { display: flex; align-items: center; gap: 15px; margin: 25px 0; color: var(--ts); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
     .divider::before, .divider::after { content: ''; height: 1px; background: var(--border); flex: 1; }
     
     .btn-google { background: white; border: 2px solid var(--border); color: var(--tb); }
     .btn-google:hover { border-color: var(--g400); background: var(--g50); }
 
-    .register-link { text-align: center; margin-top: 30px; font-size: 0.95rem; color: var(--ts); }
+    .register-link { text-align: center; margin-top: 25px; font-size: 0.95rem; color: var(--ts); }
     .register-link a { color: var(--clay); font-weight: 700; text-decoration: none; transition: 0.2s; }
     .register-link a:hover { color: #a35d3d; }
 
     /* =========================================
        Lado Derecho (Visual con Imagen)
        ========================================= */
-    .visual-side { flex: 1; position: relative; background: var(--g100); display: flex; flex-direction: column; justify-content: flex-end; padding: 60px; color: white; overflow: hidden;}
+    .visual-side { flex: 1; position: relative; background: var(--g100); display: flex; flex-direction: column; justify-content: flex-end; padding: 50px; color: white; overflow: hidden;}
     
     .visual-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
     .visual-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,46,28,0.9) 0%, rgba(26,46,28,0.2) 100%); z-index: 2; }
     
-    .visual-content { position: relative; z-index: 3; max-width: 90%; }
-    .visual-content h2 { font-family: var(--fd); font-size: 2.4rem; margin-bottom: 15px; line-height: 1.1; font-weight: 500;}
-    .visual-content p { font-size: 1.1rem; color: rgba(255,255,255,0.85); line-height: 1.6; }
+    .visual-content { position: relative; z-index: 3; max-width: 95%; }
+    .visual-content h2 { font-family: var(--fd); font-size: 2.2rem; margin-bottom: 12px; line-height: 1.1; font-weight: 500;}
+    .visual-content p { font-size: 1.05rem; color: rgba(255,255,255,0.85); line-height: 1.5; }
 
     @media (max-width: 950px) { 
       .visual-side { display: none; } 
       .form-side { padding: 40px 30px; }
       .login-container { max-width: 500px; min-height: auto; } 
+      .back-link-float { top: 15px; left: 15px; padding: 8px 15px; font-size: 0.85rem;}
     }
   </style>
 </head>
 <body>
 
+  <a href="index.html" class="back-link-float"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+
   <div class="login-container">
     
     <div class="form-side">
-      <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
-
       <div class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</div>
       
       <h1>Bienvenido de nuevo</h1>
