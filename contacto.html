@@ -213,6 +213,9 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  
   <script>
     // Navbar scroll effect
     window.addEventListener('scroll', () => {
@@ -234,6 +237,52 @@
       setTimeout(() => mm.style.display = 'none', 300);
       document.body.style.overflow = '';
     }
+
+    // CMS CONFIGURATION APPLY (Hace que Contacto respete las actualizaciones globales de Index)
+    function aplicarConfiguracion(c) {
+      if(c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
+      if(c.color_accent) { 
+        document.documentElement.style.setProperty('--clay', c.color_accent); 
+        document.documentElement.style.setProperty('--clay-l', c.color_accent + '33'); 
+      }
+
+      let footer = document.querySelector('.footer');
+      if(footer) {
+        if(c.foot_desc) { let tg = footer.querySelector('.f-tg'); if(tg) tg.textContent = c.foot_desc; }
+        
+        let contacts = footer.querySelectorAll('.f-co a');
+        if(c.foot_tel && contacts[0]) { contacts[0].innerHTML = `<i class="fas fa-phone"></i> ${c.foot_tel}`; contacts[0].href = `tel:${c.foot_tel.replace(/ /g,'')}`; }
+        if(c.foot_mail && contacts[1]) { contacts[1].innerHTML = `<i class="fas fa-envelope"></i> ${c.foot_mail}`; contacts[1].href = `mailto:${c.foot_mail}`; }
+        if(c.foot_wa && contacts[2]) contacts[2].href = c.foot_wa;
+        if(c.foot_loc) { let span = footer.querySelector('.f-co span'); if(span) span.innerHTML = `<i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> ${c.foot_loc}`; }
+        
+        let soc = footer.querySelectorAll('.f-soc a');
+        if(c.soc_ig && soc[0]) soc[0].href = c.soc_ig;
+        if(c.soc_tk && soc[1]) soc[1].href = c.soc_tk;
+        if(c.soc_in && soc[2]) soc[2].href = c.soc_in;
+        if(c.soc_fb && soc[3]) soc[3].href = c.soc_fb;
+
+        if(c.foot_copy) { let p = footer.querySelector('.f-bot p'); if(p) p.textContent = c.foot_copy; }
+      }
+    }
+
+    async function cargarConfiguracionCMS() {
+      if (!window.sb) { setTimeout(cargarConfiguracionCMS, 500); return; }
+      try {
+        const { data, error } = await window.sb.from('config_web').select('*');
+        if (error) throw error;
+        if (!data) return;
+
+        const config = {};
+        data.forEach(item => config[item.clave] = item.valor);
+        
+        aplicarConfiguracion(config);
+      } catch (err) {
+        console.error("Error conectando con el CMS:", err);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', cargarConfiguracionCMS);
   </script>
 </body>
 </html>
