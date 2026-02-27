@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>CMS Maestro - Bitácora Mental</title>
+  <title>CMS Editor - Nivel Shopify</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -10,90 +10,76 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
     body { display: flex; height: 100vh; background: var(--bg); color: var(--text); overflow: hidden; }
 
-    /* NAVEGACIÓN IZQUIERDA */
+    /* NAVEGACIÓN IZQUIERDA (Menú Admin) */
     .admin-nav { width: 70px; background: var(--sidebar); display: flex; flex-direction: column; align-items: center; padding: 20px 0; z-index: 100; flex-shrink: 0; }
     .admin-nav a { color: #a6aab4; font-size: 1.3rem; margin-bottom: 30px; transition: 0.2s; text-decoration: none; }
     .admin-nav a:hover, .admin-nav a.active { color: white; }
 
     /* PANEL DEL EDITOR */
     .editor-panel { width: 450px; background: white; border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 10; flex-shrink: 0; box-shadow: 2px 0 10px rgba(0,0,0,0.05); }
-    .ep-header { padding: 20px; border-bottom: 1px solid var(--border); background: #f9fafb; display: flex; flex-direction: column; gap: 12px; }
+    .ep-header { padding: 20px; border-bottom: 1px solid var(--border); background: #f9fafb; display: flex; justify-content: space-between; align-items: center; }
     .ep-header h2 { font-size: 1.1rem; font-weight: 700; color: #202223; }
-    
-    /* SELECTOR DE PÁGINA REPOTENCIADO */
-    #pageSelector { padding: 10px; border-radius: 8px; border: 2px solid var(--primary); font-weight: 700; width: 100%; cursor: pointer; background: white; color: var(--primary); }
+    .btn-save { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.2s; }
+    .btn-save:hover { background: #006e52; }
 
-    .btn-save { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.2s; width: 100%; }
-    .btn-save:hover { background: #006e52; transform: translateY(-1px); }
-
-    /* PESTAÑAS */
+    /* PESTAÑAS (SCROLL HORIZONTAL) */
     .ep-tabs { display: flex; overflow-x: auto; background: white; border-bottom: 1px solid var(--border); scrollbar-width: none; }
     .ep-tabs::-webkit-scrollbar { display: none; }
     .tab-btn { padding: 14px 16px; border: none; background: none; font-size: 0.85rem; font-weight: 600; color: #6d7175; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; transition: 0.2s; }
+    .tab-btn:hover { color: var(--text); }
     .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
 
     /* FORMULARIOS */
     .ep-content { flex: 1; overflow-y: auto; padding: 20px; background: #f4f6f8; }
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
+    
     .card-form { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e1e3e5; }
     .card-form h3 { font-size: 1rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: #202223; padding-bottom: 10px; border-bottom: 1px solid #f1f2f4; }
-    label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: #202223; }
-    input[type="text"], input[type="url"], textarea, input[type="color"] { width: 100%; padding: 10px 12px; border: 1px solid #babec3; border-radius: 6px; font-size: 0.9rem; transition: 0.2s; }
+    .card-form h3 i { color: var(--primary); }
     
+    .input-group { margin-bottom: 18px; }
+    label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: #202223; }
+    input[type="text"], input[type="url"], textarea { width: 100%; padding: 10px 12px; border: 1px solid #babec3; border-radius: 6px; font-size: 0.9rem; transition: 0.2s; }
+    input:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(0, 128, 96, 0.2); }
+    textarea { min-height: 80px; resize: vertical; }
+    .help { display: block; font-size: 0.75rem; color: #6d7175; margin-top: 6px; line-height: 1.4; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
     /* ZONA VISTA PREVIA */
     .preview-area { flex: 1; display: flex; flex-direction: column; background: #e4e5e7; position: relative; }
     .preview-toolbar { height: 60px; background: white; border-bottom: 1px solid var(--border); display: flex; justify-content: center; align-items: center; gap: 15px; }
     .device-btn { background: none; border: none; font-size: 1.2rem; color: #6d7175; cursor: pointer; padding: 8px; border-radius: 6px; }
     .device-btn.active { color: var(--primary); background: #f3fcf8; }
+    
     .iframe-wrapper { flex: 1; display: flex; justify-content: center; align-items: flex-start; padding: 20px; overflow: hidden; }
-    iframe { width: 100%; height: 100%; border: none; background: white; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); transition: 0.3s ease; }
+    iframe { width: 100%; height: 100%; border: none; background: white; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); transition: width 0.3s ease; }
     iframe.mobile-view { width: 375px; }
 
-    .toast { position: fixed; bottom: 20px; right: 20px; background: #202223; color: white; padding: 12px 24px; border-radius: 8px; transform: translateY(100px); opacity: 0; transition: 0.3s; z-index: 9999; }
+    .toast { position: fixed; bottom: 20px; right: 20px; background: #202223; color: white; padding: 12px 24px; border-radius: 8px; font-weight: 500; font-size: 0.9rem; transform: translateY(100px); opacity: 0; transition: 0.3s; z-index: 9999; }
     .toast.show { transform: translateY(0); opacity: 1; }
-    
-    /* Ocultar tabs del index cuando no estamos en index */
-    body.not-index .only-index { display: none; }
   </style>
 </head>
-<body class="is-index">
+<body>
 
   <nav class="admin-nav">
-    <a href="#" class="active"><i class="fas fa-paint-brush"></i></a>
-    <a href="../index.html" target="_blank" title="Ver web real"><i class="fas fa-external-link-alt"></i></a>
+    <a href="panel-admin.html" title="Inicio"><i class="fas fa-home"></i></a>
+    <a href="cms-editor.html" class="active" title="Editor Tienda"><i class="fas fa-paint-brush"></i></a>
+    <a href="gestion-talleres.html" title="Talleres"><i class="fas fa-calendar-alt"></i></a>
   </nav>
 
   <div class="editor-panel">
     <div class="ep-header">
-      <h2><i class="fas fa-magic"></i> Editor Maestro</h2>
-      <select id="pageSelector" onchange="cambiarPaginaEditor(this.value)">
-        <option value="index">🏠 Inicio (Página Principal)</option>
-        <option value="contacto">📞 Contacto</option>
-        <option value="talleres">🗓️ Talleres Gratuitos</option>
-        <optgroup label="Servicios">
-          <option value="terapia">Terapia Individual</option>
-          <option value="coaching">Coaching Emocional</option>
-          <option value="pareja">Terapia de Pareja</option>
-          <option value="familia">Psicología Familiar</option>
-        </optgroup>
-        <optgroup label="Programas">
-          <option value="ansiedad">Manejo de Ansiedad</option>
-          <option value="autoestima">Autoestima</option>
-          <option value="duelo">Duelo y Pérdidas</option>
-          <option value="estres">Estrés Laboral</option>
-          <option value="redes">Desconexión Digital</option>
-        </optgroup>
-      </select>
-      <button class="btn-save" onclick="guardarTodo()"><i class="fas fa-save"></i> GUARDAR CAMBIOS</button>
+      <h2>Editor de Landing Page</h2>
+      <button class="btn-save" onclick="guardarTodo()"><i class="fas fa-save"></i> Guardar</button>
     </div>
 
     <div class="ep-tabs">
-      <button class="tab-btn active" onclick="switchTab('t1', this)">Hero / Diseño</button>
-      <button class="tab-btn only-index" onclick="switchTab('t2', this)">Servicios</button>
-      <button class="tab-btn only-index" onclick="switchTab('t3', this)">El Proceso</button>
-      <button class="tab-btn only-index" onclick="switchTab('t4', this)">Planes</button>
-      <button class="tab-btn only-index" onclick="switchTab('t5', this)">Empresas</button>
+      <button class="tab-btn active" onclick="switchTab('t1', this)">Inicio (Hero)</button>
+      <button class="tab-btn" onclick="switchTab('t2', this)">Servicios</button>
+      <button class="tab-btn" onclick="switchTab('t3', this)">El Proceso</button>
+      <button class="tab-btn" onclick="switchTab('t4', this)">Planes</button>
+      <button class="tab-btn" onclick="switchTab('t5', this)">Empresas</button>
       <button class="tab-btn" onclick="switchTab('t6', this)">FAQ & Footer</button>
     </div>
 
@@ -103,67 +89,236 @@
         <div id="t1" class="tab-pane active">
           <div class="card-form">
             <h3><i class="fas fa-palette"></i> Colores Globales</h3>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-              <input type="color" data-key="color_primary">
-              <input type="color" data-key="color_accent">
+            <div class="grid-2">
+              <div class="input-group">
+                <label>Color Principal (Verde)</label>
+                <input type="color" data-key="color_primary" style="width:100%; height:40px; cursor:pointer;">
+              </div>
+              <div class="input-group">
+                <label>Color Acento (Terracota)</label>
+                <input type="color" data-key="color_accent" style="width:100%; height:40px; cursor:pointer;">
+              </div>
             </div>
           </div>
 
           <div class="card-form">
-            <h3><i class="fas fa-image"></i> Cabecera (Hero)</h3>
-            <label>Título H1</label>
-            <textarea id="h1_dinamico" placeholder="Cargando título..." rows="3"></textarea>
-            <label style="margin-top:10px">Subtítulo</label>
-            <textarea id="sub_dinamico" placeholder="Cargando descripción..." rows="3"></textarea>
+            <h3><i class="fas fa-image"></i> Sección Principal (Hero)</h3>
+            <div class="input-group">
+              <label>Etiqueta Superior (Badge)</label>
+              <input type="text" data-key="hero_badge">
+              <p class="help">Texto pequeñito arriba del título gigante.</p>
+            </div>
+            <div class="input-group">
+              <label>Título Principal (H1)</label>
+              <textarea data-key="hero_titulo" rows="3"></textarea>
+              <p class="help">Usa <code>&lt;br&gt;</code> para bajar de línea y <code>&lt;em&gt;palabra&lt;/em&gt;</code> para pintarla de verde.</p>
+            </div>
+            <div class="input-group">
+              <label>Subtítulo descriptivo</label>
+              <textarea data-key="hero_sub" rows="3"></textarea>
+            </div>
+            <div class="grid-2">
+              <div class="input-group"><label>Botón Principal</label><input type="text" data-key="hero_btn1_txt"><input type="text" data-key="hero_btn1_url" placeholder="Link (ej: registro.html)" style="margin-top:5px;"></div>
+              <div class="input-group"><label>Botón Secundario</label><input type="text" data-key="hero_btn2_txt"><input type="text" data-key="hero_btn2_url" placeholder="Link" style="margin-top:5px;"></div>
+            </div>
+            <div class="input-group">
+              <label>Foto Principal (URL)</label>
+              <input type="url" data-key="hero_img">
+            </div>
+            <hr style="border:0; border-top:1px solid #e1e3e5; margin: 20px 0;">
+            <label style="color:var(--primary); font-weight:700;">Tarjeta Flotante 1 (Izquierda)</label>
+            <input type="text" data-key="hero_f1_tit" placeholder="Título" style="margin-bottom:5px;">
+            <input type="text" data-key="hero_f1_sub" placeholder="Subtítulo" style="margin-bottom:15px;">
+            <label style="color:var(--primary); font-weight:700;">Tarjeta Flotante 2 (Derecha)</label>
+            <input type="text" data-key="hero_f2_tit" placeholder="Título" style="margin-bottom:5px;">
+            <input type="text" data-key="hero_f2_sub" placeholder="Subtítulo">
+          </div>
+
+          <div class="card-form">
+            <h3><i class="fas fa-chart-bar"></i> Barra Verde de Estadísticas</h3>
+            <div class="grid-2">
+              <div class="input-group"><label>Estadística 1</label><input type="text" data-key="st1_n" placeholder="Número"><input type="text" data-key="st1_t" placeholder="Texto" style="margin-top:5px;"></div>
+              <div class="input-group"><label>Estadística 2</label><input type="text" data-key="st2_n" placeholder="Número"><input type="text" data-key="st2_t" placeholder="Texto" style="margin-top:5px;"></div>
+              <div class="input-group"><label>Estadística 3</label><input type="text" data-key="st3_n" placeholder="Número"><input type="text" data-key="st3_t" placeholder="Texto" style="margin-top:5px;"></div>
+              <div class="input-group"><label>Estadística 4</label><input type="text" data-key="st4_n" placeholder="Número"><input type="text" data-key="st4_t" placeholder="Texto" style="margin-top:5px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="t2" class="tab-pane">
+          <div class="card-form">
+            <h3><i class="fas fa-hand-holding-heart"></i> Módulo: Servicios</h3>
+            <div class="input-group">
+              <label>Etiqueta Superior</label>
+              <input type="text" data-key="srv_tag">
+            </div>
+            <div class="input-group">
+              <label>Título de la sección</label>
+              <input type="text" data-key="srv_tit">
+              <p class="help">Puedes usar <code>&lt;br&gt;</code> y <code>&lt;em&gt;</code>.</p>
+            </div>
+            <div class="input-group">
+              <label>Subtítulo</label>
+              <textarea data-key="srv_sub" rows="2"></textarea>
+            </div>
+            
+            <hr style="border:0; border-top:1px solid #e1e3e5; margin: 20px 0;">
+            <label style="color:var(--primary); font-weight:700;">1. Servicio Individual</label>
+            <input type="text" data-key="srv1_ic" placeholder="Icono (Ej: fa-user-md)" style="margin-bottom:5px;">
+            <input type="text" data-key="srv1_tit" placeholder="Título" style="margin-bottom:5px;">
+            <textarea data-key="srv1_desc" placeholder="Descripción" rows="2"></textarea>
+            <div class="grid-2" style="margin-top:5px; margin-bottom:20px;">
+              <input type="text" data-key="srv1_btn_txt" placeholder="Texto Botón"><input type="text" data-key="srv1_btn_url" placeholder="Link">
+            </div>
+
+            <label style="color:var(--primary); font-weight:700;">2. Servicio Coaching</label>
+            <input type="text" data-key="srv2_ic" placeholder="Icono (Ej: fa-rocket)" style="margin-bottom:5px;">
+            <input type="text" data-key="srv2_tit" placeholder="Título" style="margin-bottom:5px;">
+            <textarea data-key="srv2_desc" placeholder="Descripción" rows="2"></textarea>
+            <div class="grid-2" style="margin-top:5px; margin-bottom:20px;">
+              <input type="text" data-key="srv2_btn_txt" placeholder="Texto Botón"><input type="text" data-key="srv2_btn_url" placeholder="Link">
+            </div>
+
+            <label style="color:var(--primary); font-weight:700;">3. Servicio Pareja</label>
+            <input type="text" data-key="srv3_ic" placeholder="Icono (Ej: fa-users)" style="margin-bottom:5px;">
+            <input type="text" data-key="srv3_tit" placeholder="Título" style="margin-bottom:5px;">
+            <textarea data-key="srv3_desc" placeholder="Descripción" rows="2"></textarea>
+            <div class="grid-2" style="margin-top:5px;">
+              <input type="text" data-key="srv3_btn_txt" placeholder="Texto Botón"><input type="text" data-key="srv3_btn_url" placeholder="Link">
+            </div>
           </div>
           
-          <div class="only-index">
-              <div class="card-form">
-                <h3>Botones Index</h3>
-                <input type="text" data-key="hero_btn1_txt" placeholder="Botón 1">
-                <input type="text" data-key="hero_btn2_txt" placeholder="Botón 2" style="margin-top:5px;">
-              </div>
+          <div class="card-form">
+            <h3><i class="fas fa-calendar-alt"></i> Títulos de Talleres</h3>
+            <div class="input-group"><label>Título</label><input type="text" data-key="tal_tit"></div>
+            <div class="input-group"><label>Subtítulo</label><textarea data-key="tal_sub" rows="2"></textarea></div>
+            <div class="input-group"><label>Texto del Botón Inferior</label><input type="text" data-key="tal_btn_txt"></div>
           </div>
         </div>
 
-        <div id="t2" class="tab-pane only-index">
+        <div id="t3" class="tab-pane">
           <div class="card-form">
-            <h3>Servicios Principal</h3>
-            <input type="text" data-key="srv_tit" placeholder="Título Sección">
-            <textarea data-key="srv_sub" placeholder="Subtítulo" rows="2" style="margin-top:5px;"></textarea>
+            <h3><i class="fas fa-shoe-prints"></i> Módulo: El Proceso</h3>
+            <div class="input-group"><label>Etiqueta Superior</label><input type="text" data-key="paso_tag"></div>
+            <div class="input-group"><label>Título de la sección</label><input type="text" data-key="paso_tit"></div>
+            
+            <hr style="border:0; border-top:1px solid #e1e3e5; margin: 20px 0;">
+            <label style="color:var(--primary); font-weight:700;">Paso 1</label>
+            <input type="text" data-key="p1_tit" placeholder="Título" style="margin-bottom:5px;"><textarea data-key="p1_desc" placeholder="Descripción" rows="2" style="margin-bottom:15px;"></textarea>
+            
+            <label style="color:var(--primary); font-weight:700;">Paso 2</label>
+            <input type="text" data-key="p2_tit" placeholder="Título" style="margin-bottom:5px;"><textarea data-key="p2_desc" placeholder="Descripción" rows="2" style="margin-bottom:15px;"></textarea>
+            
+            <label style="color:var(--primary); font-weight:700;">Paso 3</label>
+            <input type="text" data-key="p3_tit" placeholder="Título" style="margin-bottom:5px;"><textarea data-key="p3_desc" placeholder="Descripción" rows="2"></textarea>
+            
+            <div class="grid-2" style="margin-top:15px;">
+              <div class="input-group"><label>Botón Inferior</label><input type="text" data-key="paso_btn_txt"><input type="text" data-key="paso_btn_url" placeholder="Link" style="margin-top:5px;"></div>
+              <div class="input-group"><label>Imagen Lateral (URL)</label><input type="url" data-key="paso_img"></div>
+            </div>
           </div>
         </div>
 
-        <div id="t3" class="tab-pane only-index">
+        <div id="t4" class="tab-pane">
           <div class="card-form">
-            <h3>Paso 1</h3>
-            <input type="text" data-key="p1_tit">
-            <textarea data-key="p1_desc" rows="2"></textarea>
+            <h3><i class="fas fa-wallet"></i> Modalidades (Tarjetas de Planes)</h3>
+            <div class="input-group"><label>Etiqueta Superior</label><input type="text" data-key="mod_tag"></div>
+            <div class="input-group"><label>Título</label><input type="text" data-key="mod_tit"></div>
+            <div class="input-group"><label>Subtítulo</label><textarea data-key="mod_sub" rows="2"></textarea></div>
+            
+            <hr style="border:0; border-top:1px solid #e1e3e5; margin: 20px 0;">
+            <label style="color:var(--primary); font-weight:700;">Plan 1: Individual</label>
+            <input type="text" data-key="m1_ic" placeholder="Icono (Ej: fa-user)" style="margin-bottom:5px;">
+            <input type="text" data-key="m1_tit" placeholder="Título" style="margin-bottom:5px;">
+            <textarea data-key="m1_desc" placeholder="Descripción" rows="2" style="margin-bottom:5px;"></textarea>
+            <input type="text" data-key="m1_f1" placeholder="Beneficio 1" style="margin-bottom:5px;"><input type="text" data-key="m1_f2" placeholder="Beneficio 2" style="margin-bottom:5px;"><input type="text" data-key="m1_f3" placeholder="Beneficio 3" style="margin-bottom:5px;">
+            <div class="grid-2" style="margin-bottom:20px;"><input type="text" data-key="m1_btn_txt" placeholder="Texto Botón"><input type="text" data-key="m1_btn_url" placeholder="Link"></div>
+
+            <label style="color:var(--primary); font-weight:700;">Plan 2: Programas (Destacado)</label>
+            <input type="text" data-key="m2_tag" placeholder="Etiqueta destacada (Ej: Más popular)" style="margin-bottom:5px;">
+            <input type="text" data-key="m2_tit" placeholder="Título" style="margin-bottom:5px;">
+            <textarea data-key="m2_desc" placeholder="Descripción" rows="2" style="margin-bottom:5px;"></textarea>
+            <input type="text" data-key="m2_f1" placeholder="Beneficio 1" style="margin-bottom:5px;"><input type="text" data-key="m2_f2" placeholder="Beneficio 2" style="margin-bottom:5px;"><input type="text" data-key="m2_f3" placeholder="Beneficio 3" style="margin-bottom:5px;">
+            <div class="grid-2" style="margin-bottom:20px;"><input type="text" data-key="m2_btn_txt" placeholder="Texto Botón"><input type="text" data-key="m2_btn_url" placeholder="Link"></div>
+
+            <label style="color:var(--primary); font-weight:700;">Plan 3: Corporativo</label>
+            <input type="text" data-key="m3_ic" placeholder="Icono (Ej: fa-building)" style="margin-bottom:5px;">
+            <input type="text" data-key="m3_tit" placeholder="Título" style="margin-bottom:5px;">
+            <textarea data-key="m3_desc" placeholder="Descripción" rows="2" style="margin-bottom:5px;"></textarea>
+            <input type="text" data-key="m3_f1" placeholder="Beneficio 1" style="margin-bottom:5px;"><input type="text" data-key="m3_f2" placeholder="Beneficio 2" style="margin-bottom:5px;"><input type="text" data-key="m3_f3" placeholder="Beneficio 3" style="margin-bottom:5px;">
+            <div class="grid-2"><input type="text" data-key="m3_btn_txt" placeholder="Texto Botón"><input type="text" data-key="m3_btn_url" placeholder="Link"></div>
           </div>
         </div>
 
-        <div id="t4" class="tab-pane only-index">
+        <div id="t5" class="tab-pane">
           <div class="card-form">
-            <h3>Planes</h3>
-            <input type="text" data-key="mod_tit" placeholder="Título planes">
+            <h3><i class="fas fa-layer-group"></i> Sección: Programas Temáticos</h3>
+            <div class="input-group"><label>Etiqueta</label><input type="text" data-key="pro_tag"></div>
+            <div class="input-group"><label>Título</label><input type="text" data-key="pro_tit"></div>
+            <div class="input-group"><label>Párrafo 1</label><textarea data-key="pro_s1" rows="2"></textarea></div>
+            <div class="input-group"><label>Párrafo 2</label><textarea data-key="pro_s2" rows="2"></textarea></div>
+            <div class="grid-2">
+              <div class="input-group"><label>Botón</label><input type="text" data-key="pro_btn_txt"><input type="text" data-key="pro_btn_url" placeholder="Link" style="margin-top:5px;"></div>
+              <div class="input-group"><label>Imagen</label><input type="url" data-key="pro_img"></div>
+            </div>
           </div>
-        </div>
 
-        <div id="t5" class="tab-pane only-index">
           <div class="card-form">
-            <h3>Sección Empresas</h3>
-            <input type="text" data-key="emp_tit">
-            <textarea data-key="emp_sub" rows="2"></textarea>
+            <h3><i class="fas fa-building"></i> Sección: Para Empresas</h3>
+            <div class="input-group"><label>Textos Generales</label>
+              <input type="text" data-key="emp_tag" placeholder="Etiqueta" style="margin-bottom:5px;">
+              <input type="text" data-key="emp_tit" placeholder="Título" style="margin-bottom:5px;">
+              <textarea data-key="emp_sub" placeholder="Subtítulo" rows="2" style="margin-bottom:5px;"></textarea>
+            </div>
+            <div class="input-group"><label>Lista de 4 Beneficios</label>
+              <input type="text" data-key="emp_b1" style="margin-bottom:5px;"><input type="text" data-key="emp_b2" style="margin-bottom:5px;"><input type="text" data-key="emp_b3" style="margin-bottom:5px;"><input type="text" data-key="emp_b4">
+            </div>
+            <div class="grid-2" style="margin-bottom:15px;">
+              <div class="input-group"><label>Botón Izquierdo</label><input type="text" data-key="emp_btn_txt"><input type="text" data-key="emp_btn_url" placeholder="Link" style="margin-top:5px;"></div>
+            </div>
+            <hr style="border:0; border-top:1px solid #e1e3e5; margin: 20px 0;">
+            <label style="color:var(--primary); font-weight:700;">Tarjeta Oscura de Planes</label>
+            <input type="text" data-key="emp_c_tit" placeholder="Título de la tarjeta" style="margin-bottom:10px;">
+            <div class="grid-2" style="margin-bottom:10px;"><input type="text" data-key="emp_cp1_t" placeholder="Plan 1"><input type="text" data-key="emp_cp1_d" placeholder="Desc 1"></div>
+            <div class="grid-2" style="margin-bottom:10px;"><input type="text" data-key="emp_cp2_t" placeholder="Plan 2"><input type="text" data-key="emp_cp2_d" placeholder="Desc 2"></div>
+            <div class="grid-2" style="margin-bottom:10px;"><input type="text" data-key="emp_cp3_t" placeholder="Plan 3"><input type="text" data-key="emp_cp3_d" placeholder="Desc 3"></div>
+            <div class="grid-2"><input type="text" data-key="emp_c_btn_txt" placeholder="Botón Tarjeta Oscura"><input type="text" data-key="emp_c_btn_url" placeholder="Link"></div>
           </div>
         </div>
 
         <div id="t6" class="tab-pane">
           <div class="card-form">
-            <h3>Footer Global</h3>
-            <label>WhatsApp</label>
-            <input type="url" data-key="foot_wa">
-            <label style="margin-top:10px">Copyright</label>
-            <input type="text" data-key="foot_copy">
+            <h3><i class="fas fa-question-circle"></i> Preguntas Frecuentes</h3>
+            <div class="input-group"><label>Etiqueta</label><input type="text" data-key="faq_tag"></div>
+            <div class="input-group"><label>Título</label><input type="text" data-key="faq_tit"></div>
+            <hr style="border:0; border-top:1px solid #e1e3e5; margin: 15px 0;">
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div><label style="color:var(--primary)">FAQ 1</label><input type="text" data-key="faq1_q" placeholder="Pregunta" style="margin-bottom:5px;"><textarea data-key="faq1_a" rows="2" placeholder="Respuesta"></textarea></div>
+              <div><label style="color:var(--primary)">FAQ 2</label><input type="text" data-key="faq2_q" placeholder="Pregunta" style="margin-bottom:5px;"><textarea data-key="faq2_a" rows="2"></textarea></div>
+              <div><label style="color:var(--primary)">FAQ 3</label><input type="text" data-key="faq3_q" placeholder="Pregunta" style="margin-bottom:5px;"><textarea data-key="faq3_a" rows="2"></textarea></div>
+              <div><label style="color:var(--primary)">FAQ 4</label><input type="text" data-key="faq4_q" placeholder="Pregunta" style="margin-bottom:5px;"><textarea data-key="faq4_a" rows="2"></textarea></div>
+              <div><label style="color:var(--primary)">FAQ 5</label><input type="text" data-key="faq5_q" placeholder="Pregunta" style="margin-bottom:5px;"><textarea data-key="faq5_a" rows="2"></textarea></div>
+              <div><label style="color:var(--primary)">FAQ 6</label><input type="text" data-key="faq6_q" placeholder="Pregunta" style="margin-bottom:5px;"><textarea data-key="faq6_a" rows="2"></textarea></div>
+            </div>
+          </div>
+
+          <div class="card-form">
+            <h3><i class="fas fa-shoe-prints"></i> Pie de Página (Footer)</h3>
+            <div class="input-group"><label>Descripción bajo el logo</label><textarea data-key="foot_desc" rows="2"></textarea></div>
+            <div class="grid-2">
+              <div class="input-group"><label>Teléfono</label><input type="text" data-key="foot_tel"></div>
+              <div class="input-group"><label>Email</label><input type="email" data-key="foot_mail"></div>
+              <div class="input-group"><label>WhatsApp Link</label><input type="url" data-key="foot_wa"></div>
+              <div class="input-group"><label>Ubicación</label><input type="text" data-key="foot_loc"></div>
+            </div>
+            <hr style="border:0; border-top:1px solid #e1e3e5; margin: 15px 0;">
+            <div class="grid-2">
+              <div class="input-group"><label>Instagram (URL)</label><input type="url" data-key="soc_ig"></div>
+              <div class="input-group"><label>TikTok (URL)</label><input type="url" data-key="soc_tk"></div>
+              <div class="input-group"><label>LinkedIn (URL)</label><input type="url" data-key="soc_in"></div>
+              <div class="input-group"><label>Facebook (URL)</label><input type="url" data-key="soc_fb"></div>
+            </div>
+            <div class="input-group"><label>Texto Legal (Copyright)</label><input type="text" data-key="foot_copy"></div>
           </div>
         </div>
 
@@ -173,139 +328,94 @@
 
   <div class="preview-area">
     <div class="preview-toolbar">
-      <button class="device-btn active" onclick="setDevice('desktop', this)"><i class="fas fa-desktop"></i> PC</button>
-      <button class="device-btn" onclick="setDevice('mobile', this)"><i class="fas fa-mobile-alt"></i> Móvil</button>
+      <button class="device-btn active" onclick="toggleDevice('desktop', this)" title="PC"><i class="fas fa-desktop"></i></button>
+      <button class="device-btn" onclick="toggleDevice('mobile', this)" title="Móvil"><i class="fas fa-mobile-alt"></i></button>
     </div>
     <div class="iframe-wrapper">
       <iframe id="livePreview" src="../index.html"></iframe>
     </div>
   </div>
 
-  <div class="toast" id="toastMsg">✨ Cambios aplicados en la plataforma</div>
+  <div class="toast" id="toastMsg"><i class="fas fa-check-circle" style="color:#20dc8e"></i> Cambios guardados. Se reflejarán en vivo.</div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
+
   <script>
-    let paginaActual = 'index';
-
-    // 1. CARGAR DATOS INICIALES
-    async function inicializarEditor() {
-      if(!window.sb) return setTimeout(inicializarEditor, 500);
-      
-      const { data, error } = await window.sb.from('config_web').select('*');
-      if (error) return console.error(error);
-
-      data.forEach(item => {
-        // Llenar campos con data-key (Globales e Index)
-        const input = document.querySelector(`[data-key="${item.clave}"]`);
-        if (input) input.value = item.valor;
-
-        // Llenar campos dinámicos (Hero) de la página seleccionada
-        if (item.pagina === paginaActual) {
-          if (item.clave.endsWith('_titulo') || item.clave.endsWith('_h1')) {
-            document.getElementById('h1_dinamico').value = item.valor;
-          }
-          if (item.clave.endsWith('_sub')) {
-            document.getElementById('sub_dinamico').value = item.valor;
-          }
-        }
-      });
-    }
-
-    // 2. CAMBIAR DE PÁGINA
-    function cambiarPaginaEditor(val) {
-      paginaActual = val;
-      const iframe = document.getElementById('livePreview');
-      
-      // Ajustar UI si no es el index
-      if(val === 'index') {
-          document.body.classList.remove('not-index');
-      } else {
-          document.body.classList.add('not-index');
-      }
-
-      const rutas = {
-        'index': '../index.html', 'contacto': '../contacto.html', 'talleres': '../talleres.html',
-        'terapia': '../servicios/terapia-psicologica.html', 'coaching': '../servicios/coaching-emocional.html',
-        'pareja': '../servicios/terapia-de-pare_ja.html', 'familia': '../servicios/psicologia-familiar.html',
-        'ansiedad': '../programas/ansiedad.html', 'autoestima': '../programas/autoestima.html',
-        'duelo': '../programas/duelo.html', 'estres': '../programas/estres-laboral.html',
-        'redes': '../programas/redes-sociales.html'
-      };
-      
-      iframe.src = rutas[val];
-      inicializarEditor(); // Recargar datos para la nueva página
-    }
-
-    // 3. VISTA PREVIA EN VIVO
-    function enviarVistaPrevia() {
-      const iframe = document.getElementById('livePreview');
-      const config = {};
-      
-      // Recoger todo lo que tenga data-key
-      document.querySelectorAll('#cmsForm [data-key]').forEach(input => {
-        config[input.getAttribute('data-key')] = input.value;
-      });
-
-      // Añadir los campos dinámicos del hero
-      config[`${paginaActual}_titulo`] = document.getElementById('h1_dinamico').value;
-      config[`${paginaActual}_h1`] = document.getElementById('h1_dinamico').value;
-      config[`${paginaActual}_sub`] = document.getElementById('sub_dinamico').value;
-
-      iframe.contentWindow.postMessage({ tipo: 'LIVE_PREVIEW', config }, '*');
-    }
-
-    // 4. GUARDAR EN SUPABASE
-    async function guardarTodo() {
-      const btn = document.querySelector('.btn-save');
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> GUARDANDO...';
-      
-      const paquete = [];
-
-      // Globales e Index
-      document.querySelectorAll('#cmsForm [data-key]').forEach(input => {
-        paquete.push({
-          clave: input.getAttribute('data-key'),
-          valor: input.value,
-          pagina: input.dataset.page || 'global'
-        });
-      });
-
-      // Dinámicos Hero
-      const h1Key = (paginaActual === 'index') ? 'hero_titulo' : `${paginaActual}_h1`;
-      const subKey = (paginaActual === 'index') ? 'hero_sub' : `${paginaActual}_sub`;
-
-      paquete.push({ clave: h1Key, valor: document.getElementById('h1_dinamico').value, pagina: paginaActual });
-      paquete.push({ clave: subKey, valor: document.getElementById('sub_dinamico').value, pagina: paginaActual });
-
-      const { error } = await window.sb.from('config_web').upsert(paquete, { onConflict: 'clave' });
-
-      btn.innerHTML = 'GUARDAR CAMBIOS';
-      if(!error) {
-        document.getElementById('toastMsg').classList.add('show');
-        setTimeout(()=> document.getElementById('toastMsg').classList.remove('show'), 3000);
-      }
-    }
-
-    function switchTab(id, btn) {
+    function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
+      document.getElementById(tabId).classList.add('active');
       btn.classList.add('active');
     }
 
-    function setDevice(type, btn) {
+    function toggleDevice(type, btn) {
       document.querySelectorAll('.device-btn').forEach(el => el.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById('livePreview').className = (type === 'mobile') ? 'mobile-view' : '';
     }
 
-    // Escuchar cambios en cualquier input para el preview
-    document.getElementById('cmsForm').addEventListener('input', enviarVistaPrevia);
-    document.getElementById('h1_dinamico').addEventListener('input', enviarVistaPrevia);
-    document.getElementById('sub_dinamico').addEventListener('input', enviarVistaPrevia);
+    async function inicializarEditor() {
+      if(!window.sb) return setTimeout(inicializarEditor, 500);
+      const { data, error } = await window.sb.from('config_web').select('*');
+      if (error) return console.error(error);
+      data.forEach(item => {
+        const input = document.querySelector(`[data-key="${item.clave}"]`);
+        if (input) input.value = item.valor;
+      });
+    }
+
+    async function guardarTodo() {
+      const btn = document.querySelector('.btn-save');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+      btn.disabled = true;
+
+      const inputs = document.querySelectorAll('#cmsForm [data-key]');
+      const paqueteDatos = [];
+
+      inputs.forEach(input => {
+        paqueteDatos.push({
+          clave: input.getAttribute('data-key'),
+          valor: input.value,
+          updated_at: new Date()
+        });
+      });
+
+      const { error } = await window.sb.from('config_web').upsert(paqueteDatos, { onConflict: 'clave' });
+
+      btn.innerHTML = '<i class="fas fa-save"></i> Guardar';
+      btn.disabled = false;
+
+      if (!error) {
+        const toast = document.getElementById('toastMsg');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+        document.getElementById('livePreview').src = document.getElementById('livePreview').src;
+      } else {
+        alert("Error al guardar: " + error.message);
+      }
+    }
 
     document.addEventListener('DOMContentLoaded', inicializarEditor);
+  // 5. MAGIA SHOPIFY: Vista Previa en Vivo (Sin guardar)
+    function enviarVistaPrevia() {
+      const iframe = document.getElementById('livePreview');
+      if(!iframe.contentWindow) return;
+      
+      const config = {};
+      document.querySelectorAll('#cmsForm [data-key]').forEach(input => {
+        config[input.getAttribute('data-key')] = input.value;
+      });
+      
+      // Enviamos un mensaje interno al iframe con lo que estás tecleando
+      iframe.contentWindow.postMessage({ tipo: 'LIVE_PREVIEW', config: config }, '*');
+    }
+
+    // Le decimos a cada caja de texto que dispare la vista previa CADA VEZ que tecleas
+    document.querySelectorAll('#cmsForm [data-key]').forEach(input => {
+      input.addEventListener('input', enviarVistaPrevia);
+    });
+  
   </script>
 </body>
 </html>
