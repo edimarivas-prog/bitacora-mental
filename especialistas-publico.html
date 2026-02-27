@@ -5,37 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <meta name="description" content="Directorio de psicólogos y coaches colegiados en Perú. Encuentra al especialista ideal para tu bienestar emocional.">
   <title>Nuestros Especialistas — Bitácora Mental</title>
+  
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="css/design-system.css">
+
   <style>
-    /* VARIABLES (Mismo sistema de diseño) */
-    :root {
-      --g900:#1a2e1c;--g800:#2d4a30;--g700:#4F6F52;--g600:#6a8f6d;--g400:#8aaa8d;--g200:#c8ddc9;--g100:#e3ede4;--g50:#f2f8f2;
-      --s50:#fdf9f4;--s100:#f5ede0;--clay:#c97b5a;--clay-l:#f0d5c8;
-      --td:#1a2e1c;--tb:#3d4f3e;--ts:#697a6a;--tl:#9aaa9b;
-      --white:#fff;--border:#dde8de;
-      --fd:'Fraunces',Georgia,serif;--fb:'Plus Jakarta Sans',sans-serif;
-      --rlg:24px;--rxl:36px;
-      --smd:0 6px 24px rgba(26,46,28,.08);
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{font-family:var(--fb);background:var(--white);color:var(--tb);line-height:1.6;overflow-x:hidden}
-    a{text-decoration:none;transition:all .25s ease}
-    img{max-width:100%;height:auto;display:block}
+    /* =========================================
+       RESETEOS Y FORZADO DE TIPOGRAFÍA
+       ========================================= */
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--fb) !important; background: var(--white); color: var(--tb); line-height: 1.6; overflow-x: hidden; }
+    img { max-width: 100%; height: auto; display: block; }
+    
+    /* FORZAMOS LAS FUENTES DEL NAVBAR Y FOOTER */
+    .nav { font-family: var(--fb) !important; }
+    .logo { font-family: var(--fd) !important; line-height: 1; margin: 0; }
+    .mmenu { font-family: var(--fb) !important; }
+    .footer { font-family: var(--fb) !important; }
+    .f-logo { font-family: var(--fd) !important; }
+    .f-tg { color: var(--ts) !important; font-weight: 400; }
+    .f-col h5 { color: var(--td) !important; font-family: var(--fb) !important; }
 
-    /* NAV */
-    .nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-    .ni{max-width:1280px;margin:0 auto;padding:0 40px;height:76px;display:flex;align-items:center;justify-content:space-between}
-    .logo{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-size:1.5rem;font-weight:700;color:var(--g700);letter-spacing:-.5px}
-    .logo-ic{width:38px;height:38px;background:var(--g700);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem}
-    .nl{display:flex;align-items:center;gap:20px;list-style:none}
-    .nl a{color:var(--ts);font-weight:600;font-size:.9rem}
-    .nl a:hover{color:var(--g700)}
-    .btn-ct{padding:10px 22px;border-radius:50px;background:var(--g700);color:#fff;font-size:.88rem;font-weight:700}
-    .btn-ct:hover{background:var(--g800)}
-    .hbg{display:none;font-size:1.2rem;color:var(--g700);background:none;border:none;cursor:pointer}
-
+    /* =========================================
+       ESTILOS ÚNICOS PARA DIRECTORIO
+       ========================================= */
     /* HERO */
     .dir-hero{padding:120px 40px 60px;background:var(--g50);text-align:center}
     .dir-hero h1{font-family:var(--fd);font-size:clamp(2.5rem,5vw,3.5rem);color:var(--td);margin-bottom:16px}
@@ -76,197 +71,383 @@
     .reg-banner{background:var(--clay);color:#fff;border-radius:var(--rxl);padding:60px 40px;text-align:center;max-width:1000px;margin:0 auto 80px;position:relative;overflow:hidden}
     .reg-banner h2{font-family:var(--fd);font-size:2rem;margin-bottom:16px}
     .reg-banner p{max-width:500px;margin:0 auto 32px;opacity:.9}
-    .btn-reg{background:#fff;color:var(--clay);padding:14px 32px;border-radius:50px;font-weight:700;font-size:1rem}
+    .btn-reg{background:#fff;color:var(--clay);padding:14px 32px;border-radius:50px;font-weight:700;font-size:1rem; display:inline-block;}
     .btn-reg:hover{transform:scale(1.05)}
 
-    /* FOOTER */
-    footer{padding:40px;text-align:center;border-top:1px solid var(--border);color:var(--tl);font-size:.9rem}
-
     @media(max-width:900px){
-      .nl{display:none}
-      .hbg{display:block}
-      .ni{padding:0 24px}
       .dir-hero{padding:100px 24px 40px}
       .esp-sec{padding:0 24px 60px}
       .filters{padding:0 24px}
+      .reg-banner{margin: 0 24px 80px; padding: 40px 20px;}
     }
   </style>
 </head>
 <body>
 
-<nav class="nav">
-  <div class="ni">
-    <a href="index.html" class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</a>
-    <ul class="nl">
-      <li><a href="index.html">Inicio</a></li>
-      <li><a href="programas/index.html">Programas</a></li>
-      <li><a href="especialistas-publico.html" style="color:var(--g700)">Directorio</a></li>
-    </ul>
-    <a href="registro.html" class="btn-ct">Ingresar</a>
-    <button class="hbg"><i class="fas fa-bars"></i></button>
+  <nav class="nav" id="nav">
+    <div class="ni">
+      <a href="index.html" class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</a>
+      <ul class="nl">
+        <li class="ni-item">
+          <a href="index.html#servicios" class="nl-a">Servicios <i class="fas fa-chevron-down"></i></a>
+          <div class="dd wide">
+            <span class="dd-lbl">Atención profesional</span>
+            <div class="dd-grid">
+              <a href="servicios/terapia-psicologica.html" class="dd-a"><div class="ic"><i class="fas fa-user-md"></i></div><div><strong>Terapia Psicológica</strong><small style="color:var(--tl);font-size:.75rem">Online</small></div></a>
+              <a href="servicios/coaching-emocional.html" class="dd-a"><div class="ic"><i class="fas fa-rocket"></i></div><div><strong>Coaching Emocional</strong><small style="color:var(--tl);font-size:.75rem">Metas y hábitos</small></div></a>
+              <a href="servicios/terapia-de-pareja.html" class="dd-a"><div class="ic"><i class="fas fa-users"></i></div><div><strong>Terapia de Pareja</strong><small style="color:var(--tl);font-size:.75rem">Vínculos sanos</small></div></a>
+              <a href="servicios/psicologia-familiar.html" class="dd-a"><div class="ic"><i class="fas fa-child"></i></div><div><strong>Psicología Familiar</strong><small style="color:var(--tl);font-size:.75rem">Dinámica familiar</small></div></a>
+            </div>
+          </div>
+        </li>
+        <li class="ni-item">
+          <a href="index.html#programas" class="nl-a">Programas <i class="fas fa-chevron-down"></i></a>
+          <div class="dd">
+            <span class="dd-lbl">Programas temáticos</span>
+            <a href="programas/ansiedad.html" class="dd-a"><div class="ic"><i class="fas fa-wind"></i></div> Manejo de Ansiedad</a>
+            <a href="programas/estres-laboral.html" class="dd-a"><div class="ic"><i class="fas fa-briefcase"></i></div> Estrés y Burnout</a>
+            <a href="programas/pareja.html" class="dd-a"><div class="ic"><i class="fas fa-shield-alt"></i></div> Autoestima y Vínculos</a>
+            <a href="programas/redes-sociales.html" class="dd-a"><div class="ic"><i class="fas fa-mobile-alt"></i></div> Desconexión Digital</a>
+            <a href="programas/index.html" class="dd-a" style="border-top:1px solid var(--border);margin-top:8px;padding-top:12px;color:var(--g700);font-weight:700"><div class="ic"><i class="fas fa-th-large"></i></div> Ver todos →</a>
+          </div>
+        </li>
+        <li class="ni-item"><a href="especialistas-publico.html" class="nl-a" style="color:var(--g700)">Directorio</a></li>
+        <li class="ni-item"><a href="empresas.html" class="nl-a">Para empresas</a></li>
+        <li class="ni-item"><a href="para-especialistas.html" class="nl-a">Para especialistas</a></li>
+      </ul>
+      <div class="na">
+        <a href="login.html" class="btn-li">Ingresar</a>
+        <a href="registro.html" class="btn-ct">Crear cuenta</a>
+      </div>
+      <button class="hbg" onclick="openM()" aria-label="Menú"><i class="fas fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <div class="overlay" id="ov" onclick="closeM()"></div>
+  <div class="mmenu" id="mm">
+    <div class="mm-hd">
+      <span class="logo" style="font-size:1.3rem"><div class="logo-ic" style="width:32px;height:32px;font-size:.9rem"><i class="fas fa-brain"></i></div>bitácora</span>
+      <button class="mm-cl" onclick="closeM()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="mm-body">
+      <div class="mm-sec">
+        <div class="mm-lbl">Servicios</div>
+        <a href="servicios/terapia-psicologica.html" class="mm-a" onclick="closeM()"><i class="fas fa-user-md"></i> Terapia Psicológica</a>
+        <a href="servicios/coaching-emocional.html" class="mm-a" onclick="closeM()"><i class="fas fa-rocket"></i> Coaching Emocional</a>
+        <a href="servicios/terapia-de-pareja.html" class="mm-a" onclick="closeM()"><i class="fas fa-users"></i> Terapia de Pareja</a>
+        <a href="servicios/psicologia-familiar.html" class="mm-a" onclick="closeM()"><i class="fas fa-child"></i> Psicología Familiar</a>
+      </div>
+      <div class="mm-sec">
+        <div class="mm-lbl">Programas</div>
+        <a href="programas/ansiedad.html" class="mm-a" onclick="closeM()"><i class="fas fa-wind"></i> Manejo de Ansiedad</a>
+        <a href="programas/estres-laboral.html" class="mm-a" onclick="closeM()"><i class="fas fa-briefcase"></i> Estrés y Burnout</a>
+        <a href="programas/pareja.html" class="mm-a" onclick="closeM()"><i class="fas fa-shield-alt"></i> Autoestima y Vínculos</a>
+        <a href="programas/redes-sociales.html" class="mm-a" onclick="closeM()"><i class="fas fa-mobile-alt"></i> Desconexión Digital</a>
+      </div>
+      <div class="mm-sec">
+        <div class="mm-lbl">Más</div>
+        <a href="especialistas-publico.html" class="mm-a" onclick="closeM()"><i class="fas fa-search"></i> Directorio de especialistas</a>
+        <a href="empresas.html" class="mm-a" onclick="closeM()"><i class="fas fa-building"></i> Para empresas</a>
+        <a href="para-especialistas.html" class="mm-a" onclick="closeM()"><i class="fas fa-stethoscope"></i> Para especialistas</a>
+      </div>
+    </div>
+    <div class="mm-act">
+      <a href="login.html" class="btn-m1" onclick="closeM()">Iniciar sesión</a>
+      <a href="registro.html" class="btn-m2" onclick="closeM()">Crear cuenta gratis</a>
+    </div>
   </div>
-</nav>
 
-<section class="dir-hero">
-  <h1>Encuentra tu espacio seguro</h1>
-  <p>Todos nuestros especialistas están colegiados, verificados y seleccionados por su calidez humana y experiencia clínica.</p>
-</section>
+  <section class="dir-hero">
+    <h1>Encuentra tu espacio seguro</h1>
+    <p>Todos nuestros especialistas están colegiados, verificados y seleccionados por su calidez humana y experiencia clínica.</p>
+  </section>
 
-<div class="filters">
-  <button class="f-btn active" onclick="filter('all', this)">Todos</button>
-  <button class="f-btn" onclick="filter('ansiedad', this)">Ansiedad</button>
-  <button class="f-btn" onclick="filter('pareja', this)">Pareja</button>
-  <button class="f-btn" onclick="filter('autoestima', this)">Autoestima</button>
-  <button class="f-btn" onclick="filter('trabajo', this)">Estrés Laboral</button>
-</div>
-
-<div class="esp-sec">
-  <div class="esp-grid">
-
-    <div class="esp-card" data-cat="ansiedad autoestima">
-      <div class="esp-head">
-        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200" alt="Psicóloga" class="esp-img">
-        <div class="esp-info">
-          <h3>Mg. María Torres</h3>
-          <p>Psicóloga Clínica</p>
-          <span class="esp-cpp">C.Ps.P. 24501</span>
-        </div>
-      </div>
-      <div class="esp-body">
-        <div class="esp-tags"><span class="e-tag">Ansiedad</span><span class="e-tag">Adultos</span></div>
-        <p class="esp-bio">Especialista en Terapia Cognitivo Conductual. Te ayudo a entender y gestionar tu ansiedad desde la primera sesión con herramientas prácticas.</p>
-        <div class="esp-foot">
-          <a href="registro.html" class="btn-trf">Ver tarifas</a>
-          <a href="registro.html" class="btn-esp">Ver perfil</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="esp-card" data-cat="pareja">
-      <div class="esp-head">
-        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200" alt="Psicólogo" class="esp-img">
-        <div class="esp-info">
-          <h3>Lic. Carlos Ramos</h3>
-          <p>Psicoterapeuta</p>
-          <span class="esp-cpp">C.Ps.P. 19820</span>
-        </div>
-      </div>
-      <div class="esp-body">
-        <div class="esp-tags"><span class="e-tag">Pareja</span><span class="e-tag">Conflictos</span></div>
-        <p class="esp-bio">Experto en terapia de pareja y resolución de conflictos. Trabajo comunicación asertiva y reconstrucción de vínculos dañados.</p>
-        <div class="esp-foot">
-          <a href="registro.html" class="btn-trf">Ver tarifas</a>
-          <a href="registro.html" class="btn-esp">Ver perfil</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="esp-card" data-cat="trabajo">
-      <div class="esp-head">
-        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=200" alt="Coach" class="esp-img">
-        <div class="esp-info">
-          <h3>Ps. Lucía Vargas</h3>
-          <p>Coach & Psicóloga</p>
-          <span class="esp-cpp">C.Ps.P. 31044</span>
-        </div>
-      </div>
-      <div class="esp-body">
-        <div class="esp-tags"><span class="e-tag">Burnout</span><span class="e-tag">Carrera</span></div>
-        <p class="esp-bio">Enfocada en bienestar laboral y prevención del burnout. Ayudo a profesionales a equilibrar su vida personal y sus ambiciones.</p>
-        <div class="esp-foot">
-          <a href="registro.html" class="btn-trf">Ver tarifas</a>
-          <a href="registro.html" class="btn-esp">Ver perfil</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="esp-card" data-cat="autoestima ansiedad">
-      <div class="esp-head">
-        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200" alt="Psicóloga" class="esp-img">
-        <div class="esp-info">
-          <h3>Mg. Ana Quispe</h3>
-          <p>Psicóloga Clínica</p>
-          <span class="esp-cpp">C.Ps.P. 15600</span>
-        </div>
-      </div>
-      <div class="esp-body">
-        <div class="esp-tags"><span class="e-tag">Autoestima</span><span class="e-tag">Mujeres</span></div>
-        <p class="esp-bio">Acompaño a mujeres a fortalecer su autoconcepto y sanar heridas de la infancia. Enfoque humanista y compasivo.</p>
-        <div class="esp-foot">
-          <a href="registro.html" class="btn-trf">Ver tarifas</a>
-          <a href="registro.html" class="btn-esp">Ver perfil</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="esp-card" data-cat="trabajo ansiedad">
-      <div class="esp-head">
-        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200" alt="Psicólogo" class="esp-img">
-        <div class="esp-info">
-          <h3>Lic. Diego Cruz</h3>
-          <p>Psicólogo Clínico</p>
-          <span class="esp-cpp">C.Ps.P. 28901</span>
-        </div>
-      </div>
-      <div class="esp-body">
-        <div class="esp-tags"><span class="e-tag">Estrés</span><span class="e-tag">Jóvenes</span></div>
-        <p class="esp-bio">Trabajo con jóvenes adultos enfrentando crisis de cuarto de vida, ansiedad por el futuro y presión laboral.</p>
-        <div class="esp-foot">
-          <a href="registro.html" class="btn-trf">Ver tarifas</a>
-          <a href="registro.html" class="btn-esp">Ver perfil</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="esp-card" data-cat="pareja">
-      <div class="esp-head">
-        <img src="https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?q=80&w=200" alt="Psicóloga" class="esp-img">
-        <div class="esp-info">
-          <h3>Mg. Sofía Mendez</h3>
-          <p>Terapeuta Familiar</p>
-          <span class="esp-cpp">C.Ps.P. 18230</span>
-        </div>
-      </div>
-      <div class="esp-body">
-        <div class="esp-tags"><span class="e-tag">Familia</span><span class="e-tag">Crianza</span></div>
-        <p class="esp-bio">Especialista en dinámicas familiares complejas y pautas de crianza respetuosa. Sesiones para padres o familias.</p>
-        <div class="esp-foot">
-          <a href="registro.html" class="btn-trf">Ver tarifas</a>
-          <a href="registro.html" class="btn-esp">Ver perfil</a>
-        </div>
-      </div>
-    </div>
-
+  <div class="filters">
+    <button class="f-btn active" onclick="filter('all', this)">Todos</button>
+    <button class="f-btn" onclick="filter('ansiedad', this)">Ansiedad</button>
+    <button class="f-btn" onclick="filter('pareja', this)">Pareja</button>
+    <button class="f-btn" onclick="filter('autoestima', this)">Autoestima</button>
+    <button class="f-btn" onclick="filter('trabajo', this)">Estrés Laboral</button>
   </div>
-</div>
 
-<div class="reg-banner">
-  <h2>¿No sabes a quién elegir?</h2>
-  <p>Crea tu cuenta gratuita y usa nuestro sistema de recomendación inteligente. Te sugeriremos al especialista ideal basado en tus respuestas.</p>
-  <a href="registro.html" class="btn-reg">Crear cuenta gratis</a>
-</div>
+  <div class="esp-sec">
+    <div class="esp-grid">
 
-<footer>
-  <p>© 2026 Bitácora Mental. Todos los derechos reservados.</p>
-</footer>
+      <div class="esp-card" data-cat="ansiedad autoestima">
+        <div class="esp-head">
+          <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200" alt="Psicóloga" class="esp-img">
+          <div class="esp-info">
+            <h3>Mg. María Torres</h3>
+            <p>Psicóloga Clínica</p>
+            <span class="esp-cpp">C.Ps.P. 24501</span>
+          </div>
+        </div>
+        <div class="esp-body">
+          <div class="esp-tags"><span class="e-tag">Ansiedad</span><span class="e-tag">Adultos</span></div>
+          <p class="esp-bio">Especialista en Terapia Cognitivo Conductual. Te ayudo a entender y gestionar tu ansiedad desde la primera sesión con herramientas prácticas.</p>
+          <div class="esp-foot">
+            <a href="registro.html" class="btn-trf">Ver tarifas</a>
+            <a href="registro.html" class="btn-esp">Ver perfil</a>
+          </div>
+        </div>
+      </div>
 
-<script>
-  function filter(cat, btn) {
-    // Activar botón
-    document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    
-    // Filtrar tarjetas
-    const cards = document.querySelectorAll('.esp-card');
-    cards.forEach(card => {
-      if (cat === 'all' || card.dataset.cat.includes(cat)) {
-        card.style.display = 'flex';
-      } else {
-        card.style.display = 'none';
-      }
+      <div class="esp-card" data-cat="pareja">
+        <div class="esp-head">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200" alt="Psicólogo" class="esp-img">
+          <div class="esp-info">
+            <h3>Lic. Carlos Ramos</h3>
+            <p>Psicoterapeuta</p>
+            <span class="esp-cpp">C.Ps.P. 19820</span>
+          </div>
+        </div>
+        <div class="esp-body">
+          <div class="esp-tags"><span class="e-tag">Pareja</span><span class="e-tag">Conflictos</span></div>
+          <p class="esp-bio">Experto en terapia de pareja y resolución de conflictos. Trabajo comunicación asertiva y reconstrucción de vínculos dañados.</p>
+          <div class="esp-foot">
+            <a href="registro.html" class="btn-trf">Ver tarifas</a>
+            <a href="registro.html" class="btn-esp">Ver perfil</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="esp-card" data-cat="trabajo">
+        <div class="esp-head">
+          <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=200" alt="Coach" class="esp-img">
+          <div class="esp-info">
+            <h3>Ps. Lucía Vargas</h3>
+            <p>Coach & Psicóloga</p>
+            <span class="esp-cpp">C.Ps.P. 31044</span>
+          </div>
+        </div>
+        <div class="esp-body">
+          <div class="esp-tags"><span class="e-tag">Burnout</span><span class="e-tag">Carrera</span></div>
+          <p class="esp-bio">Enfocada en bienestar laboral y prevención del burnout. Ayudo a profesionales a equilibrar su vida personal y sus ambiciones.</p>
+          <div class="esp-foot">
+            <a href="registro.html" class="btn-trf">Ver tarifas</a>
+            <a href="registro.html" class="btn-esp">Ver perfil</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="esp-card" data-cat="autoestima ansiedad">
+        <div class="esp-head">
+          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200" alt="Psicóloga" class="esp-img">
+          <div class="esp-info">
+            <h3>Mg. Ana Quispe</h3>
+            <p>Psicóloga Clínica</p>
+            <span class="esp-cpp">C.Ps.P. 15600</span>
+          </div>
+        </div>
+        <div class="esp-body">
+          <div class="esp-tags"><span class="e-tag">Autoestima</span><span class="e-tag">Mujeres</span></div>
+          <p class="esp-bio">Acompaño a mujeres a fortalecer su autoconcepto y sanar heridas de la infancia. Enfoque humanista y compasivo.</p>
+          <div class="esp-foot">
+            <a href="registro.html" class="btn-trf">Ver tarifas</a>
+            <a href="registro.html" class="btn-esp">Ver perfil</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="esp-card" data-cat="trabajo ansiedad">
+        <div class="esp-head">
+          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200" alt="Psicólogo" class="esp-img">
+          <div class="esp-info">
+            <h3>Lic. Diego Cruz</h3>
+            <p>Psicólogo Clínico</p>
+            <span class="esp-cpp">C.Ps.P. 28901</span>
+          </div>
+        </div>
+        <div class="esp-body">
+          <div class="esp-tags"><span class="e-tag">Estrés</span><span class="e-tag">Jóvenes</span></div>
+          <p class="esp-bio">Trabajo con jóvenes adultos enfrentando crisis de cuarto de vida, ansiedad por el futuro y presión laboral.</p>
+          <div class="esp-foot">
+            <a href="registro.html" class="btn-trf">Ver tarifas</a>
+            <a href="registro.html" class="btn-esp">Ver perfil</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="esp-card" data-cat="pareja">
+        <div class="esp-head">
+          <img src="https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?q=80&w=200" alt="Psicóloga" class="esp-img">
+          <div class="esp-info">
+            <h3>Mg. Sofía Mendez</h3>
+            <p>Terapeuta Familiar</p>
+            <span class="esp-cpp">C.Ps.P. 18230</span>
+          </div>
+        </div>
+        <div class="esp-body">
+          <div class="esp-tags"><span class="e-tag">Familia</span><span class="e-tag">Crianza</span></div>
+          <p class="esp-bio">Especialista en dinámicas familiares complejas y pautas de crianza respetuosa. Sesiones para padres o familias.</p>
+          <div class="esp-foot">
+            <a href="registro.html" class="btn-trf">Ver tarifas</a>
+            <a href="registro.html" class="btn-esp">Ver perfil</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="reg-banner">
+    <h2>¿No sabes a quién elegir?</h2>
+    <p>Crea tu cuenta gratuita y usa nuestro sistema de recomendación inteligente. Te sugeriremos al especialista ideal basado en tus respuestas.</p>
+    <a href="registro.html" class="btn-reg">Crear cuenta gratis</a>
+  </div>
+
+  <footer class="footer">
+    <div class="f-grid">
+      <div>
+        <div class="f-logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora mental</div>
+        <p class="f-tg">Plataforma peruana de bienestar emocional. Conectamos personas con psicólogos y coaches verificados para sesiones online accesibles y confidenciales.</p>
+        <div class="f-co">
+          <a href="tel:+51999999999"><i class="fas fa-phone"></i> +51 999 999 999</a>
+          <a href="mailto:hola@bitacoramental.pe"><i class="fas fa-envelope"></i> hola@bitacoramental.pe</a>
+          <a href="https://wa.me/51999999999" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+          <span style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ts)"><i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> Lima, Perú</span>
+        </div>
+        <div class="f-soc">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+        </div>
+      </div>
+      <div class="f-col">
+        <h5>Servicios</h5>
+        <ul class="f-lk">
+          <li><a href="servicios/terapia-psicologica.html">Terapia Psicológica</a></li>
+          <li><a href="servicios/coaching-emocional.html">Coaching Emocional</a></li>
+          <li><a href="servicios/terapia-de-pareja.html">Terapia de Pareja</a></li>
+          <li><a href="servicios/psicologia-familiar.html">Psicología Familiar</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h5>Programas</h5>
+        <ul class="f-lk">
+          <li><a href="programas/ansiedad.html">Ansiedad</a></li>
+          <li><a href="programas/estres-laboral.html">Estrés y Burnout</a></li>
+          <li><a href="programas/pareja.html">Autoestima y Vínculos</a></li>
+          <li><a href="programas/redes-sociales.html">Desconexión Digital</a></li>
+          <li><a href="programas/index.html">Ver todos →</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h5>Plataforma</h5>
+        <ul class="f-lk">
+          <li><a href="especialistas-publico.html">Directorio</a></li>
+          <li><a href="test-bienestar.html">Test de bienestar</a></li>
+          <li><a href="empresas.html">Para empresas</a></li>
+          <li><a href="para-especialistas.html">Para especialistas</a></li>
+          <li><a href="faq.html">Preguntas frecuentes</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h5>Ayuda</h5>
+        <ul class="f-lk">
+          <li><a href="contacto.html">Contacto</a></li>
+          <li><a href="privacidad.html">Privacidad</a></li>
+          <li><a href="terminos.html">Términos</a></li>
+          <li><a href="libro-reclamaciones.html">Reclamaciones</a></li>
+          <li><a href="lineas-emergencia.html">Líneas de emergencia</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="f-bot">
+      <p>© 2026 Bitácora Mental. Todos los derechos reservados. Hecho en Perú 🇵🇪</p>
+      <nav class="f-leg">
+        <a href="privacidad.html">Privacidad</a>
+        <a href="terminos.html">Términos</a>
+        <a href="libro-reclamaciones.html">Reclamaciones</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+
+  <script>
+    // Filtro de especialistas
+    function filter(cat, btn) {
+      document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      const cards = document.querySelectorAll('.esp-card');
+      cards.forEach(card => {
+        if (cat === 'all' || card.dataset.cat.includes(cat)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('sc', window.scrollY > 10);
     });
-  }
-</script>
 
+    // Mobile menu functions
+    function openM() {
+      const mm = document.getElementById('mm');
+      mm.style.display = 'flex';
+      document.getElementById('ov').classList.add('show');
+      setTimeout(() => mm.classList.add('open'), 10);
+      document.body.style.overflow = 'hidden';
+    }
+    function closeM() {
+      const mm = document.getElementById('mm');
+      mm.classList.remove('open');
+      document.getElementById('ov').classList.remove('show');
+      setTimeout(() => mm.style.display = 'none', 300);
+      document.body.style.overflow = '';
+    }
+
+    // CMS CONFIGURATION APPLY
+    function aplicarConfiguracion(c) {
+      if(c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
+      if(c.color_accent) { 
+        document.documentElement.style.setProperty('--clay', c.color_accent); 
+        document.documentElement.style.setProperty('--clay-l', c.color_accent + '33'); 
+      }
+
+      let footer = document.querySelector('.footer');
+      if(footer) {
+        if(c.foot_desc) { let tg = footer.querySelector('.f-tg'); if(tg) tg.textContent = c.foot_desc; }
+        
+        let contacts = footer.querySelectorAll('.f-co a');
+        if(c.foot_tel && contacts[0]) { contacts[0].innerHTML = `<i class="fas fa-phone"></i> ${c.foot_tel}`; contacts[0].href = `tel:${c.foot_tel.replace(/ /g,'')}`; }
+        if(c.foot_mail && contacts[1]) { contacts[1].innerHTML = `<i class="fas fa-envelope"></i> ${c.foot_mail}`; contacts[1].href = `mailto:${c.foot_mail}`; }
+        if(c.foot_wa && contacts[2]) contacts[2].href = c.foot_wa;
+        if(c.foot_loc) { let span = footer.querySelector('.f-co span'); if(span) span.innerHTML = `<i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> ${c.foot_loc}`; }
+        
+        let soc = footer.querySelectorAll('.f-soc a');
+        if(c.soc_ig && soc[0]) soc[0].href = c.soc_ig;
+        if(c.soc_tk && soc[1]) soc[1].href = c.soc_tk;
+        if(c.soc_in && soc[2]) soc[2].href = c.soc_in;
+        if(c.soc_fb && soc[3]) soc[3].href = c.soc_fb;
+
+        if(c.foot_copy) { let p = footer.querySelector('.f-bot p'); if(p) p.textContent = c.foot_copy; }
+      }
+    }
+
+    async function cargarConfiguracionCMS() {
+      if (!window.sb) return;
+      try {
+        const { data, error } = await window.sb.from('config_web').select('*');
+        if (error) throw error;
+        if (!data) return;
+
+        const config = {};
+        data.forEach(item => config[item.clave] = item.valor);
+        aplicarConfiguracion(config);
+      } catch (err) {
+        console.error("Error conectando con el CMS:", err);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', cargarConfiguracionCMS);
+  </script>
 </body>
 </html>
