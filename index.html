@@ -628,7 +628,9 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/supabase-config.js"></script> <script>
+<script src="js/supabase-config.js"></script>
+
+<script>
 // =====================================================================
 // 1. DICCIONARIOS DE MAPEO (Dónde va cada cosa)
 // =====================================================================
@@ -681,7 +683,7 @@ const templateMappings = {
   'info_sub':       { sel: '.desc-text', type: 'html' }
 };
 
-// Generar dinámicamente mapeos para listas de hasta 8 elementos (Aprenderás, Sesiones, Para quién)
+// Generar dinámicamente mapeos para listas de hasta 8 elementos
 for(let i=1; i<=8; i++) {
   templateMappings[`learn_${i}`] = { sel: `.learn-grid .learn-item:nth-child(${i}) span`, type: 'text' };
   templateMappings[`symp_${i}`]  = { sel: `.pq-list .pq-item:nth-child(${i}) span, .pq-grid .pq-card:nth-child(${i}) p`, type: 'text' };
@@ -695,19 +697,55 @@ for(let i=1; i<=8; i++) {
 
 // Mapeos específicos para el Index
 const indexMappings = {
-  'hero_badge':     { sel: '.hero-badge', type: 'keep_icon_left' },
+  'hero_badge':     { sel: '.h-badge', type: 'keep_icon_left' },
   'hero_titulo':    { sel: '.hero h1', type: 'html' },
-  'hero_subtitulo': { sel: '.hero-sub', type: 'html' },
-  'stat1_number':   { sel: '.hero-stat:nth-child(1) strong', type: 'text' },
-  'stat1_label':    { sel: '.hero-stat:nth-child(1) span', type: 'text' },
-  'stat2_number':   { sel: '.hero-stat:nth-child(2) strong', type: 'text' },
-  'stat2_label':    { sel: '.hero-stat:nth-child(2) span', type: 'text' },
-  'stat3_number':   { sel: '.hero-stat:nth-child(3) strong', type: 'text' },
-  'stat3_label':    { sel: '.hero-stat:nth-child(3) span', type: 'text' },
-  'srv_tit':        { sel: '#servicios h2', type: 'html' },
-  'paso_tit':       { sel: '#proceso h2', type: 'html' },
-  'mod_tit':        { sel: '#planes h2', type: 'html' },
-  'faq_tit':        { sel: '#faq h2', type: 'html' },
+  'hero_subtitulo': { sel: '.h-sub', type: 'html' },
+  'hero_trust_text':{ sel: '.t-txt', type: 'html' },
+  'hero_btn1_text': { sel: '.h-act .btn-p', type: 'keep_icon_right' },
+  'hero_btn1_url':  { sel: '.h-act .btn-p', type: 'href' },
+  'hero_btn2_text': { sel: '.h-act .btn-s', type: 'keep_icon_left' },
+  'hero_btn2_url':  { sel: '.h-act .btn-s', type: 'href' },
+  
+  'hero_f1_tit':    { sel: '.h-fl.f1 strong', type: 'text' },
+  'hero_f1_sub':    { sel: '.h-fl.f1 span', type: 'text' },
+  'hero_f2_tit':    { sel: '.h-fl.f2 strong', type: 'text' },
+  'hero_f2_sub':    { sel: '.h-fl.f2 span', type: 'text' },
+
+  'stat1_number':   { sel: '.stats-in .st:nth-child(1) .st-n', type: 'text' },
+  'stat1_label':    { sel: '.stats-in .st:nth-child(1) .st-l', type: 'text' },
+  'stat2_number':   { sel: '.stats-in .st:nth-child(3) .st-n', type: 'text' },
+  'stat2_label':    { sel: '.stats-in .st:nth-child(3) .st-l', type: 'text' },
+  'stat3_number':   { sel: '.stats-in .st:nth-child(5) .st-n', type: 'text' },
+  'stat3_label':    { sel: '.stats-in .st:nth-child(5) .st-l', type: 'text' },
+  'stat4_number':   { sel: '.stats-in .st:nth-child(7) .st-n', type: 'text' },
+  'stat4_label':    { sel: '.stats-in .st:nth-child(7) .st-l', type: 'text' },
+
+  'srv_tag':        { sel: '#servicios .tag', type: 'keep_icon_left' },
+  'srv_tit':        { sel: '#servicios .s-ti', type: 'html' },
+  'srv_sub':        { sel: '#servicios .s-sub', type: 'text' },
+  
+  'srv1_tit':       { sel: '.srv-c:nth-child(1) h3', type: 'text' },
+  'srv1_desc':      { sel: '.srv-c:nth-child(1) p', type: 'text' },
+  'srv2_tit':       { sel: '.srv-c:nth-child(2) h3', type: 'text' },
+  'srv2_desc':      { sel: '.srv-c:nth-child(2) p', type: 'text' },
+  'srv3_tit':       { sel: '.srv-c:nth-child(3) h3', type: 'text' },
+  'srv3_desc':      { sel: '.srv-c:nth-child(3) p', type: 'text' },
+
+  'paso_tag':       { sel: '.como-g .tag:nth-child(1)', type: 'keep_icon_left' },
+  'paso_tit':       { sel: '.como-g .s-ti:nth-child(2)', type: 'html' },
+  'p1_tit':         { sel: '.step:nth-child(1) h3', type: 'text' },
+  'p1_desc':        { sel: '.step:nth-child(1) p', type: 'text' },
+  'p2_tit':         { sel: '.step:nth-child(2) h3', type: 'text' },
+  'p2_desc':        { sel: '.step:nth-child(2) p', type: 'text' },
+  'p3_tit':         { sel: '.step:nth-child(3) h3', type: 'text' },
+  'p3_desc':        { sel: '.step:nth-child(3) p', type: 'text' },
+
+  'mod_tag':        { sel: '.plan-g', type: 'ignore' }, // Placeholder 
+  'mod_tit':        { sel: '.s-hd.c .s-ti', type: 'html' },
+  'mod_sub':        { sel: '.s-hd.c .s-sub', type: 'text' },
+
+  'faq_tag':        { sel: '.sec-bg:last-of-type .tag', type: 'keep_icon_left' },
+  'faq_tit':        { sel: '.sec-bg:last-of-type .s-ti', type: 'html' }
 };
 
 // =====================================================================
@@ -734,7 +772,7 @@ else if (path.includes('vinculos')) pageName = 'vinculos';
 // 3. FUNCIÓN PARA INYECTAR TEXTO SIN ROMPER LOS ICONOS HTML
 // =====================================================================
 function updateDOM(selector, value, type = 'text') {
-  if (!value || value === '') return;
+  if (!value || value === '' || type === 'ignore') return;
   document.querySelectorAll(selector).forEach(el => {
     if (type === 'text') el.textContent = value;
     else if (type === 'html') el.innerHTML = value;
@@ -770,14 +808,22 @@ function aplicarConfiguracion(c) {
 
   // C. Aplicar configuraciones según el tipo de página
   if (pageName === 'index') {
-    // Si es el Index, buscamos del diccionario de Index + FAQs
+    // Aplicar mapeos básicos
     for (const [key, mapping] of Object.entries(indexMappings)) {
       if (c[key] !== undefined) updateDOM(mapping.sel, c[key], mapping.type);
     }
+    
+    // Aplicar FAQs
     for (let i=1; i<=6; i++) {
-        if(c[`faq${i}_q`]) updateDOM(`.faq-item:nth-of-type(${i}) .faq-q`, c[`faq${i}_q`], 'keep_icon_right');
-        if(c[`faq${i}_a`]) updateDOM(`.faq-item:nth-of-type(${i}) .faq-a`, c[`faq${i}_a`], 'html');
+        if(c[`faq${i}_q`]) updateDOM(`.faq-i:nth-of-type(${i}) .faq-q`, c[`faq${i}_q`], 'keep_icon_right');
+        if(c[`faq${i}_a`]) updateDOM(`.faq-i:nth-of-type(${i}) .faq-ai`, c[`faq${i}_a`], 'html');
     }
+    
+    // Si se subió imagen del hero, cambiarla
+    if(c.hero_img && c.hero_img.trim() !== '') {
+        updateDOM('.h-img img', c.hero_img, 'src');
+    }
+
   } else {
     // Si es Programa o Servicio (Plantilla dinámica)
     const prefix = pageName + '_';
