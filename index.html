@@ -628,431 +628,206 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase-config.js"></script>
+<script src="../js/supabase-config.js"></script> <script>
+// =====================================================================
+// 1. DICCIONARIOS DE MAPEO (Dónde va cada cosa)
+// =====================================================================
 
-<script>
-  // Navbar scroll
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => nav.classList.toggle('sc', window.scrollY > 30), {passive:true});
+// Mapeos Globales (Navbar y Footer) - Aplican a todas las páginas
+const globalMappings = {
+  'navbar_logo_text': { sel: '.logo', type: 'keep_icon_left' },
+  'navbar_btn1_text': { sel: '.btn-li', type: 'text' },
+  'navbar_btn1_url':  { sel: '.btn-li', type: 'href' },
+  'navbar_btn2_text': { sel: '.btn-ct', type: 'text' },
+  'navbar_btn2_url':  { sel: '.btn-ct', type: 'href' },
+  'foot_desc':        { sel: '.f-tg', type: 'text' },
+  'foot_tel':         { sel: '.f-co a[href^="tel:"]', type: 'keep_icon_left' },
+  'foot_mail':        { sel: '.f-co a[href^="mailto:"]', type: 'keep_icon_left' },
+  'foot_wa':          { sel: '.f-co a[href^="https://wa.me"]', type: 'href' },
+  'foot_loc':         { sel: '.f-co span', type: 'keep_icon_left' },
+  'foot_copy':        { sel: '.f-bot p', type: 'text' },
+  'soc_ig':           { sel: '.f-soc a[aria-label="Instagram"]', type: 'href' },
+  'soc_tk':           { sel: '.f-soc a[aria-label="TikTok"]', type: 'href' },
+  'soc_in':           { sel: '.f-soc a[aria-label="LinkedIn"]', type: 'href' },
+  'soc_fb':           { sel: '.f-soc a[aria-label="Facebook"]', type: 'href' }
+};
 
-  // Mobile menu
-  function openM() {
-    const mm = document.getElementById('mm');
-    mm.style.display = 'flex';
-    document.getElementById('ov').classList.add('show');
-    setTimeout(() => mm.classList.add('open'), 10);
-    document.body.style.overflow = 'hidden';
-  }
-  function closeM() {
-    const mm = document.getElementById('mm');
-    mm.classList.remove('open');
-    document.getElementById('ov').classList.remove('show');
-    setTimeout(() => mm.style.display = 'none', 300);
-    document.body.style.overflow = '';
-  }
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeM(); });
-
-  // FAQ
-  function toggleF(btn) {
-    const item = btn.closest('.faq-i');
-    const open = item.classList.contains('open');
-    document.querySelectorAll('.faq-i.open').forEach(el => el.classList.remove('open'));
-    if (!open) item.classList.add('open');
-  }
-
-  // Smooth scroll
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const t = document.querySelector(a.getAttribute('href'));
-      if (t) { e.preventDefault(); t.scrollIntoView({behavior:'smooth'}); closeM(); }
-    });
-  });
-
-  // --- LÓGICA TALLERES (DISEÑO COLORIDO) ---
+// Mapeos de Plantillas (Servicios y Programas)
+const templateMappings = {
+  'hero_tag':       { sel: '.h-tag, .tag', type: 'keep_icon_left' },
+  'hero_h1':        { sel: '.hero h1, .hero-srv h1', type: 'html' },
+  'hero_desc':      { sel: '.hero-desc, .hero-srv p', type: 'html' },
+  'hero_btn1_txt':  { sel: '.btn-p', type: 'text' },
+  'hero_btn1_url':  { sel: '.btn-p', type: 'href' },
+  'hero_btn2_txt':  { sel: '.btn-s', type: 'text' },
+  'hero_btn2_url':  { sel: '.btn-s', type: 'href' },
   
-  async function cargarTalleres() {
-      if (!window.sb) return;
-      
-      const container = document.getElementById('talleresContainer');
-      
-      const { data: talleres } = await window.sb
-          .from('web_talleres')
-          .select('*')
-          .gte('fecha', new Date().toISOString())
-          .eq('visible', true)
-          .order('fecha', { ascending: true })
-          .limit(3);
+  // Metadatos (Iconos en Hero de Programas)
+  'meta1_txt':      { sel: '.hero-meta .h-m:nth-child(1)', type: 'keep_icon_left' },
+  'meta2_txt':      { sel: '.hero-meta .h-m:nth-child(2)', type: 'keep_icon_left' },
+  'meta3_txt':      { sel: '.hero-meta .h-m:nth-child(3)', type: 'keep_icon_left' },
+  'meta4_txt':      { sel: '.hero-meta .h-m:nth-child(4)', type: 'keep_icon_left' },
+  
+  // Tarjetas Flotantes y Sidebar
+  'hero_float_txt': { sel: '.hero-float', type: 'keep_icon_left' },
+  'card_tit':       { sel: '.hero-price .val, .side-head .val', type: 'text' },
+  'card_sub':       { sel: '.hero-price .lbl', type: 'text' },
+  'card_btn_url':   { sel: '.btn-buy, .btn-hero', type: 'href' },
+  
+  // Contenido principal
+  'content_h2':     { sel: '.sec-t', type: 'html' },
+  'content_p':      { sel: '.desc-text', type: 'html' },
+  'info_h2':        { sel: '.sec-t', type: 'html' },
+  'info_sub':       { sel: '.desc-text', type: 'html' }
+};
 
-      if (talleres && talleres.length > 0) {
-          container.innerHTML = talleres.map((t, index) => {
-              const fecha = new Date(t.fecha);
-              const dia = fecha.getDate();
-              const mes = fecha.toLocaleString('es-ES', { month: 'short' }).toUpperCase().replace('.', '');
-              const hora = fecha.toLocaleString('es-ES', { hour: '2-digit', minute: '2-digit' });
-              
-              const disponibles = t.cupos_totales - t.cupos_ocupados;
-              const colorClass = `ws-card-${(index % 3) + 1}`; 
-              const options = { weekday: 'long', day: 'numeric', month: 'short' };
-              const fechaTexto = fecha.toLocaleDateString('es-ES', options);
-
-              return `
-              <div class="workshop-card ${colorClass}">
-                  <div class="ws-header">
-                      <span class="date-big">${dia}</span>
-                      <span class="month-big">${mes}</span>
-                  </div>
-                  <div class="ws-body">
-                      <span class="ws-type">= ${t.tipo.toUpperCase()} • ${t.duracion.toUpperCase()}</span>
-                      <h3 class="ws-title">${t.titulo}</h3>
-                      <p class="ws-desc">${t.descripcion}</p>
-                      
-                      <ul class="ws-details">
-                          <li><i class="far fa-calendar"></i> ${fechaTexto} • ${hora}</li>
-                          <li><i class="fas fa-video"></i> Virtual (Zoom)</li>
-                          <li><i class="far fa-user"></i> ${t.especialista}</li>
-                      </ul>
-
-                      <div class="spots-pill">
-                          <i class="far fa-check-circle"></i> ${disponibles} cupos disponibles de ${t.cupos_totales}
-                      </div>
-
-                      <button onclick="openWsModal('${t.id}', '${t.titulo.replace(/'/g, "&apos;")}')" class="btn-ws">Inscribirme gratis</button>
-                  </div>
-              </div>
-              `;
-          }).join('');
-      } else {
-          container.innerHTML = `<p style="text-align:center; color:var(--ts); grid-column:1/-1; padding:40px;">No hay talleres programados esta semana.</p>`;
-      }
-  }
-
-  // Modal Control
-  function openWsModal(id, titulo) {
-    document.getElementById('wsId').value = id;
-    document.getElementById('mdWsTitle').textContent = titulo;
-    document.getElementById('modalWs').classList.add('show');
-  }
-  function closeWsModal() {
-    document.getElementById('modalWs').classList.remove('show');
-  }
-
-  // Submit Logic
-  async function submitWs(e) {
-    e.preventDefault();
-    const btn = document.getElementById('wsBtn');
-    const txt = btn.textContent;
-    btn.textContent = "Procesando..."; btn.disabled = true;
-
-    const datos = {
-      nombre: document.getElementById('wsName').value,
-      email: document.getElementById('wsEmail').value,
-      telefono: document.getElementById('wsPhone').value,
-      taller_id: document.getElementById('wsId').value
-    };
-
-    try {
-      const passTemp = "Bitacora" + Math.floor(Math.random()*10000);
-      await window.sb.auth.signUp({
-        email: datos.email, password: passTemp,
-        options: { data: { full_name: datos.nombre, phone: datos.telefono } }
-      });
-
-      const { error } = await window.sb.from('web_inscripciones').insert([datos]);
-      if (error) throw error;
-      
-      alert(`¡Inscripción exitosa! Hemos enviado el acceso a ${datos.email}.`);
-      closeWsModal();
-      document.getElementById('formWs').reset();
-
-    } catch (err) {
-      console.error(err);
-      alert("Ocurrió un error. Es posible que ya estés inscrito o registrado.");
-    } finally {
-      btn.textContent = txt; btn.disabled = false;
-    }
-  }
-
-  // Init
-  document.addEventListener('DOMContentLoaded', () => {
-    cargarTalleres();
-  });
-</script>
-
-<script>
-// ESTA FUNCIÓN APLICA TODOS LOS CAMBIOS VISUALES A LA PÁGINA
-function aplicarConfiguracion(c) {
-    // 1. COLORES
-    if(c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
-    if(c.color_accent) { 
-      document.documentElement.style.setProperty('--clay', c.color_accent); 
-      document.documentElement.style.setProperty('--clay-l', c.color_accent + '33'); 
-    }
-
-    // 2. HERO (INICIO)
-    if(c.hero_badge) { let b = document.querySelector('.h-badge'); if(b) b.innerHTML = `<span class="dot"></span> ${c.hero_badge}`; }
-    if(c.hero_titulo) { let t = document.querySelector('.hero h1'); if(t) t.innerHTML = c.hero_titulo; }
-    if(c.hero_sub) { let s = document.querySelector('.hero .h-sub'); if(s) s.textContent = c.hero_sub; }
-    if(c.hero_img) { let i = document.querySelector('.h-img img'); if(i) i.src = c.hero_img; }
-    if(c.hero_btn1_txt) { let b = document.querySelector('.h-act .btn-p'); if(b) { b.innerHTML = `${c.hero_btn1_txt} <i class="fas fa-arrow-right"></i>`; b.href = c.hero_btn1_url || '#'; } }
-    if(c.hero_btn2_txt) { let b = document.querySelector('.h-act .btn-s'); if(b) { b.innerHTML = `<i class="fas fa-search"></i> ${c.hero_btn2_txt}`; b.href = c.hero_btn2_url || '#'; } }
-    if(c.hero_f1_tit) { let t = document.querySelector('.h-fl.f1 .f-tx strong'); if(t) t.textContent = c.hero_f1_tit; }
-    if(c.hero_f1_sub) { let s = document.querySelector('.h-fl.f1 .f-tx span'); if(s) s.textContent = c.hero_f1_sub; }
-    if(c.hero_f2_tit) { let t = document.querySelector('.h-fl.f2 .f-tx strong'); if(t) t.textContent = c.hero_f2_tit; }
-    if(c.hero_f2_sub) { let s = document.querySelector('.h-fl.f2 .f-tx span'); if(s) s.textContent = c.hero_f2_sub; }
-
-    // 3. ESTADÍSTICAS
-    let sts = document.querySelectorAll('.stats .st');
-    if(sts.length >= 4) {
-      if(c.st1_n) sts[0].querySelector('.st-n').textContent = c.st1_n;
-      if(c.st1_t) sts[0].querySelector('.st-l').textContent = c.st1_t;
-      if(c.st2_n) sts[1].querySelector('.st-n').textContent = c.st2_n;
-      if(c.st2_t) sts[1].querySelector('.st-l').textContent = c.st2_t;
-      if(c.st3_n) sts[2].querySelector('.st-n').textContent = c.st3_n;
-      if(c.st3_t) sts[2].querySelector('.st-l').textContent = c.st3_t;
-      if(c.st4_n) sts[3].querySelector('.st-n').textContent = c.st4_n;
-      if(c.st4_t) sts[3].querySelector('.st-l').textContent = c.st4_t;
-    }
-
-    // 4. SERVICIOS
-    let srvSec = document.querySelector('#servicios');
-    if(srvSec) {
-        if(c.srv_tag) { let t = srvSec.querySelector('.tag'); if(t) t.innerHTML = `<i class="fas fa-star"></i> ${c.srv_tag}`; }
-        if(c.srv_tit) { let t = srvSec.querySelector('.s-ti'); if(t) t.innerHTML = c.srv_tit; }
-        if(c.srv_sub) { let s = srvSec.querySelector('.s-sub'); if(s) s.textContent = c.srv_sub; }
-        
-        let srvs = srvSec.querySelectorAll('.srv-c');
-        if(srvs.length >= 3) {
-          if(c.srv1_ic) srvs[0].querySelector('.srv-ic i').className = `fas ${c.srv1_ic}`;
-          if(c.srv1_tit) srvs[0].querySelector('h3').textContent = c.srv1_tit;
-          if(c.srv1_desc) srvs[0].querySelector('p').textContent = c.srv1_desc;
-          if(c.srv1_btn_txt) { let a=srvs[0].querySelector('a'); a.innerHTML = `${c.srv1_btn_txt} <i class="fas fa-arrow-right"></i>`; a.href = c.srv1_btn_url || '#'; }
-          
-          if(c.srv2_ic) srvs[1].querySelector('.srv-ic i').className = `fas ${c.srv2_ic}`;
-          if(c.srv2_tit) srvs[1].querySelector('h3').textContent = c.srv2_tit;
-          if(c.srv2_desc) srvs[1].querySelector('p').textContent = c.srv2_desc;
-          if(c.srv2_btn_txt) { let a=srvs[1].querySelector('a'); a.innerHTML = `${c.srv2_btn_txt} <i class="fas fa-arrow-right"></i>`; a.href = c.srv2_btn_url || '#'; }
-          
-          if(c.srv3_ic) srvs[2].querySelector('.srv-ic i').className = `fas ${c.srv3_ic}`;
-          if(c.srv3_tit) srvs[2].querySelector('h3').textContent = c.srv3_tit;
-          if(c.srv3_desc) srvs[2].querySelector('p').textContent = c.srv3_desc;
-          if(c.srv3_btn_txt) { let a=srvs[2].querySelector('a'); a.innerHTML = `${c.srv3_btn_txt} <i class="fas fa-arrow-right"></i>`; a.href = c.srv3_btn_url || '#'; }
-        }
-    }
-
-    // 5. TALLERES
-    let talSec = document.querySelector('#talleres');
-    if (talSec) {
-        if(c.tal_tit) { let t = talSec.querySelector('.s-ti'); if(t) t.innerHTML = c.tal_tit; }
-        if(c.tal_sub) { let s = talSec.querySelector('.s-sub'); if(s) s.textContent = c.tal_sub; }
-        if(c.tal_btn_txt) { let b = talSec.querySelector('.btn-cal'); if(b) b.textContent = c.tal_btn_txt; }
-    }
-
-    // 6. EL PROCESO
-    let pasosSec = document.querySelectorAll('.sec-bg')[0]; 
-    if(pasosSec) {
-       if(c.paso_tag) { let t = pasosSec.querySelector('.tag'); if(t) t.innerHTML = `<i class="fas fa-map"></i> ${c.paso_tag}`; }
-       if(c.paso_tit) { let t = pasosSec.querySelector('.s-ti'); if(t) t.innerHTML = c.paso_tit; }
-       if(c.paso_img) { let i = pasosSec.querySelector('.como-img img'); if(i) i.src = c.paso_img; }
-       let steps = pasosSec.querySelectorAll('.step');
-       if(steps.length >= 3) {
-         if(c.p1_tit) steps[0].querySelector('h3').textContent = c.p1_tit;
-         if(c.p1_desc) steps[0].querySelector('p').textContent = c.p1_desc;
-         if(c.p2_tit) steps[1].querySelector('h3').textContent = c.p2_tit;
-         if(c.p2_desc) steps[1].querySelector('p').textContent = c.p2_desc;
-         if(c.p3_tit) steps[2].querySelector('h3').textContent = c.p3_tit;
-         if(c.p3_desc) steps[2].querySelector('p').textContent = c.p3_desc;
-       }
-       if(c.paso_btn_txt) { let btn = pasosSec.querySelector('.btn-p'); if(btn) { btn.innerHTML = `${c.paso_btn_txt} <i class="fas fa-arrow-right"></i>`; btn.href = c.paso_btn_url || '#'; } }
-    }
-
-    // 7. MODALIDADES (PLANES)
-    let allSecs = document.querySelectorAll('.sec');
-    let planSec = Array.from(allSecs).find(s => s.querySelector('.tag i.fa-wallet'));
-    if(planSec) {
-      if(c.mod_tag) { let t=planSec.querySelector('.tag'); if(t) t.innerHTML = `<i class="fas fa-wallet"></i> ${c.mod_tag}`; }
-      if(c.mod_tit) { let t=planSec.querySelector('.s-ti'); if(t) t.innerHTML = c.mod_tit; }
-      if(c.mod_sub) { let s=planSec.querySelector('.s-sub'); if(s) s.textContent = c.mod_sub; }
-      
-      let planes = planSec.querySelectorAll('.plan-c');
-      if(planes.length >= 3) {
-        if(c.m1_ic) planes[0].querySelector('.plan-ic i').className = `fas ${c.m1_ic}`;
-        if(c.m1_tit) planes[0].querySelector('.plan-ti').textContent = c.m1_tit;
-        if(c.m1_desc) planes[0].querySelector('.plan-desc').textContent = c.m1_desc;
-        let p1li = planes[0].querySelectorAll('li');
-        if(c.m1_f1 && p1li[0]) p1li[0].innerHTML = `<i class="fas fa-check"></i> ${c.m1_f1}`;
-        if(c.m1_f2 && p1li[1]) p1li[1].innerHTML = `<i class="fas fa-check"></i> ${c.m1_f2}`;
-        if(c.m1_f3 && p1li[2]) p1li[2].innerHTML = `<i class="fas fa-check"></i> ${c.m1_f3}`;
-        if(c.m1_btn_txt) { planes[0].querySelector('a').textContent = c.m1_btn_txt; planes[0].querySelector('a').href = c.m1_btn_url || '#'; }
-
-        if(c.m2_tag) { let t=planes[1].querySelector('.tag'); if(t) t.textContent = c.m2_tag; }
-        if(c.m2_tit) planes[1].querySelector('.plan-ti').textContent = c.m2_tit;
-        if(c.m2_desc) planes[1].querySelector('.plan-desc').textContent = c.m2_desc;
-        let p2li = planes[1].querySelectorAll('li');
-        if(c.m2_f1 && p2li[0]) p2li[0].innerHTML = `<i class="fas fa-check"></i> ${c.m2_f1}`;
-        if(c.m2_f2 && p2li[1]) p2li[1].innerHTML = `<i class="fas fa-check"></i> ${c.m2_f2}`;
-        if(c.m2_f3 && p2li[2]) p2li[2].innerHTML = `<i class="fas fa-check"></i> ${c.m2_f3}`;
-        if(c.m2_btn_txt) { planes[1].querySelector('a').textContent = c.m2_btn_txt; planes[1].querySelector('a').href = c.m2_btn_url || '#'; }
-
-        if(c.m3_ic) planes[2].querySelector('.plan-ic i').className = `fas ${c.m3_ic}`;
-        if(c.m3_tit) planes[2].querySelector('.plan-ti').textContent = c.m3_tit;
-        if(c.m3_desc) planes[2].querySelector('.plan-desc').textContent = c.m3_desc;
-        let p3li = planes[2].querySelectorAll('li');
-        if(c.m3_f1 && p3li[0]) p3li[0].innerHTML = `<i class="fas fa-check"></i> ${c.m3_f1}`;
-        if(c.m3_f2 && p3li[1]) p3li[1].innerHTML = `<i class="fas fa-check"></i> ${c.m3_f2}`;
-        if(c.m3_f3 && p3li[2]) p3li[2].innerHTML = `<i class="fas fa-check"></i> ${c.m3_f3}`;
-        if(c.m3_btn_txt) { planes[2].querySelector('a').textContent = c.m3_btn_txt; planes[2].querySelector('a').href = c.m3_btn_url || '#'; }
-      }
-    }
-
-    // 8. PROGRAMAS TEMÁTICOS
-    let progSec = document.querySelector('#programas');
-    if(progSec) {
-      if(c.pro_tag) { let t = progSec.querySelector('.tag'); if(t) t.innerHTML = `<i class="fas fa-layer-group"></i> ${c.pro_tag}`; }
-      if(c.pro_tit) { let t = progSec.querySelector('.s-ti'); if(t) t.innerHTML = c.pro_tit; }
-      let ps = progSec.querySelectorAll('.s-sub');
-      if(ps.length >= 2) {
-        if(c.pro_s1) ps[0].textContent = c.pro_s1;
-        if(c.pro_s2) ps[1].textContent = c.pro_s2;
-      }
-      if(c.pro_btn_txt) { let a = progSec.querySelector('.btn-p'); if(a) { a.textContent = c.pro_btn_txt; a.href = c.pro_btn_url || '#'; } }
-      if(c.pro_img) { let i = progSec.querySelector('.como-img img'); if(i) i.src = c.pro_img; }
-    }
-
-    // 9. EMPRESAS
-    let empSec = document.querySelector('.emp-sec');
-    if(empSec) {
-      if(c.emp_tag) { let t = empSec.querySelector('.tag'); if(t) t.innerHTML = `<i class="fas fa-building"></i> ${c.emp_tag}`; }
-      if(c.emp_tit) { let t = empSec.querySelector('.s-ti'); if(t) t.innerHTML = c.emp_tit; }
-      if(c.emp_sub) { let s = empSec.querySelector('.s-sub'); if(s) s.textContent = c.emp_sub; }
-      let bens = empSec.querySelectorAll('.ben');
-      if(bens.length >= 4) {
-        if(c.emp_b1) bens[0].innerHTML = `<i class="fas fa-chart-line"></i> ${c.emp_b1}`;
-        if(c.emp_b2) bens[1].innerHTML = `<i class="fas fa-users"></i> ${c.emp_b2}`;
-        if(c.emp_b3) bens[2].innerHTML = `<i class="fas fa-file-alt"></i> ${c.emp_b3}`;
-        if(c.emp_b4) bens[3].innerHTML = `<i class="fas fa-shield-alt"></i> ${c.emp_b4}`;
-      }
-      if(c.emp_btn_txt) { let a = empSec.querySelector('.emp-in > div:first-child .btn-p'); if(a) { a.innerHTML = `${c.emp_btn_txt} <i class="fas fa-arrow-right"></i>`; a.href = c.emp_btn_url || '#'; } }
-      
-      let card = empSec.querySelector('.emp-card');
-      if(card) {
-        if(c.emp_c_tit) { let h = card.querySelector('h3'); if(h) h.textContent = c.emp_c_tit; }
-        let eps = card.querySelectorAll('.ep');
-        if(eps.length >= 3) {
-          if(c.emp_cp1_t) eps[0].querySelector('h4').textContent = c.emp_cp1_t;
-          if(c.emp_cp1_d) eps[0].querySelector('p').textContent = c.emp_cp1_d;
-          if(c.emp_cp2_t) eps[1].querySelector('h4').textContent = c.emp_cp2_t;
-          if(c.emp_cp2_d) eps[1].querySelector('p').textContent = c.emp_cp2_d;
-          if(c.emp_cp3_t) eps[2].querySelector('h4').textContent = c.emp_cp3_t;
-          if(c.emp_cp3_d) eps[2].querySelector('p').textContent = c.emp_cp3_d;
-        }
-        if(c.emp_c_btn_txt) { let a = card.querySelector('.btn-emp'); if(a) { a.textContent = c.emp_c_btn_txt; a.href = c.emp_c_btn_url || '#'; } }
-      }
-    }
-
-    // 10. FAQ
-    let faqSec = Array.from(document.querySelectorAll('.sec')).find(s => s.querySelector('.faq-l'));
-    if(faqSec) {
-      if(c.faq_tag) { let t = faqSec.querySelector('.tag'); if(t) t.innerHTML = `<i class="fas fa-question-circle"></i> ${c.faq_tag}`; }
-      if(c.faq_tit) { let t = faqSec.querySelector('.s-ti'); if(t) t.innerHTML = c.faq_tit; }
-      let faqs = faqSec.querySelectorAll('.faq-i');
-      if(faqs.length >= 6) {
-        if(c.faq1_q) faqs[0].querySelector('.faq-q').innerHTML = `${c.faq1_q} <i class="fas fa-chevron-down"></i>`;
-        if(c.faq1_a) faqs[0].querySelector('.faq-ai').innerHTML = c.faq1_a;
-        if(c.faq2_q) faqs[1].querySelector('.faq-q').innerHTML = `${c.faq2_q} <i class="fas fa-chevron-down"></i>`;
-        if(c.faq2_a) faqs[1].querySelector('.faq-ai').innerHTML = c.faq2_a;
-        if(c.faq3_q) faqs[2].querySelector('.faq-q').innerHTML = `${c.faq3_q} <i class="fas fa-chevron-down"></i>`;
-        if(c.faq3_a) faqs[2].querySelector('.faq-ai').innerHTML = c.faq3_a;
-        if(c.faq4_q) faqs[3].querySelector('.faq-q').innerHTML = `${c.faq4_q} <i class="fas fa-chevron-down"></i>`;
-        if(c.faq4_a) faqs[3].querySelector('.faq-ai').innerHTML = c.faq4_a;
-        if(c.faq5_q) faqs[4].querySelector('.faq-q').innerHTML = `${c.faq5_q} <i class="fas fa-chevron-down"></i>`;
-        if(c.faq5_a) faqs[4].querySelector('.faq-ai').innerHTML = c.faq5_a;
-        if(c.faq6_q) faqs[5].querySelector('.faq-q').innerHTML = `${c.faq6_q} <i class="fas fa-chevron-down"></i>`;
-        if(c.faq6_a) faqs[5].querySelector('.faq-ai').innerHTML = c.faq6_a;
-      }
-    }
-
-    // 11. FOOTER
-    let footer = document.querySelector('.footer');
-    if(footer) {
-      if(c.foot_desc) { let tg = footer.querySelector('.f-tg'); if(tg) tg.textContent = c.foot_desc; }
-      
-      let contacts = footer.querySelectorAll('.f-co a');
-      if(c.foot_tel && contacts[0]) { contacts[0].innerHTML = `<i class="fas fa-phone"></i> ${c.foot_tel}`; contacts[0].href = `tel:${c.foot_tel.replace(/ /g,'')}`; }
-      if(c.foot_mail && contacts[1]) { contacts[1].innerHTML = `<i class="fas fa-envelope"></i> ${c.foot_mail}`; contacts[1].href = `mailto:${c.foot_mail}`; }
-      if(c.foot_wa && contacts[2]) contacts[2].href = c.foot_wa;
-      if(c.foot_loc) { let span = footer.querySelector('.f-co span'); if(span) span.innerHTML = `<i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> ${c.foot_loc}`; }
-      
-      let soc = footer.querySelectorAll('.f-soc a');
-      if(c.soc_ig && soc[0]) soc[0].href = c.soc_ig;
-      if(c.soc_tk && soc[1]) soc[1].href = c.soc_tk;
-      if(c.soc_in && soc[2]) soc[2].href = c.soc_in;
-      if(c.soc_fb && soc[3]) soc[3].href = c.soc_fb;
-
-      if(c.foot_copy) { let p = footer.querySelector('.f-bot p'); if(p) p.textContent = c.foot_copy; }
-    }
+// Generar dinámicamente mapeos para listas de hasta 8 elementos (Aprenderás, Sesiones, Para quién)
+for(let i=1; i<=8; i++) {
+  templateMappings[`learn_${i}`] = { sel: `.learn-grid .learn-item:nth-child(${i}) span`, type: 'text' };
+  templateMappings[`symp_${i}`]  = { sel: `.pq-list .pq-item:nth-child(${i}) span, .pq-grid .pq-card:nth-child(${i}) p`, type: 'text' };
+  templateMappings[`ses${i}_tit`] = { sel: `.sesiones .sesion-item:nth-child(${i}) h4, .step-list .step-item:nth-child(${i}) h4`, type: 'text' };
+  templateMappings[`ses${i}_desc`]= { sel: `.sesiones .sesion-item:nth-child(${i}) p, .step-list .step-item:nth-child(${i}) p`, type: 'text' };
+  templateMappings[`info_b${i}_tit`] = { sel: `.pq-grid .pq-card:nth-child(${i}) h3`, type: 'text' };
+  templateMappings[`info_b${i}_txt`] = { sel: `.pq-grid .pq-card:nth-child(${i}) p`, type: 'text' };
+  templateMappings[`faq${i}_q`]  = { sel: `.faq-item:nth-of-type(${i}) .faq-q`, type: 'keep_icon_right' };
+  templateMappings[`faq${i}_a`]  = { sel: `.faq-item:nth-of-type(${i}) .faq-a`, type: 'html' };
 }
 
-<script>
+// Mapeos específicos para el Index
+const indexMappings = {
+  'hero_badge':     { sel: '.hero-badge', type: 'keep_icon_left' },
+  'hero_titulo':    { sel: '.hero h1', type: 'html' },
+  'hero_subtitulo': { sel: '.hero-sub', type: 'html' },
+  'stat1_number':   { sel: '.hero-stat:nth-child(1) strong', type: 'text' },
+  'stat1_label':    { sel: '.hero-stat:nth-child(1) span', type: 'text' },
+  'stat2_number':   { sel: '.hero-stat:nth-child(2) strong', type: 'text' },
+  'stat2_label':    { sel: '.hero-stat:nth-child(2) span', type: 'text' },
+  'stat3_number':   { sel: '.hero-stat:nth-child(3) strong', type: 'text' },
+  'stat3_label':    { sel: '.hero-stat:nth-child(3) span', type: 'text' },
+  'srv_tit':        { sel: '#servicios h2', type: 'html' },
+  'paso_tit':       { sel: '#proceso h2', type: 'html' },
+  'mod_tit':        { sel: '#planes h2', type: 'html' },
+  'faq_tit':        { sel: '#faq h2', type: 'html' },
+};
+
+// =====================================================================
+// 2. DETECCIÓN DE PÁGINA ACTUAL
+// =====================================================================
+const path = window.location.pathname;
+let pageName = 'index'; 
+if (path.includes('contacto')) pageName = 'contacto';
+else if (path.includes('talleres')) pageName = 'talleres';
+else if (path.includes('empresas')) pageName = 'empresas';
+else if (path.includes('especialistas-publico')) pageName = 'directorio';
+else if (path.includes('terapia-psicologica')) pageName = 'terapia';
+else if (path.includes('coaching-emocional')) pageName = 'coaching';
+else if (path.includes('terapia-de-pareja')) pageName = 'pareja';
+else if (path.includes('psicologia-familiar')) pageName = 'familia';
+else if (path.includes('ansiedad')) pageName = 'ansiedad';
+else if (path.includes('autoestima')) pageName = 'autoestima';
+else if (path.includes('duelo')) pageName = 'duelo';
+else if (path.includes('estres-laboral')) pageName = 'estres';
+else if (path.includes('redes-sociales')) pageName = 'redes';
+else if (path.includes('vinculos')) pageName = 'vinculos';
+
+// =====================================================================
+// 3. FUNCIÓN PARA INYECTAR TEXTO SIN ROMPER LOS ICONOS HTML
+// =====================================================================
+function updateDOM(selector, value, type = 'text') {
+  if (!value || value === '') return;
+  document.querySelectorAll(selector).forEach(el => {
+    if (type === 'text') el.textContent = value;
+    else if (type === 'html') el.innerHTML = value;
+    else if (type === 'href') el.href = value;
+    else if (type === 'src') el.src = value;
+    else if (type === 'keep_icon_left') {
+      const icon = el.querySelector('i');
+      el.innerHTML = (icon ? icon.outerHTML + ' ' : '') + value;
+    }
+    else if (type === 'keep_icon_right') {
+      const icon = el.querySelector('i');
+      el.innerHTML = value + (icon ? ' ' + icon.outerHTML : '');
+    }
+  });
+}
+
+// =====================================================================
+// 4. APLICAR LA CONFIGURACIÓN A LA PÁGINA
+// =====================================================================
+function aplicarConfiguracion(c) {
+  // A. Aplicar colores dinámicos
+  if (c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
+  if (c.color_accent) {
+    document.documentElement.style.setProperty('--clay', c.color_accent);
+    document.documentElement.style.setProperty('--blue', c.color_accent);
+    document.documentElement.style.setProperty('--fam', c.color_accent);
+  }
+
+  // B. Aplicar Globales (Navbar / Footer)
+  for (const [key, mapping] of Object.entries(globalMappings)) {
+    if (c[key] !== undefined) updateDOM(mapping.sel, c[key], mapping.type);
+  }
+
+  // C. Aplicar configuraciones según el tipo de página
+  if (pageName === 'index') {
+    // Si es el Index, buscamos del diccionario de Index + FAQs
+    for (const [key, mapping] of Object.entries(indexMappings)) {
+      if (c[key] !== undefined) updateDOM(mapping.sel, c[key], mapping.type);
+    }
+    for (let i=1; i<=6; i++) {
+        if(c[`faq${i}_q`]) updateDOM(`.faq-item:nth-of-type(${i}) .faq-q`, c[`faq${i}_q`], 'keep_icon_right');
+        if(c[`faq${i}_a`]) updateDOM(`.faq-item:nth-of-type(${i}) .faq-a`, c[`faq${i}_a`], 'html');
+    }
+  } else {
+    // Si es Programa o Servicio (Plantilla dinámica)
+    const prefix = pageName + '_';
+    Object.keys(c).forEach(dbKey => {
+      // Extraemos "ansiedad_hero_h1" -> "hero_h1"
+      if (dbKey.startsWith(prefix)) {
+        const genericKey = dbKey.replace(prefix, '');
+        const mapping = templateMappings[genericKey];
+        if (mapping) {
+          updateDOM(mapping.sel, c[dbKey], mapping.type);
+        }
+      }
+    });
+  }
+  
+  // D. SEO Title Extra Update
+  if (c[`${pageName}_seo_tit`]) document.title = c[`${pageName}_seo_tit`];
+}
+
+// =====================================================================
+// 5. CARGA DESDE SUPABASE Y LISTENER PARA VISTA PREVIA EN VIVO
+// =====================================================================
 async function cargarConfiguracionCMS() {
   if (!window.sb) return setTimeout(cargarConfiguracionCMS, 500);
-
-  // 1. Detectamos automáticamente en qué página estamos
-  const path = window.location.pathname;
-  let pageName = 'index'; 
-  if (path.includes('contacto')) pageName = 'contacto';
-  else if (path.includes('terapia-psicologica')) pageName = 'terapia';
-  else if (path.includes('coaching-emocional')) pageName = 'coaching';
-  else if (path.includes('terapia-de-pareja')) pageName = 'pareja';
-  else if (path.includes('psicologia-familiar')) pageName = 'familia';
-  else if (path.includes('ansiedad')) pageName = 'ansiedad';
-  else if (path.includes('autoestima')) pageName = 'autoestima';
-  else if (path.includes('duelo')) pageName = 'duelo';
-  else if (path.includes('estres-laboral')) pageName = 'estres';
-  else if (path.includes('redes-sociales')) pageName = 'redes';
-  else if (path.includes('empresas')) pageName = 'empresas';
-  else if (path.includes('especialistas-publico')) pageName = 'directorio';
-  else if (path.includes('talleres')) pageName = 'talleres';
-
   try {
-    // 2. Pedimos a Supabase los datos de la página actual Y los globales
     const { data, error } = await window.sb
       .from('config_web')
       .select('*')
-      .or(`pagina.eq.${pageName},pagina.eq.global`);
+      .or(`pagina.eq.${pageName},pagina.eq.global,pagina.eq.index`);
 
     if (error) throw error;
     
-    const c = {};
-    data.forEach(item => c[item.clave] = item.valor);
-
-    // ============ APLICAR CONFIGURACIÓN GLOBAL ============
-    if (c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
-    if (c.color_accent) document.documentElement.style.setProperty('--clay', c.color_accent);
+    const config = {};
+    data.forEach(item => config[item.clave] = item.valor);
+    aplicarConfiguracion(config);
     
-    const logoTxt = document.querySelector('.logo');
-    if (logoTxt && c.navbar_logo_text) {
-        const span = logoTxt.querySelector('span') || logoTxt.childNodes[logoTxt.childNodes.length - 1];
-        if (span) span.textContent = c.navbar_logo_text;
-    }
-
-    // ============ APLICAR CONFIGURACIÓN ESPECÍFICA ============
-    // Ejemplo: Títulos H1 dinámicos
-    const mainH1 = document.querySelector('h1');
-    if (mainH1 && c[`${pageName}_h1`]) mainH1.innerHTML = c[`${pageName}_h1`];
-
-    // Ejemplo: Descripciones/Subtítulos
-    const subText = document.querySelector('.hero-desc, .pg-sub');
-    if (subText && c[`${pageName}_sub`]) subText.textContent = c[`${pageName}_sub`];
-
-    console.log(`✅ CMS: Datos de "${pageName}" aplicados correctamente.`);
-
   } catch (err) {
-    console.error('❌ Error cargando configuración del CMS:', err);
+    console.error('❌ Error CMS:', err);
   }
 }
 
+// Esto escucha cuando tecleas en el editor CMS y actualiza al instante
+window.addEventListener('message', (event) => {
+  if (event.data && event.data.tipo === 'LIVE_PREVIEW') {
+    aplicarConfiguracion(event.data.config);
+  }
+});
+
+// Arrancar al cargar
 document.addEventListener('DOMContentLoaded', cargarConfiguracionCMS);
-</script>ntListener('DOMContentLoaded', cargarConfiguracionCMS);
 </script>
   
 </body>
