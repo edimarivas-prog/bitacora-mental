@@ -5,26 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <meta name="description" content="Terapia familiar online en Perú. Resuelvan conflictos de convivencia, mejoren la crianza y fortalezcan el vínculo familiar con especialistas colegiados.">
   <title>Psicología Familiar — Bitácora Mental</title>
+  
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="../css/design-system.css">
+
   <style>
-    /* SISTEMA DE DISEÑO BITÁCORA MENTAL */
+    /* =========================================
+       RESETEOS Y FORZADO DE TIPOGRAFÍA
+       ========================================= */
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--fb) !important; background: var(--white); color: var(--tb); line-height: 1.6; overflow-x: hidden; }
+    a { text-decoration: none; transition: all .3s ease; }
+    img { max-width: 100%; height: auto; display: block; }
+    
+    /* FORZAMOS LAS FUENTES DEL NAVBAR Y FOOTER */
+    .nav { font-family: var(--fb) !important; }
+    .logo { font-family: var(--fd) !important; line-height: 1; margin: 0; }
+    .mmenu { font-family: var(--fb) !important; }
+    .footer { font-family: var(--fb) !important; }
+    .f-logo { font-family: var(--fd) !important; }
+    .f-tg { color: var(--ts) !important; font-weight: 400; }
+    .f-col h5 { color: var(--td) !important; font-family: var(--fb) !important; }
+
+    /* =========================================
+       ESTILOS ÚNICOS PARA PSICOLOGÍA FAMILIAR
+       ========================================= */
     :root {
-      --g900:#1a2e1c;--g800:#2d4a30;--g700:#4F6F52;--g600:#6a8f6d;--g400:#8aaa8d;--g100:#e3ede4;--g50:#f2f8f2;
-      --s50:#fdf9f4;--clay:#c97b5a;--clay-l:#f0d5c8;
       /* Variables específicas para Familia (Magenta Cálido) */
       --fam-l:#fce7f3; --fam:#9d174d;
-      --td:#1a2e1c;--tb:#3d4f3e;--ts:#697a6a;--tl:#9aaa9b;
-      --white:#fff;--border:#dde8de;
-      --fd:'Fraunces',Georgia,serif;--fb:'Plus Jakarta Sans',sans-serif;
-      --rlg:24px;--rxl:32px;
-      --smd:0 8px 24px rgba(26,46,28,.08);
     }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{font-family:var(--fb);background:var(--white);color:var(--tb);line-height:1.6;overflow-x:hidden}
-    a{text-decoration:none;transition:all .3s ease}
-    img{max-width:100%;height:auto;display:block}
 
     /* COMPONENTES BASE */
     .btn-p{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--g700);color:#fff;border-radius:50px;font-weight:700;font-size:.95rem;box-shadow:0 6px 20px rgba(79,111,82,.25)}
@@ -32,14 +43,7 @@
     .btn-s{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border:1px solid var(--border);color:var(--tb);border-radius:50px;font-weight:700;font-size:.95rem}
     .btn-s:hover{border-color:var(--g400);color:var(--g700);background:var(--g50)}
     
-    /* Tag específico familia */
     .tag{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--fam);background:var(--fam-l);padding:6px 14px;border-radius:50px;margin-bottom:20px}
-
-    /* NAV */
-    .nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
-    .ni{max-width:1280px;margin:0 auto;padding:0 40px;height:76px;display:flex;align-items:center;justify-content:space-between}
-    .logo{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-size:1.5rem;font-weight:700;color:var(--g700);letter-spacing:-.5px}
-    .logo-ic{width:38px;height:38px;background:var(--g700);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem}
     .back-lnk{font-weight:600;color:var(--ts);font-size:.9rem;display:flex;align-items:center;gap:6px}
     .back-lnk:hover{color:var(--g700)}
 
@@ -95,118 +99,318 @@
 </head>
 <body>
 
-<nav class="nav">
-  <div class="ni">
-    <a href="../index.html" class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</a>
-    <a href="../index.html" class="back-lnk"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
-  </div>
-</nav>
-
-<header class="hero-srv">
-  <div class="tag"><i class="fas fa-home"></i> Dinámica Familiar</div>
-  <h1>Armonía en casa,<br><em>entendimiento mutuo</em></h1>
-  <p>Para familias que atraviesan cambios, conflictos de crianza o dificultades de convivencia. Un espacio para aprender a escucharse y respetarse.</p>
-  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-    <a href="../registro.html" class="btn-p">Agendar terapia familiar</a>
-    <a href="../especialistas-publico.html" class="btn-s">Ver especialistas</a>
-  </div>
-  <div class="hero-img-wrap">
-    <img src="https://images.unsplash.com/photo-1542037104857-ffbb0b9155fb?q=80&w=1000" alt="Familia compartiendo">
-    <div class="hero-float"><i class="fas fa-hand-holding-heart"></i> Mejora la convivencia</div>
-  </div>
-</header>
-
-<section class="sec">
-  <div style="text-align:center;max-width:700px;margin:0 auto 40px">
-    <h2 style="font-family:var(--fd);font-size:2.2rem;color:var(--td);margin-bottom:16px">¿Cuándo acudir en familia?</h2>
-    <p style="color:var(--ts)">La familia es un sistema. Cuando una pieza se mueve, todo cambia. Busquen apoyo si:</p>
-  </div>
-  <div class="pq-grid">
-    <div class="pq-card">
-      <div class="pq-ic"><i class="fas fa-users"></i></div>
-      <h3>Conflictos de convivencia</h3>
-      <p>Peleas constantes entre padres e hijos, o entre hermanos, que afectan el clima del hogar y generan tensión diaria.</p>
+  <nav class="nav" id="nav">
+    <div class="ni">
+      <a href="../index.html" class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</a>
+      <ul class="nl">
+        <li class="ni-item">
+          <a href="../index.html#servicios" class="nl-a" style="color:var(--g700);">Servicios <i class="fas fa-chevron-down"></i></a>
+          <div class="dd wide">
+            <span class="dd-lbl">Atención profesional</span>
+            <div class="dd-grid">
+              <a href="terapia-psicologica.html" class="dd-a"><div class="ic"><i class="fas fa-user-md"></i></div><div><strong>Terapia Psicológica</strong><small style="color:var(--tl);font-size:.75rem">Online</small></div></a>
+              <a href="coaching-emocional.html" class="dd-a"><div class="ic"><i class="fas fa-rocket"></i></div><div><strong>Coaching Emocional</strong><small style="color:var(--tl);font-size:.75rem">Metas y hábitos</small></div></a>
+              <a href="terapia-de-pareja.html" class="dd-a"><div class="ic"><i class="fas fa-users"></i></div><div><strong>Terapia de Pareja</strong><small style="color:var(--tl);font-size:.75rem">Vínculos sanos</small></div></a>
+              <a href="psicologia-familiar.html" class="dd-a" style="background:var(--g50);"><div class="ic"><i class="fas fa-child"></i></div><div><strong>Psicología Familiar</strong><small style="color:var(--tl);font-size:.75rem">Dinámica familiar</small></div></a>
+            </div>
+          </div>
+        </li>
+        <li class="ni-item">
+          <a href="../index.html#programas" class="nl-a">Programas <i class="fas fa-chevron-down"></i></a>
+          <div class="dd">
+            <span class="dd-lbl">Programas temáticos</span>
+            <a href="../programas/ansiedad.html" class="dd-a"><div class="ic"><i class="fas fa-wind"></i></div> Manejo de Ansiedad</a>
+            <a href="../programas/estres-laboral.html" class="dd-a"><div class="ic"><i class="fas fa-briefcase"></i></div> Estrés y Burnout</a>
+            <a href="../programas/pareja.html" class="dd-a"><div class="ic"><i class="fas fa-shield-alt"></i></div> Autoestima y Vínculos</a>
+            <a href="../programas/redes-sociales.html" class="dd-a"><div class="ic"><i class="fas fa-mobile-alt"></i></div> Desconexión Digital</a>
+            <a href="../programas/index.html" class="dd-a" style="border-top:1px solid var(--border);margin-top:8px;padding-top:12px;color:var(--g700);font-weight:700"><div class="ic"><i class="fas fa-th-large"></i></div> Ver todos →</a>
+          </div>
+        </li>
+        <li class="ni-item"><a href="../especialistas-publico.html" class="nl-a">Directorio</a></li>
+        <li class="ni-item"><a href="../empresas.html" class="nl-a">Para empresas</a></li>
+        <li class="ni-item"><a href="../para-especialistas.html" class="nl-a">Para especialistas</a></li>
+      </ul>
+      <div class="na">
+        <a href="../login.html" class="btn-li">Ingresar</a>
+        <a href="../registro.html" class="btn-ct">Crear cuenta</a>
+      </div>
+      <button class="hbg" onclick="openM()" aria-label="Menú"><i class="fas fa-bars"></i></button>
     </div>
-    <div class="pq-card">
-      <div class="pq-ic"><i class="fas fa-baby-carriage"></i></div>
-      <h3>Crianza y Límites</h3>
-      <p>Dificultad para poner normas claras o desacuerdos entre los padres sobre cómo criar, generando confusión en los hijos.</p>
+  </nav>
+
+  <div class="overlay" id="ov" onclick="closeM()"></div>
+  <div class="mmenu" id="mm">
+    <div class="mm-hd">
+      <span class="logo" style="font-size:1.3rem"><div class="logo-ic" style="width:32px;height:32px;font-size:.9rem"><i class="fas fa-brain"></i></div>bitácora</span>
+      <button class="mm-cl" onclick="closeM()"><i class="fas fa-times"></i></button>
     </div>
-    <div class="pq-card">
-      <div class="pq-ic"><i class="fas fa-exchange-alt"></i></div>
-      <h3>Cambios Familiares</h3>
-      <p>Divorcios, mudanzas, duelos o la llegada de nuevos miembros que han desestabilizado la rutina y las emociones de todos.</p>
+    <div class="mm-body">
+      <div class="mm-sec">
+        <div class="mm-lbl">Servicios</div>
+        <a href="terapia-psicologica.html" class="mm-a" onclick="closeM()"><i class="fas fa-user-md"></i> Terapia Psicológica</a>
+        <a href="coaching-emocional.html" class="mm-a" onclick="closeM()"><i class="fas fa-rocket"></i> Coaching Emocional</a>
+        <a href="terapia-de-pareja.html" class="mm-a" onclick="closeM()"><i class="fas fa-users"></i> Terapia de Pareja</a>
+        <a href="psicologia-familiar.html" class="mm-a" onclick="closeM()"><i class="fas fa-child"></i> Psicología Familiar</a>
+      </div>
+      <div class="mm-sec">
+        <div class="mm-lbl">Programas</div>
+        <a href="../programas/ansiedad.html" class="mm-a" onclick="closeM()"><i class="fas fa-wind"></i> Manejo de Ansiedad</a>
+        <a href="../programas/estres-laboral.html" class="mm-a" onclick="closeM()"><i class="fas fa-briefcase"></i> Estrés y Burnout</a>
+        <a href="../programas/pareja.html" class="mm-a" onclick="closeM()"><i class="fas fa-shield-alt"></i> Autoestima y Vínculos</a>
+        <a href="../programas/redes-sociales.html" class="mm-a" onclick="closeM()"><i class="fas fa-mobile-alt"></i> Desconexión Digital</a>
+      </div>
+      <div class="mm-sec">
+        <div class="mm-lbl">Más</div>
+        <a href="../especialistas-publico.html" class="mm-a" onclick="closeM()"><i class="fas fa-search"></i> Directorio de especialistas</a>
+        <a href="../empresas.html" class="mm-a" onclick="closeM()"><i class="fas fa-building"></i> Para empresas</a>
+        <a href="../para-especialistas.html" class="mm-a" onclick="closeM()"><i class="fas fa-stethoscope"></i> Para especialistas</a>
+      </div>
+    </div>
+    <div class="mm-act">
+      <a href="../login.html" class="btn-m1" onclick="closeM()">Iniciar sesión</a>
+      <a href="../registro.html" class="btn-m2" onclick="closeM()">Crear cuenta gratis</a>
     </div>
   </div>
-</section>
 
-<div class="sec-bg">
-  <div class="sec">
-    <div class="how-grid">
+  <header class="hero-srv">
+    <div class="tag"><i class="fas fa-home"></i> Dinámica Familiar</div>
+    <h1>Armonía en casa,<br><em>entendimiento mutuo</em></h1>
+    <p>Para familias que atraviesan cambios, conflictos de crianza o dificultades de convivencia. Un espacio para aprender a escucharse y respetarse.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="../registro.html" class="btn-p">Agendar terapia familiar</a>
+      <a href="../especialistas-publico.html" class="btn-s">Ver especialistas</a>
+    </div>
+    <div class="hero-img-wrap">
+      <img src="https://images.unsplash.com/photo-1542037104857-ffbb0b9155fb?q=80&w=1000" alt="Familia compartiendo">
+      <div class="hero-float"><i class="fas fa-hand-holding-heart"></i> Mejora la convivencia</div>
+    </div>
+  </header>
+
+  <section class="sec">
+    <div style="text-align:center;max-width:700px;margin:0 auto 40px">
+      <h2 style="font-family:var(--fd);font-size:2.2rem;color:var(--td);margin-bottom:16px">¿Cuándo acudir en familia?</h2>
+      <p style="color:var(--ts)">La familia es un sistema. Cuando una pieza se mueve, todo cambia. Busquen apoyo si:</p>
+    </div>
+    <div class="pq-grid">
+      <div class="pq-card">
+        <div class="pq-ic"><i class="fas fa-users"></i></div>
+        <h3>Conflictos de convivencia</h3>
+        <p>Peleas constantes entre padres e hijos, o entre hermanos, que afectan el clima del hogar y generan tensión diaria.</p>
+      </div>
+      <div class="pq-card">
+        <div class="pq-ic"><i class="fas fa-baby-carriage"></i></div>
+        <h3>Crianza y Límites</h3>
+        <p>Dificultad para poner normas claras o desacuerdos entre los padres sobre cómo criar, generando confusión en los hijos.</p>
+      </div>
+      <div class="pq-card">
+        <div class="pq-ic"><i class="fas fa-exchange-alt"></i></div>
+        <h3>Cambios Familiares</h3>
+        <p>Divorcios, mudanzas, duelos o la llegada de nuevos miembros que han desestabilizado la rutina y las emociones de todos.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="sec-bg">
+    <div class="sec" style="padding-top:0; padding-bottom:0;">
+      <div class="how-grid">
+        <div>
+          <h2 style="font-family:var(--fd);font-size:2.2rem;color:var(--td);margin-bottom:24px">Un equipo más fuerte y unido.</h2>
+          <p style="color:var(--ts);margin-bottom:32px">El terapeuta familiar ayuda a que cada miembro tenga voz y a que el sistema funcione mejor para todos.</p>
+          <ul class="step-list">
+            <li class="step-item">
+              <h4>Evaluación del Sistema</h4>
+              <p>Entendemos cómo funciona su familia, qué roles cumple cada uno y dónde están los bloqueos.</p>
+            </li>
+            <li class="step-item">
+              <h4>Herramientas de Diálogo</h4>
+              <p>Aprenden a comunicarse sin gritos ni silencios castigadores. Fomentamos la empatía entre generaciones.</p>
+            </li>
+            <li class="step-item">
+              <h4>Nuevas Dinámicas</h4>
+              <p>Establecen acuerdos de convivencia y límites sanos que devuelven la tranquilidad al hogar.</p>
+            </li>
+          </ul>
+        </div>
+        <div style="text-align:center">
+          <img src="https://images.unsplash.com/photo-1609220136736-443140cffec6?q=80&w=600" alt="Padres e hijos conversando" style="border-radius:24px;box-shadow:var(--smd)">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="sec" style="max-width:800px">
+    <h2 style="font-family:var(--fd);font-size:2rem;text-align:center;margin-bottom:40px;color:var(--td)">Preguntas Frecuentes</h2>
+    <div class="faq-list">
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">¿Tienen que estar todos los miembros en la sesión? <i class="fas fa-chevron-down"></i></div>
+        <div class="faq-a">No siempre. A veces se trabaja con los padres, a veces con toda la familia, y otras veces con subsistemas (ej. solo hermanos). El terapeuta guiará quiénes deben asistir.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">¿Atienden a niños pequeños? <i class="fas fa-chevron-down"></i></div>
+        <div class="faq-a">Trabajamos la orientación a padres y terapia familiar. Si el niño es muy pequeño, el trabajo suele ser principalmente con los padres para darles herramientas de crianza.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">¿Qué pasa si mi hijo adolescente no quiere ir? <i class="fas fa-chevron-down"></i></div>
+        <div class="faq-a">Es común. Podemos empezar trabajando con los padres para cambiar la dinámica desde su lado, lo cual suele tener un impacto positivo indirecto en el adolescente.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">¿Cómo vemos los precios? <i class="fas fa-chevron-down"></i></div>
+        <div class="faq-a">Las tarifas de terapia familiar varían según la duración y el especialista. Regístrate gratis para ver los costos exactos y disponibilidad.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sec" style="padding-top:0;">
+    <div class="cta-box">
+      <h2>Tu familia es un equipo</h2>
+      <p>No dejen que los problemas los alejen. Recuperen la conexión y la paz en el hogar con ayuda profesional.</p>
+      <a href="../registro.html" class="btn-p" style="background:#fff;color:var(--g900)">Crear cuenta gratis</a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="f-grid">
       <div>
-        <h2 style="font-family:var(--fd);font-size:2.2rem;color:var(--td);margin-bottom:24px">Un equipo más fuerte y unido.</h2>
-        <p style="color:var(--ts);margin-bottom:32px">El terapeuta familiar ayuda a que cada miembro tenga voz y a que el sistema funcione mejor para todos.</p>
-        <ul class="step-list">
-          <li class="step-item">
-            <h4>Evaluación del Sistema</h4>
-            <p>Entendemos cómo funciona su familia, qué roles cumple cada uno y dónde están los bloqueos.</p>
-          </li>
-          <li class="step-item">
-            <h4>Herramientas de Diálogo</h4>
-            <p>Aprenden a comunicarse sin gritos ni silencios castigadores. Fomentamos la empatía entre generaciones.</p>
-          </li>
-          <li class="step-item">
-            <h4>Nuevas Dinámicas</h4>
-            <p>Establecen acuerdos de convivencia y límites sanos que devuelven la tranquilidad al hogar.</p>
-          </li>
+        <div class="f-logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora mental</div>
+        <p class="f-tg">Plataforma peruana de bienestar emocional. Conectamos personas con psicólogos y coaches verificados para sesiones online accesibles y confidenciales.</p>
+        <div class="f-co">
+          <a href="tel:+51999999999"><i class="fas fa-phone"></i> +51 999 999 999</a>
+          <a href="mailto:hola@bitacoramental.pe"><i class="fas fa-envelope"></i> hola@bitacoramental.pe</a>
+          <a href="https://wa.me/51999999999" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+          <span style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ts)"><i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> Lima, Perú</span>
+        </div>
+        <div class="f-soc">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+        </div>
+      </div>
+      <div class="f-col">
+        <h5>Servicios</h5>
+        <ul class="f-lk">
+          <li><a href="terapia-psicologica.html">Terapia Psicológica</a></li>
+          <li><a href="coaching-emocional.html">Coaching Emocional</a></li>
+          <li><a href="terapia-de-pareja.html">Terapia de Pareja</a></li>
+          <li><a href="psicologia-familiar.html">Psicología Familiar</a></li>
         </ul>
       </div>
-      <div style="text-align:center">
-        <img src="https://images.unsplash.com/photo-1609220136736-443140cffec6?q=80&w=600" alt="Padres e hijos conversando" style="border-radius:24px;box-shadow:var(--smd)">
+      <div class="f-col">
+        <h5>Programas</h5>
+        <ul class="f-lk">
+          <li><a href="../programas/ansiedad.html">Ansiedad</a></li>
+          <li><a href="../programas/estres-laboral.html">Estrés y Burnout</a></li>
+          <li><a href="../programas/pareja.html">Autoestima y Vínculos</a></li>
+          <li><a href="../programas/redes-sociales.html">Desconexión Digital</a></li>
+          <li><a href="../programas/index.html">Ver todos →</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h5>Plataforma</h5>
+        <ul class="f-lk">
+          <li><a href="../especialistas-publico.html">Directorio</a></li>
+          <li><a href="../test-bienestar.html">Test de bienestar</a></li>
+          <li><a href="../empresas.html">Para empresas</a></li>
+          <li><a href="../para-especialistas.html">Para especialistas</a></li>
+          <li><a href="../faq.html">Preguntas frecuentes</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h5>Ayuda</h5>
+        <ul class="f-lk">
+          <li><a href="../contacto.html">Contacto</a></li>
+          <li><a href="../privacidad.html">Privacidad</a></li>
+          <li><a href="../terminos.html">Términos</a></li>
+          <li><a href="../libro-reclamaciones.html">Reclamaciones</a></li>
+          <li><a href="../lineas-emergencia.html">Líneas de emergencia</a></li>
+        </ul>
       </div>
     </div>
-  </div>
-</div>
-
-<section class="sec" style="max-width:800px">
-  <h2 style="font-family:var(--fd);font-size:2rem;text-align:center;margin-bottom:40px;color:var(--td)">Preguntas Frecuentes</h2>
-  <div class="faq-list">
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">¿Tienen que estar todos los miembros en la sesión? <i class="fas fa-chevron-down"></i></div>
-      <div class="faq-a">No siempre. A veces se trabaja con los padres, a veces con toda la familia, y otras veces con subsistemas (ej. solo hermanos). El terapeuta guiará quiénes deben asistir.</div>
+    <div class="f-bot">
+      <p>© 2026 Bitácora Mental. Todos los derechos reservados. Hecho en Perú 🇵🇪</p>
+      <nav class="f-leg">
+        <a href="../privacidad.html">Privacidad</a>
+        <a href="../terminos.html">Términos</a>
+        <a href="../libro-reclamaciones.html">Reclamaciones</a>
+      </nav>
     </div>
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">¿Atienden a niños pequeños? <i class="fas fa-chevron-down"></i></div>
-      <div class="faq-a">Trabajamos la orientación a padres y terapia familiar. Si el niño es muy pequeño, el trabajo suele ser principalmente con los padres para darles herramientas de crianza.</div>
-    </div>
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">¿Qué pasa si mi hijo adolescente no quiere ir? <i class="fas fa-chevron-down"></i></div>
-      <div class="faq-a">Es común. Podemos empezar trabajando con los padres para cambiar la dinámica desde su lado, lo cual suele tener un impacto positivo indirecto en el adolescente.</div>
-    </div>
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">¿Cómo vemos los precios? <i class="fas fa-chevron-down"></i></div>
-      <div class="faq-a">Las tarifas de terapia familiar varían según la duración y el especialista. Regístrate gratis para ver los costos exactos y disponibilidad.</div>
-    </div>
-  </div>
-</section>
+  </footer>
 
-<div class="sec">
-  <div class="cta-box">
-    <h2>Tu familia es un equipo</h2>
-    <p>No dejen que los problemas los alejen. Recuperen la conexión y la paz en el hogar con ayuda profesional.</p>
-    <a href="../registro.html" class="btn-p" style="background:#fff;color:var(--g900)">Crear cuenta gratis</a>
-  </div>
-</div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
 
-<footer style="text-align:center;padding:40px;border-top:1px solid var(--border);color:var(--tl);font-size:.9rem;background:var(--s50)">
-  <p>© 2026 Bitácora Mental · Hecho con ❤️ en Perú</p>
-</footer>
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('sc', window.scrollY > 10);
+    });
 
-<script>
-  function toggleFaq(el) {
-    el.classList.toggle('active');
-  }
-</script>
+    // Mobile menu functions
+    function openM() {
+      const mm = document.getElementById('mm');
+      mm.style.display = 'flex';
+      document.getElementById('ov').classList.add('show');
+      setTimeout(() => mm.classList.add('open'), 10);
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeM() {
+      const mm = document.getElementById('mm');
+      mm.classList.remove('open');
+      document.getElementById('ov').classList.remove('show');
+      setTimeout(() => mm.style.display = 'none', 300);
+      document.body.style.overflow = '';
+    }
 
+    // FAQ Toggle
+    function toggleFaq(el) {
+      el.classList.toggle('active');
+    }
+
+    // CMS CONFIGURATION APPLY
+    function aplicarConfiguracion(c) {
+      if(c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
+      if(c.color_accent) { 
+        document.documentElement.style.setProperty('--clay', c.color_accent); 
+        document.documentElement.style.setProperty('--clay-l', c.color_accent + '33'); 
+      }
+
+      let footer = document.querySelector('.footer');
+      if(footer) {
+        if(c.foot_desc) { let tg = footer.querySelector('.f-tg'); if(tg) tg.textContent = c.foot_desc; }
+        
+        let contacts = footer.querySelectorAll('.f-co a');
+        if(c.foot_tel && contacts[0]) { contacts[0].innerHTML = `<i class="fas fa-phone"></i> ${c.foot_tel}`; contacts[0].href = `tel:${c.foot_tel.replace(/ /g,'')}`; }
+        if(c.foot_mail && contacts[1]) { contacts[1].innerHTML = `<i class="fas fa-envelope"></i> ${c.foot_mail}`; contacts[1].href = `mailto:${c.foot_mail}`; }
+        if(c.foot_wa && contacts[2]) contacts[2].href = c.foot_wa;
+        if(c.foot_loc) { let span = footer.querySelector('.f-co span'); if(span) span.innerHTML = `<i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> ${c.foot_loc}`; }
+        
+        let soc = footer.querySelectorAll('.f-soc a');
+        if(c.soc_ig && soc[0]) soc[0].href = c.soc_ig;
+        if(c.soc_tk && soc[1]) soc[1].href = c.soc_tk;
+        if(c.soc_in && soc[2]) soc[2].href = c.soc_in;
+        if(c.soc_fb && soc[3]) soc[3].href = c.soc_fb;
+
+        if(c.foot_copy) { let p = footer.querySelector('.f-bot p'); if(p) p.textContent = c.foot_copy; }
+      }
+    }
+
+    async function cargarConfiguracionCMS() {
+      if (!window.sb) return;
+      try {
+        const { data, error } = await window.sb.from('config_web').select('*');
+        if (error) throw error;
+        if (!data) return;
+
+        const config = {};
+        data.forEach(item => config[item.clave] = item.valor);
+        aplicarConfiguracion(config);
+      } catch (err) {
+        console.error("Error conectando con el CMS:", err);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', cargarConfiguracionCMS);
+  </script>
 </body>
 </html>
