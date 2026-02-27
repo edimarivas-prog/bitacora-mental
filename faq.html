@@ -6,144 +6,68 @@
   <meta name="description" content="Preguntas frecuentes sobre terapia online, planes y funcionamiento de Bitácora Mental">
   <title>Preguntas Frecuentes - Bitácora Mental</title>
   
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Outfit:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <style>
-    /* VARIABLES GLOBALES OFICIALES (Del Index) */
-    :root {
-      --g900:#1a2e1c;--g800:#2d4a30;--g700:#4F6F52;--g600:#6a8f6d;--g400:#8aaa8d;--g200:#c8ddc9;--g100:#e3ede4;--g50:#f2f8f2;
-      --s50:#fdf9f4;--s100:#f5ede0;--s300:#d4b896;--s600:#a08060;
-      --clay:#c97b5a;--clay-l:#f0d5c8;
-      --td:#1a2e1c;--tb:#3d4f3e;--ts:#697a6a;--tl:#9aaa9b;
-      --white:#fff;--border:#dde8de;
-      --fd:'Fraunces',Georgia,serif;--fb:'Plus Jakarta Sans',sans-serif;
-      --rsm:10px;--rmd:16px;--rlg:24px;--rxl:36px;
-      --ssm:0 2px 8px rgba(26,46,28,.08);--smd:0 6px 24px rgba(26,46,28,.10);--slg:0 16px 48px rgba(26,46,28,.12);
-      
-      /* Variables del FAQ original mapeadas al diseño oficial */
-      --bg: var(--white);
-      --primary: var(--g700);
-      --primary-500: var(--g800);
-      --primary-50: var(--g50);
-      --text-main: var(--td);
-      --text-soft: var(--ts);
-    }
+  <link rel="stylesheet" href="css/design-system.css">
 
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:var(--fb);background:var(--white);color:var(--tb);line-height:1.6;overflow-x:hidden}
-    a{text-decoration:none;transition:all .25s ease}
+  <style>
+    /* =========================================
+       RESETEOS Y FORZADO DE TIPOGRAFÍA
+       ========================================= */
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--fb) !important; background: var(--white); color: var(--tb); line-height: 1.6; overflow-x: hidden; }
+    img { max-width: 100%; height: auto; display: block; }
+    
+    /* FORZAMOS LAS FUENTES DEL NAVBAR Y FOOTER */
+    .nav { font-family: var(--fb) !important; }
+    .logo { font-family: var(--fd) !important; line-height: 1; margin: 0; }
+    .mmenu { font-family: var(--fb) !important; }
+    .footer { font-family: var(--fb) !important; }
+    .f-logo { font-family: var(--fd) !important; }
+    .f-tg { color: var(--ts) !important; font-weight: 400; }
+    .f-col h5 { color: var(--td) !important; font-family: var(--fb) !important; }
 
     /* =========================================
-       Navegación (Copia exacta del Index)
+       ESTILOS ÚNICOS PARA LA CABECERA (FAQ)
        ========================================= */
-    .nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid transparent;transition:all .3s}
-    .nav.sc{border-bottom-color:var(--border);box-shadow:var(--ssm)}
-    .ni{max-width:1280px;margin:0 auto;padding:0 40px;height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}
-    .logo{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-size:1.5rem;font-weight:700;color:var(--g700);letter-spacing:-.5px}
-    .logo-ic{width:38px;height:38px;background:var(--g700);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem}
-    .nl{display:flex;align-items:center;gap:4px;list-style:none}
-    .ni-item{position:relative}
-    .nl-a{display:flex;align-items:center;gap:5px;padding:8px 14px;color:var(--ts);font-size:.9rem;font-weight:600;border-radius:var(--rsm);white-space:nowrap}
-    .nl-a:hover{background:var(--g50);color:var(--g700)}
-    .nl-a i{font-size:.65rem;transition:transform .3s}
-    .ni-item:hover .nl-a i{transform:rotate(180deg)}
-    .dd{position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%);background:#fff;border:1px solid var(--border);border-radius:var(--rmd);box-shadow:var(--slg);padding:12px;min-width:230px;opacity:0;visibility:hidden;transition:all .2s}
-    .dd.wide{min-width:480px}
-    .ni-item:hover .dd{opacity:1;visibility:visible;top:calc(100% + 18px)}
-    .dd-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
-    .dd-a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--rsm);color:var(--tb);font-size:.88rem;font-weight:500}
-    .dd-a:hover{background:var(--g50);color:var(--g700)}
-    .dd-a .ic{width:32px;height:32px;background:var(--g50);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--g700);font-size:.85rem;flex-shrink:0}
-    .dd-lbl{display:block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--g700);padding:8px 12px 4px}
-    .na{display:flex;align-items:center;gap:10px}
-    .btn-li{padding:9px 20px;border-radius:50px;border:2px solid var(--border);color:var(--tb);font-size:.88rem;font-weight:700}
-    .btn-li:hover{border-color:var(--g400);color:var(--g700)}
-    .btn-ct{padding:10px 22px;border-radius:50px;background:var(--g700);color:#fff;font-size:.88rem;font-weight:700;box-shadow:0 4px 14px rgba(79,111,82,.3)}
-    .btn-ct:hover{background:var(--g800);transform:translateY(-1px)}
-    .hbg{display:none;width:44px;height:44px;background:var(--g50);border:none;border-radius:var(--rsm);color:var(--g700);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center}
-
-    /* MENÚ MÓVIL */
-    .mmenu{display:none;position:fixed;inset:0;background:#fff;z-index:2000;flex-direction:column;overflow-y:auto;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
-    .mmenu.open{transform:translateX(0)}
-    .mm-hd{padding:20px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);flex-shrink:0}
-    .mm-cl{width:44px;height:44px;background:var(--g50);border:none;border-radius:10px;color:var(--g700);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
-    .mm-body{padding:20px 24px;flex:1}
-    .mm-sec{margin-bottom:28px}
-    .mm-lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--tl);margin-bottom:8px}
-    .mm-a{display:flex;align-items:center;gap:12px;padding:12px 0;color:var(--tb);font-weight:600;font-size:1rem;border-bottom:1px solid var(--g50)}
-    .mm-a i{color:var(--g700);width:20px;text-align:center}
-    .mm-act{padding:20px 24px 40px;display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--border)}
-    .btn-m1{padding:15px;text-align:center;border:2px solid var(--border);border-radius:12px;color:var(--tb);font-weight:700}
-    .btn-m2{padding:15px;text-align:center;background:var(--g700);color:#fff;border-radius:12px;font-weight:700;display:block}
-    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1500}
-    .overlay.show{display:block}
-
-    /* ESTILOS DE CABECERA UNIFICADA */
     .pg-head { padding: 140px 40px 60px; background: linear-gradient(160deg,var(--s50) 0%,var(--g50) 100%); text-align: center; border-bottom: 1px solid var(--border); }
     .pg-ti { font-family: var(--fd); font-size: clamp(2.2rem, 4vw, 3rem); color: var(--td); margin-bottom: 16px; line-height: 1.2; letter-spacing: -1px; }
     .pg-sub { font-size: 1.05rem; color: var(--ts); max-width: 600px; margin: 0 auto; line-height: 1.6; }
     .tag{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--g700);background:var(--g100);padding:6px 14px;border-radius:50px;margin-bottom:20px}
 
     /* =========================================
-       Estilos del FAQ (Tu código adaptado)
+       ESTILOS DEL FAQ INTERACTIVO
        ========================================= */
     .container { max-width: 900px; margin: 0 auto; padding: 60px 20px 100px; min-height: 50vh; }
     
     .faq-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 40px; }
-    .category-btn { padding: 15px 20px; border-radius: 50px; border: 1px solid var(--border); background: white; color: var(--text-soft); font-weight: 700; font-family: inherit; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; text-align: center; }
-    .category-btn:hover { border-color: var(--primary); background: var(--primary-50); color: var(--primary); transform: translateY(-2px); }
-    .category-btn.active { border-color: var(--primary); background: var(--primary); color: white; }
+    .category-btn { padding: 15px 20px; border-radius: 50px; border: 1px solid var(--border); background: white; color: var(--ts); font-weight: 700; font-family: inherit; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; text-align: center; }
+    .category-btn:hover { border-color: var(--g700); background: var(--g50); color: var(--g700); transform: translateY(-2px); }
+    .category-btn.active { border-color: var(--g700); background: var(--g700); color: white; }
     
     .faq-list { display: flex; flex-direction: column; gap: 15px; }
     .faq-item { background: white; border-radius: 16px; border: 1px solid var(--border); overflow: hidden; transition: all 0.3s; }
     .faq-item:hover { box-shadow: var(--ssm); border-color: var(--g200); }
     
-    .faq-question { padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 20px; font-weight: 700; font-size: 1.05rem; color: var(--text-main); user-select: none; }
-    .faq-icon { color: var(--primary); font-size: 1.2rem; transition: transform 0.3s; flex-shrink: 0; }
+    .faq-question { padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 20px; font-weight: 700; font-size: 1.05rem; color: var(--td); user-select: none; }
+    .faq-icon { color: var(--g700); font-size: 1.2rem; transition: transform 0.3s; flex-shrink: 0; }
     .faq-item.open .faq-icon { transform: rotate(180deg); }
     .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
     .faq-item.open .faq-answer { max-height: 500px; }
-    .faq-answer-content { padding: 0 24px 24px 24px; color: var(--text-soft); line-height: 1.7; font-size: 0.95rem; }
+    .faq-answer-content { padding: 0 24px 24px 24px; color: var(--ts); line-height: 1.7; font-size: 0.95rem; }
     
     .cta-box { background: linear-gradient(135deg, var(--g700), var(--g800)); color: white; padding: 50px 40px; border-radius: 20px; text-align: center; margin-top: 60px; box-shadow: var(--smd); }
     .cta-box h2 { font-family: var(--fd); font-size: 2.2rem; margin-bottom: 15px; font-weight: 500;}
     .cta-box p { color: rgba(255,255,255,0.9); margin-bottom: 30px; font-size: 1.1rem; }
-    .btn-white { background: white; color: var(--primary); padding: 14px 32px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; }
+    .btn-white { background: white; color: var(--g700); padding: 14px 32px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; }
     .btn-white:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
 
-    /* FOOTER */
-    .footer{background:var(--s50);padding:80px 40px 40px;border-top:1px solid var(--border)}
-    .f-grid{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:40px;margin-bottom:60px}
-    .f-logo{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-size:1.5rem;font-weight:700;color:var(--g700);margin-bottom:16px}
-    .f-logo .logo-ic{width:34px;height:34px;font-size:.95rem}
-    .f-tg{font-size:.88rem;color:var(--ts);line-height:1.7;margin-bottom:20px}
-    .f-co{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
-    .f-co a{display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ts)}
-    .f-co a:hover{color:var(--g700)}
-    .f-co i{color:var(--g600);width:16px}
-    .f-soc{display:flex;gap:10px}
-    .f-soc a{width:38px;height:38px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;color:var(--g700);transition:all .3s}
-    .f-soc a:hover{background:var(--g700);color:#fff;transform:translateY(-3px)}
-    .f-col h5{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--td);margin-bottom:16px}
-    .f-lk{list-style:none;display:flex;flex-direction:column;gap:10px}
-    .f-lk a{font-size:.88rem;color:var(--ts)}
-    .f-lk a:hover{color:var(--g700)}
-    .f-bot{max-width:1280px;margin:0 auto;padding-top:30px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
-    .f-bot p{font-size:.82rem;color:var(--tl)}
-    .f-leg{display:flex;gap:20px}
-    .f-leg a{font-size:.82rem;color:var(--tl)}
-    .f-leg a:hover{color:var(--g700)}
-
-    /* RESPONSIVE MÓVIL */
     @media (max-width: 900px) { 
-      .nl, .btn-li { display: none; }
-      .hbg { display: flex; }
-      .f-grid { grid-template-columns: 1fr; }
-      .f-bot { flex-direction: column; text-align: center; }
       .faq-categories { grid-template-columns: 1fr; }
       .cta-box { padding: 40px 20px; }
       .cta-box h2 { font-size: 1.8rem; }
+      .pg-head { padding: 120px 20px 40px; }
     }
   </style>
 </head>
@@ -173,10 +97,12 @@
             <a href="programas/estres-laboral.html" class="dd-a"><div class="ic"><i class="fas fa-briefcase"></i></div> Estrés y Burnout</a>
             <a href="programas/pareja.html" class="dd-a"><div class="ic"><i class="fas fa-shield-alt"></i></div> Autoestima y Vínculos</a>
             <a href="programas/redes-sociales.html" class="dd-a"><div class="ic"><i class="fas fa-mobile-alt"></i></div> Desconexión Digital</a>
+            <a href="programas/index.html" class="dd-a" style="border-top:1px solid var(--border);margin-top:8px;padding-top:12px;color:var(--g700);font-weight:700"><div class="ic"><i class="fas fa-th-large"></i></div> Ver todos →</a>
           </div>
         </li>
         <li class="ni-item"><a href="especialistas-publico.html" class="nl-a">Directorio</a></li>
         <li class="ni-item"><a href="empresas.html" class="nl-a">Para empresas</a></li>
+        <li class="ni-item"><a href="para-especialistas.html" class="nl-a">Para especialistas</a></li>
       </ul>
       <div class="na">
         <a href="login.html" class="btn-li">Ingresar</a>
@@ -194,9 +120,24 @@
     </div>
     <div class="mm-body">
       <div class="mm-sec">
-        <div class="mm-lbl">Navegación</div>
-        <a href="index.html" class="mm-a" onclick="closeM()"><i class="fas fa-home"></i> Inicio</a>
+        <div class="mm-lbl">Servicios</div>
+        <a href="servicios/terapia-psicologica.html" class="mm-a" onclick="closeM()"><i class="fas fa-user-md"></i> Terapia Psicológica</a>
+        <a href="servicios/coaching-emocional.html" class="mm-a" onclick="closeM()"><i class="fas fa-rocket"></i> Coaching Emocional</a>
+        <a href="servicios/terapia-de-pareja.html" class="mm-a" onclick="closeM()"><i class="fas fa-users"></i> Terapia de Pareja</a>
+        <a href="servicios/psicologia-familiar.html" class="mm-a" onclick="closeM()"><i class="fas fa-child"></i> Psicología Familiar</a>
+      </div>
+      <div class="mm-sec">
+        <div class="mm-lbl">Programas</div>
+        <a href="programas/ansiedad.html" class="mm-a" onclick="closeM()"><i class="fas fa-wind"></i> Manejo de Ansiedad</a>
+        <a href="programas/estres-laboral.html" class="mm-a" onclick="closeM()"><i class="fas fa-briefcase"></i> Estrés y Burnout</a>
+        <a href="programas/pareja.html" class="mm-a" onclick="closeM()"><i class="fas fa-shield-alt"></i> Autoestima y Vínculos</a>
+        <a href="programas/redes-sociales.html" class="mm-a" onclick="closeM()"><i class="fas fa-mobile-alt"></i> Desconexión Digital</a>
+      </div>
+      <div class="mm-sec">
+        <div class="mm-lbl">Más</div>
         <a href="especialistas-publico.html" class="mm-a" onclick="closeM()"><i class="fas fa-search"></i> Directorio de especialistas</a>
+        <a href="empresas.html" class="mm-a" onclick="closeM()"><i class="fas fa-building"></i> Para empresas</a>
+        <a href="para-especialistas.html" class="mm-a" onclick="closeM()"><i class="fas fa-stethoscope"></i> Para especialistas</a>
       </div>
     </div>
     <div class="mm-act">
@@ -239,24 +180,68 @@
         <div class="f-co">
           <a href="tel:+51999999999"><i class="fas fa-phone"></i> +51 999 999 999</a>
           <a href="mailto:hola@bitacoramental.pe"><i class="fas fa-envelope"></i> hola@bitacoramental.pe</a>
+          <a href="https://wa.me/51999999999" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
           <span style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ts)"><i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> Lima, Perú</span>
         </div>
         <div class="f-soc">
           <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
           <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
         </div>
       </div>
-      <div class="f-col"><h5>Servicios</h5><ul class="f-lk"><li><a href="servicios/terapia-psicologica.html">Terapia Psicológica</a></li><li><a href="servicios/coaching-emocional.html">Coaching Emocional</a></li><li><a href="servicios/terapia-de-pareja.html">Terapia de Pareja</a></li></ul></div>
-      <div class="f-col"><h5>Programas</h5><ul class="f-lk"><li><a href="programas/ansiedad.html">Ansiedad</a></li><li><a href="programas/estres-laboral.html">Estrés y Burnout</a></li><li><a href="programas/pareja.html">Autoestima y Vínculos</a></li></ul></div>
-      <div class="f-col"><h5>Plataforma</h5><ul class="f-lk"><li><a href="especialistas-publico.html">Directorio</a></li><li><a href="empresas.html">Para empresas</a></li><li><a href="para-especialistas.html">Para especialistas</a></li></ul></div>
-      <div class="f-col"><h5>Ayuda</h5><ul class="f-lk"><li><a href="contacto.html">Contacto</a></li><li><a href="faq.html">Preguntas frecuentes</a></li><li><a href="lineas-emergencia.html">Líneas de emergencia</a></li></ul></div>
+      <div class="f-col">
+        <h5>Servicios</h5>
+        <ul class="f-lk">
+          <li><a href="servicios/terapia-psicologica.html">Terapia Psicológica</a></li>
+          <li><a href="servicios/coaching-emocional.html">Coaching Emocional</a></li>
+          <li><a href="servicios/terapia-de-pareja.html">Terapia de Pareja</a></li>
+          <li><a href="servicios/psicologia-familiar.html">Psicología Familiar</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h5>Programas</h5>
+        <ul class="f-lk">
+          <li><a href="programas/ansiedad.html">Ansiedad</a></li>
+          <li><a href="programas/estres-laboral.html">Estrés y Burnout</a></li>
+          <li><a href="programas/pareja.html">Autoestima y Vínculos</a></li>
+          <li><a href="programas/redes-sociales.html">Desconexión Digital</a></li>
+          <li><a href="programas/index.html">Ver todos →</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h5>Plataforma</h5>
+        <ul class="f-lk">
+          <li><a href="especialistas-publico.html">Directorio</a></li>
+          <li><a href="test-bienestar.html">Test de bienestar</a></li>
+          <li><a href="empresas.html">Para empresas</a></li>
+          <li><a href="para-especialistas.html">Para especialistas</a></li>
+          <li><a href="faq.html">Preguntas frecuentes</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h5>Ayuda</h5>
+        <ul class="f-lk">
+          <li><a href="contacto.html">Contacto</a></li>
+          <li><a href="privacidad.html">Privacidad</a></li>
+          <li><a href="terminos.html">Términos</a></li>
+          <li><a href="libro-reclamaciones.html">Reclamaciones</a></li>
+          <li><a href="lineas-emergencia.html">Líneas de emergencia</a></li>
+        </ul>
+      </div>
     </div>
     <div class="f-bot">
       <p>© 2026 Bitácora Mental. Todos los derechos reservados. Hecho en Perú 🇵🇪</p>
-      <nav class="f-leg"><a href="privacidad.html">Privacidad</a><a href="terminos.html">Términos</a><a href="libro-reclamaciones.html">Reclamaciones</a></nav>
+      <nav class="f-leg">
+        <a href="privacidad.html">Privacidad</a>
+        <a href="terminos.html">Términos</a>
+        <a href="libro-reclamaciones.html">Reclamaciones</a>
+      </nav>
     </div>
   </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
 
   <script>
     // 1. LÓGICA DEL DISEÑO GLOBAL
@@ -280,7 +265,7 @@
       document.body.style.overflow = '';
     }
 
-    // 2. LÓGICA DEL FAQ (Tus datos originales)
+    // 2. LÓGICA DEL FAQ (Datos originales)
     const faqs = [
       { category: 'servicios', question: '¿Cómo funciona la terapia online?', answer: 'Nuestras sesiones se realizan por videollamada en una sala virtual privada y segura. Agendas tu cita, el día indicado ingresas 10 minutos antes y te conectas directamente con tu especialista. Es como una sesión presencial, pero desde la comodidad de tu hogar.' },
       { category: 'servicios', question: '¿Los psicólogos están colegiados?', answer: 'Sí, todos nuestros psicólogos están colegiados en el Colegio de Psicólogos del Perú. Verificamos sus credenciales y experiencia antes de integrarlos a nuestra plataforma.' },
@@ -330,7 +315,6 @@
     function filterCategory(category, btnElement) {
       currentCategory = category;
       
-      // Actualizar botones (He ajustado esta parte para que funcione perfecto con tu HTML)
       document.querySelectorAll('.category-btn').forEach(btn => {
         btn.classList.remove('active');
       });
@@ -339,8 +323,52 @@
       renderFAQs();
     }
 
-    // Inicializar al cargar
     renderFAQs();
+
+    // 3. CMS CONFIGURATION APPLY (Forza colores dinámicos del Index)
+    function aplicarConfiguracion(c) {
+      if(c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
+      if(c.color_accent) { 
+        document.documentElement.style.setProperty('--clay', c.color_accent); 
+        document.documentElement.style.setProperty('--clay-l', c.color_accent + '33'); 
+      }
+
+      let footer = document.querySelector('.footer');
+      if(footer) {
+        if(c.foot_desc) { let tg = footer.querySelector('.f-tg'); if(tg) tg.textContent = c.foot_desc; }
+        
+        let contacts = footer.querySelectorAll('.f-co a');
+        if(c.foot_tel && contacts[0]) { contacts[0].innerHTML = `<i class="fas fa-phone"></i> ${c.foot_tel}`; contacts[0].href = `tel:${c.foot_tel.replace(/ /g,'')}`; }
+        if(c.foot_mail && contacts[1]) { contacts[1].innerHTML = `<i class="fas fa-envelope"></i> ${c.foot_mail}`; contacts[1].href = `mailto:${c.foot_mail}`; }
+        if(c.foot_wa && contacts[2]) contacts[2].href = c.foot_wa;
+        if(c.foot_loc) { let span = footer.querySelector('.f-co span'); if(span) span.innerHTML = `<i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> ${c.foot_loc}`; }
+        
+        let soc = footer.querySelectorAll('.f-soc a');
+        if(c.soc_ig && soc[0]) soc[0].href = c.soc_ig;
+        if(c.soc_tk && soc[1]) soc[1].href = c.soc_tk;
+        if(c.soc_in && soc[2]) soc[2].href = c.soc_in;
+        if(c.soc_fb && soc[3]) soc[3].href = c.soc_fb;
+
+        if(c.foot_copy) { let p = footer.querySelector('.f-bot p'); if(p) p.textContent = c.foot_copy; }
+      }
+    }
+
+    async function cargarConfiguracionCMS() {
+      if (!window.sb) return;
+      try {
+        const { data, error } = await window.sb.from('config_web').select('*');
+        if (error) throw error;
+        if (!data) return;
+
+        const config = {};
+        data.forEach(item => config[item.clave] = item.valor);
+        aplicarConfiguracion(config);
+      } catch (err) {
+        console.error("Error conectando con el CMS:", err);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', cargarConfiguracionCMS);
   </script>
 </body>
 </html>
