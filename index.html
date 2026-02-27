@@ -992,31 +992,67 @@ function aplicarConfiguracion(c) {
     }
 }
 
-// CARGA NORMAL (Lectura desde la Base de Datos)
+<script>
 async function cargarConfiguracionCMS() {
-  if (!window.sb) { setTimeout(cargarConfiguracionCMS, 500); return; }
-  try {
-    const { data, error } = await window.sb.from('config_web').select('*');
-    if (error) throw error;
-    if (!data) return;
+  if (!window.sb) return setTimeout(cargarConfiguracionCMS, 500);
 
-    const config = {};
-    data.forEach(item => config[item.clave] = item.valor);
+  // 1. Detectamos automáticamente en qué página estamos
+  const path = window.location.pathname;
+  let pageName = 'index'; 
+  if (path.includes('contacto')) pageName = 'contacto';
+  else if (path.includes('terapia-psicologica')) pageName = 'terapia';
+  else if (path.includes('coaching-emocional')) pageName = 'coaching';
+  else if (path.includes('terapia-de-pareja')) pageName = 'pareja';
+  else if (path.includes('psicologia-familiar')) pageName = 'familia';
+  else if (path.includes('ansiedad')) pageName = 'ansiedad';
+  else if (path.includes('autoestima')) pageName = 'autoestima';
+  else if (path.includes('duelo')) pageName = 'duelo';
+  else if (path.includes('estres-laboral')) pageName = 'estres';
+  else if (path.includes('redes-sociales')) pageName = 'redes';
+  else if (path.includes('empresas')) pageName = 'empresas';
+  else if (path.includes('especialistas-publico')) pageName = 'directorio';
+  else if (path.includes('talleres')) pageName = 'talleres';
+
+  try {
+    // 2. Pedimos a Supabase los datos de la página actual Y los globales
+    const { data, error } = await window.sb
+      .from('config_web')
+      .select('*')
+      .or(`pagina.eq.${pageName},pagina.eq.global`);
+
+    if (error) throw error;
     
-    aplicarConfiguracion(config);
+    const c = {};
+    data.forEach(item => c[item.clave] = item.valor);
+
+    // ============ APLICAR CONFIGURACIÓN GLOBAL ============
+    if (c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
+    if (c.color_accent) document.documentElement.style.setProperty('--clay', c.color_accent);
+    
+    const logoTxt = document.querySelector('.logo');
+    if (logoTxt && c.navbar_logo_text) {
+        const span = logoTxt.querySelector('span') || logoTxt.childNodes[logoTxt.childNodes.length - 1];
+        if (span) span.textContent = c.navbar_logo_text;
+    }
+
+    // ============ APLICAR CONFIGURACIÓN ESPECÍFICA ============
+    // Ejemplo: Títulos H1 dinámicos
+    const mainH1 = document.querySelector('h1');
+    if (mainH1 && c[`${pageName}_h1`]) mainH1.innerHTML = c[`${pageName}_h1`];
+
+    // Ejemplo: Descripciones/Subtítulos
+    const subText = document.querySelector('.hero-desc, .pg-sub');
+    if (subText && c[`${pageName}_sub`]) subText.textContent = c[`${pageName}_sub`];
+
+    console.log(`✅ CMS: Datos de "${pageName}" aplicados correctamente.`);
+
   } catch (err) {
-    console.error("Error conectando con el CMS:", err);
+    console.error('❌ Error cargando configuración del CMS:', err);
   }
 }
 
-// MODO EDITOR (Escucha los cambios en tiempo real del cms-editor.html)
-window.addEventListener('message', (event) => {
-  if (event.data && event.data.tipo === 'LIVE_PREVIEW') {
-    aplicarConfiguracion(event.data.config);
-  }
-});
-
 document.addEventListener('DOMContentLoaded', cargarConfiguracionCMS);
+</script>ntListener('DOMContentLoaded', cargarConfiguracionCMS);
 </script>
   
 </body>
