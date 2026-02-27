@@ -627,254 +627,36 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase-config.js"></script>
-
 <script>
-// =====================================================================
-// 1. DICCIONARIOS DE MAPEO (Dónde va cada cosa)
-// =====================================================================
-
-// Mapeos Globales (Navbar y Footer) - Aplican a todas las páginas
-const globalMappings = {
-  'navbar_logo_text': { sel: '.logo', type: 'keep_icon_left' },
-  'navbar_btn1_text': { sel: '.btn-li', type: 'text' },
-  'navbar_btn1_url':  { sel: '.btn-li', type: 'href' },
-  'navbar_btn2_text': { sel: '.btn-ct', type: 'text' },
-  'navbar_btn2_url':  { sel: '.btn-ct', type: 'href' },
-  'foot_desc':        { sel: '.f-tg', type: 'text' },
-  'foot_tel':         { sel: '.f-co a[href^="tel:"]', type: 'keep_icon_left' },
-  'foot_mail':        { sel: '.f-co a[href^="mailto:"]', type: 'keep_icon_left' },
-  'foot_wa':          { sel: '.f-co a[href^="https://wa.me"]', type: 'href' },
-  'foot_loc':         { sel: '.f-co span', type: 'keep_icon_left' },
-  'foot_copy':        { sel: '.f-bot p', type: 'text' },
-  'soc_ig':           { sel: '.f-soc a[aria-label="Instagram"]', type: 'href' },
-  'soc_tk':           { sel: '.f-soc a[aria-label="TikTok"]', type: 'href' },
-  'soc_in':           { sel: '.f-soc a[aria-label="LinkedIn"]', type: 'href' },
-  'soc_fb':           { sel: '.f-soc a[aria-label="Facebook"]', type: 'href' }
-};
-
-// Mapeos de Plantillas (Servicios y Programas)
-const templateMappings = {
-  'hero_tag':       { sel: '.h-tag, .tag', type: 'keep_icon_left' },
-  'hero_h1':        { sel: '.hero h1, .hero-srv h1', type: 'html' },
-  'hero_desc':      { sel: '.hero-desc, .hero-srv p', type: 'html' },
-  'hero_btn1_txt':  { sel: '.btn-p', type: 'text' },
-  'hero_btn1_url':  { sel: '.btn-p', type: 'href' },
-  'hero_btn2_txt':  { sel: '.btn-s', type: 'text' },
-  'hero_btn2_url':  { sel: '.btn-s', type: 'href' },
-  
-  // Metadatos (Iconos en Hero de Programas)
-  'meta1_txt':      { sel: '.hero-meta .h-m:nth-child(1)', type: 'keep_icon_left' },
-  'meta2_txt':      { sel: '.hero-meta .h-m:nth-child(2)', type: 'keep_icon_left' },
-  'meta3_txt':      { sel: '.hero-meta .h-m:nth-child(3)', type: 'keep_icon_left' },
-  'meta4_txt':      { sel: '.hero-meta .h-m:nth-child(4)', type: 'keep_icon_left' },
-  
-  // Tarjetas Flotantes y Sidebar
-  'hero_float_txt': { sel: '.hero-float', type: 'keep_icon_left' },
-  'card_tit':       { sel: '.hero-price .val, .side-head .val', type: 'text' },
-  'card_sub':       { sel: '.hero-price .lbl', type: 'text' },
-  'card_btn_url':   { sel: '.btn-buy, .btn-hero', type: 'href' },
-  
-  // Contenido principal
-  'content_h2':     { sel: '.sec-t', type: 'html' },
-  'content_p':      { sel: '.desc-text', type: 'html' },
-  'info_h2':        { sel: '.sec-t', type: 'html' },
-  'info_sub':       { sel: '.desc-text', type: 'html' }
-};
-
-// Generar dinámicamente mapeos para listas de hasta 8 elementos
-for(let i=1; i<=8; i++) {
-  templateMappings[`learn_${i}`] = { sel: `.learn-grid .learn-item:nth-child(${i}) span`, type: 'text' };
-  templateMappings[`symp_${i}`]  = { sel: `.pq-list .pq-item:nth-child(${i}) span, .pq-grid .pq-card:nth-child(${i}) p`, type: 'text' };
-  templateMappings[`ses${i}_tit`] = { sel: `.sesiones .sesion-item:nth-child(${i}) h4, .step-list .step-item:nth-child(${i}) h4`, type: 'text' };
-  templateMappings[`ses${i}_desc`]= { sel: `.sesiones .sesion-item:nth-child(${i}) p, .step-list .step-item:nth-child(${i}) p`, type: 'text' };
-  templateMappings[`info_b${i}_tit`] = { sel: `.pq-grid .pq-card:nth-child(${i}) h3`, type: 'text' };
-  templateMappings[`info_b${i}_txt`] = { sel: `.pq-grid .pq-card:nth-child(${i}) p`, type: 'text' };
-  templateMappings[`faq${i}_q`]  = { sel: `.faq-item:nth-of-type(${i}) .faq-q`, type: 'keep_icon_right' };
-  templateMappings[`faq${i}_a`]  = { sel: `.faq-item:nth-of-type(${i}) .faq-a`, type: 'html' };
-}
-
-// Mapeos específicos para el Index
-const indexMappings = {
-  'hero_badge':     { sel: '.h-badge', type: 'keep_icon_left' },
-  'hero_titulo':    { sel: '.hero h1', type: 'html' },
-  'hero_subtitulo': { sel: '.h-sub', type: 'html' },
-  'hero_trust_text':{ sel: '.t-txt', type: 'html' },
-  'hero_btn1_text': { sel: '.h-act .btn-p', type: 'keep_icon_right' },
-  'hero_btn1_url':  { sel: '.h-act .btn-p', type: 'href' },
-  'hero_btn2_text': { sel: '.h-act .btn-s', type: 'keep_icon_left' },
-  'hero_btn2_url':  { sel: '.h-act .btn-s', type: 'href' },
-  
-  'hero_f1_tit':    { sel: '.h-fl.f1 strong', type: 'text' },
-  'hero_f1_sub':    { sel: '.h-fl.f1 span', type: 'text' },
-  'hero_f2_tit':    { sel: '.h-fl.f2 strong', type: 'text' },
-  'hero_f2_sub':    { sel: '.h-fl.f2 span', type: 'text' },
-
-  'stat1_number':   { sel: '.stats-in .st:nth-child(1) .st-n', type: 'text' },
-  'stat1_label':    { sel: '.stats-in .st:nth-child(1) .st-l', type: 'text' },
-  'stat2_number':   { sel: '.stats-in .st:nth-child(3) .st-n', type: 'text' },
-  'stat2_label':    { sel: '.stats-in .st:nth-child(3) .st-l', type: 'text' },
-  'stat3_number':   { sel: '.stats-in .st:nth-child(5) .st-n', type: 'text' },
-  'stat3_label':    { sel: '.stats-in .st:nth-child(5) .st-l', type: 'text' },
-  'stat4_number':   { sel: '.stats-in .st:nth-child(7) .st-n', type: 'text' },
-  'stat4_label':    { sel: '.stats-in .st:nth-child(7) .st-l', type: 'text' },
-
-  'srv_tag':        { sel: '#servicios .tag', type: 'keep_icon_left' },
-  'srv_tit':        { sel: '#servicios .s-ti', type: 'html' },
-  'srv_sub':        { sel: '#servicios .s-sub', type: 'text' },
-  
-  'srv1_tit':       { sel: '.srv-c:nth-child(1) h3', type: 'text' },
-  'srv1_desc':      { sel: '.srv-c:nth-child(1) p', type: 'text' },
-  'srv2_tit':       { sel: '.srv-c:nth-child(2) h3', type: 'text' },
-  'srv2_desc':      { sel: '.srv-c:nth-child(2) p', type: 'text' },
-  'srv3_tit':       { sel: '.srv-c:nth-child(3) h3', type: 'text' },
-  'srv3_desc':      { sel: '.srv-c:nth-child(3) p', type: 'text' },
-
-  'paso_tag':       { sel: '.como-g .tag:nth-child(1)', type: 'keep_icon_left' },
-  'paso_tit':       { sel: '.como-g .s-ti:nth-child(2)', type: 'html' },
-  'p1_tit':         { sel: '.step:nth-child(1) h3', type: 'text' },
-  'p1_desc':        { sel: '.step:nth-child(1) p', type: 'text' },
-  'p2_tit':         { sel: '.step:nth-child(2) h3', type: 'text' },
-  'p2_desc':        { sel: '.step:nth-child(2) p', type: 'text' },
-  'p3_tit':         { sel: '.step:nth-child(3) h3', type: 'text' },
-  'p3_desc':        { sel: '.step:nth-child(3) p', type: 'text' },
-
-  'mod_tag':        { sel: '.plan-g', type: 'ignore' }, // Placeholder 
-  'mod_tit':        { sel: '.s-hd.c .s-ti', type: 'html' },
-  'mod_sub':        { sel: '.s-hd.c .s-sub', type: 'text' },
-
-  'faq_tag':        { sel: '.sec-bg:last-of-type .tag', type: 'keep_icon_left' },
-  'faq_tit':        { sel: '.sec-bg:last-of-type .s-ti', type: 'html' }
-};
-
-// =====================================================================
-// 2. DETECCIÓN DE PÁGINA ACTUAL
-// =====================================================================
-const path = window.location.pathname;
-let pageName = 'index'; 
-if (path.includes('contacto')) pageName = 'contacto';
-else if (path.includes('talleres')) pageName = 'talleres';
-else if (path.includes('empresas')) pageName = 'empresas';
-else if (path.includes('especialistas-publico')) pageName = 'directorio';
-else if (path.includes('terapia-psicologica')) pageName = 'terapia';
-else if (path.includes('coaching-emocional')) pageName = 'coaching';
-else if (path.includes('terapia-de-pareja')) pageName = 'pareja';
-else if (path.includes('psicologia-familiar')) pageName = 'familia';
-else if (path.includes('ansiedad')) pageName = 'ansiedad';
-else if (path.includes('autoestima')) pageName = 'autoestima';
-else if (path.includes('duelo')) pageName = 'duelo';
-else if (path.includes('estres-laboral')) pageName = 'estres';
-else if (path.includes('redes-sociales')) pageName = 'redes';
-else if (path.includes('vinculos')) pageName = 'vinculos';
-
-// =====================================================================
-// 3. FUNCIÓN PARA INYECTAR TEXTO SIN ROMPER LOS ICONOS HTML
-// =====================================================================
-function updateDOM(selector, value, type = 'text') {
-  if (!value || value === '' || type === 'ignore') return;
-  document.querySelectorAll(selector).forEach(el => {
-    if (type === 'text') el.textContent = value;
-    else if (type === 'html') el.innerHTML = value;
-    else if (type === 'href') el.href = value;
-    else if (type === 'src') el.src = value;
-    else if (type === 'keep_icon_left') {
-      const icon = el.querySelector('i');
-      el.innerHTML = (icon ? icon.outerHTML + ' ' : '') + value;
-    }
-    else if (type === 'keep_icon_right') {
-      const icon = el.querySelector('i');
-      el.innerHTML = value + (icon ? ' ' + icon.outerHTML : '');
-    }
-  });
-}
-
-// =====================================================================
-// 4. APLICAR LA CONFIGURACIÓN A LA PÁGINA
-// =====================================================================
-function aplicarConfiguracion(c) {
-  // A. Aplicar colores dinámicos
-  if (c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
-  if (c.color_accent) {
-    document.documentElement.style.setProperty('--clay', c.color_accent);
-    document.documentElement.style.setProperty('--blue', c.color_accent);
-    document.documentElement.style.setProperty('--fam', c.color_accent);
-  }
-
-  // B. Aplicar Globales (Navbar / Footer)
-  for (const [key, mapping] of Object.entries(globalMappings)) {
-    if (c[key] !== undefined) updateDOM(mapping.sel, c[key], mapping.type);
-  }
-
-  // C. Aplicar configuraciones según el tipo de página
-  if (pageName === 'index') {
-    // Aplicar mapeos básicos
-    for (const [key, mapping] of Object.entries(indexMappings)) {
-      if (c[key] !== undefined) updateDOM(mapping.sel, c[key], mapping.type);
-    }
-    
-    // Aplicar FAQs
-    for (let i=1; i<=6; i++) {
-        if(c[`faq${i}_q`]) updateDOM(`.faq-i:nth-of-type(${i}) .faq-q`, c[`faq${i}_q`], 'keep_icon_right');
-        if(c[`faq${i}_a`]) updateDOM(`.faq-i:nth-of-type(${i}) .faq-ai`, c[`faq${i}_a`], 'html');
-    }
-    
-    // Si se subió imagen del hero, cambiarla
-    if(c.hero_img && c.hero_img.trim() !== '') {
-        updateDOM('.h-img img', c.hero_img, 'src');
-    }
-
-  } else {
-    // Si es Programa o Servicio (Plantilla dinámica)
-    const prefix = pageName + '_';
-    Object.keys(c).forEach(dbKey => {
-      // Extraemos "ansiedad_hero_h1" -> "hero_h1"
-      if (dbKey.startsWith(prefix)) {
-        const genericKey = dbKey.replace(prefix, '');
-        const mapping = templateMappings[genericKey];
-        if (mapping) {
-          updateDOM(mapping.sel, c[dbKey], mapping.type);
-        }
-      }
+    // Efecto de sombra en el Navbar al hacer scroll
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('sc', window.scrollY > 10);
     });
-  }
-  
-  // D. SEO Title Extra Update
-  if (c[`${pageName}_seo_tit`]) document.title = c[`${pageName}_seo_tit`];
-}
 
-// =====================================================================
-// 5. CARGA DESDE SUPABASE Y LISTENER PARA VISTA PREVIA EN VIVO
-// =====================================================================
-async function cargarConfiguracionCMS() {
-  if (!window.sb) return setTimeout(cargarConfiguracionCMS, 500);
-  try {
-    const { data, error } = await window.sb
-      .from('config_web')
-      .select('*')
-      .or(`pagina.eq.${pageName},pagina.eq.global,pagina.eq.index`);
-
-    if (error) throw error;
+    // Control del Menú Móvil
+    function openM() {
+      const mm = document.getElementById('mm');
+      mm.style.display = 'flex';
+      document.getElementById('ov').classList.add('show');
+      setTimeout(() => mm.classList.add('open'), 10);
+      document.body.style.overflow = 'hidden';
+    }
     
-    const config = {};
-    data.forEach(item => config[item.clave] = item.valor);
-    aplicarConfiguracion(config);
-    
-  } catch (err) {
-    console.error('❌ Error CMS:', err);
-  }
-}
+    function closeM() {
+      const mm = document.getElementById('mm');
+      mm.classList.remove('open');
+      document.getElementById('ov').classList.remove('show');
+      setTimeout(() => mm.style.display = 'none', 300);
+      document.body.style.overflow = '';
+    }
 
-// Esto escucha cuando tecleas en el editor CMS y actualiza al instante
-window.addEventListener('message', (event) => {
-  if (event.data && event.data.tipo === 'LIVE_PREVIEW') {
-    aplicarConfiguracion(event.data.config);
-  }
-});
-
-// Arrancar al cargar
-document.addEventListener('DOMContentLoaded', cargarConfiguracionCMS);
-</script>
+    // Funcionalidad de las Preguntas Frecuentes (FAQ)
+    function toggleF(el) {
+      el.parentElement.classList.toggle('open');
+    }
+  </script>
+</body>
+</html>
   
 </body>
 </html>
