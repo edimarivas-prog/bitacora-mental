@@ -8,11 +8,99 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <link rel="stylesheet" href="css/design-system.css">
-  
   <style>
     /* =========================================
-       ESTILOS ÚNICOS PARA LA PÁGINA DE CONTACTO
+       VARIABLES OFICIALES (Forzadas)
+       ========================================= */
+    :root {
+      --g900:#1a2e1c;--g800:#2d4a30;--g700:#4F6F52;--g600:#6a8f6d;--g400:#8aaa8d;--g200:#c8ddc9;--g100:#e3ede4;--g50:#f2f8f2;
+      --s50:#fdf9f4;--s100:#f5ede0;--s300:#d4b896;--s600:#a08060;
+      --clay:#c97b5a;--clay-l:#f0d5c8;
+      --td:#1a2e1c;--tb:#3d4f3e;--ts:#697a6a;--tl:#9aaa9b;
+      --white:#fff;--border:#dde8de;
+      --fd:'Fraunces',Georgia,serif;--fb:'Plus Jakarta Sans',sans-serif;
+      --rsm:10px;--rmd:16px;--rlg:24px;--rxl:36px;
+      --ssm:0 2px 8px rgba(26,46,28,.08);--smd:0 6px 24px rgba(26,46,28,.10);--slg:0 16px 48px rgba(26,46,28,.12);
+    }
+    
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    /* FORZAMOS LA TIPOGRAFÍA A PLUS JAKARTA SANS */
+    body{font-family:var(--fb) !important; background:var(--g50); color:var(--tb); line-height:1.6; overflow-x:hidden;}
+    a{text-decoration:none;transition:all .25s ease}
+
+    /* =========================================
+       NAVBAR (Clon del Index)
+       ========================================= */
+    .nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid transparent;transition:all .3s; font-family: var(--fb) !important;}
+    .nav.sc{border-bottom-color:var(--border);box-shadow:var(--ssm)}
+    .ni{max-width:1280px;margin:0 auto;padding:0 40px;height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .logo{display:flex;align-items:center;gap:10px;font-family:var(--fd) !important;font-size:1.5rem;font-weight:700;color:var(--g700);letter-spacing:-.5px; line-height:1; margin:0;}
+    .logo-ic{width:38px;height:38px;background:var(--g700);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem}
+    .nl{display:flex;align-items:center;gap:4px;list-style:none}
+    .ni-item{position:relative}
+    .nl-a{display:flex;align-items:center;gap:5px;padding:8px 14px;color:var(--ts);font-size:.9rem;font-weight:600;border-radius:var(--rsm);white-space:nowrap}
+    .nl-a:hover{background:var(--g50);color:var(--g700)}
+    .nl-a i{font-size:.65rem;transition:transform .3s}
+    .ni-item:hover .nl-a i{transform:rotate(180deg)}
+    .dd{position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%);background:#fff;border:1px solid var(--border);border-radius:var(--rmd);box-shadow:var(--slg);padding:12px;min-width:230px;opacity:0;visibility:hidden;transition:all .2s}
+    .dd.wide{min-width:480px}
+    .ni-item:hover .dd{opacity:1;visibility:visible;top:calc(100% + 18px)}
+    .dd-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+    .dd-a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--rsm);color:var(--tb);font-size:.88rem;font-weight:500}
+    .dd-a:hover{background:var(--g50);color:var(--g700)}
+    .dd-a .ic{width:32px;height:32px;background:var(--g50);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--g700);font-size:.85rem;flex-shrink:0}
+    .dd-lbl{display:block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--g700);padding:8px 12px 4px}
+    .na{display:flex;align-items:center;gap:10px}
+    .btn-li{padding:9px 20px;border-radius:50px;border:2px solid var(--border);color:var(--tb);font-size:.88rem;font-weight:700}
+    .btn-li:hover{border-color:var(--g400);color:var(--g700)}
+    .btn-ct{padding:10px 22px;border-radius:50px;background:var(--g700);color:#fff;font-size:.88rem;font-weight:700;box-shadow:0 4px 14px rgba(79,111,82,.3)}
+    .btn-ct:hover{background:var(--g800);transform:translateY(-1px)}
+    .hbg{display:none;width:44px;height:44px;background:var(--g50);border:none;border-radius:var(--rsm);color:var(--g700);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center}
+
+    /* MENÚ MÓVIL */
+    .mmenu{display:none;position:fixed;inset:0;background:#fff;z-index:2000;flex-direction:column;overflow-y:auto;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1); font-family: var(--fb) !important;}
+    .mmenu.open{transform:translateX(0)}
+    .mm-hd{padding:20px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);flex-shrink:0}
+    .mm-cl{width:44px;height:44px;background:var(--g50);border:none;border-radius:10px;color:var(--g700);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .mm-body{padding:20px 24px;flex:1}
+    .mm-sec{margin-bottom:28px}
+    .mm-lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--tl);margin-bottom:8px}
+    .mm-a{display:flex;align-items:center;gap:12px;padding:12px 0;color:var(--tb);font-weight:600;font-size:1rem;border-bottom:1px solid var(--g50)}
+    .mm-a i{color:var(--g700);width:20px;text-align:center}
+    .mm-act{padding:20px 24px 40px;display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--border)}
+    .btn-m1{padding:15px;text-align:center;border:2px solid var(--border);border-radius:12px;color:var(--tb);font-weight:700}
+    .btn-m2{padding:15px;text-align:center;background:var(--g700);color:#fff;border-radius:12px;font-weight:700;display:block}
+    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1500}
+    .overlay.show{display:block}
+
+    /* =========================================
+       FOOTER (Clon exacto del Index)
+       ========================================= */
+    .footer{background:var(--s50);padding:80px 40px 40px;border-top:1px solid var(--border); font-family: var(--fb) !important;}
+    .f-grid{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:40px;margin-bottom:60px}
+    .f-logo{display:flex;align-items:center;gap:10px;font-family:var(--fd) !important;font-size:1.5rem;font-weight:700;color:var(--g700);margin-bottom:16px}
+    .f-logo .logo-ic{width:34px;height:34px;font-size:.95rem}
+    .f-tg{font-size:.88rem;color:var(--ts) !important;line-height:1.7;margin-bottom:20px; font-weight: 400;} /* Aquí forzamos el color correcto */
+    .f-co{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+    .f-co a{display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ts)}
+    .f-co a:hover{color:var(--g700)}
+    .f-co i{color:var(--g600);width:16px}
+    .f-soc{display:flex;gap:10px}
+    .f-soc a{width:38px;height:38px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;color:var(--g700);transition:all .3s}
+    .f-soc a:hover{background:var(--g700);color:#fff;transform:translateY(-3px)}
+    .f-col h5{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--td) !important;margin-bottom:16px; font-family: var(--fb) !important;} /* Forzamos color y fuente de los títulos */
+    .f-lk{list-style:none;display:flex;flex-direction:column;gap:10px}
+    .f-lk a{font-size:.88rem;color:var(--ts)}
+    .f-lk a:hover{color:var(--g700)}
+    .f-bot{max-width:1280px;margin:0 auto;padding-top:30px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+    .f-bot p{font-size:.82rem;color:var(--tl)}
+    .f-leg{display:flex;gap:20px}
+    .f-leg a{font-size:.82rem;color:var(--tl)}
+    .f-leg a:hover{color:var(--g700)}
+
+    /* =========================================
+       ESTILOS ÚNICOS DE CONTACTO
        ========================================= */
     .pg-head { padding: 140px 40px 60px; background: linear-gradient(160deg,var(--s50) 0%,var(--g50) 100%); text-align: center; border-bottom: 1px solid var(--border); }
     .pg-ti { font-family: var(--fd); font-size: clamp(2.5rem, 5vw, 3.5rem); color: var(--td); margin-bottom: 16px; line-height: 1.2; letter-spacing: -1px; }
@@ -20,10 +108,8 @@
     .tag{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--g700);background:var(--g100);padding:6px 14px;border-radius:50px;margin-bottom:20px}
 
     .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px 100px; }
-    
     .contact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
     
-    /* TARJETA NORMAL */
     .info-card { background: white; padding: 40px 30px; border-radius: var(--rlg); border: 1px solid var(--border); transition: 0.3s; text-align: center; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.03);}
     .info-card:hover { transform: translateY(-8px); box-shadow: var(--smd); border-color: var(--g200);}
     .card-icon { width: 64px; height: 64px; background: var(--g50); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: var(--g700); margin-bottom: 20px; }
@@ -33,7 +119,6 @@
     .contact-link { display: inline-block; margin-top: auto; padding: 12px 24px; background: white; color: var(--g700); font-weight: 700; border-radius: 50px; border: 2px solid var(--border); transition: 0.2s; width: 100%;}
     .contact-link:hover { border-color: var(--g700); background: var(--g50); }
 
-    /* TARJETA DESTACADA (WHATSAPP) */
     .info-card.highlight { background: linear-gradient(145deg, var(--g700), var(--g800)); color: white; border: none; transform: scale(1.05); box-shadow: var(--smd); }
     .info-card.highlight:hover { transform: scale(1.05) translateY(-5px); box-shadow: var(--slg); }
     .info-card.highlight h3 { color: white; }
@@ -46,14 +131,17 @@
     .location-box i { font-size: 1.5rem; color: var(--clay); }
     .location-box p { font-size: 1.05rem; color: var(--td); font-weight: 500; margin: 0;}
 
-    /* CTA INFERIOR */
     .cta-box { background: linear-gradient(135deg, var(--clay), #a35d3d); color: white; padding: 50px 40px; border-radius: 20px; text-align: center; margin-top: 60px; box-shadow: var(--smd); }
     .cta-box h2 { font-family: var(--fd); font-size: 2.2rem; margin-bottom: 15px; font-weight: 500;}
     .cta-box p { color: rgba(255,255,255,0.9); margin-bottom: 30px; font-size: 1.1rem; }
     .btn-white { background: white; color: var(--clay); padding: 14px 32px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; }
     .btn-white:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
-    
-    @media (max-width: 900px) { 
+
+    @media (max-width: 900px) {
+      .nl, .btn-li { display: none; }
+      .hbg { display: flex; }
+      .f-grid { grid-template-columns: 1fr; }
+      .f-bot { flex-direction: column; text-align: center; }
       .contact-grid { grid-template-columns: 1fr; gap: 20px;} 
       .info-card.highlight { transform: none; margin: 20px 0;}
       .info-card.highlight:hover { transform: translateY(-5px); }
@@ -181,7 +269,6 @@
         Ver directorio de psicólogos <i class="fas fa-arrow-right"></i>
       </a>
     </div>
-
   </div>
 
   <footer class="footer">
@@ -198,24 +285,63 @@
         <div class="f-soc">
           <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
           <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
           <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
         </div>
       </div>
-      <div class="f-col"><h5>Servicios</h5><ul class="f-lk"><li><a href="servicios/terapia-psicologica.html">Terapia Psicológica</a></li><li><a href="servicios/coaching-emocional.html">Coaching Emocional</a></li><li><a href="servicios/terapia-de-pareja.html">Terapia de Pareja</a></li><li><a href="servicios/psicologia-familiar.html">Psicología Familiar</a></li></ul></div>
-      <div class="f-col"><h5>Programas</h5><ul class="f-lk"><li><a href="programas/ansiedad.html">Ansiedad</a></li><li><a href="programas/estres-laboral.html">Estrés y Burnout</a></li><li><a href="programas/pareja.html">Autoestima y Vínculos</a></li><li><a href="programas/redes-sociales.html">Desconexión Digital</a></li><li><a href="programas/index.html">Ver todos →</a></li></ul></div>
-      <div class="f-col"><h5>Plataforma</h5><ul class="f-lk"><li><a href="especialistas-publico.html">Directorio</a></li><li><a href="test-bienestar.html">Test de bienestar</a></li><li><a href="empresas.html">Para empresas</a></li><li><a href="para-especialistas.html">Para especialistas</a></li><li><a href="faq.html">Preguntas frecuentes</a></li></ul></div>
-      <div class="f-col"><h5>Ayuda</h5><ul class="f-lk"><li><a href="contacto.html">Contacto</a></li><li><a href="privacidad.html">Privacidad</a></li><li><a href="terminos.html">Términos</a></li><li><a href="libro-reclamaciones.html">Reclamaciones</a></li><li><a href="lineas-emergencia.html">Líneas de emergencia</a></li></ul></div>
+      <div class="f-col">
+        <h5>Servicios</h5>
+        <ul class="f-lk">
+          <li><a href="servicios/terapia-psicologica.html">Terapia Psicológica</a></li>
+          <li><a href="servicios/coaching-emocional.html">Coaching Emocional</a></li>
+          <li><a href="servicios/terapia-de-pareja.html">Terapia de Pareja</a></li>
+          <li><a href="servicios/psicologia-familiar.html">Psicología Familiar</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h5>Programas</h5>
+        <ul class="f-lk">
+          <li><a href="programas/ansiedad.html">Ansiedad</a></li>
+          <li><a href="programas/estres-laboral.html">Estrés y Burnout</a></li>
+          <li><a href="programas/pareja.html">Autoestima y Vínculos</a></li>
+          <li><a href="programas/redes-sociales.html">Desconexión Digital</a></li>
+          <li><a href="programas/index.html">Ver todos &rarr;</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h5>Plataforma</h5>
+        <ul class="f-lk">
+          <li><a href="especialistas-publico.html">Directorio</a></li>
+          <li><a href="test-bienestar.html">Test de bienestar</a></li>
+          <li><a href="empresas.html">Para empresas</a></li>
+          <li><a href="para-especialistas.html">Para especialistas</a></li>
+          <li><a href="faq.html">Preguntas frecuentes</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h5>Ayuda</h5>
+        <ul class="f-lk">
+          <li><a href="contacto.html">Contacto</a></li>
+          <li><a href="privacidad.html">Privacidad</a></li>
+          <li><a href="terminos.html">Términos</a></li>
+          <li><a href="libro-reclamaciones.html">Reclamaciones</a></li>
+          <li><a href="lineas-emergencia.html">Líneas de emergencia</a></li>
+        </ul>
+      </div>
     </div>
     <div class="f-bot">
       <p>© 2026 Bitácora Mental. Todos los derechos reservados. Hecho en Perú 🇵🇪</p>
-      <nav class="f-leg"><a href="privacidad.html">Privacidad</a><a href="terminos.html">Términos</a><a href="libro-reclamaciones.html">Reclamaciones</a></nav>
+      <nav class="f-leg">
+        <a href="privacidad.html">Privacidad</a>
+        <a href="terminos.html">Términos</a>
+        <a href="libro-reclamaciones.html">Reclamaciones</a>
+      </nav>
     </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
-  
+
   <script>
     // Navbar scroll effect
     window.addEventListener('scroll', () => {
@@ -238,7 +364,7 @@
       document.body.style.overflow = '';
     }
 
-    // CMS CONFIGURATION APPLY (Hace que Contacto respete las actualizaciones globales de Index)
+    // CMS CONFIGURATION APPLY (Forza colores dinámicos del Index)
     function aplicarConfiguracion(c) {
       if(c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
       if(c.color_accent) { 
@@ -267,7 +393,7 @@
     }
 
     async function cargarConfiguracionCMS() {
-      if (!window.sb) { setTimeout(cargarConfiguracionCMS, 500); return; }
+      if (!window.sb) return;
       try {
         const { data, error } = await window.sb.from('config_web').select('*');
         if (error) throw error;
@@ -275,7 +401,6 @@
 
         const config = {};
         data.forEach(item => config[item.clave] = item.valor);
-        
         aplicarConfiguracion(config);
       } catch (err) {
         console.error("Error conectando con el CMS:", err);
