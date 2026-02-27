@@ -627,36 +627,264 @@
   </div>
 </div>
 
-<script>
-    // Efecto de sombra en el Navbar al hacer scroll
-    window.addEventListener('scroll', () => {
-      document.getElementById('nav').classList.toggle('sc', window.scrollY > 10);
-    });
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
 
-    // Control del Menú Móvil
-    function openM() {
-      const mm = document.getElementById('mm');
-      mm.style.display = 'flex';
-      document.getElementById('ov').classList.add('show');
-      setTimeout(() => mm.classList.add('open'), 10);
-      document.body.style.overflow = 'hidden';
+<script>
+  // =====================================================================
+  // 1. DICCIONARIOS DE MAPEO (Dónde va cada cosa)
+  // =====================================================================
+
+  // Mapeos Globales (Navbar y Footer) - Aplican a todas las páginas
+  const globalMappings = {
+    'navbar_logo_text': { sel: '.logo', type: 'keep_icon_left' },
+    'navbar_btn1_text': { sel: '.btn-li', type: 'text' },
+    'navbar_btn1_url':  { sel: '.btn-li', type: 'href' },
+    'navbar_btn2_text': { sel: '.btn-ct', type: 'text' },
+    'navbar_btn2_url':  { sel: '.btn-ct', type: 'href' },
+    'foot_desc':        { sel: '.f-tg', type: 'text' },
+    'foot_tel':         { sel: '.f-co a[href^="tel:"]', type: 'keep_icon_left' },
+    'foot_mail':        { sel: '.f-co a[href^="mailto:"]', type: 'keep_icon_left' },
+    'foot_wa':          { sel: '.f-co a[href^="https://wa.me"]', type: 'href' },
+    'foot_loc':         { sel: '.f-co span', type: 'keep_icon_left' },
+    'foot_copy':        { sel: '.f-bot p', type: 'text' },
+    'soc_ig':           { sel: '.f-soc a[aria-label="Instagram"]', type: 'href' },
+    'soc_tk':           { sel: '.f-soc a[aria-label="TikTok"]', type: 'href' },
+    'soc_in':           { sel: '.f-soc a[aria-label="LinkedIn"]', type: 'href' },
+    'soc_fb':           { sel: '.f-soc a[aria-label="Facebook"]', type: 'href' }
+  };
+
+  // Mapeos específicos para el Index
+  const indexMappings = {
+    'hero_badge':     { sel: '.h-badge', type: 'keep_icon_left' },
+    'hero_titulo':    { sel: '.hero h1', type: 'html' },
+    'hero_subtitulo': { sel: '.h-sub', type: 'html' },
+    'hero_trust_text':{ sel: '.t-txt', type: 'html' },
+    'hero_btn1_text': { sel: '.h-act .btn-p', type: 'keep_icon_right' },
+    'hero_btn1_url':  { sel: '.h-act .btn-p', type: 'href' },
+    'hero_btn2_text': { sel: '.h-act .btn-s', type: 'keep_icon_left' },
+    'hero_btn2_url':  { sel: '.h-act .btn-s', type: 'href' },
+    
+    'hero_f1_tit':    { sel: '.h-fl.f1 .f-tx strong', type: 'text' },
+    'hero_f1_sub':    { sel: '.h-fl.f1 .f-tx span', type: 'text' },
+    'hero_f2_tit':    { sel: '.h-fl.f2 .f-tx strong', type: 'text' },
+    'hero_f2_sub':    { sel: '.h-fl.f2 .f-tx span', type: 'text' },
+
+    'stat1_number':   { sel: '.stats-in .st:nth-child(1) .st-n', type: 'text' },
+    'stat1_label':    { sel: '.stats-in .st:nth-child(1) .st-l', type: 'text' },
+    'stat2_number':   { sel: '.stats-in .st:nth-child(3) .st-n', type: 'text' },
+    'stat2_label':    { sel: '.stats-in .st:nth-child(3) .st-l', type: 'text' },
+    'stat3_number':   { sel: '.stats-in .st:nth-child(5) .st-n', type: 'text' },
+    'stat3_label':    { sel: '.stats-in .st:nth-child(5) .st-l', type: 'text' },
+    'stat4_number':   { sel: '.stats-in .st:nth-child(7) .st-n', type: 'text' },
+    'stat4_label':    { sel: '.stats-in .st:nth-child(7) .st-l', type: 'text' },
+
+    'srv_tag':        { sel: '#servicios .tag', type: 'keep_icon_left' },
+    'srv_tit':        { sel: '#servicios .s-ti', type: 'html' },
+    'srv_sub':        { sel: '#servicios .s-sub', type: 'text' },
+    
+    'srv1_tit':       { sel: '.srv-c:nth-child(1) h3', type: 'text' },
+    'srv1_desc':      { sel: '.srv-c:nth-child(1) p', type: 'text' },
+    'srv2_tit':       { sel: '.srv-c:nth-child(2) h3', type: 'text' },
+    'srv2_desc':      { sel: '.srv-c:nth-child(2) p', type: 'text' },
+    'srv3_tit':       { sel: '.srv-c:nth-child(3) h3', type: 'text' },
+    'srv3_desc':      { sel: '.srv-c:nth-child(3) p', type: 'text' },
+
+    'paso_tag':       { sel: '.como-g .tag', type: 'keep_icon_left' },
+    'paso_tit':       { sel: '.como-g .s-ti', type: 'html' },
+    'p1_tit':         { sel: '.step:nth-child(1) h3', type: 'text' },
+    'p1_desc':        { sel: '.step:nth-child(1) p', type: 'text' },
+    'p2_tit':         { sel: '.step:nth-child(2) h3', type: 'text' },
+    'p2_desc':        { sel: '.step:nth-child(2) p', type: 'text' },
+    'p3_tit':         { sel: '.step:nth-child(3) h3', type: 'text' },
+    'p3_desc':        { sel: '.step:nth-child(3) p', type: 'text' },
+
+    'mod_tit':        { sel: '.plan-g', type: 'ignore' }, 
+
+    'faq_tag':        { sel: '.faq-l', type: 'ignore' },
+    'faq_tit':        { sel: '.faq-l', type: 'ignore' }
+  };
+
+  // =====================================================================
+  // 2. FUNCIÓN PARA INYECTAR TEXTO SIN ROMPER LOS ICONOS HTML
+  // =====================================================================
+  function updateDOM(selector, value, type = 'text') {
+    if (!value || value === '' || type === 'ignore') return;
+    document.querySelectorAll(selector).forEach(el => {
+      if (type === 'text') el.textContent = value;
+      else if (type === 'html') el.innerHTML = value;
+      else if (type === 'href') el.href = value;
+      else if (type === 'src') el.src = value;
+      else if (type === 'keep_icon_left') {
+        const icon = el.querySelector('i');
+        el.innerHTML = (icon ? icon.outerHTML + ' ' : '') + value;
+      }
+      else if (type === 'keep_icon_right') {
+        const icon = el.querySelector('i');
+        el.innerHTML = value + (icon ? ' ' + icon.outerHTML : '');
+      }
+    });
+  }
+
+  // =====================================================================
+  // 3. APLICAR LA CONFIGURACIÓN AL INDEX
+  // =====================================================================
+  function aplicarConfiguracion(c) {
+    if (c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
+    if (c.color_accent) {
+      document.documentElement.style.setProperty('--clay', c.color_accent);
+    }
+
+    for (const [key, mapping] of Object.entries(globalMappings)) {
+      if (c[key] !== undefined) updateDOM(mapping.sel, c[key], mapping.type);
+    }
+
+    for (const [key, mapping] of Object.entries(indexMappings)) {
+      if (c[key] !== undefined) updateDOM(mapping.sel, c[key], mapping.type);
     }
     
-    function closeM() {
-      const mm = document.getElementById('mm');
-      mm.classList.remove('open');
-      document.getElementById('ov').classList.remove('show');
-      setTimeout(() => mm.style.display = 'none', 300);
-      document.body.style.overflow = '';
+    for (let i=1; i<=6; i++) {
+        if(c[`faq${i}_q`]) updateDOM(`.faq-i:nth-of-type(${i}) .faq-q`, c[`faq${i}_q`], 'keep_icon_right');
+        if(c[`faq${i}_a`]) updateDOM(`.faq-i:nth-of-type(${i}) .faq-ai`, c[`faq${i}_a`], 'html');
     }
+    
+    if(c.hero_img && c.hero_img.trim() !== '') {
+        updateDOM('.h-img img', c.hero_img, 'src');
+    }
+  }
 
-    // Funcionalidad de las Preguntas Frecuentes (FAQ)
-    function toggleF(el) {
-      el.parentElement.classList.toggle('open');
+  // =====================================================================
+  // 4. CARGA DE BASE DE DATOS Y VISTA PREVIA
+  // =====================================================================
+  async function cargarConfiguracionCMS() {
+    if (!window.sb) return setTimeout(cargarConfiguracionCMS, 500);
+    try {
+      const { data, error } = await window.sb
+        .from('config_web')
+        .select('*')
+        .or(`pagina.eq.index,pagina.eq.global`);
+
+      if (error) throw error;
+      
+      const config = {};
+      data.forEach(item => config[item.clave] = item.valor);
+      aplicarConfiguracion(config);
+      
+    } catch (err) {
+      console.error('❌ Error CMS:', err);
     }
-  </script>
-</body>
-</html>
+  }
+
+  window.addEventListener('message', (event) => {
+    if (event.data && event.data.tipo === 'LIVE_PREVIEW') {
+      aplicarConfiguracion(event.data.config);
+    }
+  });
+
+  // =====================================================================
+  // 5. CARGAR TALLERES DINÁMICAMENTE
+  // =====================================================================
+  async function cargarTalleresIndex() {
+    if (!window.sb) return setTimeout(cargarTalleresIndex, 500);
+    const container = document.getElementById('talleresContainer');
+    if (!container) return;
+
+    try {
+      const { data: talleres, error } = await window.sb
+        .from('web_talleres')
+        .select('*')
+        .eq('visible', true)
+        .gte('fecha', new Date().toISOString())
+        .order('fecha', { ascending: true })
+        .limit(3);
+
+      if (error) throw error;
+
+      if (talleres && talleres.length > 0) {
+        container.innerHTML = '';
+        talleres.forEach((t, index) => {
+          const fecha = new Date(t.fecha);
+          const dia = fecha.getDate();
+          const mesCorto = fecha.toLocaleString('es-ES', { month: 'short' }).toUpperCase().replace('.', '');
+          const hora = fecha.toLocaleString('es-ES', { hour: '2-digit', minute: '2-digit' });
+          const cuposLibres = t.cupos_totales - t.cupos_ocupados;
+          const estaLleno = cuposLibres <= 0;
+          const colorCard = (index % 3) + 1; 
+
+          container.innerHTML += `
+            <div class="workshop-card ws-card-${colorCard}">
+              <div class="ws-header">
+                <span class="date-big">${dia}</span>
+                <span class="month-big">${mesCorto}</span>
+              </div>
+              <div class="ws-body">
+                <span class="ws-type"><i class="fas fa-video"></i> ${t.tipo}</span>
+                <h3 class="ws-title">${t.titulo}</h3>
+                <p class="ws-desc">${t.descripcion.substring(0, 90)}...</p>
+                <ul class="ws-details">
+                  <li><i class="far fa-clock"></i> ${hora} (Hora PE)</li>
+                  <li><i class="far fa-user"></i> ${t.especialista}</li>
+                </ul>
+                <div class="spots-pill">
+                  <i class="fas fa-users"></i> ${estaLleno ? 'Cupos llenos' : cuposLibres + ' cupos disponibles'}
+                </div>
+                <button class="btn-ws" onclick="window.location='talleres.html'" ${estaLleno ? 'disabled style="background:var(--border);color:var(--tl);cursor:not-allowed"' : ''}>
+                  ${estaLleno ? 'Agotado' : 'Ver Taller'}
+                </button>
+              </div>
+            </div>
+          `;
+        });
+      } else {
+        container.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:var(--ts); padding: 40px 0;">No hay talleres programados por el momento.</p>';
+      }
+    } catch (err) {
+      console.error("Error cargando talleres:", err);
+      container.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:var(--ts);">Ocurrió un error al cargar la agenda.</p>';
+    }
+  }
+
+  // =====================================================================
+  // 6. FUNCIONES DE UI Y EVENTOS
+  // =====================================================================
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('sc', window.scrollY > 10);
+  });
+
+  function openM() {
+    const mm = document.getElementById('mm');
+    mm.style.display = 'flex';
+    document.getElementById('ov').classList.add('show');
+    setTimeout(() => mm.classList.add('open'), 10);
+    document.body.style.overflow = 'hidden';
+  }
   
+  function closeM() {
+    const mm = document.getElementById('mm');
+    mm.classList.remove('open');
+    document.getElementById('ov').classList.remove('show');
+    setTimeout(() => mm.style.display = 'none', 300);
+    document.body.style.overflow = '';
+  }
+
+  function toggleF(el) {
+    el.parentElement.classList.toggle('open');
+  }
+
+  function closeWsModal() {
+    document.getElementById('modalWs').classList.remove('show');
+  }
+
+  function submitWs(event) {
+    event.preventDefault();
+    alert("Función de inscripción en desarrollo.");
+  }
+
+  // Inicializar todo al cargar
+  document.addEventListener('DOMContentLoaded', () => {
+    cargarConfiguracionCMS();
+    cargarTalleresIndex();
+  });
+</script>
 </body>
 </html>
