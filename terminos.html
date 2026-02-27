@@ -4,51 +4,218 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Términos y Condiciones - Bitácora Mental</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="css/design-system.css">
+  
   <style>
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); margin: 0; padding-top: 80px; }
-    .container { max-width: 900px; margin: 0 auto; padding: 60px 20px; }
-    .page-header { margin-bottom: 40px; }
-    .page-header h1 { font-family: 'Outfit', sans-serif; font-size: 2.5rem; color: var(--primary); margin-bottom: 10px; }
-    .page-header .date { color: var(--text-soft); font-size: 0.9rem; }
+    /* =========================================
+       VARIABLES GLOBALES OFICIALES
+       ========================================= */
+    :root {
+      --g900:#1a2e1c;--g800:#2d4a30;--g700:#4F6F52;--g600:#6a8f6d;--g400:#8aaa8d;--g200:#c8ddc9;--g100:#e3ede4;--g50:#f2f8f2;
+      --s50:#fdf9f4;--s100:#f5ede0;--s300:#d4b896;--s600:#a08060;
+      --clay:#c97b5a;--clay-l:#f0d5c8;
+      --td:#1a2e1c;--tb:#3d4f3e;--ts:#697a6a;--tl:#9aaa9b;
+      --white:#fff;--border:#dde8de;
+      --fd:'Fraunces',Georgia,serif;--fb:'Plus Jakarta Sans',sans-serif;
+      --rsm:10px;--rmd:16px;--rlg:24px;--rxl:36px;
+      --ssm:0 2px 8px rgba(26,46,28,.08);--smd:0 6px 24px rgba(26,46,28,.10);--slg:0 16px 48px rgba(26,46,28,.12);
+    }
+
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--fb);background:var(--g50);color:var(--tb);line-height:1.6;overflow-x:hidden}
+    a{text-decoration:none;transition:all .25s ease}
+
+    /* =========================================
+       NAVBAR UNIFICADO
+       ========================================= */
+    .nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid transparent;transition:all .3s}
+    .nav.sc{border-bottom-color:var(--border);box-shadow:var(--ssm)}
+    .ni{max-width:1280px;margin:0 auto;padding:0 40px;height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .logo{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-size:1.5rem;font-weight:700;color:var(--g700);letter-spacing:-.5px}
+    .logo-ic{width:38px;height:38px;background:var(--g700);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem}
+    .nl{display:flex;align-items:center;gap:4px;list-style:none}
+    .ni-item{position:relative}
+    .nl-a{display:flex;align-items:center;gap:5px;padding:8px 14px;color:var(--ts);font-size:.9rem;font-weight:600;border-radius:var(--rsm);white-space:nowrap}
+    .nl-a:hover{background:var(--g50);color:var(--g700)}
+    .nl-a i{font-size:.65rem;transition:transform .3s}
+    .ni-item:hover .nl-a i{transform:rotate(180deg)}
+    .dd{position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%);background:#fff;border:1px solid var(--border);border-radius:var(--rmd);box-shadow:var(--slg);padding:12px;min-width:230px;opacity:0;visibility:hidden;transition:all .2s}
+    .dd.wide{min-width:480px}
+    .ni-item:hover .dd{opacity:1;visibility:visible;top:calc(100% + 18px)}
+    .dd-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+    .dd-a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--rsm);color:var(--tb);font-size:.88rem;font-weight:500}
+    .dd-a:hover{background:var(--g50);color:var(--g700)}
+    .dd-a .ic{width:32px;height:32px;background:var(--g50);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--g700);font-size:.85rem;flex-shrink:0}
+    .dd-lbl{display:block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--g700);padding:8px 12px 4px}
+    .na{display:flex;align-items:center;gap:10px}
+    .btn-li{padding:9px 20px;border-radius:50px;border:2px solid var(--border);color:var(--tb);font-size:.88rem;font-weight:700}
+    .btn-li:hover{border-color:var(--g400);color:var(--g700)}
+    .btn-ct{padding:10px 22px;border-radius:50px;background:var(--g700);color:#fff;font-size:.88rem;font-weight:700;box-shadow:0 4px 14px rgba(79,111,82,.3)}
+    .btn-ct:hover{background:var(--g800);transform:translateY(-1px)}
+    .hbg{display:none;width:44px;height:44px;background:var(--g50);border:none;border-radius:var(--rsm);color:var(--g700);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center}
+
+    /* MENÚ MÓVIL */
+    .mmenu{display:none;position:fixed;inset:0;background:#fff;z-index:2000;flex-direction:column;overflow-y:auto;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+    .mmenu.open{transform:translateX(0)}
+    .mm-hd{padding:20px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);flex-shrink:0}
+    .mm-cl{width:44px;height:44px;background:var(--g50);border:none;border-radius:10px;color:var(--g700);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .mm-body{padding:20px 24px;flex:1}
+    .mm-sec{margin-bottom:28px}
+    .mm-lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--tl);margin-bottom:8px}
+    .mm-a{display:flex;align-items:center;gap:12px;padding:12px 0;color:var(--tb);font-weight:600;font-size:1rem;border-bottom:1px solid var(--g50)}
+    .mm-a i{color:var(--g700);width:20px;text-align:center}
+    .mm-act{padding:20px 24px 40px;display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--border)}
+    .btn-m1{padding:15px;text-align:center;border:2px solid var(--border);border-radius:12px;color:var(--tb);font-weight:700}
+    .btn-m2{padding:15px;text-align:center;background:var(--g700);color:#fff;border-radius:12px;font-weight:700;display:block}
+    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1500}
+    .overlay.show{display:block}
+
+    /* =========================================
+       DISEÑO DE PÁGINA LEGAL
+       ========================================= */
+    .pg-head { padding: 140px 40px 60px; background: linear-gradient(160deg,var(--s50) 0%,var(--g50) 100%); text-align: center; border-bottom: 1px solid var(--border); }
+    .pg-ti { font-family: var(--fd); font-size: clamp(2.2rem, 4vw, 3rem); color: var(--td); margin-bottom: 10px; line-height: 1.2; letter-spacing: -1px; }
+    .pg-sub { font-size: 1.05rem; color: var(--ts); max-width: 600px; margin: 0 auto; line-height: 1.6; }
+    .tag{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--g700);background:var(--g100);padding:6px 14px;border-radius:50px;margin-bottom:20px}
+
+    .legal-wrap { max-width: 900px; margin: -30px auto 100px; padding: 0 20px; position: relative; z-index: 10; }
     
-    .content-card { background: white; padding: 40px; border-radius: 20px; border: 1px solid var(--border); }
-    .content-card h2 { font-family: 'Outfit', sans-serif; color: var(--primary); font-size: 1.5rem; margin-top: 30px; margin-bottom: 15px; }
-    .content-card h3 { font-family: 'Outfit', sans-serif; color: var(--text-main); font-size: 1.2rem; margin-top: 20px; margin-bottom: 10px; }
-    .content-card p { line-height: 1.7; color: var(--text-soft); margin-bottom: 15px; }
-    .content-card ul, .content-card ol { margin: 15px 0; padding-left: 30px; }
-    .content-card li { margin: 8px 0; line-height: 1.6; color: var(--text-soft); }
+    .legal-card { background: white; padding: 60px; border-radius: var(--rxl); border: 1px solid var(--border); box-shadow: var(--slg); }
     
-    .warning-box { background: #FEF2F2; padding: 20px; border-radius: 12px; border-left: 4px solid #EF4444; margin: 20px 0; }
-    .warning-box p { margin: 0; color: #7F1D1D; }
+    .legal-card h2 { font-family: var(--fd); color: var(--td); font-size: 1.8rem; margin-top: 40px; margin-bottom: 15px; border-bottom: 2px solid var(--g100); padding-bottom: 10px;}
+    .legal-card h2:first-child { margin-top: 0; }
     
-    .info-box { background: var(--primary-50); padding: 20px; border-radius: 12px; border-left: 4px solid var(--primary); margin: 20px 0; }
-    .info-box p { margin: 0; color: var(--text-main); }
+    .legal-card h3 { font-family: var(--fd); color: var(--g800); font-size: 1.3rem; margin-top: 30px; margin-bottom: 10px; }
     
-    .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--primary); text-decoration: none; font-weight: 600; margin-bottom: 20px; }
-    .back-link:hover { gap: 12px; }
+    .legal-card p { line-height: 1.8; color: var(--ts); margin-bottom: 20px; font-size: 1.05rem;}
     
+    .legal-card ul, .legal-card ol { margin: 15px 0 25px; padding-left: 20px; }
+    .legal-card li { margin: 10px 0; line-height: 1.7; color: var(--ts); font-size: 1.05rem;}
+    .legal-card li strong { color: var(--td); }
+    
+    /* Cajas de Atención */
+    .highlight-box { background: var(--g50); padding: 25px; border-radius: 16px; border-left: 5px solid var(--g700); margin: 30px 0; }
+    .highlight-box p { margin: 0; color: var(--td); font-size: 1rem;}
+    
+    .warning-box { background: #FEF2F2; padding: 25px; border-radius: 16px; border-left: 5px solid #DC2626; margin: 30px 0; }
+    .warning-box p { margin: 0; color: #7F1D1D; font-size: 1rem;}
+    .warning-box ul { margin-top: 15px; margin-bottom: 0; padding-left: 20px;}
+    .warning-box li { color: #991B1B; font-weight: 500;}
+
+    .legal-link { color: var(--g700); text-decoration: none; font-weight: 600; transition: 0.2s;}
+    .legal-link:hover { color: var(--clay); text-decoration: underline; }
+
+    /* FOOTER */
+    .footer{background:var(--s50);padding:80px 40px 40px;border-top:1px solid var(--border)}
+    .f-grid{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:40px;margin-bottom:60px}
+    .f-logo{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-size:1.5rem;font-weight:700;color:var(--g700);margin-bottom:16px}
+    .f-logo .logo-ic{width:34px;height:34px;font-size:.95rem}
+    .f-tg{font-size:.88rem;color:var(--ts);line-height:1.7;margin-bottom:20px}
+    .f-co{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+    .f-co a{display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ts)}
+    .f-co a:hover{color:var(--g700)}
+    .f-co i{color:var(--g600);width:16px}
+    .f-soc{display:flex;gap:10px}
+    .f-soc a{width:38px;height:38px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;color:var(--g700);transition:all .3s}
+    .f-soc a:hover{background:var(--g700);color:#fff;transform:translateY(-3px)}
+    .f-col h5{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--td);margin-bottom:16px}
+    .f-lk{list-style:none;display:flex;flex-direction:column;gap:10px}
+    .f-lk a{font-size:.88rem;color:var(--ts)}
+    .f-lk a:hover{color:var(--g700)}
+    .f-bot{max-width:1280px;margin:0 auto;padding-top:30px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+    .f-bot p{font-size:.82rem;color:var(--tl)}
+    .f-leg{display:flex;gap:20px}
+    .f-leg a{font-size:.82rem;color:var(--tl)}
+    .f-leg a:hover{color:var(--g700)}
+
     @media (max-width: 768px) {
-      .page-header h1 { font-size: 2rem; }
-      .content-card { padding: 25px 20px; }
+      .nl, .btn-li { display: none; }
+      .hbg { display: flex; }
+      .f-grid { grid-template-columns: 1fr; }
+      .f-bot { flex-direction: column; text-align: center; }
+      .legal-card { padding: 30px 20px; }
+      .legal-wrap { margin-top: -20px; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <a href="index.html" class="back-link">
-      <i class="fas fa-arrow-left"></i> Volver al inicio
-    </a>
-    
-    <div class="page-header">
-      <h1>Términos y Condiciones de Uso</h1>
-      <p class="date">Última actualización: 13 de febrero, 2026</p>
-    </div>
 
-    <div class="content-card">
-      <div class="info-box">
+  <nav class="nav" id="nav">
+    <div class="ni">
+      <a href="index.html" class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</a>
+      <ul class="nl">
+        <li class="ni-item">
+          <a href="index.html#servicios" class="nl-a">Servicios <i class="fas fa-chevron-down"></i></a>
+          <div class="dd wide">
+            <span class="dd-lbl">Atención profesional</span>
+            <div class="dd-grid">
+              <a href="servicios/terapia-psicologica.html" class="dd-a"><div class="ic"><i class="fas fa-user-md"></i></div><div><strong>Terapia Psicológica</strong><small style="color:var(--tl);font-size:.75rem">Online</small></div></a>
+              <a href="servicios/coaching-emocional.html" class="dd-a"><div class="ic"><i class="fas fa-rocket"></i></div><div><strong>Coaching Emocional</strong><small style="color:var(--tl);font-size:.75rem">Metas y hábitos</small></div></a>
+              <a href="servicios/terapia-de-pareja.html" class="dd-a"><div class="ic"><i class="fas fa-users"></i></div><div><strong>Terapia de Pareja</strong><small style="color:var(--tl);font-size:.75rem">Vínculos sanos</small></div></a>
+              <a href="servicios/psicologia-familiar.html" class="dd-a"><div class="ic"><i class="fas fa-child"></i></div><div><strong>Psicología Familiar</strong><small style="color:var(--tl);font-size:.75rem">Dinámica familiar</small></div></a>
+            </div>
+          </div>
+        </li>
+        <li class="ni-item">
+          <a href="index.html#programas" class="nl-a">Programas <i class="fas fa-chevron-down"></i></a>
+          <div class="dd">
+            <span class="dd-lbl">Programas temáticos</span>
+            <a href="programas/ansiedad.html" class="dd-a"><div class="ic"><i class="fas fa-wind"></i></div> Manejo de Ansiedad</a>
+            <a href="programas/estres-laboral.html" class="dd-a"><div class="ic"><i class="fas fa-briefcase"></i></div> Estrés y Burnout</a>
+            <a href="programas/pareja.html" class="dd-a"><div class="ic"><i class="fas fa-shield-alt"></i></div> Autoestima y Vínculos</a>
+            <a href="programas/redes-sociales.html" class="dd-a"><div class="ic"><i class="fas fa-mobile-alt"></i></div> Desconexión Digital</a>
+          </div>
+        </li>
+        <li class="ni-item"><a href="especialistas-publico.html" class="nl-a">Directorio</a></li>
+        <li class="ni-item"><a href="empresas.html" class="nl-a">Para empresas</a></li>
+        <li class="ni-item"><a href="para-especialistas.html" class="nl-a">Para especialistas</a></li>
+      </ul>
+      <div class="na">
+        <a href="login.html" class="btn-li">Ingresar</a>
+        <a href="registro.html" class="btn-ct">Crear cuenta</a>
+      </div>
+      <button class="hbg" onclick="openM()" aria-label="Menú"><i class="fas fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <div class="overlay" id="ov" onclick="closeM()"></div>
+  <div class="mmenu" id="mm">
+    <div class="mm-hd">
+      <span class="logo" style="font-size:1.3rem"><div class="logo-ic" style="width:32px;height:32px;font-size:.9rem"><i class="fas fa-brain"></i></div>bitácora</span>
+      <button class="mm-cl" onclick="closeM()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="mm-body">
+      <div class="mm-sec">
+        <div class="mm-lbl">Servicios</div>
+        <a href="servicios/terapia-psicologica.html" class="mm-a" onclick="closeM()"><i class="fas fa-user-md"></i> Terapia Psicológica</a>
+        <a href="servicios/coaching-emocional.html" class="mm-a" onclick="closeM()"><i class="fas fa-rocket"></i> Coaching Emocional</a>
+        <a href="servicios/terapia-de-pareja.html" class="mm-a" onclick="closeM()"><i class="fas fa-users"></i> Terapia de Pareja</a>
+      </div>
+      <div class="mm-sec">
+        <div class="mm-lbl">Más</div>
+        <a href="especialistas-publico.html" class="mm-a" onclick="closeM()"><i class="fas fa-search"></i> Directorio de especialistas</a>
+        <a href="empresas.html" class="mm-a" onclick="closeM()"><i class="fas fa-building"></i> Para empresas</a>
+        <a href="para-especialistas.html" class="mm-a" onclick="closeM()"><i class="fas fa-stethoscope"></i> Para especialistas</a>
+      </div>
+    </div>
+    <div class="mm-act">
+      <a href="login.html" class="btn-m1" onclick="closeM()">Iniciar sesión</a>
+      <a href="registro.html" class="btn-m2" onclick="closeM()">Crear cuenta gratis</a>
+    </div>
+  </div>
+
+  <header class="pg-head">
+    <div class="tag"><i class="fas fa-file-contract"></i> Legal</div>
+    <h1 class="pg-ti">Términos y Condiciones de Uso</h1>
+    <p class="pg-sub">Última actualización: 13 de febrero, 2026</p>
+  </header>
+
+  <main class="legal-wrap">
+    <div class="legal-card">
+      
+      <div class="highlight-box">
         <p><strong>📌 Importante:</strong> Al usar Bitácora Mental, aceptas estos términos. Por favor léelos cuidadosamente. Si no estás de acuerdo, no utilices nuestros servicios.</p>
       </div>
 
@@ -76,17 +243,17 @@
       
       <h3>3.1 Requisitos de Edad</h3>
       <ul>
-        <li>Debes tener al menos <strong>16 años</strong> para usar la plataforma</li>
-        <li>Menores entre 16-18 años requieren consentimiento de un tutor legal</li>
-        <li>Al registrarte, declaras cumplir con este requisito</li>
+        <li>Debes tener al menos <strong>16 años</strong> para usar la plataforma.</li>
+        <li>Menores entre 16 y 18 años requieren el consentimiento de un tutor legal.</li>
+        <li>Al registrarte, declaras cumplir con este requisito.</li>
       </ul>
 
       <h3>3.2 Información de Registro</h3>
       <ul>
-        <li>Debes proporcionar información precisa, actual y completa</li>
-        <li>Eres responsable de mantener actualizada tu información</li>
-        <li>Eres responsable de la seguridad de tu contraseña</li>
-        <li>No puedes compartir tu cuenta con terceros</li>
+        <li>Debes proporcionar información precisa, actual y completa.</li>
+        <li>Eres responsable de mantener actualizada tu información.</li>
+        <li>Eres responsable de la seguridad de tu contraseña.</li>
+        <li>No puedes compartir tu cuenta con terceros.</li>
       </ul>
 
       <h2>4. Naturaleza de los Servicios</h2>
@@ -96,107 +263,107 @@
         <p style="margin-top: 10px;">
           Bitácora Mental NO es un servicio de emergencias. Si estás en crisis, tienes pensamientos suicidas o te encuentras en una situación de peligro inmediato, contacta inmediatamente:
         </p>
-        <ul style="margin-top: 10px; margin-bottom: 0;">
-          <li>🚨 Línea 113 (Salud Mental - Perú)</li>
-          <li>🚨 Emergencias: 105 (Bomberos/Ambulancia)</li>
-          <li>🚨 Acude a la sala de emergencias más cercana</li>
+        <ul>
+          <li>🚨 <strong>Línea 113</strong> (Salud Mental - MINSA)</li>
+          <li>🚨 <strong>Línea 105</strong> (Policía de Emergencias)</li>
+          <li>🚨 Acude a la sala de emergencias médicas más cercana</li>
         </ul>
       </div>
 
       <h3>4.1 Limitaciones del Servicio</h3>
       <ul>
-        <li>La terapia online <strong>no reemplaza</strong> la atención médica presencial en casos graves</li>
-        <li>No diagnosticamos ni prescribimos medicamentos</li>
-        <li>No atendemos casos de alto riesgo que requieran hospitalización</li>
-        <li>No sustituimos evaluaciones psiquiátricas especializadas</li>
+        <li>La terapia online <strong>no reemplaza</strong> la atención médica presencial en casos graves.</li>
+        <li>No diagnosticamos ni prescribimos medicamentos psiquiátricos.</li>
+        <li>No atendemos casos de alto riesgo que requieran hospitalización.</li>
+        <li>No sustituimos evaluaciones psiquiátricas especializadas.</li>
       </ul>
 
       <h3>4.2 Rol de los Profesionales</h3>
       <ul>
-        <li>Todos nuestros psicólogos están <strong>colegiados y verificados</strong></li>
-        <li>Actúan como <strong>profesionales independientes</strong>, no como empleados</li>
-        <li>Cada profesional es responsable de sus propios servicios</li>
-        <li>La plataforma facilita la conexión, pero no practica psicología</li>
+        <li>Todos nuestros psicólogos están <strong>colegiados y verificados</strong>.</li>
+        <li>Actúan como <strong>profesionales independientes</strong>, no como empleados.</li>
+        <li>Cada profesional es responsable de sus propios servicios terapéuticos.</li>
+        <li>La plataforma facilita la conexión, pero no practica la psicología.</li>
       </ul>
 
       <h2>5. Planes y Pagos</h2>
 
       <h3>5.1 Suscripciones</h3>
       <ul>
-        <li>Los planes se renuevan <strong>automáticamente</strong> cada mes</li>
-        <li>Te cobraremos el primer día de cada ciclo de facturación</li>
-        <li>Recibirás un recordatorio 3 días antes de la renovación</li>
-        <li>Puedes cancelar en cualquier momento desde tu panel</li>
+        <li>Los planes se renuevan <strong>automáticamente</strong> cada mes.</li>
+        <li>Te cobraremos el primer día de cada ciclo de facturación.</li>
+        <li>Recibirás un recordatorio 3 días antes de la renovación.</li>
+        <li>Puedes cancelar en cualquier momento desde tu panel de usuario.</li>
       </ul>
 
       <h3>5.2 Política de Reembolsos</h3>
       <ul>
-        <li><strong>Primeros 7 días:</strong> Reembolso completo si no has usado sesiones</li>
-        <li><strong>Después de 7 días:</strong> No hay reembolsos, pero puedes cancelar para no renovar</li>
-        <li><strong>Sesiones individuales:</strong> Reembolso si cancelas con 24h de anticipación</li>
-        <li><strong>Problemas técnicos:</strong> Evaluamos caso por caso</li>
+        <li><strong>Primeros 7 días:</strong> Reembolso completo si no has usado sesiones.</li>
+        <li><strong>Después de 7 días:</strong> No hay reembolsos, pero puedes cancelar para no renovar.</li>
+        <li><strong>Sesiones individuales:</strong> Reembolso disponible si cancelas con al menos 24h de anticipación.</li>
+        <li><strong>Problemas técnicos:</strong> Evaluamos y compensamos caso por caso.</li>
       </ul>
 
       <h3>5.3 Cambios de Precio</h3>
       <p>
-        Nos reservamos el derecho de modificar precios con <strong>30 días de aviso previo</strong>. Los cambios no afectan tu ciclo actual de facturación.
+        Nos reservamos el derecho de modificar los precios con <strong>30 días de aviso previo</strong>. Los cambios de precio no afectarán tu ciclo actual de facturación.
       </p>
 
       <h2>6. Reservas y Cancelaciones de Sesiones</h2>
 
       <h3>6.1 Política de Cancelación</h3>
       <ul>
-        <li>Puedes cancelar hasta <strong>24 horas antes</strong> sin penalización</li>
-        <li>Cancelaciones con menos de 24h descuentan la sesión de tu plan</li>
-        <li>Los profesionales pueden cancelar con 24h y se te reembolsa la sesión</li>
-        <li>En caso de emergencia, contacta soporte para evaluación especial</li>
+        <li>Puedes cancelar o reprogramar hasta <strong>24 horas antes</strong> sin penalización.</li>
+        <li>Las cancelaciones con menos de 24h de anticipación descontarán la sesión de tu plan.</li>
+        <li>Si el profesional cancela con menos de 24h, se te reembolsará o repondrá la sesión.</li>
+        <li>En caso de emergencia demostrable, contacta a soporte para una evaluación especial.</li>
       </ul>
 
       <h3>6.2 Asistencia a Sesiones</h3>
       <ul>
-        <li>Si no te presentas sin cancelar, la sesión se considera usada</li>
-        <li>Si llegas más de 15 minutos tarde, el profesional puede cancelar</li>
-        <li>Recomendamos ingresar 5-10 minutos antes para pruebas técnicas</li>
+        <li>Si no te presentas sin cancelar, la sesión se considera utilizada.</li>
+        <li>Si llegas más de 15 minutos tarde, el profesional tiene derecho a cancelar la cita.</li>
+        <li>Recomendamos ingresar 5 a 10 minutos antes para verificar tu conexión técnica.</li>
       </ul>
 
       <h2>7. Uso Aceptable</h2>
 
-      <h3>7.1 Está PROHIBIDO:</h3>
+      <h3>7.1 Está estrictamente PROHIBIDO:</h3>
       <ul>
-        <li>❌ Acosar, amenazar o abusar de profesionales o usuarios</li>
-        <li>❌ Usar la plataforma para actividades ilegales</li>
-        <li>❌ Compartir contenido ofensivo, violento o sexualmente explícito</li>
-        <li>❌ Hacerse pasar por otra persona</li>
-        <li>❌ Intentar acceder a cuentas ajenas</li>
-        <li>❌ Realizar ingeniería inversa o hackear la plataforma</li>
-        <li>❌ Usar bots o scripts automatizados</li>
-        <li>❌ Revender o redistribuir contenido de la plataforma</li>
+        <li>❌ Acosar, amenazar o abusar verbalmente de los profesionales o usuarios.</li>
+        <li>❌ Usar la plataforma para actividades ilegales.</li>
+        <li>❌ Compartir contenido ofensivo, violento o sexualmente explícito.</li>
+        <li>❌ Hacerse pasar por otra persona o falsificar identidad.</li>
+        <li>❌ Intentar acceder a cuentas ajenas.</li>
+        <li>❌ Realizar ingeniería inversa, hackear o dañar la plataforma.</li>
+        <li>❌ Usar bots o scripts automatizados para extraer datos.</li>
+        <li>❌ Revender o redistribuir contenido exclusivo de la plataforma.</li>
       </ul>
 
       <h3>7.2 Consecuencias de Violación</h3>
       <p>
-        Podemos suspender o terminar tu cuenta inmediatamente, sin reembolso, si violas estos términos.
+        Podemos suspender o terminar tu cuenta de manera inmediata, sin derecho a reembolso, si determinamos que has violado estas reglas de uso aceptable.
       </p>
 
       <h2>8. Propiedad Intelectual</h2>
 
       <h3>8.1 Contenido de la Plataforma</h3>
       <ul>
-        <li>Todo el contenido (textos, imágenes, videos, audios) es propiedad de Bitácora Mental</li>
-        <li>Está protegido por derechos de autor y marcas registradas</li>
-        <li>No puedes copiar, distribuir o modificar nuestro contenido sin permiso</li>
+        <li>Todo el contenido (textos, imágenes, videos, diseño, código) es propiedad exclusiva de Bitácora Mental.</li>
+        <li>Está protegido por derechos de autor y marcas registradas nacionales e internacionales.</li>
+        <li>No puedes copiar, distribuir o modificar nuestro contenido sin permiso por escrito.</li>
       </ul>
 
       <h3>8.2 Tu Contenido</h3>
       <ul>
-        <li>Conservas los derechos sobre tu diario emocional y contenido personal</li>
-        <li>Nos concedes licencia para almacenar y procesar tu contenido</li>
-        <li>Puedes eliminar tu contenido en cualquier momento</li>
+        <li>Tú conservas todos los derechos sobre tu diario emocional y tu contenido personal.</li>
+        <li>Nos concedes la licencia técnica necesaria para almacenar y procesar tu contenido dentro del sistema.</li>
+        <li>Puedes eliminar tu contenido en cualquier momento cerrando tu cuenta.</li>
       </ul>
 
       <h2>9. Privacidad y Confidencialidad</h2>
       <p>
-        El manejo de tus datos personales está regido por nuestra <a href="privacidad.html" style="color: var(--primary); font-weight: 600;">Política de Privacidad</a>. Las sesiones con profesionales están sujetas a confidencialidad profesional, con las excepciones legales aplicables (riesgo de daño, abuso de menores, orden judicial).
+        El manejo de tus datos personales está regido estrictamente por nuestra <a href="privacidad.html" class="legal-link">Política de Privacidad</a>. Las sesiones con profesionales están sujetas al secreto profesional, con las únicas excepciones legales aplicables (riesgo inminente de daño a sí mismo o a terceros, abuso de menores, u orden judicial expresa).
       </p>
 
       <h2>10. Limitación de Responsabilidad</h2>
@@ -204,91 +371,143 @@
       <div class="warning-box">
         <p><strong>⚠️ RENUNCIA DE GARANTÍAS:</strong></p>
         <p style="margin-top: 10px;">
-          La plataforma se proporciona "TAL CUAL" y "SEGÚN DISPONIBILIDAD". No garantizamos resultados terapéuticos específicos. La efectividad de la terapia depende de múltiples factores individuales.
+          La plataforma se proporciona "TAL CUAL" y "SEGÚN DISPONIBILIDAD". No garantizamos resultados terapéuticos específicos. La efectividad de la terapia depende de múltiples factores individuales y del compromiso del paciente.
         </p>
       </div>
 
       <h3>10.1 No Somos Responsables Por:</h3>
       <ul>
-        <li>Resultados o falta de mejora en tu condición mental</li>
-        <li>Conducta de profesionales independientes fuera de la plataforma</li>
-        <li>Problemas técnicos o interrupciones del servicio</li>
-        <li>Pérdida de datos por causas ajenas a nuestro control</li>
-        <li>Daños indirectos, incidentales o consecuentes</li>
+        <li>Resultados o falta de mejora en tu condición mental o emocional.</li>
+        <li>La conducta o consejo de los profesionales independientes fuera del entorno de la plataforma.</li>
+        <li>Problemas técnicos de tu proveedor de internet o interrupciones del servicio eléctrico.</li>
+        <li>Pérdida de datos por causas de fuerza mayor ajenas a nuestro control.</li>
+        <li>Daños indirectos, incidentales o consecuentes derivados del uso del servicio.</li>
       </ul>
 
-      <h3>10.2 Límite de Responsabilidad</h3>
+      <h3>10.2 Límite Monetario de Responsabilidad</h3>
       <p>
-        Nuestra responsabilidad total por cualquier reclamo no excederá el monto que pagaste en los últimos 3 meses.
+        En la máxima medida permitida por la ley, nuestra responsabilidad total por cualquier reclamo no excederá el monto total que nos pagaste en los últimos 3 meses de servicio.
       </p>
 
       <h2>11. Indemnización</h2>
       <p>
-        Aceptas indemnizarnos y mantenernos a salvo de cualquier reclamo, daño o gasto (incluyendo honorarios legales) que surja de tu uso indebido de la plataforma o violación de estos términos.
+        Aceptas indemnizarnos y mantener a Bitácora Mental, sus directivos y empleados a salvo de cualquier reclamo, daño, obligación o gasto (incluyendo honorarios razonables de abogados) que surja de tu uso indebido de la plataforma o de la violación de estos Términos.
       </p>
 
-      <h2>12. Terminación</h2>
+      <h2>12. Terminación del Servicio</h2>
 
       <h3>12.1 Por Tu Parte</h3>
-      <p>Puedes cancelar tu cuenta en cualquier momento desde tu panel de usuario o contactando soporte.</p>
+      <p>Puedes cancelar y eliminar tu cuenta en cualquier momento desde tu panel de usuario o contactando a nuestro equipo de soporte.</p>
 
       <h3>12.2 Por Nuestra Parte</h3>
-      <p>Podemos suspender o terminar tu cuenta si:</p>
+      <p>Nos reservamos el derecho de suspender o terminar tu cuenta si:</p>
       <ul>
-        <li>Violas estos Términos</li>
-        <li>Cometes fraude o proporcionas información falsa</li>
-        <li>Tu conducta pone en riesgo a otros usuarios o profesionales</li>
-        <li>Razones legales o regulatorias lo requieren</li>
+        <li>Violas reiterada o gravemente estos Términos.</li>
+        <li>Cometes fraude o proporcionas información financiera falsa.</li>
+        <li>Tu conducta pone en riesgo la seguridad de otros usuarios o de nuestros profesionales.</li>
+        <li>Requerimientos legales o regulatorios nos obligan a hacerlo.</li>
       </ul>
 
-      <h2>13. Modificaciones</h2>
+      <h2>13. Modificaciones al Acuerdo</h2>
       <p>
-        Podemos actualizar estos Términos ocasionalmente. Los cambios significativos se te notificarán por email o aviso en la plataforma con <strong>15 días de anticipación</strong>. Tu uso continuado después de los cambios constituye aceptación.
+        Podemos actualizar estos Términos de manera ocasional para reflejar mejoras en el servicio o cambios en la ley. Los cambios significativos se te notificarán por email o mediante un aviso destacado en la plataforma con al menos <strong>15 días de anticipación</strong>. Tu uso continuado de la plataforma después de dicha fecha constituye tu aceptación de los nuevos términos.
       </p>
 
       <h2>14. Ley Aplicable y Jurisdicción</h2>
       <p>
-        Estos Términos se rigen por las leyes de la República del Perú. Cualquier disputa se resolverá en los tribunales de Lima, Perú.
+        Estos Términos se rigen e interpretan de acuerdo con las leyes de la República del Perú. Cualquier disputa que surja en relación con estos términos estará sujeta a la jurisdicción exclusiva de los tribunales de la ciudad de Lima, Perú.
       </p>
 
       <h2>15. Resolución de Disputas</h2>
       <p>
-        Antes de iniciar cualquier acción legal, ambas partes acuerdan intentar resolver el conflicto mediante:
+        En Bitácora Mental valoramos el diálogo. Antes de iniciar cualquier acción legal, ambas partes acuerdan intentar resolver el conflicto de buena fe mediante:
       </p>
       <ol>
-        <li>Comunicación directa con nuestro equipo de soporte</li>
-        <li>Mediación voluntaria (si ambas partes lo aceptan)</li>
-        <li>Solo después, procedimientos legales formales</li>
+        <li>Comunicación directa con nuestro equipo de soporte y atención al cliente.</li>
+        <li>Mediación voluntaria (si ambas partes lo consideran útil).</li>
+        <li>Solo en caso de no llegar a un acuerdo, se procederá a las vías legales formales.</li>
       </ol>
 
       <h2>16. Disposiciones Generales</h2>
       <ul>
-        <li><strong>Divisibilidad:</strong> Si alguna cláusula es inválida, el resto permanece vigente</li>
-        <li><strong>Renuncia:</strong> No ejercer un derecho no constituye renuncia a él</li>
-        <li><strong>Cesión:</strong> No puedes transferir tus derechos sin nuestro consentimiento</li>
-        <li><strong>Acuerdo Completo:</strong> Estos Términos constituyen el acuerdo completo entre las partes</li>
+        <li><strong>Divisibilidad:</strong> Si alguna cláusula de este documento resulta ser inválida o inaplicable, el resto de las cláusulas permanecerán plenamente vigentes.</li>
+        <li><strong>Renuncia:</strong> El hecho de que no ejerzamos un derecho descrito aquí no constituye una renuncia a dicho derecho.</li>
+        <li><strong>Cesión:</strong> No puedes transferir ni ceder tus derechos de usuario sin nuestro consentimiento previo por escrito.</li>
+        <li><strong>Acuerdo Completo:</strong> Estos Términos constituyen el acuerdo completo y final entre tú y Bitácora Mental.</li>
       </ul>
 
-      <h2>17. Contacto</h2>
+      <h2>17. Contacto y Consultas</h2>
       <p>
-        Para preguntas sobre estos Términos, contacta:
+        Para cualquier pregunta, duda o solicitud relacionada con estos Términos, por favor comunícate con nosotros:
       </p>
       <ul>
-        <li>📧 Email: <a href="mailto:legal@bitacoramental.pe" style="color: var(--primary);">legal@bitacoramental.pe</a></li>
+        <li>📧 Email: <a href="mailto:legal@bitacoramental.pe" class="legal-link">legal@bitacoramental.pe</a></li>
         <li>📞 Teléfono: +51 999 999 999</li>
         <li>📍 Dirección: Lima, Perú</li>
       </ul>
 
-      <div class="info-box" style="margin-top: 40px;">
-        <p><strong>✅ Al hacer clic en "Acepto" durante el registro, confirmas que:</strong></p>
+      <div class="highlight-box" style="margin-top: 40px;">
+        <p><strong>✅ Al hacer clic en "Acepto" durante el proceso de registro, confirmas que:</strong></p>
         <ul style="margin-top: 10px; margin-bottom: 0;">
-          <li>Has leído estos Términos y Condiciones</li>
-          <li>Comprendes y aceptas sus implicaciones</li>
-          <li>Tienes capacidad legal para celebrar este acuerdo</li>
-          <li>Cumples con los requisitos de edad</li>
+          <li>Has leído y comprendido estos Términos y Condiciones en su totalidad.</li>
+          <li>Aceptas sus implicaciones legales.</li>
+          <li>Tienes la capacidad legal requerida para celebrar este acuerdo.</li>
+          <li>Cumples plenamente con nuestros requisitos de edad mínima.</li>
         </ul>
       </div>
+
     </div>
-  </div>
+  </main>
+
+  <footer class="footer">
+    <div class="f-grid">
+      <div>
+        <div class="f-logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora mental</div>
+        <p class="f-tg">Plataforma peruana de bienestar emocional. Conectamos personas con psicólogos y coaches verificados para sesiones online accesibles y confidenciales.</p>
+        <div class="f-co">
+          <a href="tel:+51999999999"><i class="fas fa-phone"></i> +51 999 999 999</a>
+          <a href="mailto:hola@bitacoramental.pe"><i class="fas fa-envelope"></i> hola@bitacoramental.pe</a>
+          <span style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ts)"><i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> Lima, Perú</span>
+        </div>
+        <div class="f-soc">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+      <div class="f-col"><h5>Servicios</h5><ul class="f-lk"><li><a href="servicios/terapia-psicologica.html">Terapia Psicológica</a></li><li><a href="servicios/coaching-emocional.html">Coaching Emocional</a></li><li><a href="servicios/terapia-de-pareja.html">Terapia de Pareja</a></li></ul></div>
+      <div class="f-col"><h5>Programas</h5><ul class="f-lk"><li><a href="programas/ansiedad.html">Ansiedad</a></li><li><a href="programas/estres-laboral.html">Estrés y Burnout</a></li><li><a href="programas/pareja.html">Autoestima y Vínculos</a></li></ul></div>
+      <div class="f-col"><h5>Plataforma</h5><ul class="f-lk"><li><a href="especialistas-publico.html">Directorio</a></li><li><a href="empresas.html">Para empresas</a></li><li><a href="para-especialistas.html">Para especialistas</a></li></ul></div>
+      <div class="f-col"><h5>Ayuda</h5><ul class="f-lk"><li><a href="contacto.html">Contacto</a></li><li><a href="faq.html">Preguntas frecuentes</a></li><li><a href="lineas-emergencia.html">Líneas de emergencia</a></li></ul></div>
+    </div>
+    <div class="f-bot">
+      <p>© 2026 Bitácora Mental. Todos los derechos reservados. Hecho en Perú 🇵🇪</p>
+      <nav class="f-leg"><a href="privacidad.html">Privacidad</a><a href="terminos.html" style="color:var(--g700); font-weight:700;">Términos</a><a href="libro-reclamaciones.html">Reclamaciones</a></nav>
+    </div>
+  </footer>
+
+  <script>
+    // Efecto de sombra al bajar en la página
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('sc', window.scrollY > 10);
+    });
+
+    // Control del Menú Móvil
+    function openM() {
+      const mm = document.getElementById('mm');
+      mm.style.display = 'flex';
+      document.getElementById('ov').classList.add('show');
+      setTimeout(() => mm.classList.add('open'), 10);
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeM() {
+      const mm = document.getElementById('mm');
+      mm.classList.remove('open');
+      document.getElementById('ov').classList.remove('show');
+      setTimeout(() => mm.style.display = 'none', 300);
+      document.body.style.overflow = '';
+    }
+  </script>
 </body>
 </html>
