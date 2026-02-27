@@ -5,32 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <meta name="description" content="Programa de 4 sesiones para manejar la ansiedad con psicólogo colegiado. Virtual. Bitácora Mental Perú.">
   <title>Manejo de Ansiedad — Bitácora Mental</title>
+  
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="../css/design-system.css">
+
   <style>
-    :root{--g900:#1a2e1c;--g800:#2d4a30;--g700:#4F6F52;--g600:#6a8f6d;--g200:#c8ddc9;--g100:#e3ede4;--g50:#f2f8f2;--s50:#fdf9f4;--s100:#f5ede0;--clay:#c97b5a;--clay-l:#f0d5c8;--td:#1a2e1c;--tb:#3d4f3e;--ts:#697a6a;--tl:#9aaa9b;--white:#fff;--border:#dde8de;--accent:#4F6F52;--accent-l:#e3ede4;--fd:'Fraunces',Georgia,serif;--fb:'Plus Jakarta Sans',sans-serif;}
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{font-family:var(--fb);background:var(--white);color:var(--tb);line-height:1.6;overflow-x:hidden}
-    a{text-decoration:none;transition:all .25s}
-    img{max-width:100%;height:auto;display:block}
+    /* =========================================
+       RESETEOS Y FORZADO DE TIPOGRAFÍA
+       ========================================= */
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--fb) !important; background: var(--white); color: var(--tb); line-height: 1.6; overflow-x: hidden; }
+    a { text-decoration: none; transition: all .25s ease; }
+    img { max-width: 100%; height: auto; display: block; }
+    
+    /* FORZAMOS LAS FUENTES DEL NAVBAR Y FOOTER */
+    .nav { font-family: var(--fb) !important; }
+    .logo { font-family: var(--fd) !important; line-height: 1; margin: 0; }
+    .mmenu { font-family: var(--fb) !important; }
+    .footer { font-family: var(--fb) !important; }
+    .f-logo { font-family: var(--fd) !important; }
+    .f-tg { color: var(--ts) !important; font-weight: 400; }
+    .f-col h5 { color: var(--td) !important; font-family: var(--fb) !important; }
 
-    /* NAV */
-    .nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid transparent;transition:all .3s}
-    .nav.sc{border-bottom-color:var(--border);box-shadow:0 2px 8px rgba(26,46,28,.08)}
-    .ni{max-width:1280px;margin:0 auto;padding:0 40px;height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}
-    .logo{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-size:1.5rem;font-weight:700;color:var(--g700);letter-spacing:-.5px}
-    .logo-ic{width:38px;height:38px;background:var(--g700);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem}
-    .nl{display:flex;align-items:center;gap:4px;list-style:none}
-    .nl-a{display:flex;align-items:center;gap:5px;padding:8px 14px;color:var(--ts);font-size:.9rem;font-weight:600;border-radius:10px;white-space:nowrap}
-    .nl-a:hover{background:var(--g50);color:var(--g700)}
-    .na{display:flex;align-items:center;gap:10px}
-    .btn-li{padding:9px 20px;border-radius:50px;border:2px solid var(--border);color:var(--tb);font-size:.88rem;font-weight:700}
-    .btn-li:hover{border-color:var(--g200);color:var(--g700)}
-    .btn-ct{padding:10px 22px;border-radius:50px;background:var(--g700);color:#fff;font-size:.88rem;font-weight:700}
-    .btn-ct:hover{background:var(--g800)}
-    .hbg{display:none;width:44px;height:44px;background:var(--g50);border:none;border-radius:10px;color:var(--g700);cursor:pointer;align-items:center;justify-content:center;font-size:1.2rem}
-
+    /* =========================================
+       ESTILOS ÚNICOS PARA LA PÁGINA DEL PROGRAMA
+       ========================================= */
     /* BREADCRUMB */
     .bc{background:var(--g50);padding:16px 40px;border-bottom:1px solid var(--border);margin-top:76px}
     .bc-in{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ts)}
@@ -98,8 +99,8 @@
     .side-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--g50);font-size:.9rem;color:var(--tb)}
     .side-item:last-child{border-bottom:none}
     .side-item i{color:var(--g700);width:18px;text-align:center}
-    .btn-buy{display:block;width:100%;padding:16px;background:var(--g700);color:#fff;border-radius:12px;text-align:center;font-weight:700;font-size:1rem;margin-top:20px;cursor:pointer;border:none;font-family:var(--fb)}
-    .btn-buy:hover{background:var(--g800)}
+    .btn-buy{display:block;width:100%;padding:16px;background:var(--g700);color:#fff;border-radius:12px;text-align:center;font-weight:700;font-size:1rem;margin-top:20px;cursor:pointer;border:none;font-family:var(--fb);transition:0.3s;}
+    .btn-buy:hover{background:var(--g800); transform: translateY(-2px);}
     .side-note{text-align:center;margin-top:12px;font-size:.78rem;color:var(--tl)}
     .side-guarantee{display:flex;align-items:center;gap:10px;background:var(--g50);border-radius:12px;padding:14px;margin-top:16px;font-size:.82rem;color:var(--ts)}
     .side-guarantee i{color:var(--g700);flex-shrink:0}
@@ -117,14 +118,8 @@
     .otro-link{font-size:.82rem;font-weight:700;color:var(--g700);display:flex;align-items:center;gap:5px}
     .otro-icon{width:40px;height:40px;border-radius:10px;background:var(--g50);display:flex;align-items:center;justify-content:center;color:var(--g700)}
 
-    /* FOOTER */
-    .foot-min{padding:30px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;max-width:1280px;margin:0 auto}
-    .foot-min p{font-size:.82rem;color:var(--tl)}
-    .foot-links{display:flex;gap:20px}
-    .foot-links a{font-size:.82rem;color:var(--tl)}
-    .foot-links a:hover{color:var(--g700)}
     .em-bar{background:#FEF2F2;border-top:2px solid #FCA5A5;padding:12px 40px;text-align:center;font-size:.82rem;color:#7F1D1D}
-    .em-bar a{color:#991B1B;font-weight:700}
+    .em-bar a{color:#991B1B;font-weight:700; text-decoration: underline;}
 
     @media(max-width:960px){
       .hero-in{grid-template-columns:1fr;gap:30px}
@@ -132,12 +127,8 @@
       .learn-grid{grid-template-columns:1fr}
       .sidebar{position:static}
       .otros-grid{grid-template-columns:1fr 1fr}
-      .nl,.btn-li{display:none}
-      .hbg{display:flex}
-      .ni{padding:0 24px}
       .bc,.hero,.otros{padding-left:24px;padding-right:24px}
       .main{padding:50px 24px}
-      .foot-min{flex-direction:column;text-align:center;padding:24px}
     }
     @media(max-width:600px){
       .otros-grid{grid-template-columns:1fr}
@@ -147,188 +138,369 @@
 </head>
 <body>
 
-<nav class="nav" id="nav">
-  <div class="ni">
-    <a href="../index.html" class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</a>
-    <ul class="nl">
-      <li><a href="../index.html#servicios" class="nl-a">Servicios</a></li>
-      <li><a href="index.html" class="nl-a">Programas</a></li>
-      <li><a href="../especialistas-publico.html" class="nl-a">Directorio</a></li>
-      <li><a href="../empresas.html" class="nl-a">Para empresas</a></li>
-    </ul>
-    <div class="na">
-      <a href="../login.html" class="btn-li">Ingresar</a>
-      <a href="../registro.html" class="btn-ct">Crear cuenta</a>
+  <nav class="nav" id="nav">
+    <div class="ni">
+      <a href="../index.html" class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</a>
+      <ul class="nl">
+        <li class="ni-item">
+          <a href="../index.html#servicios" class="nl-a">Servicios <i class="fas fa-chevron-down"></i></a>
+          <div class="dd wide">
+            <span class="dd-lbl">Atención profesional</span>
+            <div class="dd-grid">
+              <a href="../servicios/terapia-psicologica.html" class="dd-a"><div class="ic"><i class="fas fa-user-md"></i></div><div><strong>Terapia Psicológica</strong><small style="color:var(--tl);font-size:.75rem">Online</small></div></a>
+              <a href="../servicios/coaching-emocional.html" class="dd-a"><div class="ic"><i class="fas fa-rocket"></i></div><div><strong>Coaching Emocional</strong><small style="color:var(--tl);font-size:.75rem">Metas y hábitos</small></div></a>
+              <a href="../servicios/terapia-de-pareja.html" class="dd-a"><div class="ic"><i class="fas fa-users"></i></div><div><strong>Terapia de Pareja</strong><small style="color:var(--tl);font-size:.75rem">Vínculos sanos</small></div></a>
+              <a href="../servicios/psicologia-familiar.html" class="dd-a"><div class="ic"><i class="fas fa-child"></i></div><div><strong>Psicología Familiar</strong><small style="color:var(--tl);font-size:.75rem">Dinámica familiar</small></div></a>
+            </div>
+          </div>
+        </li>
+        <li class="ni-item">
+          <a href="../index.html#programas" class="nl-a" style="color:var(--g700);">Programas <i class="fas fa-chevron-down"></i></a>
+          <div class="dd">
+            <span class="dd-lbl">Programas temáticos</span>
+            <a href="ansiedad.html" class="dd-a" style="background:var(--g50);"><div class="ic"><i class="fas fa-wind"></i></div> Manejo de Ansiedad</a>
+            <a href="estres-laboral.html" class="dd-a"><div class="ic"><i class="fas fa-briefcase"></i></div> Estrés y Burnout</a>
+            <a href="pareja.html" class="dd-a"><div class="ic"><i class="fas fa-shield-alt"></i></div> Autoestima y Vínculos</a>
+            <a href="redes-sociales.html" class="dd-a"><div class="ic"><i class="fas fa-mobile-alt"></i></div> Desconexión Digital</a>
+            <a href="index.html" class="dd-a" style="border-top:1px solid var(--border);margin-top:8px;padding-top:12px;color:var(--g700);font-weight:700"><div class="ic"><i class="fas fa-th-large"></i></div> Ver todos →</a>
+          </div>
+        </li>
+        <li class="ni-item"><a href="../especialistas-publico.html" class="nl-a">Directorio</a></li>
+        <li class="ni-item"><a href="../empresas.html" class="nl-a">Para empresas</a></li>
+        <li class="ni-item"><a href="../para-especialistas.html" class="nl-a">Para especialistas</a></li>
+      </ul>
+      <div class="na">
+        <a href="../login.html" class="btn-li">Ingresar</a>
+        <a href="../registro.html" class="btn-ct">Crear cuenta</a>
+      </div>
+      <button class="hbg" onclick="openM()" aria-label="Menú"><i class="fas fa-bars"></i></button>
     </div>
-    <button class="hbg" onclick="window.location='../index.html'" aria-label="Menú"><i class="fas fa-bars"></i></button>
-  </div>
-</nav>
+  </nav>
 
-<div class="bc">
-  <div class="bc-in">
-    <a href="../index.html">Inicio</a>
-    <i class="fas fa-chevron-right"></i>
-    <a href="index.html">Programas</a>
-    <i class="fas fa-chevron-right"></i>
-    <span style="color:var(--td);font-weight:600">Manejo de Ansiedad</span>
-  </div>
-</div>
-
-<div class="hero">
-  <div class="hero-in">
-    <div>
-      <div class="h-tag"><i class="fas fa-wind"></i> Bienestar · Ansiedad</div>
-      <h1>Deja de ser prisionero<br>de tu propia <em>ansiedad</em></h1>
-      <p class="hero-desc">Aprende a reconocer tus patrones, identificar detonantes y construir herramientas prácticas para regularte sin que la ansiedad te controle.</p>
-      <div class="hero-meta">
-        <div class="h-m"><i class="fas fa-video"></i> Virtual</div>
-        <div class="h-m"><i class="fas fa-calendar-alt"></i> 4 semanas</div>
-        <div class="h-m"><i class="fas fa-user-friends"></i> 4 sesiones individuales</div>
-        <div class="h-m"><i class="fas fa-clock"></i> 50 min por sesión</div>
-      </div>
-      <div class="h-cta">
-        <a href="../registro.html?programa=ansiedad" class="btn-hero">Crear cuenta gratis</a>
-        <a href="../especialistas-publico.html" class="btn-hero2">Ver especialistas</a>
-      </div>
+  <div class="overlay" id="ov" onclick="closeM()"></div>
+  <div class="mmenu" id="mm">
+    <div class="mm-hd">
+      <span class="logo" style="font-size:1.3rem"><div class="logo-ic" style="width:32px;height:32px;font-size:.9rem"><i class="fas fa-brain"></i></div>bitácora</span>
+      <button class="mm-cl" onclick="closeM()"><i class="fas fa-times"></i></button>
     </div>
-    <div>
-      <div class="hero-price">
-        <div class="val">Inicia tu cambio hoy</div>
-        <div class="lbl">Crea tu cuenta para ver opciones y agendar tu primera sesión.</div>
-        <div class="hero-includes">
-          <div class="h-inc"><i class="fas fa-check-circle"></i> Especialista asignado desde el inicio</div>
-          <div class="h-inc"><i class="fas fa-check-circle"></i> Estructura y objetivos claros</div>
-          <div class="h-inc"><i class="fas fa-check-circle"></i> Acceso al diario emocional</div>
-          <div class="h-inc"><i class="fas fa-check-circle"></i> Soporte entre sesiones</div>
-        </div>
+    <div class="mm-body">
+      <div class="mm-sec">
+        <div class="mm-lbl">Servicios</div>
+        <a href="../servicios/terapia-psicologica.html" class="mm-a" onclick="closeM()"><i class="fas fa-user-md"></i> Terapia Psicológica</a>
+        <a href="../servicios/coaching-emocional.html" class="mm-a" onclick="closeM()"><i class="fas fa-rocket"></i> Coaching Emocional</a>
+        <a href="../servicios/terapia-de-pareja.html" class="mm-a" onclick="closeM()"><i class="fas fa-users"></i> Terapia de Pareja</a>
+        <a href="../servicios/psicologia-familiar.html" class="mm-a" onclick="closeM()"><i class="fas fa-child"></i> Psicología Familiar</a>
       </div>
-    </div>
-  </div>
-</div>
-
-<div class="main">
-  <div class="content">
-
-    <div class="section-label"><i class="fas fa-info-circle"></i> Sobre este programa</div>
-    <h2 class="sec-t">¿Qué trabajamos en este <em>programa?</em></h2>
-    <p class="desc-text">La ansiedad no es el problema en sí misma — es una señal que tu cuerpo y mente usan para comunicar algo. El problema surge cuando esa señal no para, o cuando no sabemos cómo responderle. Este programa te da herramientas reales: no solo teoría, sino estrategias que puedes aplicar en el día a día en Lima, en el trabajo, en el tráfico, en las relaciones. Trabajarás con un psicólogo colegiado que entiende la realidad peruana y adaptará cada sesión a tu situación específica.</p>
-
-    <div class="section-label"><i class="fas fa-graduation-cap"></i> Lo que aprenderás</div>
-    <div class="learn-grid">
-      <div class="learn-item"><i class="fas fa-check-circle"></i><span>Reconocer y nombrar tus patrones de ansiedad</span></div>
-      <div class="learn-item"><i class="fas fa-check-circle"></i><span>Identificar los detonantes específicos en tu vida</span></div>
-      <div class="learn-item"><i class="fas fa-check-circle"></i><span>Técnicas de regulación para el momento de crisis</span></div>
-      <div class="learn-item"><i class="fas fa-check-circle"></i><span>Respiración y anclaje corporal</span></div>
-      <div class="learn-item"><i class="fas fa-check-circle"></i><span>Reestructuración de pensamientos catastróficos</span></div>
-      <div class="learn-item"><i class="fas fa-check-circle"></i><span>Plan de autocuidado sostenible</span></div>
-      <div class="learn-item"><i class="fas fa-check-circle"></i><span>Herramientas para el día a día en Perú</span></div>
-      <div class="learn-item"><i class="fas fa-check-circle"></i><span>Prevenir recaídas y sostener el progreso</span></div>
-    </div>
-
-    <div class="section-label"><i class="fas fa-calendar-check"></i> Estructura del programa</div>
-    <h2 class="sec-t" style="margin-bottom:8px">Sesión <em>por sesión</em></h2>
-    <p style="color:var(--ts);font-size:.9rem;margin-bottom:24px">Cada sesión tiene un enfoque específico. Tu especialista adapta el contenido a tu realidad.</p>
-    <div class="sesiones">
-      <div class="sesion-item">
-        <div class="ses-num">1</div>
-        <div class="ses-content"><h4>Diagnóstico y mapa de tu ansiedad</h4><p>Exploramos juntos cómo se manifiesta la ansiedad en tu vida, cuándo aparece, qué la activa y cómo reaccionas. Establecemos objetivos claros para el programa.</p></div>
+      <div class="mm-sec">
+        <div class="mm-lbl">Programas</div>
+        <a href="ansiedad.html" class="mm-a" onclick="closeM()"><i class="fas fa-wind"></i> Manejo de Ansiedad</a>
+        <a href="estres-laboral.html" class="mm-a" onclick="closeM()"><i class="fas fa-briefcase"></i> Estrés y Burnout</a>
+        <a href="pareja.html" class="mm-a" onclick="closeM()"><i class="fas fa-shield-alt"></i> Autoestima y Vínculos</a>
+        <a href="redes-sociales.html" class="mm-a" onclick="closeM()"><i class="fas fa-mobile-alt"></i> Desconexión Digital</a>
       </div>
-      <div class="sesion-item">
-        <div class="ses-num">2</div>
-        <div class="ses-content"><h4>Detonantes y creencias de fondo</h4><p>Identificamos los pensamientos y creencias que alimentan tu ansiedad. Trabajamos reestructuración cognitiva adaptada a tu realidad.</p></div>
-      </div>
-      <div class="sesion-item">
-        <div class="ses-num">3</div>
-        <div class="ses-content"><h4>Herramientas de regulación</h4><p>Practicamos técnicas de respiración, anclaje corporal y mindfulness adaptadas. Construimos tu caja de herramientas personal.</p></div>
-      </div>
-      <div class="sesion-item">
-        <div class="ses-num">4</div>
-        <div class="ses-content"><h4>Plan de sostenibilidad y cierre</h4><p>Revisamos el avance, consolidamos las herramientas aprendidas y diseñamos tu plan de autocuidado para continuar el progreso por tu cuenta.</p></div>
+      <div class="mm-sec">
+        <div class="mm-lbl">Más</div>
+        <a href="../especialistas-publico.html" class="mm-a" onclick="closeM()"><i class="fas fa-search"></i> Directorio de especialistas</a>
+        <a href="../empresas.html" class="mm-a" onclick="closeM()"><i class="fas fa-building"></i> Para empresas</a>
+        <a href="../para-especialistas.html" class="mm-a" onclick="closeM()"><i class="fas fa-stethoscope"></i> Para especialistas</a>
       </div>
     </div>
-
-    <div class="para-quien">
-      <h3><i class="fas fa-user-check" style="color:var(--g700);margin-right:8px"></i> ¿Este programa es para ti?</h3>
-      <div class="pq-list">
-        <div class="pq-item"><i class="fas fa-check"></i><span>Sientes ansiedad frecuente que interfiere con tu trabajo, estudio o relaciones</span></div>
-        <div class="pq-item"><i class="fas fa-check"></i><span>Te cuesta relajarte o "desconectar" aunque quieras</span></div>
-        <div class="pq-item"><i class="fas fa-check"></i><span>Tienes pensamientos repetitivos o catastrofistas difíciles de parar</span></div>
-        <div class="pq-item"><i class="fas fa-check"></i><span>La ansiedad te genera síntomas físicos (tensión, insomnio, molestias digestivas)</span></div>
-        <div class="pq-item"><i class="fas fa-check"></i><span>Quieres herramientas concretas, no solo hablar del problema</span></div>
-        <div class="pq-item"><i class="fas fa-check"></i><span>Buscas un proceso estructurado con objetivos claros desde el inicio</span></div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="sidebar">
-    <div class="side-card">
-      <div class="side-head">
-        <div class="val">Programa de 4 Semanas</div>
-      </div>
-      <div class="side-body">
-        <div class="side-item"><i class="fas fa-video"></i> Modalidad virtual</div>
-        <div class="side-item"><i class="fas fa-calendar-alt"></i> Duración: 4 semanas</div>
-        <div class="side-item"><i class="fas fa-user-friends"></i> 4 sesiones individuales</div>
-        <div class="side-item"><i class="fas fa-clock"></i> 50 minutos por sesión</div>
-        <div class="side-item"><i class="fas fa-user-md"></i> Especialista asignado</div>
-        <div class="side-item"><i class="fas fa-certificate"></i> Psicólogo colegiado (CPP)</div>
-        <div class="side-item"><i class="fas fa-shield-alt"></i> Confidencialidad garantizada</div>
-        <button class="btn-buy" onclick="window.location='../registro.html?programa=ansiedad'">
-          Crear cuenta para empezar <i class="fas fa-arrow-right" style="margin-left:5px"></i>
-        </button>
-        <p class="side-note">Regístrate gratis para ver tarifas y horarios</p>
-        <div class="side-guarantee">
-          <i class="fas fa-shield-alt"></i>
-          Garantía de satisfacción en tu primera sesión con tu especialista.
-        </div>
-      </div>
+    <div class="mm-act">
+      <a href="../login.html" class="btn-m1" onclick="closeM()">Iniciar sesión</a>
+      <a href="../registro.html" class="btn-m2" onclick="closeM()">Crear cuenta gratis</a>
     </div>
   </div>
-</div>
 
-<div class="otros">
-  <div class="otros-in">
-    <h2>Otros programas</h2>
-    <p>Explora más opciones que pueden complementar tu proceso terapéutico.</p>
-    <div class="otros-grid">
-      <div class="otro-card">
-        <div class="otro-icon"><i class="fas fa-fire"></i></div>
-        <h4>Estrés y Burnout</h4>
-        <p>Para quienes están al límite laboral</p>
-        <a href="estres-laboral.html" class="otro-link">Ver programa <i class="fas fa-arrow-right"></i></a>
-      </div>
-      <div class="otro-card">
-        <div class="otro-icon"><i class="fas fa-shield-alt"></i></div>
-        <h4>Autoestima</h4>
-        <p>Trabaja la imagen que tienes de ti</p>
-        <a href="autoestima.html" class="otro-link">Ver programa <i class="fas fa-arrow-right"></i></a>
-      </div>
-      <div class="otro-card">
-        <div class="otro-icon"><i class="fas fa-heart-broken"></i></div>
-        <h4>Duelo y Pérdidas</h4>
-        <p>Procesa pérdidas importantes</p>
-        <a href="duelo.html" class="otro-link">Ver programa <i class="fas fa-arrow-right"></i></a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<footer>
-  <div class="foot-min">
-    <p>© 2026 Bitácora Mental · Lima, Perú 🇵🇪</p>
-    <nav class="foot-links">
+  <div class="bc">
+    <div class="bc-in">
       <a href="../index.html">Inicio</a>
+      <i class="fas fa-chevron-right"></i>
       <a href="index.html">Programas</a>
-      <a href="../faq.html">FAQ</a>
-      <a href="../contacto.html">Contacto</a>
-    </nav>
+      <i class="fas fa-chevron-right"></i>
+      <span style="color:var(--td);font-weight:600">Manejo de Ansiedad</span>
+    </div>
   </div>
-</footer>
-<div class="em-bar">🚨 Crisis: <strong>Línea 113</strong> (MINSA) · <strong>Línea 100</strong> (MIMP). Gratuitas 24h. <a href="../lineas-emergencia.html">Más recursos →</a></div>
 
-<script>
-  window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('sc',window.scrollY>30),{passive:true});
-</script>
+  <div class="hero">
+    <div class="hero-in">
+      <div>
+        <div class="h-tag"><i class="fas fa-wind"></i> Bienestar · Ansiedad</div>
+        <h1>Deja de ser prisionero<br>de tu propia <em>ansiedad</em></h1>
+        <p class="hero-desc">Aprende a reconocer tus patrones, identificar detonantes y construir herramientas prácticas para regularte sin que la ansiedad te controle.</p>
+        <div class="hero-meta">
+          <div class="h-m"><i class="fas fa-video"></i> Virtual</div>
+          <div class="h-m"><i class="fas fa-calendar-alt"></i> 4 semanas</div>
+          <div class="h-m"><i class="fas fa-user-friends"></i> 4 sesiones individuales</div>
+          <div class="h-m"><i class="fas fa-clock"></i> 50 min por sesión</div>
+        </div>
+        <div class="h-cta">
+          <a href="../registro.html?programa=ansiedad" class="btn-hero">Crear cuenta gratis</a>
+          <a href="../especialistas-publico.html" class="btn-hero2">Ver especialistas</a>
+        </div>
+      </div>
+      <div>
+        <div class="hero-price">
+          <div class="val">Inicia tu cambio hoy</div>
+          <div class="lbl">Crea tu cuenta para ver opciones y agendar tu primera sesión.</div>
+          <div class="hero-includes">
+            <div class="h-inc"><i class="fas fa-check-circle"></i> Especialista asignado desde el inicio</div>
+            <div class="h-inc"><i class="fas fa-check-circle"></i> Estructura y objetivos claros</div>
+            <div class="h-inc"><i class="fas fa-check-circle"></i> Acceso al diario emocional</div>
+            <div class="h-inc"><i class="fas fa-check-circle"></i> Soporte entre sesiones</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="content">
+
+      <div class="section-label"><i class="fas fa-info-circle"></i> Sobre este programa</div>
+      <h2 class="sec-t">¿Qué trabajamos en este <em>programa?</em></h2>
+      <p class="desc-text">La ansiedad no es el problema en sí misma — es una señal que tu cuerpo y mente usan para comunicar algo. El problema surge cuando esa señal no para, o cuando no sabemos cómo responderle. Este programa te da herramientas reales: no solo teoría, sino estrategias que puedes aplicar en el día a día en Lima, en el trabajo, en el tráfico, en las relaciones. Trabajarás con un psicólogo colegiado que entiende la realidad peruana y adaptará cada sesión a tu situación específica.</p>
+
+      <div class="section-label"><i class="fas fa-graduation-cap"></i> Lo que aprenderás</div>
+      <div class="learn-grid">
+        <div class="learn-item"><i class="fas fa-check-circle"></i><span>Reconocer y nombrar tus patrones de ansiedad</span></div>
+        <div class="learn-item"><i class="fas fa-check-circle"></i><span>Identificar los detonantes específicos en tu vida</span></div>
+        <div class="learn-item"><i class="fas fa-check-circle"></i><span>Técnicas de regulación para el momento de crisis</span></div>
+        <div class="learn-item"><i class="fas fa-check-circle"></i><span>Respiración y anclaje corporal</span></div>
+        <div class="learn-item"><i class="fas fa-check-circle"></i><span>Reestructuración de pensamientos catastróficos</span></div>
+        <div class="learn-item"><i class="fas fa-check-circle"></i><span>Plan de autocuidado sostenible</span></div>
+        <div class="learn-item"><i class="fas fa-check-circle"></i><span>Herramientas para el día a día en Perú</span></div>
+        <div class="learn-item"><i class="fas fa-check-circle"></i><span>Prevenir recaídas y sostener el progreso</span></div>
+      </div>
+
+      <div class="section-label"><i class="fas fa-calendar-check"></i> Estructura del programa</div>
+      <h2 class="sec-t" style="margin-bottom:8px">Sesión <em>por sesión</em></h2>
+      <p style="color:var(--ts);font-size:.9rem;margin-bottom:24px">Cada sesión tiene un enfoque específico. Tu especialista adapta el contenido a tu realidad.</p>
+      <div class="sesiones">
+        <div class="sesion-item">
+          <div class="ses-num">1</div>
+          <div class="ses-content"><h4>Diagnóstico y mapa de tu ansiedad</h4><p>Exploramos juntos cómo se manifiesta la ansiedad en tu vida, cuándo aparece, qué la activa y cómo reaccionas. Establecemos objetivos claros para el programa.</p></div>
+        </div>
+        <div class="sesion-item">
+          <div class="ses-num">2</div>
+          <div class="ses-content"><h4>Detonantes y creencias de fondo</h4><p>Identificamos los pensamientos y creencias que alimentan tu ansiedad. Trabajamos reestructuración cognitiva adaptada a tu realidad.</p></div>
+        </div>
+        <div class="sesion-item">
+          <div class="ses-num">3</div>
+          <div class="ses-content"><h4>Herramientas de regulación</h4><p>Practicamos técnicas de respiración, anclaje corporal y mindfulness adaptadas. Construimos tu caja de herramientas personal.</p></div>
+        </div>
+        <div class="sesion-item">
+          <div class="ses-num">4</div>
+          <div class="ses-content"><h4>Plan de sostenibilidad y cierre</h4><p>Revisamos el avance, consolidamos las herramientas aprendidas y diseñamos tu plan de autocuidado para continuar el progreso por tu cuenta.</p></div>
+        </div>
+      </div>
+
+      <div class="para-quien">
+        <h3><i class="fas fa-user-check" style="color:var(--g700);margin-right:8px"></i> ¿Este programa es para ti?</h3>
+        <div class="pq-list">
+          <div class="pq-item"><i class="fas fa-check"></i><span>Sientes ansiedad frecuente que interfiere con tu trabajo, estudio o relaciones</span></div>
+          <div class="pq-item"><i class="fas fa-check"></i><span>Te cuesta relajarte o "desconectar" aunque quieras</span></div>
+          <div class="pq-item"><i class="fas fa-check"></i><span>Tienes pensamientos repetitivos o catastrofistas difíciles de parar</span></div>
+          <div class="pq-item"><i class="fas fa-check"></i><span>La ansiedad te genera síntomas físicos (tensión, insomnio, molestias digestivas)</span></div>
+          <div class="pq-item"><i class="fas fa-check"></i><span>Quieres herramientas concretas, no solo hablar del problema</span></div>
+          <div class="pq-item"><i class="fas fa-check"></i><span>Buscas un proceso estructurado con objetivos claros desde el inicio</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sidebar">
+      <div class="side-card">
+        <div class="side-head">
+          <div class="val">Programa de 4 Semanas</div>
+        </div>
+        <div class="side-body">
+          <div class="side-item"><i class="fas fa-video"></i> Modalidad virtual</div>
+          <div class="side-item"><i class="fas fa-calendar-alt"></i> Duración: 4 semanas</div>
+          <div class="side-item"><i class="fas fa-user-friends"></i> 4 sesiones individuales</div>
+          <div class="side-item"><i class="fas fa-clock"></i> 50 minutos por sesión</div>
+          <div class="side-item"><i class="fas fa-user-md"></i> Especialista asignado</div>
+          <div class="side-item"><i class="fas fa-certificate"></i> Psicólogo colegiado (CPP)</div>
+          <div class="side-item"><i class="fas fa-shield-alt"></i> Confidencialidad garantizada</div>
+          <button class="btn-buy" onclick="window.location='../registro.html?programa=ansiedad'">
+            Crear cuenta para empezar <i class="fas fa-arrow-right" style="margin-left:5px"></i>
+          </button>
+          <p class="side-note">Regístrate gratis para ver tarifas y horarios</p>
+          <div class="side-guarantee">
+            <i class="fas fa-shield-alt"></i>
+            Garantía de satisfacción en tu primera sesión con tu especialista.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="otros">
+    <div class="otros-in">
+      <h2>Otros programas</h2>
+      <p>Explora más opciones que pueden complementar tu proceso terapéutico.</p>
+      <div class="otros-grid">
+        <div class="otro-card">
+          <div class="otro-icon"><i class="fas fa-fire"></i></div>
+          <h4>Estrés y Burnout</h4>
+          <p>Para quienes están al límite laboral</p>
+          <a href="estres-laboral.html" class="otro-link">Ver programa <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="otro-card">
+          <div class="otro-icon"><i class="fas fa-shield-alt"></i></div>
+          <h4>Autoestima</h4>
+          <p>Trabaja la imagen que tienes de ti</p>
+          <a href="pareja.html" class="otro-link">Ver programa <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="otro-card">
+          <div class="otro-icon"><i class="fas fa-mobile-alt"></i></div>
+          <h4>Desconexión Digital</h4>
+          <p>Equilibra tu tiempo frente a la pantalla</p>
+          <a href="redes-sociales.html" class="otro-link">Ver programa <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="f-grid">
+      <div>
+        <div class="f-logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora mental</div>
+        <p class="f-tg">Plataforma peruana de bienestar emocional. Conectamos personas con psicólogos y coaches verificados para sesiones online accesibles y confidenciales.</p>
+        <div class="f-co">
+          <a href="tel:+51999999999"><i class="fas fa-phone"></i> +51 999 999 999</a>
+          <a href="mailto:hola@bitacoramental.pe"><i class="fas fa-envelope"></i> hola@bitacoramental.pe</a>
+          <a href="https://wa.me/51999999999" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+          <span style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ts)"><i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> Lima, Perú</span>
+        </div>
+        <div class="f-soc">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+        </div>
+      </div>
+      <div class="f-col">
+        <h5>Servicios</h5>
+        <ul class="f-lk">
+          <li><a href="../servicios/terapia-psicologica.html">Terapia Psicológica</a></li>
+          <li><a href="../servicios/coaching-emocional.html">Coaching Emocional</a></li>
+          <li><a href="../servicios/terapia-de-pareja.html">Terapia de Pareja</a></li>
+          <li><a href="../servicios/psicologia-familiar.html">Psicología Familiar</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h5>Programas</h5>
+        <ul class="f-lk">
+          <li><a href="ansiedad.html">Ansiedad</a></li>
+          <li><a href="estres-laboral.html">Estrés y Burnout</a></li>
+          <li><a href="pareja.html">Autoestima y Vínculos</a></li>
+          <li><a href="redes-sociales.html">Desconexión Digital</a></li>
+          <li><a href="index.html">Ver todos →</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h5>Plataforma</h5>
+        <ul class="f-lk">
+          <li><a href="../especialistas-publico.html">Directorio</a></li>
+          <li><a href="../test-bienestar.html">Test de bienestar</a></li>
+          <li><a href="../empresas.html">Para empresas</a></li>
+          <li><a href="../para-especialistas.html">Para especialistas</a></li>
+          <li><a href="../faq.html">Preguntas frecuentes</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h5>Ayuda</h5>
+        <ul class="f-lk">
+          <li><a href="../contacto.html">Contacto</a></li>
+          <li><a href="../privacidad.html">Privacidad</a></li>
+          <li><a href="../terminos.html">Términos</a></li>
+          <li><a href="../libro-reclamaciones.html">Reclamaciones</a></li>
+          <li><a href="../lineas-emergencia.html">Líneas de emergencia</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="f-bot">
+      <p>© 2026 Bitácora Mental. Todos los derechos reservados. Hecho en Perú 🇵🇪</p>
+      <nav class="f-leg">
+        <a href="../privacidad.html">Privacidad</a>
+        <a href="../terminos.html">Términos</a>
+        <a href="../libro-reclamaciones.html">Reclamaciones</a>
+      </nav>
+    </div>
+  </footer>
+
+  <div class="em-bar">🚨 Crisis: <strong>Línea 113</strong> (MINSA) · <strong>Línea 100</strong> (MIMP). Gratuitas 24h. <a href="../lineas-emergencia.html">Más recursos →</a></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('sc', window.scrollY > 30);
+    });
+
+    // Mobile menu functions
+    function openM() {
+      const mm = document.getElementById('mm');
+      mm.style.display = 'flex';
+      document.getElementById('ov').classList.add('show');
+      setTimeout(() => mm.classList.add('open'), 10);
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeM() {
+      const mm = document.getElementById('mm');
+      mm.classList.remove('open');
+      document.getElementById('ov').classList.remove('show');
+      setTimeout(() => mm.style.display = 'none', 300);
+      document.body.style.overflow = '';
+    }
+
+    // CMS CONFIGURATION APPLY
+    function aplicarConfiguracion(c) {
+      if(c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
+      if(c.color_accent) { 
+        document.documentElement.style.setProperty('--clay', c.color_accent); 
+        document.documentElement.style.setProperty('--clay-l', c.color_accent + '33'); 
+      }
+
+      let footer = document.querySelector('.footer');
+      if(footer) {
+        if(c.foot_desc) { let tg = footer.querySelector('.f-tg'); if(tg) tg.textContent = c.foot_desc; }
+        
+        let contacts = footer.querySelectorAll('.f-co a');
+        if(c.foot_tel && contacts[0]) { contacts[0].innerHTML = `<i class="fas fa-phone"></i> ${c.foot_tel}`; contacts[0].href = `tel:${c.foot_tel.replace(/ /g,'')}`; }
+        if(c.foot_mail && contacts[1]) { contacts[1].innerHTML = `<i class="fas fa-envelope"></i> ${c.foot_mail}`; contacts[1].href = `mailto:${c.foot_mail}`; }
+        if(c.foot_wa && contacts[2]) contacts[2].href = c.foot_wa;
+        if(c.foot_loc) { let span = footer.querySelector('.f-co span'); if(span) span.innerHTML = `<i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> ${c.foot_loc}`; }
+        
+        let soc = footer.querySelectorAll('.f-soc a');
+        if(c.soc_ig && soc[0]) soc[0].href = c.soc_ig;
+        if(c.soc_tk && soc[1]) soc[1].href = c.soc_tk;
+        if(c.soc_in && soc[2]) soc[2].href = c.soc_in;
+        if(c.soc_fb && soc[3]) soc[3].href = c.soc_fb;
+
+        if(c.foot_copy) { let p = footer.querySelector('.f-bot p'); if(p) p.textContent = c.foot_copy; }
+      }
+    }
+
+    async function cargarConfiguracionCMS() {
+      if (!window.sb) return;
+      try {
+        const { data, error } = await window.sb.from('config_web').select('*');
+        if (error) throw error;
+        if (!data) return;
+
+        const config = {};
+        data.forEach(item => config[item.clave] = item.valor);
+        aplicarConfiguracion(config);
+      } catch (err) {
+        console.error("Error conectando con el CMS:", err);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', cargarConfiguracionCMS);
+  </script>
 </body>
 </html>
