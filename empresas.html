@@ -393,111 +393,124 @@
       document.body.style.overflow = '';
     }
 
-    // CMS CONFIGURATION APPLY (Forza colores dinámicos del Index)
-    function aplicarConfiguracion(c) {
-      if(c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
-      if(c.color_accent) { 
-        document.documentElement.style.setProperty('--clay', c.color_accent); 
-        document.documentElement.style.setProperty('--clay-l', c.color_accent + '33'); 
-      }
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script> <script>
+// 1. MAPEO DE EMPRESAS
+const MAPPING = {
+  // Hero
+  'emp_tag':      { sel: '.tag-pill', type: 'keep_icon_left' },
+  'emp_h1':       { sel: '.hero h1', type: 'html' },
+  'emp_desc':     { sel: '.hero p', type: 'text' },
+  'emp_btn1_txt': { sel: '.hero-txt .btn-ct:nth-child(1)', type: 'text' },
+  'emp_btn1_url': { sel: '.hero-txt .btn-ct:nth-child(1)', type: 'href' },
+  'emp_btn2_txt': { sel: '.hero-txt .btn-ct:nth-child(2)', type: 'text' },
+  'emp_btn2_url': { sel: '.hero-txt .btn-ct:nth-child(2)', type: 'href' },
+  
+  // Flotantes (Hero)
+  'emp_f1_tit':   { sel: '.fc-1 .fc-txt strong', type: 'text' },
+  'emp_f1_sub':   { sel: '.fc-1 .fc-txt span', type: 'text' },
+  'emp_f2_tit':   { sel: '.fc-2 .fc-txt strong', type: 'text' },
+  'emp_f2_sub':   { sel: '.fc-2 .fc-txt span', type: 'text' },
 
-      let footer = document.querySelector('.footer');
-      if(footer) {
-        if(c.foot_desc) { let tg = footer.querySelector('.f-tg'); if(tg) tg.textContent = c.foot_desc; }
-        
-        let contacts = footer.querySelectorAll('.f-co a');
-        if(c.foot_tel && contacts[0]) { contacts[0].innerHTML = `<i class="fas fa-phone"></i> ${c.foot_tel}`; contacts[0].href = `tel:${c.foot_tel.replace(/ /g,'')}`; }
-        if(c.foot_mail && contacts[1]) { contacts[1].innerHTML = `<i class="fas fa-envelope"></i> ${c.foot_mail}`; contacts[1].href = `mailto:${c.foot_mail}`; }
-        if(c.foot_wa && contacts[2]) contacts[2].href = c.foot_wa;
-        if(c.foot_loc) { let span = footer.querySelector('.f-co span'); if(span) span.innerHTML = `<i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> ${c.foot_loc}`; }
-        
-        let soc = footer.querySelectorAll('.f-soc a');
-        if(c.soc_ig && soc[0]) soc[0].href = c.soc_ig;
-        if(c.soc_tk && soc[1]) soc[1].href = c.soc_tk;
-        if(c.soc_in && soc[2]) soc[2].href = c.soc_in;
-        if(c.soc_fb && soc[3]) soc[3].href = c.soc_fb;
+  // Soluciones
+  'sol_h2':       { sel: '.sec-header h2', type: 'html' },
+  'sol_p':        { sel: '.sec-header p', type: 'text' },
+  'sol_b1_tit':   { sel: '.b-card:nth-child(1) h3', type: 'text' },
+  'sol_b1_desc':  { sel: '.b-card:nth-child(1) p', type: 'text' },
+  'sol_b2_tit':   { sel: '.b-card:nth-child(2) h3', type: 'text' },
+  'sol_b2_desc':  { sel: '.b-card:nth-child(2) p', type: 'text' },
+  'sol_b3_tit':   { sel: '.b-card:nth-child(3) h3', type: 'text' },
+  'sol_b3_desc':  { sel: '.b-card:nth-child(3) p', type: 'text' },
 
-        if(c.foot_copy) { let p = footer.querySelector('.f-bot p'); if(p) p.textContent = c.foot_copy; }
-      }
+  // Cultura y Ley
+  'ley_badge':    { sel: '.badge-law', type: 'keep_icon_left' },
+  'cult_h2':      { sel: '.feat-grid h2', type: 'html' },
+  'cult_p1_tit':  { sel: '.feat-item:nth-child(1) h4', type: 'text' },
+  'cult_p1_desc': { sel: '.feat-item:nth-child(1) p', type: 'text' },
+  'cult_p2_tit':  { sel: '.feat-item:nth-child(2) h4', type: 'text' },
+  'cult_p2_desc': { sel: '.feat-item:nth-child(2) p', type: 'text' },
+  'cult_p3_tit':  { sel: '.feat-item:nth-child(3) h4', type: 'text' },
+  'cult_p3_desc': { sel: '.feat-item:nth-child(3) p', type: 'text' },
+
+  // Call to Action (Bottom)
+  'cta_h2':       { sel: '.cta-box h2', type: 'text' },
+  'cta_p':        { sel: '.cta-box p', type: 'text' },
+  'cta_btn':      { sel: '.btn-sub', type: 'text' }
+};
+
+// 2. FUNCIÓN DE INYECCIÓN
+function inyectar(key, val) {
+  const m = MAPPING[key];
+  if (!m || !val || val.trim() === '') return;
+  document.querySelectorAll(m.sel).forEach(el => {
+    if (m.type === 'text') el.textContent = val;
+    else if (m.type === 'html') el.innerHTML = val;
+    else if (m.type === 'href') el.href = val;
+    else if (m.type === 'keep_icon_left') {
+      const ic = el.querySelector('i');
+      el.innerHTML = (ic ? ic.outerHTML + ' ' : '') + val;
     }
+  });
+}
 
-    async function cargarConfiguracionCMS() {
-      if (!window.sb) return;
-      try {
-        const { data, error } = await window.sb.from('config_web').select('*');
-        if (error) throw error;
-        if (!data) return;
+// 3. APLICAR AJUSTES GLOBALES
+function aplicarGlobales(c) {
+  if (c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
+  if (c.color_accent) {
+    document.documentElement.style.setProperty('--clay', c.color_accent);
+    document.documentElement.style.setProperty('--clay-l', c.color_accent + '33');
+  }
 
-        const config = {};
-        data.forEach(item => config[item.clave] = item.valor);
-        aplicarConfiguracion(config);
-      } catch (err) {
-        console.error("Error conectando con el CMS:", err);
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', cargarConfiguracionCMS);
-  </script>
-  <script>
-async function cargarConfiguracionCMS() {
-  if (!window.sb) return setTimeout(cargarConfiguracionCMS, 500);
-
-  // 1. Detectamos automáticamente en qué página estamos
-  const path = window.location.pathname;
-  let pageName = 'index'; 
-  if (path.includes('contacto')) pageName = 'contacto';
-  else if (path.includes('terapia-psicologica')) pageName = 'terapia';
-  else if (path.includes('coaching-emocional')) pageName = 'coaching';
-  else if (path.includes('terapia-de-pareja')) pageName = 'pareja';
-  else if (path.includes('psicologia-familiar')) pageName = 'familia';
-  else if (path.includes('ansiedad')) pageName = 'ansiedad';
-  else if (path.includes('autoestima')) pageName = 'autoestima';
-  else if (path.includes('duelo')) pageName = 'duelo';
-  else if (path.includes('estres-laboral')) pageName = 'estres';
-  else if (path.includes('redes-sociales')) pageName = 'redes';
-  else if (path.includes('empresas')) pageName = 'empresas';
-  else if (path.includes('especialistas-publico')) pageName = 'directorio';
-  else if (path.includes('talleres')) pageName = 'talleres';
-
-  try {
-    // 2. Pedimos a Supabase los datos de la página actual Y los globales
-    const { data, error } = await window.sb
-      .from('config_web')
-      .select('*')
-      .or(`pagina.eq.${pageName},pagina.eq.global`);
-
-    if (error) throw error;
+  const footer = document.querySelector('.footer');
+  if (footer) {
+    if (c.foot_desc) { const tg = footer.querySelector('.f-tg'); if (tg) tg.textContent = c.foot_desc; }
+    const contacts = footer.querySelectorAll('.f-co a');
+    if (c.foot_tel && contacts[0]) { contacts[0].innerHTML = `<i class="fas fa-phone"></i> ${c.foot_tel}`; contacts[0].href = `tel:${c.foot_tel.replace(/ /g,'')}`; }
+    if (c.foot_mail && contacts[1]) { contacts[1].innerHTML = `<i class="fas fa-envelope"></i> ${c.foot_mail}`; contacts[1].href = `mailto:${c.foot_mail}`; }
+    if (c.foot_wa && contacts[2]) contacts[2].href = c.foot_wa;
+    if (c.foot_loc) { const span = footer.querySelector('.f-co span'); if (span) span.innerHTML = `<i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> ${c.foot_loc}`; }
     
-    const c = {};
-    data.forEach(item => c[item.clave] = item.valor);
-
-    // ============ APLICAR CONFIGURACIÓN GLOBAL ============
-    if (c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
-    if (c.color_accent) document.documentElement.style.setProperty('--clay', c.color_accent);
-    
-    const logoTxt = document.querySelector('.logo');
-    if (logoTxt && c.navbar_logo_text) {
-        const span = logoTxt.querySelector('span') || logoTxt.childNodes[logoTxt.childNodes.length - 1];
-        if (span) span.textContent = c.navbar_logo_text;
-    }
-
-    // ============ APLICAR CONFIGURACIÓN ESPECÍFICA ============
-    // Ejemplo: Títulos H1 dinámicos
-    const mainH1 = document.querySelector('h1');
-    if (mainH1 && c[`${pageName}_h1`]) mainH1.innerHTML = c[`${pageName}_h1`];
-
-    // Ejemplo: Descripciones/Subtítulos
-    const subText = document.querySelector('.hero-desc, .pg-sub');
-    if (subText && c[`${pageName}_sub`]) subText.textContent = c[`${pageName}_sub`];
-
-    console.log(`✅ CMS: Datos de "${pageName}" aplicados correctamente.`);
-
-  } catch (err) {
-    console.error('❌ Error cargando configuración del CMS:', err);
+    const soc = footer.querySelectorAll('.f-soc a');
+    if (c.soc_ig && soc[0]) soc[0].href = c.soc_ig;
+    if (c.soc_tk && soc[1]) soc[1].href = c.soc_tk;
+    if (c.soc_in && soc[2]) soc[2].href = c.soc_in;
+    if (c.soc_fb && soc[3]) soc[3].href = c.soc_fb;
+    if (c.foot_copy) { const p = footer.querySelector('.f-bot p'); if (p) p.textContent = c.foot_copy; }
   }
 }
 
-document.addEventListener('DOMContentLoaded', cargarConfiguracionCMS);
+// 4. CARGA DE BASE DE DATOS
+async function cargarCMS() {
+  if (!window.sb) return setTimeout(cargarCMS, 500);
+  
+  // Pedimos los datos Globales y los de Empresas en 1 sola consulta
+  const { data } = await window.sb.from('config_web')
+                                 .select('*')
+                                 .or(`pagina.eq.empresas,pagina.eq.global`);
+  
+  if (data) {
+    const configGlobal = {};
+    data.forEach(d => {
+      if (d.pagina === 'global') configGlobal[d.clave] = d.valor;
+      else inyectar(d.clave, d.valor);
+    });
+    aplicarGlobales(configGlobal);
+  }
+}
+
+// 5. LISTENER PARA PREVIEW EN VIVO
+window.addEventListener('message', e => {
+  if (e.data.tipo === 'LIVE_PREVIEW') {
+    Object.entries(e.data.config).forEach(([k, v]) => inyectar(k, v));
+  }
+});
+
+document.addEventListener('DOMContentLoaded', cargarCMS);
+
+// UI Básica
+window.addEventListener('scroll', () => { document.getElementById('nav').classList.toggle('sc', window.scrollY > 30); });
+function openM() { document.getElementById('mm').style.display = 'flex'; document.getElementById('ov').classList.add('show'); setTimeout(() => document.getElementById('mm').classList.add('open'), 10); document.body.style.overflow = 'hidden'; }
+function closeM() { document.getElementById('mm').classList.remove('open'); document.getElementById('ov').classList.remove('show'); setTimeout(() => document.getElementById('mm').style.display = 'none', 300); document.body.style.overflow = ''; }
 </script>
   
 </body>
