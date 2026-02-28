@@ -2,90 +2,88 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Editor Inicio - Bitácora Mental</title>
+  <title>Editor de Inicio - Bitácora Mental</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root { 
       --bg: #f4f6f8; --sidebar: #1a1d20; --primary: #008060; --primary-dark: #005e46;
       --text: #202223; --text-light: #6d7175; --border: #c9cccf; --border-light: #e1e3e5;
-      --success: #20dc8e; --danger: #d72c0d; --card: white; --shadow: 0 1px 3px rgba(0,0,0,0.1);
+      --success: #20dc8e; --info: #00a0e9; 
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { display: flex; height: 100vh; background: var(--bg); color: var(--text); overflow: hidden; }
-
+    body { display: flex; height: 100vh; background: var(--bg); overflow: hidden; color: var(--text); }
+    
     /* NAVEGACIÓN ADMIN */
-    .admin-nav { width: 70px; background: var(--sidebar); display: flex; flex-direction: column; align-items: center; padding: 20px 0; z-index: 100; flex-shrink: 0; box-shadow: 2px 0 10px rgba(0,0,0,0.2); }
+    .admin-nav { width: 70px; background: var(--sidebar); display: flex; flex-direction: column; align-items: center; padding: 20px 0; z-index: 100; flex-shrink: 0; }
     .admin-nav .logo { width: 40px; height: 40px; background: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; margin-bottom: 30px; }
-    .admin-nav a { color: #a6aab4; font-size: 1.3rem; margin-bottom: 25px; transition: 0.2s; text-decoration: none; position: relative; padding: 10px; border-radius: 8px; }
+    .admin-nav a { color: #a6aab4; font-size: 1.3rem; margin-bottom: 25px; padding: 10px; border-radius: 8px; text-decoration: none; position: relative;}
     .admin-nav a:hover { color: white; background: rgba(255,255,255,0.1); }
     .admin-nav a.active { color: var(--success); background: rgba(32,220,142,0.1); }
     .admin-nav a.active::after { content: ''; position: absolute; left: -20px; top: 50%; transform: translateY(-50%); width: 3px; height: 24px; background: var(--success); border-radius: 0 3px 3px 0; }
 
-    /* PANEL EDITOR */
-    .editor-panel { width: 450px; background: white; border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 10; flex-shrink: 0; box-shadow: 2px 0 15px rgba(0,0,0,0.08); }
+    /* PANEL DEL EDITOR */
+    .editor-panel { width: 450px; background: white; border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; z-index: 10; box-shadow: 2px 0 15px rgba(0,0,0,0.05);}
+    
     .ep-header { padding: 16px 20px; border-bottom: 1px solid var(--border-light); background: linear-gradient(135deg, #f9fafb 0%, white 100%); display: flex; flex-direction: column; gap: 12px; }
-    .ep-header h2 { font-size: 1.05rem; font-weight: 700; color: #202223; display: flex; align-items: center; gap: 10px; }
-    .btn-save { background: var(--primary); color: white; border: none; padding: 12px 16px; border-radius: 6px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 4px rgba(0,128,96,0.2); transition: 0.2s; width: 100%; margin-top: 5px;}
+    .ep-header-top { display: flex; justify-content: space-between; align-items: center; }
+    .ep-header h2 { font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+    .ep-header h2 i { color: var(--primary); font-size: 1.1rem; }
+    
+    /* BOTONERA (Historial y Guardar) */
+    .header-actions { display: flex; gap: 8px; width: 100%; margin-top: 5px; }
+    .btn-header { background: white; border: 1px solid var(--border); color: var(--text-light); padding: 8px 12px; border-radius: 6px; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; flex: 1; }
+    .btn-header:hover { border-color: var(--primary); color: var(--primary); background: #f0f9ff; }
+    .btn-header:active { transform: scale(0.95); }
+    .btn-save { background: var(--primary); color: white; border: none; padding: 10px 16px; border-radius: 6px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 4px rgba(0,128,96,0.2); transition: 0.2s; flex: 3; }
     .btn-save:hover { background: var(--primary-dark); transform: translateY(-1px); }
 
     /* TABS */
-    .ep-tabs { display: flex; overflow-x: auto; background: white; border-bottom: 1px solid var(--border-light); scrollbar-width: none; flex-shrink: 0; }
+    .ep-tabs { display: flex; overflow-x: auto; border-bottom: 1px solid var(--border-light); background: white; scrollbar-width: none;}
     .ep-tabs::-webkit-scrollbar { display: none; }
-    .tab-btn { padding: 14px 18px; border: none; background: none; font-size: 0.78rem; font-weight: 700; color: var(--text-light); cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.5px;}
-    .tab-btn:hover { color: var(--text); background: #f9fafb; }
-    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: white; }
+    .tab-btn { padding: 14px 15px; border: none; background: none; font-size: 0.78rem; font-weight: 700; cursor: pointer; border-bottom: 3px solid transparent; color: var(--text-light); text-transform: uppercase; white-space: nowrap; flex: 1; transition: 0.2s;}
+    .tab-btn:hover { background: #f9fafb; color: var(--text); }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
 
     /* CONTENIDO */
     .ep-content { flex: 1; overflow-y: auto; padding: 20px; background: #fafbfc; }
-    .tab-pane { display: none; animation: fadeIn 0.3s ease; }
+    .tab-pane { display: none; animation: fadeIn 0.3s ease; } 
     .tab-pane.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     /* FORMULARIOS */
-    .card-form { background: white; border-radius: 12px; padding: 24px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border-light); }
+    .card-form { background: white; border: 1px solid var(--border-light); border-radius: 12px; padding: 24px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
     .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #f1f2f4; }
-    .card-header h3 { font-size: 0.95rem; display: flex; align-items: center; gap: 10px; color: #202223; font-weight: 700; letter-spacing: -0.2px; }
+    .card-header h3 { font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 10px; color: var(--text); }
     .card-header h3 i { color: var(--primary); font-size: 1rem; }
     
     .input-group { margin-bottom: 15px; }
-    label { display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 5px; text-transform: uppercase; color: var(--text-light); }
-    input[type="text"], input[type="url"], textarea { width: 100%; padding: 10px 12px; border: 1px solid #babec3; border-radius: 6px; font-size: 0.88rem; transition: 0.2s; background: white; font-family: inherit;}
+    label { display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 6px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px;}
+    input, textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; transition: 0.2s; font-family: inherit; }
     input:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1); }
     textarea { min-height: 70px; resize: vertical; line-height: 1.5; }
     
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;}
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px;}
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;}
     .section-divider { display: flex; align-items: center; gap: 15px; margin: 25px 0 15px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); }
     .section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
 
-    /* IMAGE UPLOAD */
-    .image-upload { border: 2px dashed var(--border); border-radius: 10px; padding: 20px; text-align: center; cursor: pointer; transition: 0.2s; background: #fafbfc; position: relative; overflow: hidden; }
-    .image-upload:hover { border-color: var(--primary); background: #f0f9ff; }
-    .image-upload input { display: none; }
-    .image-preview-box { margin-top: 15px; border-radius: 8px; overflow: hidden; max-width: 100%; border: 1px solid var(--border-light); box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: relative; display:none;}
-    .image-preview-box img { width: 100%; height: auto; display: block; }
-    .image-preview-remove { position: absolute; top: 10px; right: 10px; background: var(--danger); color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; }
-
     /* PREVIEW AREA */
-    .preview-area { flex: 1; display: flex; flex-direction: column; background: #e4e5e7; overflow: hidden; }
-    .preview-toolbar { height: 60px; background: white; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 0 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-    .live-indicator { display: flex; align-items: center; gap: 8px; padding: 6px 12px; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 20px; font-size: 0.75rem; font-weight: 700; color: #0369a1; text-transform: uppercase; }
-    .live-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 2s ease infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.2); } }
+    .preview-area { flex: 1; background: #e4e5e7; display: flex; flex-direction: column; position: relative; overflow: hidden;}
+    .preview-toolbar { height: 60px; background: white; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+    .live-indicator { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 700; color: #0369a1; text-transform: uppercase; background: #f0f9ff; padding: 6px 12px; border-radius: 20px; border: 1px solid #bae6fd;}
+    .live-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     
-    .device-selector { display: flex; gap: 4px; background: #f1f3f5; padding: 4px; border-radius: 8px; }
-    .device-btn { background: transparent; border: none; padding: 8px 12px; border-radius: 6px; font-size: 1rem; color: var(--text-light); cursor: pointer; transition: 0.2s; }
-    .device-btn.active { background: white; color: var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-    
-    .iframe-wrapper { flex: 1; padding: 30px; overflow: auto; display: flex; justify-content: center; align-items: flex-start;}
+    .iframe-wrap { flex: 1; padding: 30px; display: flex; justify-content: center; overflow: auto; }
     .iframe-container { width: 100%; height: 100%; transition: 0.3s; }
-    .iframe-container.mobile { width: 375px; height: 812px; margin: 0 auto;}
-    .iframe-container.tablet { width: 768px; height: 1024px; margin: 0 auto;}
-    iframe { width: 100%; height: 100%; border: none; background: white; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); display:block;}
+    iframe { width: 100%; height: 100%; border: none; border-radius: 12px; background: white; box-shadow: 0 20px 60px rgba(0,0,0,0.15); display: block;}
 
-    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--success); color: #166534; padding: 14px 20px; border-radius: 10px; font-weight: 600; font-size: 0.9rem; transform: translateX(400px); transition: 0.3s; z-index: 9999; display: flex; align-items: center; gap: 10px;}
+    /* TOASTS */
+    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--text); color: white; padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transform: translateX(400px); transition: 0.3s; display: flex; align-items: center; gap: 10px; z-index: 9999;}
     .toast.show { transform: translateX(0); }
+    .toast.success { background: var(--success); color: #166534; }
+    .toast.info { background: var(--info); color: white; }
   </style>
 </head>
 <body>
@@ -101,177 +99,115 @@
   <div class="editor-panel">
     <div class="ep-header">
       <div class="ep-header-top">
-        <h2><i class="fas fa-home"></i> Inicio (Página Principal)</h2>
+        <h2><i class="fas fa-home"></i> Página de Inicio</h2>
       </div>
-      <button class="btn-save" onclick="guardarTodo()"><i class="fas fa-save"></i> GUARDAR INICIO</button>
+      <div class="header-actions">
+        <button type="button" class="btn-header" onclick="undo()" title="Deshacer (Ctrl+Z)"><i class="fas fa-undo"></i></button>
+        <button type="button" class="btn-header" onclick="redo()" title="Rehacer (Ctrl+Y)"><i class="fas fa-redo"></i></button>
+        <button class="btn-save" onclick="guardarTodo()"><i class="fas fa-save"></i> GUARDAR INICIO</button>
+      </div>
     </div>
-
+    
     <div class="ep-tabs">
-      <button class="tab-btn active" onclick="switchTab('t-hero', this)">Hero</button>
-      <button class="tab-btn" onclick="switchTab('t-stats', this)">Stats / Servs</button>
-      <button class="tab-btn" onclick="switchTab('t-proceso', this)">Proceso</button>
-      <button class="tab-btn" onclick="switchTab('t-planes', this)">Planes</button>
-      <button class="tab-btn" onclick="switchTab('t-emp', this)">Empr / FAQ</button>
+      <button class="tab-btn active" onclick="switchTab('hero', this)">Hero</button>
+      <button class="tab-btn" onclick="switchTab('stats', this)">Stats / Servs</button>
+      <button class="tab-btn" onclick="switchTab('proceso', this)">Proceso</button>
+      <button class="tab-btn" onclick="switchTab('planes', this)">Planes / FAQ</button>
     </div>
 
     <div class="ep-content">
       <form id="cmsForm">
         
-        <div id="t-hero" class="tab-pane active">
+        <div id="hero" class="tab-pane active">
           <div class="card-form">
             <div class="card-header"><h3><i class="fas fa-star"></i> Portada Principal</h3></div>
-            <div class="input-group"><label>Badge Superior</label><input type="text" data-key="hero_badge" placeholder="Plataforma 100% peruana"></div>
-            <div class="input-group"><label>Título H1</label><textarea data-key="hero_titulo" rows="3"></textarea></div>
+            <div class="input-group"><label>Badge Superior</label><input type="text" data-key="hero_badge"></div>
+            <div class="input-group"><label>Título (H1)</label><textarea data-key="hero_titulo" rows="3"></textarea></div>
             <div class="input-group"><label>Subtítulo</label><textarea data-key="hero_subtitulo" rows="3"></textarea></div>
             
-            <div class="section-divider">Botones</div>
+            <div class="section-divider">Botones Call To Action</div>
             <div class="grid-2">
-              <div class="input-group"><label>Botón Principal</label><input type="text" data-key="hero_btn1_text" style="margin-bottom:5px"><input type="text" data-key="hero_btn1_url" placeholder="URL"></div>
-              <div class="input-group"><label>Botón Secundario</label><input type="text" data-key="hero_btn2_text" style="margin-bottom:5px"><input type="text" data-key="hero_btn2_url" placeholder="URL"></div>
+              <div class="input-group"><label>Botón 1 (Texto)</label><input type="text" data-key="hero_btn1_text"></div>
+              <div class="input-group"><label>Botón 1 (URL)</label><input type="text" data-key="hero_btn1_url"></div>
+              <div class="input-group"><label>Botón 2 (Texto)</label><input type="text" data-key="hero_btn2_text"></div>
+              <div class="input-group"><label>Botón 2 (URL)</label><input type="text" data-key="hero_btn2_url"></div>
             </div>
-            
-            <div class="input-group"><label>Texto de Confianza (Bajo botones)</label><input type="text" data-key="hero_trust_text"></div>
+            <div class="input-group"><label>Texto de Confianza</label><input type="text" data-key="hero_trust_text"></div>
           </div>
-
           <div class="card-form">
-            <div class="card-header"><h3><i class="fas fa-image"></i> Imagen y Tarjetas</h3></div>
-            <div class="input-group"><label>Imagen Principal (URL)</label><input type="url" data-key="hero_img"></div>
-            
-            <div class="section-divider">Tarjetas Flotantes</div>
-            <label>Tarjeta Izquierda</label>
+            <div class="card-header"><h3><i class="fas fa-layer-group"></i> Tarjetas Flotantes</h3></div>
+            <div class="input-group"><label>URL de Imagen Principal</label><input type="url" data-key="hero_img"></div>
+            <div class="section-divider">Tarjeta Izquierda</div>
             <div class="grid-2"><input type="text" data-key="hero_f1_tit" placeholder="Título"><input type="text" data-key="hero_f1_sub" placeholder="Subtítulo"></div>
-            <label style="margin-top:10px">Tarjeta Derecha</label>
+            <div class="section-divider">Tarjeta Derecha</div>
             <div class="grid-2"><input type="text" data-key="hero_f2_tit" placeholder="Título"><input type="text" data-key="hero_f2_sub" placeholder="Subtítulo"></div>
           </div>
         </div>
 
-        <div id="t-stats" class="tab-pane">
+        <div id="stats" class="tab-pane">
           <div class="card-form">
-            <div class="card-header"><h3><i class="fas fa-chart-bar"></i> Barra Verde de Estadísticas</h3></div>
+            <div class="card-header"><h3><i class="fas fa-chart-bar"></i> Barra de Estadísticas</h3></div>
             <div class="grid-2">
-              <div class="input-group"><label>Stat 1</label><input type="text" data-key="stat1_number" placeholder="Ej: 50+"><input type="text" data-key="stat1_label" placeholder="Texto" style="margin-top:5px"></div>
-              <div class="input-group"><label>Stat 2</label><input type="text" data-key="stat2_number" placeholder="Ej: 500+"><input type="text" data-key="stat2_label" placeholder="Texto" style="margin-top:5px"></div>
-              <div class="input-group"><label>Stat 3</label><input type="text" data-key="stat3_number" placeholder="Ej: 4.8★"><input type="text" data-key="stat3_label" placeholder="Texto" style="margin-top:5px"></div>
-              <div class="input-group"><label>Stat 4</label><input type="text" data-key="stat4_number" placeholder="Ej: Tarifas"><input type="text" data-key="stat4_label" placeholder="Texto" style="margin-top:5px"></div>
+              <div class="input-group"><label>Stat 1</label><input type="text" data-key="stat1_number" placeholder="Nro"><input type="text" data-key="stat1_label" placeholder="Texto" style="margin-top:5px"></div>
+              <div class="input-group"><label>Stat 2</label><input type="text" data-key="stat2_number" placeholder="Nro"><input type="text" data-key="stat2_label" placeholder="Texto" style="margin-top:5px"></div>
+              <div class="input-group"><label>Stat 3</label><input type="text" data-key="stat3_number" placeholder="Nro"><input type="text" data-key="stat3_label" placeholder="Texto" style="margin-top:5px"></div>
+              <div class="input-group"><label>Stat 4</label><input type="text" data-key="stat4_number" placeholder="Nro"><input type="text" data-key="stat4_label" placeholder="Texto" style="margin-top:5px"></div>
             </div>
           </div>
-
           <div class="card-form">
-            <div class="card-header"><h3><i class="fas fa-hand-holding-heart"></i> Sección Servicios</h3></div>
-            <div class="input-group"><label>Etiqueta</label><input type="text" data-key="srv_tag"></div>
-            <div class="input-group"><label>Título</label><textarea data-key="srv_tit" rows="2"></textarea></div>
+            <div class="card-header"><h3><i class="fas fa-hand-holding-heart"></i> Servicios</h3></div>
+            <div class="input-group"><label>Etiqueta Superior</label><input type="text" data-key="srv_tag"></div>
+            <div class="input-group"><label>Título Sección</label><input type="text" data-key="srv_tit"></div>
             <div class="input-group"><label>Subtítulo</label><textarea data-key="srv_sub" rows="2"></textarea></div>
-            
-            <div class="section-divider">Tarjetas de Servicio</div>
-            <label>1. Terapia Psicológica</label>
+            <div class="section-divider">Tarjetas</div>
+            <label style="color:var(--primary)">1. Terapia Individual</label>
             <div class="grid-2"><input type="text" data-key="srv1_ic" placeholder="Icono fa-"><input type="text" data-key="srv1_tit" placeholder="Título"></div>
             <textarea data-key="srv1_desc" rows="2" style="margin:5px 0 15px;"></textarea>
-            
-            <label>2. Coaching Emocional</label>
+            <label style="color:var(--primary)">2. Coaching</label>
             <div class="grid-2"><input type="text" data-key="srv2_ic" placeholder="Icono fa-"><input type="text" data-key="srv2_tit" placeholder="Título"></div>
             <textarea data-key="srv2_desc" rows="2" style="margin:5px 0 15px;"></textarea>
-            
-            <label>3. Terapia de Pareja</label>
+            <label style="color:var(--primary)">3. Pareja</label>
             <div class="grid-2"><input type="text" data-key="srv3_ic" placeholder="Icono fa-"><input type="text" data-key="srv3_tit" placeholder="Título"></div>
             <textarea data-key="srv3_desc" rows="2" style="margin-top:5px;"></textarea>
           </div>
         </div>
 
-        <div id="t-proceso" class="tab-pane">
+        <div id="proceso" class="tab-pane">
           <div class="card-form">
-            <div class="card-header"><h3><i class="fas fa-shoe-prints"></i> El Proceso (3 Pasos)</h3></div>
-            <div class="input-group"><label>Etiqueta</label><input type="text" data-key="paso_tag"></div>
+            <div class="card-header"><h3><i class="fas fa-shoe-prints"></i> El Proceso</h3></div>
+            <div class="input-group"><label>Etiqueta Superior</label><input type="text" data-key="paso_tag"></div>
             <div class="input-group"><label>Título</label><textarea data-key="paso_tit" rows="2"></textarea></div>
-            <div class="input-group"><label>URL Imagen Lateral</label><input type="text" data-key="proceso_img"></div>
             
-            <div class="section-divider">Pasos</div>
-            <label>Paso 1</label>
-            <input type="text" data-key="p1_tit" placeholder="Título" style="margin-bottom:5px;">
-            <textarea data-key="p1_desc" rows="2" style="margin-bottom:15px;"></textarea>
-            
-            <label>Paso 2</label>
-            <input type="text" data-key="p2_tit" placeholder="Título" style="margin-bottom:5px;">
-            <textarea data-key="p2_desc" rows="2" style="margin-bottom:15px;"></textarea>
-            
-            <label>Paso 3</label>
-            <input type="text" data-key="p3_tit" placeholder="Título" style="margin-bottom:5px;">
-            <textarea data-key="p3_desc" rows="2" style="margin-bottom:15px;"></textarea>
-
-            <div class="section-divider">Botón Inferior</div>
-            <div class="grid-2"><input type="text" data-key="proceso_btn_texto" placeholder="Texto"><input type="text" data-key="proceso_btn_url" placeholder="URL"></div>
+            <div class="section-divider">3 Pasos</div>
+            <label>Paso 1</label><input type="text" data-key="p1_tit" placeholder="Título" style="margin-bottom:5px;"><textarea data-key="p1_desc" rows="2" style="margin-bottom:15px;"></textarea>
+            <label>Paso 2</label><input type="text" data-key="p2_tit" placeholder="Título" style="margin-bottom:5px;"><textarea data-key="p2_desc" rows="2" style="margin-bottom:15px;"></textarea>
+            <label>Paso 3</label><input type="text" data-key="p3_tit" placeholder="Título" style="margin-bottom:5px;"><textarea data-key="p3_desc" rows="2"></textarea>
           </div>
         </div>
 
-        <div id="t-planes" class="tab-pane">
+        <div id="planes" class="tab-pane">
           <div class="card-form">
-            <div class="card-header"><h3><i class="fas fa-wallet"></i> Modalidades (Planes)</h3></div>
-            <div class="input-group"><label>Etiqueta</label><input type="text" data-key="mod_tag"></div>
-            <div class="input-group"><label>Título</label><textarea data-key="mod_tit" rows="2"></textarea></div>
+            <div class="card-header"><h3><i class="fas fa-wallet"></i> Planes</h3></div>
+            <div class="input-group"><label>Título Planes</label><input type="text" data-key="mod_tit"></div>
             <div class="input-group"><label>Subtítulo</label><textarea data-key="mod_sub" rows="2"></textarea></div>
+            <div class="section-divider">Tarjetas de Plan</div>
+            <label>Plan 1</label><input type="text" data-key="m1_tit" placeholder="Título"><textarea data-key="m1_desc" rows="2" style="margin:5px 0"></textarea>
+            <div class="grid-3" style="margin-bottom:15px"><input type="text" data-key="m1_f1" placeholder="Beneficio"><input type="text" data-key="m1_f2" placeholder="Beneficio"><input type="text" data-key="m1_f3" placeholder="Beneficio"></div>
             
-            <div class="section-divider">Plan 1: Individual</div>
-            <div class="grid-2" style="margin-bottom:5px"><input type="text" data-key="m1_ic" placeholder="Icono"><input type="text" data-key="m1_tit" placeholder="Título"></div>
-            <textarea data-key="m1_desc" rows="2" style="margin-bottom:5px"></textarea>
-            <div class="grid-3" style="margin-bottom:5px"><input type="text" data-key="m1_f1" placeholder="Beneficio 1"><input type="text" data-key="m1_f2" placeholder="Beneficio 2"><input type="text" data-key="m1_f3" placeholder="Beneficio 3"></div>
-            <div class="grid-2" style="margin-bottom:20px"><input type="text" data-key="m1_btn_txt" placeholder="Botón"><input type="text" data-key="m1_btn_url" placeholder="URL"></div>
-
-            <div class="section-divider">Plan 2: Programas (Destacado)</div>
-            <div class="grid-2" style="margin-bottom:5px"><input type="text" data-key="m2_tag" placeholder="Tag Destacado"><input type="text" data-key="m2_tit" placeholder="Título"></div>
-            <textarea data-key="m2_desc" rows="2" style="margin-bottom:5px"></textarea>
-            <div class="grid-3" style="margin-bottom:5px"><input type="text" data-key="m2_f1" placeholder="Beneficio 1"><input type="text" data-key="m2_f2" placeholder="Beneficio 2"><input type="text" data-key="m2_f3" placeholder="Beneficio 3"></div>
-            <div class="grid-2" style="margin-bottom:20px"><input type="text" data-key="m2_btn_txt" placeholder="Botón"><input type="text" data-key="m2_btn_url" placeholder="URL"></div>
-
-            <div class="section-divider">Plan 3: Corporativo</div>
-            <div class="grid-2" style="margin-bottom:5px"><input type="text" data-key="m3_ic" placeholder="Icono"><input type="text" data-key="m3_tit" placeholder="Título"></div>
-            <textarea data-key="m3_desc" rows="2" style="margin-bottom:5px"></textarea>
-            <div class="grid-3" style="margin-bottom:5px"><input type="text" data-key="m3_f1" placeholder="Beneficio 1"><input type="text" data-key="m3_f2" placeholder="Beneficio 2"><input type="text" data-key="m3_f3" placeholder="Beneficio 3"></div>
-            <div class="grid-2"><input type="text" data-key="m3_btn_txt" placeholder="Botón"><input type="text" data-key="m3_btn_url" placeholder="URL"></div>
+            <label>Plan 2 (Destacado)</label><input type="text" data-key="m2_tit" placeholder="Título"><textarea data-key="m2_desc" rows="2" style="margin:5px 0"></textarea>
+            <div class="grid-3" style="margin-bottom:15px"><input type="text" data-key="m2_f1" placeholder="Beneficio"><input type="text" data-key="m2_f2" placeholder="Beneficio"><input type="text" data-key="m2_f3" placeholder="Beneficio"></div>
+            
+            <label>Plan 3</label><input type="text" data-key="m3_tit" placeholder="Título"><textarea data-key="m3_desc" rows="2" style="margin:5px 0"></textarea>
+            <div class="grid-3"><input type="text" data-key="m3_f1" placeholder="Beneficio"><input type="text" data-key="m3_f2" placeholder="Beneficio"><input type="text" data-key="m3_f3" placeholder="Beneficio"></div>
           </div>
-        </div>
-
-        <div id="t-emp" class="tab-pane">
+          
           <div class="card-form">
-            <div class="card-header"><h3><i class="fas fa-layer-group"></i> Info Programas</h3></div>
-            <div class="input-group"><label>Etiqueta</label><input type="text" data-key="pro_tag"></div>
-            <div class="input-group"><label>Título</label><textarea data-key="pro_tit" rows="2"></textarea></div>
-            <div class="input-group"><label>Párrafo 1</label><textarea data-key="pro_s1" rows="2"></textarea></div>
-            <div class="input-group"><label>Párrafo 2</label><textarea data-key="pro_s2" rows="2"></textarea></div>
-            <div class="grid-2"><input type="text" data-key="pro_btn_txt" placeholder="Botón"><input type="text" data-key="pro_btn_url" placeholder="URL"></div>
-          </div>
-
-          <div class="card-form">
-            <div class="card-header"><h3><i class="fas fa-building"></i> Sección Empresas</h3></div>
-            <div class="input-group"><label>Etiqueta</label><input type="text" data-key="emp_tag"></div>
-            <div class="input-group"><label>Título</label><textarea data-key="emp_tit" rows="2"></textarea></div>
-            <div class="input-group"><label>Subtítulo</label><textarea data-key="emp_sub" rows="2"></textarea></div>
-            
-            <div class="section-divider">Beneficios (Checklist)</div>
-            <div class="grid-2" style="margin-bottom:15px">
-              <input type="text" data-key="emp_b1"><input type="text" data-key="emp_b2">
-              <input type="text" data-key="emp_b3"><input type="text" data-key="emp_b4">
-            </div>
-            <div class="grid-2" style="margin-bottom:15px"><input type="text" data-key="emp_btn_txt" placeholder="Botón Blanco"><input type="text" data-key="emp_btn_url" placeholder="URL"></div>
-            
-            <div class="section-divider">Tarjeta Oscura (Planes)</div>
-            <div class="input-group"><label>Título de la Caja</label><input type="text" data-key="emp_c_tit"></div>
-            <div class="grid-2" style="margin-bottom:5px"><input type="text" data-key="emp_cp1_t" placeholder="Plan 1"><input type="text" data-key="emp_cp1_d" placeholder="Desc 1"></div>
-            <div class="grid-2" style="margin-bottom:5px"><input type="text" data-key="emp_cp2_t" placeholder="Plan 2"><input type="text" data-key="emp_cp2_d" placeholder="Desc 2"></div>
-            <div class="grid-2" style="margin-bottom:15px"><input type="text" data-key="emp_cp3_t" placeholder="Plan 3"><input type="text" data-key="emp_cp3_d" placeholder="Desc 3"></div>
-            <div class="grid-2"><input type="text" data-key="emp_c_btn_txt" placeholder="Botón Abajo"><input type="text" data-key="emp_c_btn_url" placeholder="URL"></div>
-          </div>
-
-          <div class="card-form">
-            <div class="card-header"><h3><i class="fas fa-question-circle"></i> Preguntas Frecuentes</h3></div>
-            <div class="input-group"><label>Etiqueta</label><input type="text" data-key="faq_tag"></div>
-            <div class="input-group"><label>Título</label><textarea data-key="faq_tit" rows="2"></textarea></div>
-            
-            <div class="section-divider">Listado (Pregunta / Respuesta)</div>
-            <div style="margin-bottom:10px;"><input type="text" data-key="faq1_q" placeholder="Pregunta 1"><textarea data-key="faq1_a" rows="2" style="margin-top:5px"></textarea></div>
-            <div style="margin-bottom:10px;"><input type="text" data-key="faq2_q" placeholder="Pregunta 2"><textarea data-key="faq2_a" rows="2" style="margin-top:5px"></textarea></div>
-            <div style="margin-bottom:10px;"><input type="text" data-key="faq3_q" placeholder="Pregunta 3"><textarea data-key="faq3_a" rows="2" style="margin-top:5px"></textarea></div>
-            <div style="margin-bottom:10px;"><input type="text" data-key="faq4_q" placeholder="Pregunta 4"><textarea data-key="faq4_a" rows="2" style="margin-top:5px"></textarea></div>
-            <div style="margin-bottom:10px;"><input type="text" data-key="faq5_q" placeholder="Pregunta 5"><textarea data-key="faq5_a" rows="2" style="margin-top:5px"></textarea></div>
-            <div style="margin-bottom:10px;"><input type="text" data-key="faq6_q" placeholder="Pregunta 6"><textarea data-key="faq6_a" rows="2" style="margin-top:5px"></textarea></div>
+            <div class="card-header"><h3><i class="fas fa-question-circle"></i> FAQ (Inicio)</h3></div>
+            <div class="input-group"><label>Título FAQ</label><input type="text" data-key="faq_tit"></div>
+            <div class="section-divider">Preguntas Activas</div>
+            <div style="margin-bottom:10px;"><input type="text" data-key="faq1_q" placeholder="Pregunta 1"><textarea data-key="faq1_a" rows="2" style="margin-top:5px" placeholder="Respuesta"></textarea></div>
+            <div style="margin-bottom:10px;"><input type="text" data-key="faq2_q" placeholder="Pregunta 2"><textarea data-key="faq2_a" rows="2" style="margin-top:5px" placeholder="Respuesta"></textarea></div>
+            <div style="margin-bottom:10px;"><input type="text" data-key="faq3_q" placeholder="Pregunta 3"><textarea data-key="faq3_a" rows="2" style="margin-top:5px" placeholder="Respuesta"></textarea></div>
           </div>
         </div>
 
@@ -281,96 +217,172 @@
 
   <div class="preview-area">
     <div class="preview-toolbar">
-      <div class="live-indicator"><span class="live-dot"></span> Preview Activo</div>
-      
-      <div class="device-selector">
-        <button class="device-btn active" onclick="setDevice('desktop', this)"><i class="fas fa-desktop"></i></button>
-        <button class="device-btn" onclick="setDevice('tablet', this)"><i class="fas fa-tablet-alt"></i></button>
-        <button class="device-btn" onclick="setDevice('mobile', this)"><i class="fas fa-mobile-alt"></i></button>
-      </div>
-
-      <button onclick="document.getElementById('livePreview').src = document.getElementById('livePreview').src" style="background:none; border:none; cursor:pointer; color:var(--text-light);"><i class="fas fa-sync-alt"></i></button>
+      <div class="live-indicator"><span class="live-dot"></span> Sincronizado</div>
+      <button onclick="document.getElementById('livePreview').src = document.getElementById('livePreview').src" style="background:none; border:none; cursor:pointer; color:var(--text-light);"><i class="fas fa-sync-alt"></i> Actualizar Frame</button>
     </div>
-    
-    <div class="iframe-wrapper">
+    <div class="iframe-wrap">
       <div class="iframe-container" id="iframeContainer">
         <iframe id="livePreview" src="../../index.html"></iframe>
       </div>
     </div>
   </div>
 
-  <div class="toast" id="toastMsg"><i class="fas fa-check-circle"></i> Inicio guardado con éxito.</div>
+  <div id="toast" class="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg">Cambios guardados</span></div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../../js/supabase-config.js"></script>
-
   <script>
+    // ==========================================
+    // SISTEMA DE HISTORIAL (DESHACER/REHACER)
+    // ==========================================
+    let historyStack = [];
+    let historyIndex = -1;
+    let isRestoring = false;
+
+    // Toma una "foto" de todos los inputs actuales
+    function captureState() {
+      if (isRestoring) return; // No capturar si el script está restaurando un dato
+      
+      const state = {};
+      document.querySelectorAll('[data-key]').forEach(i => state[i.dataset.key] = i.value);
+      
+      // Si rehicimos algo y luego escribimos nuevo, borrar el "futuro"
+      if (historyIndex < historyStack.length - 1) {
+        historyStack = historyStack.slice(0, historyIndex + 1);
+      }
+      
+      // Evitar guardar duplicados idénticos
+      if (historyIndex >= 0 && JSON.stringify(historyStack[historyIndex]) === JSON.stringify(state)) {
+        return; 
+      }
+      
+      historyStack.push(state);
+      historyIndex++;
+      
+      // Limitar historial a 30 pasos para no saturar memoria
+      if(historyStack.length > 30) {
+        historyStack.shift();
+        historyIndex--;
+      }
+    }
+
+    // Aplica una "foto" guardada a los inputs
+    function applyState(state) {
+      if(!state) return;
+      isRestoring = true;
+      document.querySelectorAll('[data-key]').forEach(i => {
+        if (state[i.dataset.key] !== undefined) {
+          i.value = state[i.dataset.key];
+        }
+      });
+      enviarPreview();
+      isRestoring = false;
+    }
+
+    function undo() {
+      if (historyIndex > 0) {
+        historyIndex--;
+        applyState(historyStack[historyIndex]);
+        mostrarNotificacion('Deshacer aplicado', 'info');
+      } else {
+        mostrarNotificacion('No hay más cambios', 'warning');
+      }
+    }
+
+    function redo() {
+      if (historyIndex < historyStack.length - 1) {
+        historyIndex++;
+        applyState(historyStack[historyIndex]);
+        mostrarNotificacion('Rehacer aplicado', 'info');
+      } else {
+        mostrarNotificacion('Estás en el último cambio', 'warning');
+      }
+    }
+
+    // Atajos de teclado para Undo/Redo/Save
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === 'z' || e.key === 'Z') {
+          e.preventDefault();
+          if (e.shiftKey) redo(); else undo();
+        }
+        if (e.key === 'y' || e.key === 'Y') {
+          e.preventDefault();
+          redo();
+        }
+        if (e.key === 's' || e.key === 'S') {
+          e.preventDefault();
+          guardarTodo();
+        }
+      }
+    });
+
+    // ==========================================
+    // LÓGICA DEL EDITOR Y SUPABASE
+    // ==========================================
+    async function cargarDatos() {
+      if (!window.sb) return setTimeout(cargarDatos, 500);
+      const { data } = await window.sb.from('config_web').select('*').eq('pagina', 'index');
+      if (data) {
+        data.forEach(item => {
+          const input = document.querySelector(`[data-key="${item.clave}"]`);
+          if (input) input.value = item.valor;
+        });
+        captureState(); // Guardar el estado inicial de la BD
+      }
+    }
+
     function switchTab(id, btn) {
-      document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.getElementById(id).classList.add('active');
       btn.classList.add('active');
     }
 
-    function setDevice(type, btn) {
-      document.querySelectorAll('.device-btn').forEach(el => el.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('iframeContainer').className = 'iframe-container ' + (type === 'desktop' ? '' : type);
-    }
-
-    // Base de Datos
-    async function cargarDatos() {
-      if (!window.sb) return setTimeout(cargarDatos, 500);
-      
-      const { data, error } = await window.sb.from('config_web').select('*').eq('pagina', 'index');
-      if (error) return console.error("Error BD:", error);
-
-      data.forEach(item => {
-        const input = document.querySelector(`[data-key="${item.clave}"]`);
-        if (input) input.value = item.valor;
-      });
+    function enviarPreview() {
+      const config = {};
+      document.querySelectorAll('[data-key]').forEach(i => config[i.dataset.key] = i.value);
+      document.getElementById('livePreview').contentWindow.postMessage({ tipo: 'LIVE_PREVIEW', config }, '*');
     }
 
     async function guardarTodo() {
       const btn = document.querySelector('.btn-save');
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> GUARDANDO...';
       
-      const paquete = [];
-      document.querySelectorAll('#cmsForm [data-key]').forEach(input => {
-        if(input.value) {
-            paquete.push({
-                clave: input.getAttribute('data-key'),
-                valor: input.value,
-                pagina: 'index'
-            });
+      const updates = [];
+      document.querySelectorAll('[data-key]').forEach(i => {
+        if(i.value.trim() !== '') { // Solo guardamos campos que no estén vacíos
+           updates.push({ clave: i.dataset.key, valor: i.value, pagina: 'index' });
         }
       });
-
-      const { error } = await window.sb.from('config_web').upsert(paquete, { onConflict: 'clave' });
-
-      btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR INICIO';
-      if(!error) {
-        document.getElementById('toastMsg').classList.add('show');
-        setTimeout(()=> document.getElementById('toastMsg').classList.remove('show'), 3000);
-        document.getElementById('livePreview').src = document.getElementById('livePreview').src;
-      }
-    }
-
-    // Vista Previa
-    function enviarVistaPrevia() {
-      const iframe = document.getElementById('livePreview');
-      if(!iframe.contentWindow) return;
       
-      const config = {};
-      document.querySelectorAll('#cmsForm [data-key]').forEach(input => {
-        config[input.getAttribute('data-key')] = input.value;
-      });
-
-      iframe.contentWindow.postMessage({ tipo: 'LIVE_PREVIEW', config }, '*');
+      await window.sb.from('config_web').upsert(updates, { onConflict: 'clave' });
+      
+      btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR INICIO';
+      mostrarNotificacion('Cambios guardados en vivo', 'success');
     }
 
-    document.getElementById('cmsForm').addEventListener('input', enviarVistaPrevia);
+    function mostrarNotificacion(msg, tipo = 'success') {
+      const t = document.getElementById('toast');
+      const text = document.getElementById('toastMsg');
+      const icon = t.querySelector('i');
+      
+      t.className = 'toast'; // Reset
+      t.classList.add(tipo);
+      text.textContent = msg;
+      
+      if(tipo === 'info') icon.className = 'fas fa-info-circle';
+      else if(tipo === 'warning') icon.className = 'fas fa-exclamation-triangle';
+      else icon.className = 'fas fa-check-circle';
 
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // Event Listeners principales
+    // Usamos 'change' (al quitar el foco) para el historial, y 'input' para el preview en vivo
+    document.getElementById('cmsForm').addEventListener('change', captureState);
+    document.getElementById('cmsForm').addEventListener('input', enviarPreview);
     document.addEventListener('DOMContentLoaded', cargarDatos);
   </script>
 </body>
