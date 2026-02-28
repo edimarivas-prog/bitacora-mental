@@ -3,42 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verificación - Admin</title>
+  <title>Verificación C.Ps.P - Admin Bitácora</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
     :root { 
-      /* Mismos estilos que Panel Admin */
-      --sidebar-bg: #1F2933; 
-      --sidebar-text: #94A3B8;
-      --primary: #4F6F52; 
-      --bg: #F3F4F6; 
-      --white: #FFFFFF; 
-      --text: #1F2933; 
-      --border: #E5E7EB; 
-      --radius: 20px; 
-      --danger: #EF4444; 
-      --success: #10B981;
-      --info: #3B82F6;
+      /* Variables Sidebar */
+      --sidebar-bg: #1F2933; --sidebar-text: #94A3B8; --primary: #4F6F52; 
+      --danger: #EF4444; --success: #10B981; --warning: #F59E0B; --info: #3B82F6;
+      /* Variables Página */
+      --bg: #F3F4F6; --white: #FFFFFF; --text: #1F2933; --border: #E5E7EB; --radius: 20px; 
     }
     
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; overflow-x: hidden; }
     
-    /* --- SIDEBAR --- */
-    .sidebar { width: 260px; background: var(--sidebar-bg); color: white; padding: 24px; position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; }
-    .logo { font-family: 'Outfit'; font-weight: 700; color: white; font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 10px; margin-bottom: 40px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 12px; }
+    /* ================= SIDEBAR UNIFICADO ================= */
+    .sidebar { width: 260px; background: var(--sidebar-bg); color: white; padding: 24px; position: fixed; height: 100%; top: 0; left: 0; display: flex; flex-direction: column; z-index: 100; overflow-y: auto; scrollbar-width: none;}
+    .sidebar::-webkit-scrollbar { display: none; }
+    
+    .logo { font-family: 'Outfit', sans-serif; font-weight: 700; color: white; font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 10px; margin-bottom: 30px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 12px; }
     
     .nav-section { margin-bottom: 25px; }
     .nav-title { font-size: 0.7rem; text-transform: uppercase; color: var(--sidebar-text); font-weight: 700; padding-left: 12px; margin-bottom: 8px; letter-spacing: 1px; }
     
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: #CBD5E1; text-decoration: none; border-radius: 12px; transition: 0.2s; font-size: 0.95rem; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; color: #CBD5E1; text-decoration: none; border-radius: 12px; transition: 0.2s; font-size: 0.95rem; margin-bottom: 4px;}
     .nav-item:hover, .nav-item.active { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(79, 111, 82, 0.4); }
     .nav-item i { width: 20px; text-align: center; }
     
-    /* --- MAIN CONTENT --- */
+    .badge-alert { background: var(--danger); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; margin-left: auto; display: none; }
+    .badge-info { background: var(--info); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; margin-left: auto; display: none; }
+    
+    .submenu { display: flex; flex-direction: column; gap: 2px; padding-left: 36px; margin-top: 4px; }
+    .submenu a { color: #94A3B8; text-decoration: none; font-size: 0.85rem; padding: 8px 10px; border-radius: 8px; transition: 0.2s; display: flex; align-items: center; gap: 8px;}
+    .submenu a:hover, .submenu a.active { background: rgba(255,255,255,0.05); color: white; }
+
+    /* ================= MAIN CONTENT ================= */
     .main { flex: 1; padding: 30px 40px; margin-left: 260px; max-width: 100%; }
     .header { margin-bottom: 30px; }
     .header h1 { font-family: 'Outfit'; font-size: 2rem; margin: 0 0 5px 0; }
@@ -47,10 +49,10 @@
     .requests-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
     
     .req-card { background: white; border-radius: var(--radius); padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid transparent; transition: 0.2s; display: flex; flex-direction: column; gap: 15px; }
-    .req-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+    .req-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 25px rgba(79, 111, 82, 0.1);}
     
     .req-header { display: flex; align-items: center; gap: 15px; }
-    .req-avatar { width: 50px; height: 50px; background: #F1F5F9; color: #64748B; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; }
+    .req-avatar { width: 50px; height: 50px; background: #F1F5F9; color: #64748B; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; text-transform: uppercase;}
     
     .req-info h3 { margin: 0; font-family: 'Outfit'; font-size: 1.1rem; }
     .req-date { font-size: 0.8rem; color: #94A3B8; margin-top: 4px; display: block; }
@@ -76,8 +78,11 @@
 
     .btn-action { padding: 12px 24px; border-radius: 10px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; font-size: 0.95rem; }
     .btn-approve { background: var(--success); color: white; }
+    .btn-approve:hover { background: #059669; }
     .btn-reject { background: #FEE2E2; color: #B91C1C; }
+    .btn-reject:hover { background: #FECACA; }
     .btn-close { background: white; border: 1px solid var(--border); color: var(--text); }
+    .btn-close:hover { background: #F8FAFC; }
 
     @keyframes slideUp { from{transform:translateY(30px); opacity:0} to{transform:translateY(0); opacity:1} }
     @media (max-width: 900px) { .sidebar { display: none; } .main { margin-left: 0; padding: 20px; } .modal-body { grid-template-columns: 1fr; } }
@@ -86,35 +91,54 @@
 <body>
 
   <aside class="sidebar">
-    <a href="panel-admin.html" class="logo"><i class="fas fa-brain"></i> ADMIN PRO</a>
+    <a href="#" class="logo"><i class="fas fa-brain"></i> ADMIN PRO</a>
     
     <div class="nav-section">
-      <div class="nav-title">PANEL DE CONTROL</div>
+      <div class="nav-title">PANEL PRINCIPAL</div>
       <a href="panel-admin.html" class="nav-item"><i class="fas fa-chart-pie"></i> Resumen</a>
-      <a href="monitoreo.html" class="nav-item"><i class="fas fa-desktop"></i> Monitoreo</a>
+      <a href="monitoreo.html" class="nav-item"><i class="fas fa-desktop"></i> Monitoreo en vivo</a>
     </div>
 
     <div class="nav-section">
-      <div class="nav-title">GESTIÓN</div>
-      <a href="verificacion.html" class="nav-item active"><i class="fas fa-user-check"></i> Verificación</a>
+      <div class="nav-title">GESTIÓN CLÍNICA</div>
+      <a href="verificacion.html" class="nav-item active">
+        <i class="fas fa-user-check"></i> Verificación C.Ps.P.
+        <span id="globalBadgePending" class="badge-alert">0</span>
+      </a>
+      <a href="postulaciones.html" class="nav-item">
+        <i class="fas fa-file-contract"></i> Postulaciones (CVs)
+        <span id="globalBadgeCVs" class="badge-info">0</span>
+      </a>
       <a href="gestion-usuarios.html" class="nav-item"><i class="fas fa-users"></i> Usuarios</a>
-      <a href="recursos.html" class="nav-item"><i class="fas fa-folder-open"></i> Recursos</a>
     </div>
 
     <div class="nav-section">
-      <div class="nav-title">CONFIGURACIÓN</div>
-      <a href="ajustes.html" class="nav-item"><i class="fas fa-sliders-h"></i> Ajustes Web</a>
+      <div class="nav-title">GESTIÓN DE CONTENIDO</div>
+      <a href="gestion-talleres.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Agenda Talleres</a>
+      <a href="recursos.html" class="nav-item"><i class="fas fa-folder-open"></i> Recursos</a>
+      
+      <div class="nav-item" style="cursor:default; color:#CBD5E1; background:rgba(255,255,255,0.03); margin-top:10px;">
+        <i class="fas fa-paint-brush"></i> Editores Web (CMS)
+      </div>
+      <div class="submenu">
+        <a href="editores/global.html"><i class="fas fa-globe"></i> Globales & SEO</a>
+        <a href="editores/index.html"><i class="fas fa-home"></i> Página Inicio</a>
+        <a href="editores/programas.html"><i class="fas fa-layer-group"></i> Programas</a>
+        <a href="editores/empresas.html"><i class="fas fa-building"></i> Empresas</a>
+        <a href="editores/especialistas.html"><i class="fas fa-user-md"></i> Especialistas</a>
+      </div>
     </div>
 
-    <div style="margin-top:auto;">
+    <div style="margin-top:auto; padding-top:20px;">
       <a href="../app/dashboard.html" class="nav-item"><i class="fas fa-arrow-left"></i> Volver a App</a>
+      <a href="#" onclick="logout()" class="nav-item" style="color:#FCA5A5"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
     </div>
   </aside>
 
   <main class="main">
     <div class="header">
         <h1>Verificación de Terapeutas</h1>
-        <p style="color:#64748B;">Revisa y valida las credenciales de los nuevos profesionales.</p>
+        <p style="color:#64748B;">Revisa y valida las credenciales y colegiaturas de los nuevos profesionales.</p>
     </div>
 
     <div id="requestsContainer" class="requests-grid">
@@ -128,7 +152,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <div>
-                <h2 style="font-family:'Outfit'; margin:0; font-size:1.4rem;" id="modalName">...</h2>
+                <h2 style="font-family:'Outfit'; margin:0; font-size:1.4rem; color:var(--sidebar-bg);" id="modalName">...</h2>
                 <div style="font-size:0.85rem; color:#64748B; display:flex; gap:10px; margin-top:5px;">
                     <span><i class="far fa-clock"></i> Solicitado: <span id="modalDate">-</span></span>
                 </div>
@@ -142,32 +166,32 @@
                 
                 <div style="margin-bottom:20px;">
                     <label style="font-size:0.85rem; font-weight:600;">Correo Electrónico</label>
-                    <div id="modalEmail" style="font-size:1rem; margin-top:5px;">-</div>
+                    <div id="modalEmail" style="font-size:1rem; margin-top:5px; color:var(--text);">-</div>
                 </div>
                 <div style="margin-bottom:20px;">
                     <label style="font-size:0.85rem; font-weight:600;">Teléfono</label>
-                    <div id="modalPhone" style="font-size:1rem; margin-top:5px;">-</div>
+                    <div id="modalPhone" style="font-size:1rem; margin-top:5px; color:var(--text);">-</div>
                 </div>
 
                 <div style="background:#FFF7ED; padding:20px; border-radius:12px; border:1px solid #FFEDD5; margin-top:30px;">
-                    <h5 style="margin:0 0 10px 0; color:#9A3412;">Estado: Pendiente</h5>
-                    <p style="margin:0; font-size:0.9rem; color:#9A3412;">Este usuario no podrá recibir citas hasta que sea aprobado manualmente.</p>
+                    <h5 style="margin:0 0 10px 0; color:#9A3412;"><i class="fas fa-exclamation-triangle"></i> Estado: Pendiente de Revisión</h5>
+                    <p style="margin:0; font-size:0.9rem; color:#9A3412;">Este usuario no podrá recibir pacientes ni acceder a su agenda hasta que su colegiatura sea aprobada por ti.</p>
                 </div>
             </div>
 
             <div>
-                <h4 style="margin-top:0; color:#64748B; text-transform:uppercase; font-size:0.75rem; letter-spacing:1px; margin-bottom:15px;">Expediente Digital</h4>
+                <h4 style="margin-top:0; color:#64748B; text-transform:uppercase; font-size:0.75rem; letter-spacing:1px; margin-bottom:15px;">Expediente Digital Adjunto</h4>
                 
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-                    <div class="doc-preview" onclick="alert('Abrir DNI')">
+                    <div class="doc-preview" onclick="alert('Función de visualización de DNI en desarrollo')">
                         <i class="far fa-id-card fa-2x"></i>
                         <span>DNI / Pasaporte</span>
                     </div>
-                    <div class="doc-preview" onclick="alert('Abrir Título')">
+                    <div class="doc-preview" onclick="alert('Función de visualización de Título en desarrollo')">
                         <i class="fas fa-graduation-cap fa-2x"></i>
-                        <span>Colegiatura</span>
+                        <span>Colegiatura (C.Ps.P)</span>
                     </div>
-                    <div class="doc-preview" style="grid-column: 1 / -1;" onclick="alert('Abrir CV')">
+                    <div class="doc-preview" style="grid-column: 1 / -1;" onclick="alert('Función de visualización de CV en desarrollo')">
                         <i class="far fa-file-pdf fa-2x"></i>
                         <span>Curriculum Vitae</span>
                     </div>
@@ -176,8 +200,8 @@
         </div>
 
         <div class="modal-footer">
-            <button class="btn-action btn-close" onclick="closeModal()">Cancelar</button>
-            <button class="btn-action btn-reject" onclick="processUser('rechazado')">Rechazar Solicitud</button>
+            <button class="btn-action btn-close" onclick="closeModal()">Cerrar</button>
+            <button class="btn-action btn-reject" onclick="processUser('rechazado')"><i class="fas fa-times"></i> Rechazar Solicitud</button>
             <button class="btn-action btn-approve" onclick="processUser('aprobado')"><i class="fas fa-check"></i> Aprobar Acceso</button>
         </div>
     </div>
@@ -188,19 +212,40 @@
   <script>
     let currentUserId = null;
 
-    // 1. Auth Guard
+    // 1. Auth Guard y Alertas
     async function checkAdmin() {
         if (!window.sb) return setTimeout(checkAdmin, 100);
         const { data: { session } } = await window.sb.auth.getSession();
         if (!session) return window.location.href = '../login.html';
 
         const { data: profile } = await window.sb.from('users_profile').select('rol').eq('id', session.user.id).single();
-        if (profile.rol !== 'admin') window.location.href = '../app/dashboard.html';
-        else loadPendingRequests();
+        if (profile.rol !== 'admin') {
+            window.location.href = '../app/dashboard.html';
+        } else {
+            actualizarBadgesSidebar();
+            loadPendingRequests();
+        }
     }
+
+    async function actualizarBadgesSidebar() {
+      try {
+        const [pendientes, postulacionesNuevas] = await Promise.all([
+          window.sb.from('users_profile').select('id', { count: 'exact', head: true }).eq('rol', 'psicologo').eq('estado_validacion', 'pendiente'),
+          window.sb.from('postulaciones').select('id', { count: 'exact', head: true }).eq('estado', 'nueva')
+        ]);
+
+        const badgeP = document.getElementById('globalBadgePending');
+        const badgeC = document.getElementById('globalBadgeCVs');
+
+        if (pendientes.count > 0 && badgeP) { badgeP.style.display = 'inline-block'; badgeP.textContent = pendientes.count; }
+        if (postulacionesNuevas.count > 0 && badgeC) { badgeC.style.display = 'inline-block'; badgeC.textContent = postulacionesNuevas.count; }
+      } catch (err) { console.error("Error cargando alertas:", err); }
+    }
+
+    async function logout() { await window.sb.auth.signOut(); window.location.href = '../login.html'; }
     checkAdmin();
 
-    // 2. Cargar Lista
+    // 2. Cargar Lista de Solicitudes Pendientes
     async function loadPendingRequests() {
         const container = document.getElementById('requestsContainer');
         
@@ -212,11 +257,16 @@
             .eq('estado_validacion', 'pendiente')
             .order('created_at', { ascending: false });
 
+        if (error) {
+            container.innerHTML = `<div class="empty-state">Error cargando datos.</div>`;
+            return;
+        }
+
         if (!users || users.length === 0) {
             container.innerHTML = `
                 <div class="empty-state">
                     <i class="fas fa-check-circle" style="font-size:4rem; color:#E2E8F0; margin-bottom:20px;"></i>
-                    <h2 style="font-family:'Outfit'; color:#1F2933;">¡Todo al día!</h2>
+                    <h2 style="font-family:'Outfit'; color:#1F2933;">¡Bandeja al día!</h2>
                     <p>No hay nuevas solicitudes de terapeutas pendientes de revisión.</p>
                 </div>
             `;
@@ -229,11 +279,11 @@
                     <div class="req-avatar">${(u.nombre || 'U').charAt(0)}</div>
                     <div class="req-info">
                         <h3>${u.nombre || 'Usuario Nuevo'}</h3>
-                        <span class="req-date">Registrado el ${new Date(u.created_at).toLocaleDateString()}</span>
+                        <span class="req-date">Registrado: ${new Date(u.created_at).toLocaleDateString()}</span>
                     </div>
                 </div>
                 <div style="margin-top:10px; display:flex; flex-direction:column; gap:8px;">
-                    <div class="contact-row"><i class="far fa-envelope"></i> ${u.email || 'Email oculto'}</div>
+                    <div class="contact-row"><i class="far fa-envelope"></i> ${u.email || 'No especificado'}</div>
                     <div class="contact-row"><i class="fas fa-phone-alt"></i> ${u.telefono || 'Sin teléfono'}</div>
                 </div>
                 <button class="btn-review" onclick="openModal('${u.id}', '${u.nombre}', '${u.email}', '${u.telefono}', '${u.created_at}')">
@@ -243,7 +293,7 @@
         `).join('');
     }
 
-    // 3. Funciones Modal
+    // 3. Funciones del Modal de Revisión
     function openModal(id, nombre, email, phone, date) {
         currentUserId = id;
         document.getElementById('modalName').textContent = nombre;
@@ -251,20 +301,22 @@
         document.getElementById('modalPhone').textContent = phone || 'No disponible';
         document.getElementById('modalDate').textContent = new Date(date).toLocaleString();
         
+        document.getElementById('reviewModal').classList.add('show');
         document.getElementById('reviewModal').style.display = 'flex';
     }
 
     function closeModal() {
         document.getElementById('reviewModal').style.display = 'none';
+        document.getElementById('reviewModal').classList.remove('show');
         currentUserId = null;
     }
 
-    // 4. Procesar Decisión
+    // 4. Procesar Decisión (Aprobar o Rechazar)
     async function processUser(newStatus) {
         if (!currentUserId) return;
         const confirmMsg = newStatus === 'aprobado' 
-            ? "¿Estás seguro de APROBAR a este profesional? Tendrá acceso inmediato a la agenda."
-            : "¿Estás seguro de RECHAZAR esta solicitud?";
+            ? "¿Confirmas que la colegiatura de este profesional es válida? Se le dará acceso inmediato a la plataforma."
+            : "¿Estás seguro de RECHAZAR y denegar el acceso a este usuario?";
 
         if (!confirm(confirmMsg)) return;
 
@@ -276,9 +328,9 @@
         if (error) {
             alert("Error: " + error.message);
         } else {
-            // Éxito visual
             closeModal();
-            loadPendingRequests();
+            loadPendingRequests(); // Recargar la grilla
+            actualizarBadgesSidebar(); // Actualizar el globito rojo
         }
     }
   </script>
