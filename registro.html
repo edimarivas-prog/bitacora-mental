@@ -189,49 +189,35 @@
 
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
   <script>
     const errorBox = document.getElementById('errorBox');
     const loadingOverlay = document.getElementById('loadingOverlay');
 
-    // --- LÓGICA CRÍTICA DE VALIDACIÓN ---
     document.addEventListener('DOMContentLoaded', async () => {
         if (sessionStorage.getItem('temp_entrevista')) {
             document.getElementById('regTitle').textContent = "Guarda tu perfil";
             document.getElementById('regSubtitle').textContent = "Crea una cuenta gratuita para no perder tus resultados.";
         }
 
+        // Si ya hay sesión iniciada, redigir al dashboard
         if (window.sb) {
             const { data: { session } } = await window.sb.auth.getSession();
-            
             if (session) {
-                loadingOverlay.style.display = 'flex';
-
-                const createdAt = new Date(session.user.created_at).getTime();
-                const now = new Date().getTime();
-                const differenceInSeconds = (now - createdAt) / 1000;
-
-                if (differenceInSeconds > 60) {
-                    await window.sb.auth.signOut();
-                    loadingOverlay.style.display = 'none';
-                    showError(`
-                        <strong>⚠️ Esta cuenta ya existe.</strong><br>
-                        Has intentado registrarte con un correo de Google que ya tiene cuenta en Bitácora.<br>
-                        <a href="login.html" style="color:#B91C1C; font-weight:700; text-decoration:underline; margin-top:8px; display:block;">👉 Haz clic aquí para Iniciar Sesión</a>
-                    `);
-                } else {
-                    handleNewUser(session.user);
-                }
+                window.location.href = 'app/dashboard.html';
             }
         }
     });
 
+    // REGISTRO CON GOOGLE
     document.getElementById('googleBtn').addEventListener('click', async () => {
       try {
         if (!window.sb) throw new Error("Error de conexión con la base de datos.");
         const currentURL = window.location.href.split('#')[0]; 
-
+        
+        // Supabase maneja el insert en la tabla users_profile automáticamente
+        // si tienes el trigger. Si no lo tienes, puedes capturar el evento OAuth.
         await window.sb.auth.signInWithOAuth({
           provider: 'google',
           options: { redirectTo: currentURL } 
@@ -239,6 +225,7 @@
       } catch (err) { showError("Ocurrió un error al intentar conectar con Google."); }
     });
 
+    // REGISTRO POR CORREO Y CONTRASEÑA
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       errorBox.style.display = 'none';
@@ -257,15 +244,48 @@
       try {
         if (!window.sb) throw new Error("Error de conexión.");
         
-        const { data, error } = await window.sb.auth.signUp({ email, password });
+        // 1. Crear el usuario en Auth (Supabase)
+        const { data: authData, error: authError } = await window.sb.auth.signUp({ 
+            email, 
+            password 
+        });
         
-        if (error) throw error;
+        if (authError) throw authError;
 
-        if (data.user && !data.session) {
-            alert("¡Registro casi listo! Te hemos enviado un enlace a tu correo para confirmarlo.");
-            window.location.href = 'login.html';
-        } else if (data.user) {
-            handleNewUser(data.user);
+        if (authData.user) {
+            // 2. Insertar MANUALMENTE en la tabla users_profile
+            // Extraemos datos de la sesión temporal si existen
+            let perfilBase = {
+                id: authData.user.id,
+                email: authData.user.email,
+                nombre: 'Usuario Nuevo',
+                rol: 'paciente', // Por defecto es paciente
+                estado_validacion: 'pendiente'
+            };
+
+            const temp = sessionStorage.getItem('temp_entrevista');
+            if (temp) {
+                // Si viene del test, fusionamos los datos del test con el perfil
+                perfilBase = { ...perfilBase, ...JSON.parse(temp) };
+            }
+
+            // Inserción directa
+            const { error: profileError } = await window.sb.from('users_profile').insert([perfilBase]);
+            
+            if (profileError) {
+                console.error("Error guardando perfil:", profileError);
+                // No lanzamos error para no bloquear al usuario si el auth funcionó
+            }
+
+            // 3. Redirección o aviso
+            if (!authData.session) {
+                alert("¡Registro casi listo! Te hemos enviado un enlace a tu correo para confirmarlo.");
+                window.location.href = 'login.html';
+            } else {
+                sessionStorage.removeItem('temp_entrevista');
+                sessionStorage.setItem('show_onboarding', 'true');
+                window.location.href = 'app/dashboard.html';
+            }
         }
 
       } catch (err) {
@@ -275,17 +295,7 @@
       }
     });
 
-    async function handleNewUser(user) {
-        const temp = sessionStorage.getItem('temp_entrevista');
-        if (temp) {
-            await window.sb.from('users_profile').update(JSON.parse(temp)).eq('id', user.id);
-            sessionStorage.removeItem('temp_entrevista');
-        }
-        
-        sessionStorage.setItem('show_onboarding', 'true');
-        window.location.href = 'app/dashboard.html';
-    }
-
+    // UX: Ocultar/Mostrar Contraseña
     function togglePass(id) {
       const input = document.getElementById(id);
       const icon = input.parentElement.querySelector('.toggle-pass i');
@@ -300,6 +310,7 @@
       }
     }
 
+    // UX: Medidor de Fuerza de Contraseña
     function checkStrength() {
       const val = document.getElementById('password').value;
       const bar = document.getElementById('strengthBar');
