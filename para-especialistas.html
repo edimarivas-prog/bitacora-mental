@@ -261,135 +261,118 @@
     </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
 
-  <script>
-    window.addEventListener('scroll', () => {
-      document.getElementById('nav').classList.toggle('sc', window.scrollY > 10);
-    });
+<script>
+// 1. MAPEO EXACTO PARA LA PÁGINA DE ESPECIALISTAS
+const MAPPING = {
+  // Hero
+  'esp_tag':     { sel: '.h-tag', type: 'text' },
+  'esp_h1':      { sel: '.hero-sp h1', type: 'html' },
+  'esp_desc':    { sel: '.hero-sp p', type: 'text' },
+  'esp_btn_txt': { sel: '.hero-sp .btn-p', type: 'text' },
+  'esp_btn_url': { sel: '.hero-sp .btn-p', type: 'href' },
+  
+  // Beneficios
+  'ben_h2':      { sel: '.sec h2', type: 'text' },
+  'ben_1_ic':    { sel: '.ben-c:nth-child(1) .ben-ic', type: 'icon_left' },
+  'ben_1_tit':   { sel: '.ben-c:nth-child(1) h3', type: 'text' },
+  'ben_1_desc':  { sel: '.ben-c:nth-child(1) p', type: 'text' },
+  'ben_2_ic':    { sel: '.ben-c:nth-child(2) .ben-ic', type: 'icon_left' },
+  'ben_2_tit':   { sel: '.ben-c:nth-child(2) h3', type: 'text' },
+  'ben_2_desc':  { sel: '.ben-c:nth-child(2) p', type: 'text' },
+  'ben_3_ic':    { sel: '.ben-c:nth-child(3) .ben-ic', type: 'icon_left' },
+  'ben_3_tit':   { sel: '.ben-c:nth-child(3) h3', type: 'text' },
+  'ben_3_desc':  { sel: '.ben-c:nth-child(3) p', type: 'text' },
 
-    function openM() {
-      const mm = document.getElementById('mm');
-      mm.style.display = 'flex';
-      document.getElementById('ov').classList.add('show');
-      setTimeout(() => mm.classList.add('open'), 10);
-      document.body.style.overflow = 'hidden';
+  // Requisitos
+  'req_h2':      { sel: '.req-in h2', type: 'text' },
+  'req_p':       { sel: '.req-in p', type: 'text' },
+  'req_li1':     { sel: '.req-list li:nth-child(1)', type: 'keep_icon_left' },
+  'req_li2':     { sel: '.req-list li:nth-child(2)', type: 'keep_icon_left' },
+  'req_li3':     { sel: '.req-list li:nth-child(3)', type: 'keep_icon_left' },
+  'req_li4':     { sel: '.req-list li:nth-child(4)', type: 'keep_icon_left' },
+  'req_li5':     { sel: '.req-list li:nth-child(5)', type: 'keep_icon_left' },
+
+  // CTA Postular
+  'cta_h2':        { sel: '.cta-form h2', type: 'text' },
+  'cta_p':         { sel: '.cta-form p:nth-of-type(1)', type: 'text' },
+  'cta_btn_txt':   { sel: '.cta-form .btn-p', type: 'text' },
+  'cta_btn_email': { sel: '.cta-form .btn-p', type: 'href_mailto' },
+  'cta_nota':      { sel: '.cta-form p:nth-of-type(2)', type: 'text' }
+};
+
+// 2. FUNCIÓN DE INYECCIÓN
+function inyectar(key, val) {
+  const m = MAPPING[key];
+  if (!m || !val || val.trim() === '') return;
+  document.querySelectorAll(m.sel).forEach(el => {
+    if (m.type === 'text') el.textContent = val;
+    else if (m.type === 'html') el.innerHTML = val;
+    else if (m.type === 'href') el.href = val;
+    else if (m.type === 'href_mailto') el.href = `mailto:${val}`;
+    else if (m.type === 'icon_left') el.innerHTML = `<i class="${val}"></i>`;
+    else if (m.type === 'keep_icon_left') {
+      const ic = el.querySelector('i');
+      el.innerHTML = (ic ? ic.outerHTML + ' ' : '') + val;
     }
+  });
+}
+
+// 3. APLICAR AJUSTES GLOBALES
+function aplicarGlobales(c) {
+  if (c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
+  if (c.color_accent) {
+    document.documentElement.style.setProperty('--clay', c.color_accent);
+    document.documentElement.style.setProperty('--clay-l', c.color_accent + '33');
+  }
+
+  const footer = document.querySelector('.footer');
+  if (footer) {
+    if (c.foot_desc) { const tg = footer.querySelector('.f-tg'); if (tg) tg.textContent = c.foot_desc; }
+    const contacts = footer.querySelectorAll('.f-co a');
+    if (c.foot_tel && contacts[0]) { contacts[0].innerHTML = `<i class="fas fa-phone"></i> ${c.foot_tel}`; contacts[0].href = `tel:${c.foot_tel.replace(/ /g,'')}`; }
+    if (c.foot_mail && contacts[1]) { contacts[1].innerHTML = `<i class="fas fa-envelope"></i> ${c.foot_mail}`; contacts[1].href = `mailto:${c.foot_mail}`; }
+    if (c.foot_wa && contacts[2]) contacts[2].href = c.foot_wa;
+    if (c.foot_loc) { const span = footer.querySelector('.f-co span'); if (span) span.innerHTML = `<i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> ${c.foot_loc}`; }
     
-    function closeM() {
-      const mm = document.getElementById('mm');
-      mm.classList.remove('open');
-      document.getElementById('ov').classList.remove('show');
-      setTimeout(() => mm.style.display = 'none', 300);
-      document.body.style.overflow = '';
-    }
-
-    // CMS CONFIGURATION APPLY
-    function aplicarConfiguracion(c) {
-      if(c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
-      if(c.color_accent) { 
-        document.documentElement.style.setProperty('--clay', c.color_accent); 
-        document.documentElement.style.setProperty('--clay-l', c.color_accent + '33'); 
-      }
-
-      let footer = document.querySelector('.footer');
-      if(footer) {
-        if(c.foot_desc) { let tg = footer.querySelector('.f-tg'); if(tg) tg.textContent = c.foot_desc; }
-        
-        let contacts = footer.querySelectorAll('.f-co a');
-        if(c.foot_tel && contacts[0]) { contacts[0].innerHTML = `<i class="fas fa-phone"></i> ${c.foot_tel}`; contacts[0].href = `tel:${c.foot_tel.replace(/ /g,'')}`; }
-        if(c.foot_mail && contacts[1]) { contacts[1].innerHTML = `<i class="fas fa-envelope"></i> ${c.foot_mail}`; contacts[1].href = `mailto:${c.foot_mail}`; }
-        if(c.foot_wa && contacts[2]) contacts[2].href = c.foot_wa;
-        if(c.foot_loc) { let span = footer.querySelector('.f-co span'); if(span) span.innerHTML = `<i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> ${c.foot_loc}`; }
-        
-        let soc = footer.querySelectorAll('.f-soc a');
-        if(c.soc_ig && soc[0]) soc[0].href = c.soc_ig;
-        if(c.soc_tk && soc[1]) soc[1].href = c.soc_tk;
-        if(c.soc_in && soc[2]) soc[2].href = c.soc_in;
-        if(c.soc_fb && soc[3]) soc[3].href = c.soc_fb;
-
-        if(c.foot_copy) { let p = footer.querySelector('.f-bot p'); if(p) p.textContent = c.foot_copy; }
-      }
-    }
-
-    async function cargarConfiguracionCMS() {
-      if (!window.sb) return;
-      try {
-        const { data, error } = await window.sb.from('config_web').select('*');
-        if (error) throw error;
-        if (!data) return;
-
-        const config = {};
-        data.forEach(item => config[item.clave] = item.valor);
-        aplicarConfiguracion(config);
-      } catch (err) {
-        console.error("Error conectando con el CMS:", err);
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', cargarConfiguracionCMS);
-  </script>
-  <script>
-async function cargarConfiguracionCMS() {
-  if (!window.sb) return setTimeout(cargarConfiguracionCMS, 500);
-
-  // 1. Detectamos automáticamente en qué página estamos
-  const path = window.location.pathname;
-  let pageName = 'index'; 
-  if (path.includes('contacto')) pageName = 'contacto';
-  else if (path.includes('terapia-psicologica')) pageName = 'terapia';
-  else if (path.includes('coaching-emocional')) pageName = 'coaching';
-  else if (path.includes('terapia-de-pareja')) pageName = 'pareja';
-  else if (path.includes('psicologia-familiar')) pageName = 'familia';
-  else if (path.includes('ansiedad')) pageName = 'ansiedad';
-  else if (path.includes('autoestima')) pageName = 'autoestima';
-  else if (path.includes('duelo')) pageName = 'duelo';
-  else if (path.includes('estres-laboral')) pageName = 'estres';
-  else if (path.includes('redes-sociales')) pageName = 'redes';
-  else if (path.includes('empresas')) pageName = 'empresas';
-  else if (path.includes('especialistas-publico')) pageName = 'directorio';
-  else if (path.includes('talleres')) pageName = 'talleres';
-
-  try {
-    // 2. Pedimos a Supabase los datos de la página actual Y los globales
-    const { data, error } = await window.sb
-      .from('config_web')
-      .select('*')
-      .or(`pagina.eq.${pageName},pagina.eq.global`);
-
-    if (error) throw error;
-    
-    const c = {};
-    data.forEach(item => c[item.clave] = item.valor);
-
-    // ============ APLICAR CONFIGURACIÓN GLOBAL ============
-    if (c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
-    if (c.color_accent) document.documentElement.style.setProperty('--clay', c.color_accent);
-    
-    const logoTxt = document.querySelector('.logo');
-    if (logoTxt && c.navbar_logo_text) {
-        const span = logoTxt.querySelector('span') || logoTxt.childNodes[logoTxt.childNodes.length - 1];
-        if (span) span.textContent = c.navbar_logo_text;
-    }
-
-    // ============ APLICAR CONFIGURACIÓN ESPECÍFICA ============
-    // Ejemplo: Títulos H1 dinámicos
-    const mainH1 = document.querySelector('h1');
-    if (mainH1 && c[`${pageName}_h1`]) mainH1.innerHTML = c[`${pageName}_h1`];
-
-    // Ejemplo: Descripciones/Subtítulos
-    const subText = document.querySelector('.hero-desc, .pg-sub');
-    if (subText && c[`${pageName}_sub`]) subText.textContent = c[`${pageName}_sub`];
-
-    console.log(`✅ CMS: Datos de "${pageName}" aplicados correctamente.`);
-
-  } catch (err) {
-    console.error('❌ Error cargando configuración del CMS:', err);
+    const soc = footer.querySelectorAll('.f-soc a');
+    if (c.soc_ig && soc[0]) soc[0].href = c.soc_ig;
+    if (c.soc_tk && soc[1]) soc[1].href = c.soc_tk;
+    if (c.soc_in && soc[2]) soc[2].href = c.soc_in;
+    if (c.soc_fb && soc[3]) soc[3].href = c.soc_fb;
+    if (c.foot_copy) { const p = footer.querySelector('.f-bot p'); if (p) p.textContent = c.foot_copy; }
   }
 }
 
-document.addEventListener('DOMContentLoaded', cargarConfiguracionCMS);
+// 4. CARGA DE BASE DE DATOS
+async function cargarCMS() {
+  if (!window.sb) return setTimeout(cargarCMS, 500);
+  const { data } = await window.sb.from('config_web').select('*').or(`pagina.eq.especialistas,pagina.eq.global`);
+  if (data) {
+    const configGlobal = {};
+    data.forEach(d => {
+      if (d.pagina === 'global') configGlobal[d.clave] = d.valor;
+      else inyectar(d.clave, d.valor);
+    });
+    aplicarGlobales(configGlobal);
+  }
+}
+
+// 5. LISTENER PARA PREVIEW EN VIVO
+window.addEventListener('message', e => {
+  if (e.data.tipo === 'LIVE_PREVIEW') {
+    Object.entries(e.data.config).forEach(([k, v]) => inyectar(k, v));
+  }
+});
+
+// UI Básica
+window.addEventListener('scroll', () => { document.getElementById('nav').classList.toggle('sc', window.scrollY > 10); });
+function openM() { document.getElementById('mm').style.display = 'flex'; document.getElementById('ov').classList.add('show'); setTimeout(() => document.getElementById('mm').classList.add('open'), 10); document.body.style.overflow = 'hidden'; }
+function closeM() { document.getElementById('mm').classList.remove('open'); document.getElementById('ov').classList.remove('show'); setTimeout(() => document.getElementById('mm').style.display = 'none', 300); document.body.style.overflow = ''; }
+
+document.addEventListener('DOMContentLoaded', cargarCMS);
 </script>
   
 </body>
