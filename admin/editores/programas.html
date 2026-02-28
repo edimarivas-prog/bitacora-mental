@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Editor de Programas - Bitácora Mental</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root { 
+      --bg: #f4f6f8; --sidebar: #1a1d20; --primary: #008060; --primary-dark: #005e46;
+      --text: #202223; --text-light: #6d7175; --border: #c9cccf; --border-light: #e1e3e5;
+      --success: #20dc8e; --info: #00a0e9; 
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { display: flex; height: 100vh; background: var(--bg); overflow: hidden; color: var(--text); }
+    
+    .admin-nav { width: 70px; background: var(--sidebar); display: flex; flex-direction: column; align-items: center; padding: 20px 0; flex-shrink: 0;}
+    .admin-nav .logo { width: 40px; height: 40px; background: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; margin-bottom: 30px; }
+    .admin-nav a { color: #a6aab4; font-size: 1.3rem; margin-bottom: 25px; padding: 10px; border-radius: 8px; text-decoration: none; position: relative;}
+    .admin-nav a:hover { color: white; background: rgba(255,255,255,0.1); }
+    .admin-nav a.active { color: var(--success); background: rgba(32,220,142,0.1); }
+
+    .editor-panel { width: 450px; background: white; border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; z-index: 10;}
+    .ep-header { padding: 16px 20px; border-bottom: 1px solid var(--border-light); background: #f9fafb; display: flex; flex-direction: column; gap: 12px; }
+    
+    #progSelector { padding: 10px; border-radius: 8px; border: 2px solid var(--primary); font-weight: 700; width: 100%; cursor: pointer; color: var(--primary); background: white;}
+    
+    .header-actions { display: flex; gap: 8px; }
+    .btn-header { background: white; border: 1px solid var(--border); color: var(--text-light); padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; flex: 1; }
+    .btn-header:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-save { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; flex: 3; }
+    .btn-save:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+    .ep-tabs { display: flex; overflow-x: auto; border-bottom: 1px solid var(--border-light); background: white; scrollbar-width: none;}
+    .ep-tabs::-webkit-scrollbar { display: none; }
+    .tab-btn { padding: 14px 15px; border: none; background: none; font-size: 0.75rem; font-weight: 700; cursor: pointer; border-bottom: 3px solid transparent; color: var(--text-light); text-transform: uppercase; white-space: nowrap; flex: 1;}
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    .ep-content { flex: 1; overflow-y: auto; padding: 20px; background: #fafbfc; }
+    .tab-pane { display: none; animation: fadeIn 0.3s ease; } .tab-pane.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .card-form { background: white; border: 1px solid var(--border-light); border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #f1f2f4; font-weight: 700; }
+    .card-header i { color: var(--primary); }
+    
+    label { display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 5px; color: var(--text-light); text-transform: uppercase;}
+    input, textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; transition: 0.2s; margin-bottom: 15px; font-family: inherit;}
+    input:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1); }
+    textarea { min-height: 70px; resize: vertical; }
+    
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;}
+    .section-divider { display: flex; align-items: center; gap: 15px; margin: 15px 0; font-size: 0.75rem; font-weight: 700; color: var(--text-light); }
+    .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
+
+    .preview-area { flex: 1; background: #e4e5e7; display: flex; flex-direction: column; overflow: hidden;}
+    .iframe-wrap { flex: 1; padding: 30px; display: flex; justify-content: center; overflow: auto; }
+    iframe { width: 100%; height: 100%; border: none; border-radius: 12px; background: white; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+
+    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--text); color: white; padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transform: translateX(400px); transition: 0.3s; z-index: 9999; display: flex; align-items: center; gap: 10px;}
+    .toast.show { transform: translateX(0); }
+    .toast.success { background: var(--success); color: #166534; }
+  </style>
+</head>
+<body>
+
+  <nav class="admin-nav">
+    <div class="logo"><i class="fas fa-brain"></i></div>
+    <a href="../panel-admin.html" title="Panel"><i class="fas fa-arrow-left"></i></a>
+    <a href="global.html" title="Ajustes Globales"><i class="fas fa-globe"></i></a>
+    <a href="index.html" title="Editor Inicio"><i class="fas fa-home"></i></a>
+    <a href="#" class="active" title="Editor Programas"><i class="fas fa-layer-group"></i></a>
+  </nav>
+
+  <div class="editor-panel">
+    <div class="ep-header">
+      <select id="progSelector" onchange="cambiarPrograma(this.value)">
+        <option value="ansiedad">Manejo de Ansiedad</option>
+        <option value="estres-laboral">Estrés y Burnout</option>
+        <option value="autoestima">Autoestima y Vínculos</option>
+        <option value="redes-sociales">Desconexión Digital</option>
+      </select>
+      <div class="header-actions">
+        <button type="button" class="btn-header" onclick="undo()" title="Deshacer"><i class="fas fa-undo"></i></button>
+        <button type="button" class="btn-header" onclick="redo()" title="Rehacer"><i class="fas fa-redo"></i></button>
+        <button class="btn-save" onclick="guardarTodo()"><i class="fas fa-save"></i> Guardar Programa</button>
+      </div>
+    </div>
+    
+    <div class="ep-tabs">
+      <button class="tab-btn active" onclick="switchTab('hero', this)">Hero</button>
+      <button class="tab-btn" onclick="switchTab('cont', this)">Contenidos</button>
+      <button class="tab-btn" onclick="switchTab('listas', this)">Listas / Sesiones</button>
+      <button class="tab-btn" onclick="switchTab('side', this)">Sidebar Venta</button>
+    </div>
+
+    <div class="ep-content">
+      <form id="cmsForm">
+        
+        <div id="hero" class="tab-pane active">
+          <div class="card-form">
+            <div class="card-header"><i class="fas fa-star"></i> Textos Principales</div>
+            <label>Etiqueta Superior</label><input type="text" data-key="hero_tag" placeholder="Bienestar · Ansiedad">
+            <label>Título H1</label><textarea data-key="hero_h1" rows="3"></textarea>
+            <label>Descripción</label><textarea data-key="hero_desc" rows="3"></textarea>
+            
+            <div class="section-divider">Iconos Descriptivos</div>
+            <div class="grid-2">
+              <input type="text" data-key="meta1_txt" placeholder="Ej: Virtual">
+              <input type="text" data-key="meta2_txt" placeholder="Ej: 4 semanas">
+              <input type="text" data-key="meta3_txt" placeholder="Ej: 4 sesiones">
+              <input type="text" data-key="meta4_txt" placeholder="Ej: 50 min">
+            </div>
+            
+            <div class="section-divider">Botones</div>
+            <div class="grid-2">
+              <input type="text" data-key="hero_btn1_txt" placeholder="Botón Primario">
+              <input type="text" data-key="hero_btn1_url" placeholder="URL">
+              <input type="text" data-key="hero_btn2_txt" placeholder="Botón Secundario">
+              <input type="text" data-key="hero_btn2_url" placeholder="URL">
+            </div>
+          </div>
+          
+          <div class="card-form">
+            <div class="card-header"><i class="fas fa-money-bill-wave"></i> Tarjeta de Precio (Hero)</div>
+            <label>Título Tarjeta</label><input type="text" data-key="hcard_tit">
+            <label>Subtítulo</label><input type="text" data-key="hcard_sub">
+            <label>Incluye (Checks)</label>
+            <input type="text" data-key="hcard_inc1" style="margin-bottom:5px">
+            <input type="text" data-key="hcard_inc2" style="margin-bottom:5px">
+            <input type="text" data-key="hcard_inc3" style="margin-bottom:5px">
+            <input type="text" data-key="hcard_inc4" style="margin-bottom:5px">
+          </div>
+        </div>
+
+        <div id="cont" class="tab-pane">
+          <div class="card-form">
+            <div class="card-header"><i class="fas fa-align-left"></i> Sobre el Programa</div>
+            <label>Título H2</label><textarea data-key="cont_h2" rows="2"></textarea>
+            <label>Párrafo Principal</label><textarea data-key="cont_p" rows="6"></textarea>
+          </div>
+        </div>
+
+        <div id="listas" class="tab-pane">
+          <div class="card-form">
+            <div class="card-header"><i class="fas fa-graduation-cap"></i> Lo que aprenderás</div>
+            <div class="grid-2">
+              <input type="text" data-key="learn_1" placeholder="Item 1"><input type="text" data-key="learn_2" placeholder="Item 2">
+              <input type="text" data-key="learn_3" placeholder="Item 3"><input type="text" data-key="learn_4" placeholder="Item 4">
+              <input type="text" data-key="learn_5" placeholder="Item 5"><input type="text" data-key="learn_6" placeholder="Item 6">
+              <input type="text" data-key="learn_7" placeholder="Item 7"><input type="text" data-key="learn_8" placeholder="Item 8">
+            </div>
+          </div>
+          
+          <div class="card-form">
+            <div class="card-header"><i class="fas fa-calendar-check"></i> Estructura (Sesiones)</div>
+            <label>Título H2</label><textarea data-key="ses_h2" rows="2"></textarea>
+            <label>Subtítulo</label><input type="text" data-key="ses_p">
+            <div class="section-divider">Sesión 1</div>
+            <input type="text" data-key="ses1_tit" placeholder="Título Sesión 1" style="margin-bottom:5px"><textarea data-key="ses1_desc" rows="2"></textarea>
+            <div class="section-divider">Sesión 2</div>
+            <input type="text" data-key="ses2_tit" placeholder="Título Sesión 2" style="margin-bottom:5px"><textarea data-key="ses2_desc" rows="2"></textarea>
+            <div class="section-divider">Sesión 3</div>
+            <input type="text" data-key="ses3_tit" placeholder="Título Sesión 3" style="margin-bottom:5px"><textarea data-key="ses3_desc" rows="2"></textarea>
+            <div class="section-divider">Sesión 4</div>
+            <input type="text" data-key="ses4_tit" placeholder="Título Sesión 4" style="margin-bottom:5px"><textarea data-key="ses4_desc" rows="2"></textarea>
+          </div>
+
+          <div class="card-form">
+            <div class="card-header"><i class="fas fa-user-check"></i> ¿Es para ti? (Síntomas)</div>
+            <input type="text" data-key="pq_1" style="margin-bottom:5px"><input type="text" data-key="pq_2" style="margin-bottom:5px">
+            <input type="text" data-key="pq_3" style="margin-bottom:5px"><input type="text" data-key="pq_4" style="margin-bottom:5px">
+            <input type="text" data-key="pq_5" style="margin-bottom:5px"><input type="text" data-key="pq_6" style="margin-bottom:5px">
+          </div>
+        </div>
+
+        <div id="side" class="tab-pane">
+          <div class="card-form">
+            <div class="card-header"><i class="fas fa-shopping-cart"></i> Sidebar (Detalles)</div>
+            <label>Título Principal</label><input type="text" data-key="side_tit">
+            
+            <div class="section-divider">Puntos de venta</div>
+            <input type="text" data-key="side_1" placeholder="Ej: Modalidad virtual"><input type="text" data-key="side_2" placeholder="Ej: 4 semanas">
+            <input type="text" data-key="side_3" placeholder="Ej: 4 sesiones"><input type="text" data-key="side_4">
+            <input type="text" data-key="side_5"><input type="text" data-key="side_6">
+            <input type="text" data-key="side_7">
+
+            <div class="section-divider">Botón y Garantía</div>
+            <label>Texto Botón</label><input type="text" data-key="side_btn_txt">
+            <label>URL Botón (Ruta)</label><input type="text" data-key="side_btn_url" placeholder="../registro.html?programa=...">
+            <label>Nota inferior</label><input type="text" data-key="side_note">
+            <label>Texto Garantía</label><textarea data-key="side_guar" rows="2"></textarea>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <div class="preview-area">
+    <div class="iframe-wrap">
+      <iframe id="livePreview" src="../../programas/ansiedad.html"></iframe>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg">Cambios guardados</span></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../../js/supabase-config.js"></script>
+  <script>
+    let programActual = 'ansiedad';
+    let historyStack = [];
+    let historyIndex = -1;
+    let isRestoring = false;
+
+    function captureState() {
+      if (isRestoring) return;
+      const state = {};
+      document.querySelectorAll('[data-key]').forEach(i => state[i.dataset.key] = i.value);
+      if (historyIndex < historyStack.length - 1) historyStack = historyStack.slice(0, historyIndex + 1);
+      if (historyIndex >= 0 && JSON.stringify(historyStack[historyIndex]) === JSON.stringify(state)) return; 
+      historyStack.push(state);
+      historyIndex++;
+      if(historyStack.length > 30) { historyStack.shift(); historyIndex--; }
+    }
+
+    function applyState(state) {
+      if(!state) return;
+      isRestoring = true;
+      document.querySelectorAll('[data-key]').forEach(i => {
+        if (state[i.dataset.key] !== undefined) i.value = state[i.dataset.key];
+      });
+      enviarPreview();
+      isRestoring = false;
+    }
+
+    function undo() { if (historyIndex > 0) { historyIndex--; applyState(historyStack[historyIndex]); } }
+    function redo() { if (historyIndex < historyStack.length - 1) { historyIndex++; applyState(historyStack[historyIndex]); } }
+
+    async function cargarDatos() {
+      if (!window.sb) return setTimeout(cargarDatos, 500);
+      document.getElementById('cmsForm').reset();
+      
+      const { data } = await window.sb.from('config_web').select('*').eq('pagina', programActual);
+      if (data) {
+        data.forEach(item => {
+          const input = document.querySelector(`[data-key="${item.clave}"]`);
+          if (input) input.value = item.valor;
+        });
+        captureState();
+      }
+    }
+
+    function cambiarPrograma(val) {
+      programActual = val;
+      historyStack = []; historyIndex = -1; // Reset history
+      document.getElementById('livePreview').src = `../../programas/${val}.html`;
+      cargarDatos();
+    }
+
+    function switchTab(id, btn) {
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    function enviarPreview() {
+      const config = {};
+      document.querySelectorAll('[data-key]').forEach(i => config[i.dataset.key] = i.value);
+      document.getElementById('livePreview').contentWindow.postMessage({ tipo: 'LIVE_PREVIEW', config }, '*');
+    }
+
+    async function guardarTodo() {
+      const btn = document.querySelector('.btn-save');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> GUARDANDO...';
+      
+      const updates = [];
+      document.querySelectorAll('[data-key]').forEach(i => {
+        if(i.value.trim() !== '') { 
+           updates.push({ clave: i.dataset.key, valor: i.value, pagina: programActual });
+        }
+      });
+      
+      await window.sb.from('config_web').upsert(updates, { onConflict: 'clave' });
+      btn.innerHTML = '<i class="fas fa-save"></i> Guardar Programa';
+      
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    document.getElementById('cmsForm').addEventListener('change', captureState);
+    document.getElementById('cmsForm').addEventListener('input', enviarPreview);
+    
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === 'z' || e.key === 'Z') { e.preventDefault(); if (e.shiftKey) redo(); else undo(); }
+        if (e.key === 'y' || e.key === 'Y') { e.preventDefault(); redo(); }
+        if (e.key === 's' || e.key === 'S') { e.preventDefault(); guardarTodo(); }
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', cargarDatos);
+  </script>
+</body>
+</html>
