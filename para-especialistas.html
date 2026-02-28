@@ -22,21 +22,15 @@
     /* FORZAMOS LAS FUENTES DEL NAVBAR Y FOOTER */
     .nav { font-family: var(--fb) !important; }
     .logo { font-family: var(--fd) !important; line-height: 1; margin: 0; }
-    .mmenu { font-family: var(--fb) !important; }
     .footer { font-family: var(--fb) !important; }
     .f-logo { font-family: var(--fd) !important; }
-    .f-tg { color: var(--ts) !important; font-weight: 400; }
-    .f-col h5 { color: var(--td) !important; font-family: var(--fb) !important; }
 
-    /* =========================================
-       ESTILOS ÚNICOS PARA ESPECIALISTAS
-       ========================================= */
     /* HERO */
     .hero-sp{padding:120px 40px 80px;background:var(--s50);text-align:center}
     .h-tag{display:inline-flex;align-items:center;gap:8px;background:var(--clay-l);color:var(--clay);padding:6px 14px;border-radius:50px;font-size:.75rem;font-weight:700;margin-bottom:20px;text-transform:uppercase;letter-spacing:1px}
     .hero-sp h1{font-family:var(--fd);font-size:clamp(2.5rem,5vw,3.8rem);color:var(--td);margin-bottom:20px;line-height:1.1}
     .hero-sp p{font-size:1.1rem;color:var(--ts);max-width:600px;margin:0 auto 32px}
-    .btn-p{background:var(--g700);color:#fff;padding:14px 32px;border-radius:50px;font-weight:700;display:inline-block;font-size:1rem;box-shadow:0 8px 20px rgba(79,111,82,.25)}
+    .btn-p{background:var(--g700);color:#fff;padding:14px 32px;border-radius:50px;font-weight:700;display:inline-block;font-size:1rem;box-shadow:0 8px 20px rgba(79,111,82,.25); border:none; cursor:pointer; transition:0.3s;}
     .btn-p:hover{transform:translateY(-2px);background:var(--g800)}
 
     /* BENEFICIOS */
@@ -55,13 +49,27 @@
     .req-list li{display:flex;align-items:center;gap:12px;margin-bottom:16px;font-size:1rem}
     .req-list i{color:var(--g400)}
 
-    /* FORM CTA */
-    .cta-form{max-width:600px;margin:0 auto;text-align:center;padding:80px 40px}
+    /* FORM CTA - REDISEÑADO */
+    .cta-form{max-width:700px;margin:0 auto;text-align:center;padding:80px 40px}
+    .postula-card { background: #fff; border: 1px solid var(--border); border-radius: 24px; padding: 40px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-top: 30px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    .f-group { display: flex; flex-direction: column; gap: 8px; }
+    .f-group.full { grid-column: span 2; }
+    .f-group label { font-size: 0.85rem; font-weight: 700; color: var(--td); text-transform: uppercase; letter-spacing: 0.5px; }
+    .f-group input, .f-group select { padding: 12px 16px; border: 1px solid var(--border); border-radius: 12px; font-family: var(--fb); font-size: 0.95rem; outline: none; transition: 0.2s; background: #fafafa; }
+    .f-group input:focus { border-color: var(--g700); background: #fff; box-shadow: 0 0 0 4px rgba(79, 111, 82, 0.1); }
+    
+    .file-area { border: 2px dashed var(--border); border-radius: 12px; padding: 20px; text-align: center; background: #fafafa; cursor: pointer; transition: 0.2s; position: relative; }
+    .file-area:hover { border-color: var(--g700); background: var(--g50); }
+    .file-area input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .file-area i { font-size: 1.5rem; color: var(--g600); margin-bottom: 8px; display: block; }
+    .file-area span { font-size: 0.9rem; color: var(--ts); font-weight: 500; }
     
     @media(max-width:800px){
-      .ben-grid,.req-in{grid-template-columns:1fr}
+      .ben-grid,.req-in, .form-grid{grid-template-columns:1fr}
       .req-sec{margin:20px;padding:60px 24px}
       .hero-sp{padding:100px 24px 60px}
+      .postula-card { padding: 25px; }
     }
   </style>
 </head>
@@ -71,29 +79,8 @@
     <div class="ni">
       <a href="index.html" class="logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora</a>
       <ul class="nl">
-        <li class="ni-item">
-          <a href="index.html#servicios" class="nl-a">Servicios <i class="fas fa-chevron-down"></i></a>
-          <div class="dd wide">
-            <span class="dd-lbl">Atención profesional</span>
-            <div class="dd-grid">
-              <a href="servicios/terapia-psicologica.html" class="dd-a"><div class="ic"><i class="fas fa-user-md"></i></div><div><strong>Terapia Psicológica</strong><small style="color:var(--tl);font-size:.75rem">Online</small></div></a>
-              <a href="servicios/coaching-emocional.html" class="dd-a"><div class="ic"><i class="fas fa-rocket"></i></div><div><strong>Coaching Emocional</strong><small style="color:var(--tl);font-size:.75rem">Metas y hábitos</small></div></a>
-              <a href="servicios/terapia-de-pareja.html" class="dd-a"><div class="ic"><i class="fas fa-users"></i></div><div><strong>Terapia de Pareja</strong><small style="color:var(--tl);font-size:.75rem">Vínculos sanos</small></div></a>
-              <a href="servicios/psicologia-familiar.html" class="dd-a"><div class="ic"><i class="fas fa-child"></i></div><div><strong>Psicología Familiar</strong><small style="color:var(--tl);font-size:.75rem">Dinámica familiar</small></div></a>
-            </div>
-          </div>
-        </li>
-        <li class="ni-item">
-          <a href="index.html#programas" class="nl-a">Programas <i class="fas fa-chevron-down"></i></a>
-          <div class="dd">
-            <span class="dd-lbl">Programas temáticos</span>
-            <a href="programas/ansiedad.html" class="dd-a"><div class="ic"><i class="fas fa-wind"></i></div> Manejo de Ansiedad</a>
-            <a href="programas/estres-laboral.html" class="dd-a"><div class="ic"><i class="fas fa-briefcase"></i></div> Estrés y Burnout</a>
-            <a href="programas/pareja.html" class="dd-a"><div class="ic"><i class="fas fa-shield-alt"></i></div> Autoestima y Vínculos</a>
-            <a href="programas/redes-sociales.html" class="dd-a"><div class="ic"><i class="fas fa-mobile-alt"></i></div> Desconexión Digital</a>
-            <a href="programas/index.html" class="dd-a" style="border-top:1px solid var(--border);margin-top:8px;padding-top:12px;color:var(--g700);font-weight:700"><div class="ic"><i class="fas fa-th-large"></i></div> Ver todos →</a>
-          </div>
-        </li>
+        <li class="ni-item"><a href="index.html#servicios" class="nl-a">Servicios <i class="fas fa-chevron-down"></i></a></li>
+        <li class="ni-item"><a href="index.html#programas" class="nl-a">Programas <i class="fas fa-chevron-down"></i></a></li>
         <li class="ni-item"><a href="especialistas-publico.html" class="nl-a">Directorio</a></li>
         <li class="ni-item"><a href="empresas.html" class="nl-a">Para empresas</a></li>
         <li class="ni-item"><a href="para-especialistas.html" class="nl-a" style="color:var(--g700)">Para especialistas</a></li>
@@ -102,49 +89,17 @@
         <a href="login.html" class="btn-li">Ingresar</a>
         <a href="registro.html" class="btn-ct">Crear cuenta</a>
       </div>
-      <button class="hbg" onclick="openM()" aria-label="Menú"><i class="fas fa-bars"></i></button>
+      <button class="hbg" onclick="openM()"><i class="fas fa-bars"></i></button>
     </div>
   </nav>
 
   <div class="overlay" id="ov" onclick="closeM()"></div>
-  <div class="mmenu" id="mm">
-    <div class="mm-hd">
-      <span class="logo" style="font-size:1.3rem"><div class="logo-ic" style="width:32px;height:32px;font-size:.9rem"><i class="fas fa-brain"></i></div>bitácora</span>
-      <button class="mm-cl" onclick="closeM()"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="mm-body">
-      <div class="mm-sec">
-        <div class="mm-lbl">Servicios</div>
-        <a href="servicios/terapia-psicologica.html" class="mm-a" onclick="closeM()"><i class="fas fa-user-md"></i> Terapia Psicológica</a>
-        <a href="servicios/coaching-emocional.html" class="mm-a" onclick="closeM()"><i class="fas fa-rocket"></i> Coaching Emocional</a>
-        <a href="servicios/terapia-de-pareja.html" class="mm-a" onclick="closeM()"><i class="fas fa-users"></i> Terapia de Pareja</a>
-        <a href="servicios/psicologia-familiar.html" class="mm-a" onclick="closeM()"><i class="fas fa-child"></i> Psicología Familiar</a>
-      </div>
-      <div class="mm-sec">
-        <div class="mm-lbl">Programas</div>
-        <a href="programas/ansiedad.html" class="mm-a" onclick="closeM()"><i class="fas fa-wind"></i> Manejo de Ansiedad</a>
-        <a href="programas/estres-laboral.html" class="mm-a" onclick="closeM()"><i class="fas fa-briefcase"></i> Estrés y Burnout</a>
-        <a href="programas/pareja.html" class="mm-a" onclick="closeM()"><i class="fas fa-shield-alt"></i> Autoestima y Vínculos</a>
-        <a href="programas/redes-sociales.html" class="mm-a" onclick="closeM()"><i class="fas fa-mobile-alt"></i> Desconexión Digital</a>
-      </div>
-      <div class="mm-sec">
-        <div class="mm-lbl">Más</div>
-        <a href="especialistas-publico.html" class="mm-a" onclick="closeM()"><i class="fas fa-search"></i> Directorio de especialistas</a>
-        <a href="empresas.html" class="mm-a" onclick="closeM()"><i class="fas fa-building"></i> Para empresas</a>
-        <a href="para-especialistas.html" class="mm-a" onclick="closeM()"><i class="fas fa-stethoscope"></i> Para especialistas</a>
-      </div>
-    </div>
-    <div class="mm-act">
-      <a href="login.html" class="btn-m1" onclick="closeM()">Iniciar sesión</a>
-      <a href="registro.html" class="btn-m2" onclick="closeM()">Crear cuenta gratis</a>
-    </div>
-  </div>
 
   <section class="hero-sp">
     <div class="h-tag">Comunidad de Especialistas</div>
     <h1>Enfócate en tus pacientes,<br><em>nosotros hacemos el resto</em></h1>
-    <p>Únete a la red de psicólogos más confiable de Perú. Te damos la tecnología, la gestión administrativa y el flujo de pacientes para que tú solo te preocupes por la terapia.</p>
-    <a href="#postular" class="btn-p">Quiero postular</a>
+    <p>Únete a la red de psicólogos más confiable de Perú. Te damos la tecnología, la gestión administrativa y el flujo de pacientes.</p>
+    <a href="#postular" class="btn-p">Quiero postular ahora</a>
   </section>
 
   <div class="sec">
@@ -160,12 +115,12 @@
       <div class="ben-c">
         <div class="ben-ic"><i class="fas fa-calendar-check"></i></div>
         <h3>Agenda Automatizada</h3>
-        <p>Gestiona tus horarios fácilmente. Recordatorios automáticos para ti y tus pacientes para reducir el ausentismo.</p>
+        <p>Gestiona tus horarios fácilmente. Recordatorios automáticos para reducir el ausentismo.</p>
       </div>
       <div class="ben-c">
         <div class="ben-ic"><i class="fas fa-shield-alt"></i></div>
         <h3>Pagos Garantizados</h3>
-        <p>Olvídate de cobrar. Nosotros procesamos los pagos antes de la sesión y te depositamos puntualmente.</p>
+        <p>Olvídate de cobrar. Nosotros procesamos los pagos y te depositamos puntualmente.</p>
       </div>
     </div>
   </div>
@@ -174,206 +129,149 @@
     <div class="req-in">
       <div>
         <h2 style="font-family:var(--fd);font-size:2.2rem;margin-bottom:16px">Requisitos para unirte</h2>
-        <p style="opacity:.8;line-height:1.7">Para garantizar la calidad y seguridad de nuestros usuarios, somos muy rigurosos con nuestro proceso de selección.</p>
+        <p style="opacity:.8;line-height:1.7">Garantizamos la calidad y seguridad de nuestros usuarios mediante un proceso riguroso.</p>
       </div>
       <ul class="req-list">
-        <li><i class="fas fa-check-circle"></i> Título de Psicólogo(a) y Colegiatura (C.Ps.P.) habilitada.</li>
-        <li><i class="fas fa-check-circle"></i> Formación psicoterapéutica (Maestría o especialización).</li>
-        <li><i class="fas fa-check-circle"></i> Mínimo 3 años de experiencia clínica comprobada.</li>
-        <li><i class="fas fa-check-circle"></i> Disponibilidad para atención online (buena conexión).</li>
-        <li><i class="fas fa-check-circle"></i> Pasar nuestra entrevista técnica y de habilidades blandas.</li>
+        <li><i class="fas fa-check-circle"></i> Título de Psicólogo(a) y C.Ps.P. habilitado.</li>
+        <li><i class="fas fa-check-circle"></i> Formación psicoterapéutica (Maestría/Especialidad).</li>
+        <li><i class="fas fa-check-circle"></i> Mínimo 3 años de experiencia clínica.</li>
+        <li><i class="fas fa-check-circle"></i> Disponibilidad para atención online estable.</li>
       </ul>
     </div>
   </div>
 
   <div class="cta-form" id="postular">
-    <h2 style="font-family:var(--fd);font-size:2rem;color:var(--td);margin-bottom:12px">¿Listo para crecer tu consulta?</h2>
-    <p style="color:var(--ts);margin-bottom:30px">Completa el formulario de pre-inscripción y nuestro equipo de selección te contactará si tu perfil califica.</p>
-    <a href="mailto:seleccion@bitacoramental.pe" class="btn-p">Enviar CV a Selección</a>
-    <p style="font-size:.85rem;margin-top:20px;color:var(--tl)">O escríbenos a seleccion@bitacoramental.pe</p>
+    <h2 style="font-family:var(--fd);font-size:2.3rem;color:var(--td);margin-bottom:12px">¿Listo para crecer tu consulta?</h2>
+    <p style="color:var(--ts);">Nuestro equipo de selección revisará tu perfil en menos de 48 horas.</p>
+
+    <div class="postula-card">
+      <form id="formPostulacion" onsubmit="enviarPostulacion(event)">
+        <div class="form-grid">
+          <div class="f-group">
+            <label>Nombre Completo</label>
+            <input type="text" id="postNombre" required placeholder="Nombres y Apellidos">
+          </div>
+          <div class="f-group">
+            <label>Correo Electrónico</label>
+            <input type="email" id="postEmail" required placeholder="ejemplo@correo.com">
+          </div>
+          <div class="f-group">
+            <label>WhatsApp / Teléfono</label>
+            <input type="tel" id="postTel" required placeholder="+51 ...">
+          </div>
+          <div class="f-group">
+            <label>Años de Experiencia</label>
+            <input type="number" id="postExp" required min="0" placeholder="Ej: 5">
+          </div>
+          <div class="f-group full">
+            <label>Especialidad Principal</label>
+            <input type="text" id="postEspec" required placeholder="Ej: Terapia Cognitivo Conductual, Ansiedad, etc.">
+          </div>
+          <div class="f-group full">
+            <label>Tu Curriculum Vitae (PDF o Imagen)</label>
+            <div class="file-area" id="dropArea">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <span id="fileName">Haz clic o arrastra tu CV aquí</span>
+              <input type="file" id="postFile" accept=".pdf,.doc,.docx,image/*" required onchange="handleFile(this)">
+            </div>
+          </div>
+        </div>
+        <button type="submit" id="btnPostular" class="btn-p" style="width:100%;">Enviar mi postulación</button>
+        <div id="postMsg" style="margin-top:20px; text-align:center; font-weight:600; display:none;"></div>
+      </form>
+    </div>
   </div>
 
   <footer class="footer">
     <div class="f-grid">
       <div>
         <div class="f-logo"><div class="logo-ic"><i class="fas fa-brain"></i></div>bitácora mental</div>
-        <p class="f-tg">Plataforma peruana de bienestar emocional. Conectamos personas con psicólogos y coaches verificados para sesiones online accesibles y confidenciales.</p>
-        <div class="f-co">
-          <a href="tel:+51999999999"><i class="fas fa-phone"></i> +51 999 999 999</a>
-          <a href="mailto:hola@bitacoramental.pe"><i class="fas fa-envelope"></i> hola@bitacoramental.pe</a>
-          <a href="https://wa.me/51999999999" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-          <span style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ts)"><i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> Lima, Perú</span>
-        </div>
-        <div class="f-soc">
-          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-          <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-          <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-        </div>
+        <p class="f-tg">Plataforma peruana de bienestar emocional. Conectamos personas con psicólogos verificados.</p>
       </div>
-      <div class="f-col">
-        <h5>Servicios</h5>
-        <ul class="f-lk">
-          <li><a href="servicios/terapia-psicologica.html">Terapia Psicológica</a></li>
-          <li><a href="servicios/coaching-emocional.html">Coaching Emocional</a></li>
-          <li><a href="servicios/terapia-de-pareja.html">Terapia de Pareja</a></li>
-          <li><a href="servicios/psicologia-familiar.html">Psicología Familiar</a></li>
-        </ul>
-      </div>
-      <div class="f-col">
-        <h5>Programas</h5>
-        <ul class="f-lk">
-          <li><a href="programas/ansiedad.html">Ansiedad</a></li>
-          <li><a href="programas/estres-laboral.html">Estrés y Burnout</a></li>
-          <li><a href="programas/pareja.html">Autoestima y Vínculos</a></li>
-          <li><a href="programas/redes-sociales.html">Desconexión Digital</a></li>
-          <li><a href="programas/index.html">Ver todos →</a></li>
-        </ul>
-      </div>
-      <div class="f-col">
-        <h5>Plataforma</h5>
-        <ul class="f-lk">
-          <li><a href="especialistas-publico.html">Directorio</a></li>
-          <li><a href="test-bienestar.html">Test de bienestar</a></li>
-          <li><a href="empresas.html">Para empresas</a></li>
-          <li><a href="para-especialistas.html">Para especialistas</a></li>
-          <li><a href="faq.html">Preguntas frecuentes</a></li>
-        </ul>
-      </div>
-      <div class="f-col">
-        <h5>Ayuda</h5>
-        <ul class="f-lk">
-          <li><a href="contacto.html">Contacto</a></li>
-          <li><a href="privacidad.html">Privacidad</a></li>
-          <li><a href="terminos.html">Términos</a></li>
-          <li><a href="libro-reclamaciones.html">Reclamaciones</a></li>
-          <li><a href="lineas-emergencia.html">Líneas de emergencia</a></li>
-        </ul>
-      </div>
+      <div class="f-col"><h5>Servicios</h5><ul class="f-lk"><li><a href="servicios/terapia-psicologica.html">Terapia</a></li><li><a href="servicios/coaching-emocional.html">Coaching</a></li></ul></div>
+      <div class="f-col"><h5>Ayuda</h5><ul class="f-lk"><li><a href="contacto.html">Contacto</a></li><li><a href="privacidad.html">Privacidad</a></li></ul></div>
     </div>
-    <div class="f-bot">
-      <p>© 2026 Bitácora Mental. Todos los derechos reservados. Hecho en Perú 🇵🇪</p>
-      <nav class="f-leg">
-        <a href="privacidad.html">Privacidad</a>
-        <a href="terminos.html">Términos</a>
-        <a href="libro-reclamaciones.html">Reclamaciones</a>
-      </nav>
-    </div>
+    <div class="f-bot"><p>© 2026 Bitácora Mental. Hecho en Perú 🇵🇪</p></div>
   </footer>
 
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
 
-<script>
-// 1. MAPEO EXACTO PARA LA PÁGINA DE ESPECIALISTAS
-const MAPPING = {
-  // Hero
-  'esp_tag':     { sel: '.h-tag', type: 'text' },
-  'esp_h1':      { sel: '.hero-sp h1', type: 'html' },
-  'esp_desc':    { sel: '.hero-sp p', type: 'text' },
-  'esp_btn_txt': { sel: '.hero-sp .btn-p', type: 'text' },
-  'esp_btn_url': { sel: '.hero-sp .btn-p', type: 'href' },
-  
-  // Beneficios
-  'ben_h2':      { sel: '.sec h2', type: 'text' },
-  'ben_1_ic':    { sel: '.ben-c:nth-child(1) .ben-ic', type: 'icon_left' },
-  'ben_1_tit':   { sel: '.ben-c:nth-child(1) h3', type: 'text' },
-  'ben_1_desc':  { sel: '.ben-c:nth-child(1) p', type: 'text' },
-  'ben_2_ic':    { sel: '.ben-c:nth-child(2) .ben-ic', type: 'icon_left' },
-  'ben_2_tit':   { sel: '.ben-c:nth-child(2) h3', type: 'text' },
-  'ben_2_desc':  { sel: '.ben-c:nth-child(2) p', type: 'text' },
-  'ben_3_ic':    { sel: '.ben-c:nth-child(3) .ben-ic', type: 'icon_left' },
-  'ben_3_tit':   { sel: '.ben-c:nth-child(3) h3', type: 'text' },
-  'ben_3_desc':  { sel: '.ben-c:nth-child(3) p', type: 'text' },
+  <script>
+    // UI Logic
+    window.addEventListener('scroll', () => { document.getElementById('nav').classList.toggle('sc', window.scrollY > 30); });
 
-  // Requisitos
-  'req_h2':      { sel: '.req-in h2', type: 'text' },
-  'req_p':       { sel: '.req-in p', type: 'text' },
-  'req_li1':     { sel: '.req-list li:nth-child(1)', type: 'keep_icon_left' },
-  'req_li2':     { sel: '.req-list li:nth-child(2)', type: 'keep_icon_left' },
-  'req_li3':     { sel: '.req-list li:nth-child(3)', type: 'keep_icon_left' },
-  'req_li4':     { sel: '.req-list li:nth-child(4)', type: 'keep_icon_left' },
-  'req_li5':     { sel: '.req-list li:nth-child(5)', type: 'keep_icon_left' },
-
-  // CTA Postular
-  'cta_h2':        { sel: '.cta-form h2', type: 'text' },
-  'cta_p':         { sel: '.cta-form p:nth-of-type(1)', type: 'text' },
-  'cta_btn_txt':   { sel: '.cta-form .btn-p', type: 'text' },
-  'cta_btn_email': { sel: '.cta-form .btn-p', type: 'href_mailto' },
-  'cta_nota':      { sel: '.cta-form p:nth-of-type(2)', type: 'text' }
-};
-
-// 2. FUNCIÓN DE INYECCIÓN
-function inyectar(key, val) {
-  const m = MAPPING[key];
-  if (!m || !val || val.trim() === '') return;
-  document.querySelectorAll(m.sel).forEach(el => {
-    if (m.type === 'text') el.textContent = val;
-    else if (m.type === 'html') el.innerHTML = val;
-    else if (m.type === 'href') el.href = val;
-    else if (m.type === 'href_mailto') el.href = `mailto:${val}`;
-    else if (m.type === 'icon_left') el.innerHTML = `<i class="${val}"></i>`;
-    else if (m.type === 'keep_icon_left') {
-      const ic = el.querySelector('i');
-      el.innerHTML = (ic ? ic.outerHTML + ' ' : '') + val;
+    function handleFile(input) {
+      const nameLabel = document.getElementById('fileName');
+      if (input.files.length > 0) {
+        nameLabel.textContent = "Archivo seleccionado: " + input.files[0].name;
+        nameLabel.style.color = "var(--g700)";
+      }
     }
-  });
-}
 
-// 3. APLICAR AJUSTES GLOBALES
-function aplicarGlobales(c) {
-  if (c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
-  if (c.color_accent) {
-    document.documentElement.style.setProperty('--clay', c.color_accent);
-    document.documentElement.style.setProperty('--clay-l', c.color_accent + '33');
-  }
+    // Lógica de Postulación y Subida a Supabase
+    async function enviarPostulacion(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnPostular');
+      const msg = document.getElementById('postMsg');
+      const fileInput = document.getElementById('postFile');
+      
+      if (!fileInput.files[0]) return alert("Por favor, adjunta tu CV.");
 
-  const footer = document.querySelector('.footer');
-  if (footer) {
-    if (c.foot_desc) { const tg = footer.querySelector('.f-tg'); if (tg) tg.textContent = c.foot_desc; }
-    const contacts = footer.querySelectorAll('.f-co a');
-    if (c.foot_tel && contacts[0]) { contacts[0].innerHTML = `<i class="fas fa-phone"></i> ${c.foot_tel}`; contacts[0].href = `tel:${c.foot_tel.replace(/ /g,'')}`; }
-    if (c.foot_mail && contacts[1]) { contacts[1].innerHTML = `<i class="fas fa-envelope"></i> ${c.foot_mail}`; contacts[1].href = `mailto:${c.foot_mail}`; }
-    if (c.foot_wa && contacts[2]) contacts[2].href = c.foot_wa;
-    if (c.foot_loc) { const span = footer.querySelector('.f-co span'); if (span) span.innerHTML = `<i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> ${c.foot_loc}`; }
-    
-    const soc = footer.querySelectorAll('.f-soc a');
-    if (c.soc_ig && soc[0]) soc[0].href = c.soc_ig;
-    if (c.soc_tk && soc[1]) soc[1].href = c.soc_tk;
-    if (c.soc_in && soc[2]) soc[2].href = c.soc_in;
-    if (c.soc_fb && soc[3]) soc[3].href = c.soc_fb;
-    if (c.foot_copy) { const p = footer.querySelector('.f-bot p'); if (p) p.textContent = c.foot_copy; }
-  }
-}
+      btn.textContent = 'Subiendo documentos...';
+      btn.disabled = true;
+      msg.style.display = 'none';
 
-// 4. CARGA DE BASE DE DATOS
-async function cargarCMS() {
-  if (!window.sb) return setTimeout(cargarCMS, 500);
-  const { data } = await window.sb.from('config_web').select('*').or(`pagina.eq.especialistas,pagina.eq.global`);
-  if (data) {
-    const configGlobal = {};
-    data.forEach(d => {
-      if (d.pagina === 'global') configGlobal[d.clave] = d.valor;
-      else inyectar(d.clave, d.valor);
-    });
-    aplicarGlobales(configGlobal);
-  }
-}
+      try {
+        const file = fileInput.files[0];
+        const fileExt = file.name.split('.').pop();
+        // Generamos un nombre único: timestamp_nombre.ext
+        const safeName = document.getElementById('postNombre').value.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+        const fileName = `${Date.now()}_${safeName}.${fileExt}`;
 
-// 5. LISTENER PARA PREVIEW EN VIVO
-window.addEventListener('message', e => {
-  if (e.data.tipo === 'LIVE_PREVIEW') {
-    Object.entries(e.data.config).forEach(([k, v]) => inyectar(k, v));
-  }
-});
+        // 1. Subir el archivo al Bucket 'cvs_especialistas'
+        const { data: uploadData, error: uploadError } = await window.sb.storage
+          .from('cvs_especialistas')
+          .upload(fileName, file);
 
-// UI Básica
-window.addEventListener('scroll', () => { document.getElementById('nav').classList.toggle('sc', window.scrollY > 10); });
-function openM() { document.getElementById('mm').style.display = 'flex'; document.getElementById('ov').classList.add('show'); setTimeout(() => document.getElementById('mm').classList.add('open'), 10); document.body.style.overflow = 'hidden'; }
-function closeM() { document.getElementById('mm').classList.remove('open'); document.getElementById('ov').classList.remove('show'); setTimeout(() => document.getElementById('mm').style.display = 'none', 300); document.body.style.overflow = ''; }
+        if (uploadError) throw uploadError;
 
-document.addEventListener('DOMContentLoaded', cargarCMS);
-</script>
-  
+        // 2. Obtener URL pública del archivo subido
+        const { data: { publicUrl } } = window.sb.storage
+          .from('cvs_especialistas')
+          .getPublicUrl(fileName);
+
+        // 3. Guardar registro en la tabla 'postulaciones'
+        const payload = {
+          nombre: document.getElementById('postNombre').value,
+          email: document.getElementById('postEmail').value,
+          telefono: document.getElementById('postTel').value,
+          experiencia: parseInt(document.getElementById('postExp').value),
+          especialidad: document.getElementById('postEspec').value,
+          cv_url: publicUrl,
+          estado: 'nueva'
+        };
+
+        const { error: insertError } = await window.sb.from('postulaciones').insert([payload]);
+        if (insertError) throw insertError;
+
+        // Éxito
+        msg.style.display = 'block';
+        msg.style.color = 'var(--success)';
+        msg.innerHTML = '<i class="fas fa-check-circle"></i> ¡Postulación enviada! Te contactaremos muy pronto.';
+        document.getElementById('formPostulacion').reset();
+        document.getElementById('fileName').textContent = "Haz clic o arrastra tu CV aquí";
+        btn.style.display = 'none';
+
+      } catch (err) {
+        console.error(err);
+        msg.style.display = 'block';
+        msg.style.color = 'var(--danger)';
+        msg.textContent = "Error: " + (err.message || "No se pudo enviar. Intenta de nuevo.");
+        btn.disabled = false;
+        btn.textContent = 'Enviar mi postulación';
+      }
+    }
+  </script>
 </body>
 </html>
