@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel de Control - Admin</title>
+  <title>Panel de Control - Bitácora Mental</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,87 +11,78 @@
   
   <style>
     :root { 
-      /* Paleta Admin (Más sobria y ejecutiva) */
-      --sidebar-bg: #1F2933; 
-      --sidebar-text: #94A3B8;
-      --primary: #4F6F52; 
-      --bg: #F3F4F6; 
-      --white: #FFFFFF; 
-      --text: #1F2933; 
-      --border: #E5E7EB; 
-      --radius: 20px; 
-      
-      /* Estados */
-      --danger: #EF4444; 
-      --warning: #F59E0B; 
-      --success: #10B981;
-      --info: #3B82F6;
+      --sidebar-bg: #1F2933; --sidebar-text: #94A3B8; --primary: #4F6F52; 
+      --bg: #F3F4F6; --white: #FFFFFF; --text: #1F2933; --border: #E5E7EB; 
+      --radius: 20px; --danger: #EF4444; --warning: #F59E0B; --success: #10B981; --info: #3B82F6;
     }
     
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
     
     /* --- SIDEBAR --- */
-    .sidebar { width: 260px; background: var(--sidebar-bg); color: white; padding: 24px; position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s; }
-    
-    .logo { font-family: 'Outfit'; font-weight: 700; color: white; font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 10px; margin-bottom: 40px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 12px; }
+    .sidebar { width: 260px; background: var(--sidebar-bg); color: white; padding: 24px; position: fixed; height: 100%; top: 0; display: flex; flex-direction: column; z-index: 100; overflow-y: auto; scrollbar-width: none;}
+    .sidebar::-webkit-scrollbar { display: none; }
+    .logo { font-family: 'Outfit'; font-weight: 700; color: white; font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; gap: 10px; margin-bottom: 30px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 12px; }
     
     .nav-section { margin-bottom: 25px; }
     .nav-title { font-size: 0.7rem; text-transform: uppercase; color: var(--sidebar-text); font-weight: 700; padding-left: 12px; margin-bottom: 8px; letter-spacing: 1px; }
-    
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: #CBD5E1; text-decoration: none; border-radius: 12px; transition: 0.2s; font-size: 0.95rem; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; color: #CBD5E1; text-decoration: none; border-radius: 12px; transition: 0.2s; font-size: 0.95rem; margin-bottom: 4px;}
     .nav-item:hover, .nav-item.active { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(79, 111, 82, 0.4); }
     .nav-item i { width: 20px; text-align: center; }
+
+    .badge-alert { background: var(--danger); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; margin-left: auto; display: none; }
+    .badge-info { background: var(--info); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; margin-left: auto; display: none; }
+
+    /* Submenu CMS */
+    .submenu { display: flex; flex-direction: column; gap: 2px; padding-left: 36px; margin-top: 4px; }
+    .submenu a { color: #94A3B8; text-decoration: none; font-size: 0.85rem; padding: 8px 10px; border-radius: 8px; transition: 0.2s; display: flex; align-items: center; gap: 8px;}
+    .submenu a:hover { background: rgba(255,255,255,0.05); color: white; }
     
     /* --- MAIN CONTENT --- */
     .main { flex: 1; padding: 30px 40px; margin-left: 260px; max-width: 100%; }
-    
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
     .header h1 { font-family: 'Outfit'; font-size: 2rem; margin: 0 0 5px 0; }
     .date-badge { background: white; padding: 8px 16px; border-radius: 30px; font-size: 0.9rem; color: #64748B; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; align-items: center; gap: 8px; font-weight: 500; }
 
     /* --- ALERTAS --- */
-    .alert-box { background: #FEF2F2; border-left: 5px solid var(--danger); padding: 20px; border-radius: 12px; display: flex; align-items: center; gap: 20px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.1); animation: slideDown 0.5s ease; display: none; }
-    .alert-content strong { color: #991B1B; font-size: 1.1rem; display: block; margin-bottom: 4px; }
-    .alert-btn { background: #B91C1C; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; white-space: nowrap; transition: 0.2s; }
-    .alert-btn:hover { background: #7F1D1D; }
+    .alerts-container { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
+    .alert-box { padding: 15px 20px; border-radius: 12px; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); animation: slideDown 0.5s ease; display: none; }
+    .alert-box.danger { background: #FEF2F2; border-left: 5px solid var(--danger); }
+    .alert-box.info { background: #EFF6FF; border-left: 5px solid var(--info); }
+    .alert-content strong { font-size: 1.05rem; display: block; margin-bottom: 4px; }
+    .alert-btn { color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; white-space: nowrap; transition: 0.2s; }
+    .alert-box.danger .alert-content strong { color: #991B1B; }
+    .alert-box.danger .alert-btn { background: #B91C1C; }
+    .alert-box.info .alert-content strong { color: #1E40AF; }
+    .alert-box.info .alert-btn { background: #1D4ED8; }
 
     /* --- GRID DE MÉTRICAS --- */
-    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 30px; }
-    
-    .metric-card { background: white; padding: 24px; border-radius: var(--radius); box-shadow: 0 4px 20px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; transition: transform 0.2s; }
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-bottom: 30px; }
+    .metric-card { background: white; padding: 24px; border-radius: var(--radius); box-shadow: 0 4px 20px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: transform 0.2s; }
     .metric-card:hover { transform: translateY(-5px); }
-    
     .metric-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
     .icon-box { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-    
     .metric-value { font-family: 'Outfit'; font-size: 2.2rem; font-weight: 700; color: var(--text); margin: 0; line-height: 1; }
     .metric-label { color: #64748B; font-size: 0.9rem; margin-top: 5px; }
     
-    /* Colores de Iconos */
     .icon-users { background: #E0F2FE; color: var(--info); }
     .icon-pro { background: #DCFCE7; color: var(--success); }
-    .icon-money { background: #FEF3C7; color: var(--warning); }
+    .icon-cv { background: #FEF3C7; color: var(--warning); }
     .icon-citas { background: #F3E8FF; color: #9333EA; }
 
-    /* --- DASHBOARD LAYOUT (Gráfico + Lista) --- */
-    .dashboard-split { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
-    
+    /* --- DASHBOARD LAYOUT --- */
+    .dashboard-split { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom:40px;}
     .content-card { background: white; border-radius: var(--radius); padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
     .card-title { font-family: 'Outfit'; font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
     
-    /* Lista de Actividad */
-    .activity-list { list-style: none; padding: 0; margin: 0; }
     .activity-item { display: flex; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid #F1F5F9; }
     .activity-item:last-child { border-bottom: none; }
-    
-    .user-avatar { width: 40px; height: 40px; background: #F1F5F9; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #64748B; font-size: 0.9rem; }
+    .user-avatar { width: 40px; height: 40px; background: #F1F5F9; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #64748B; }
     .user-role { font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; font-weight: 700; }
     .role-paciente { background: #E0F2FE; color: var(--info); }
     .role-psicologo { background: #DCFCE7; color: var(--success); }
 
     @keyframes slideDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
-    @media (max-width: 1024px) { .dashboard-split { grid-template-columns: 1fr; } .main { margin-left: 0; padding: 20px; } .sidebar { display: none; } }
   </style>
 </head>
 <body>
@@ -100,30 +91,42 @@
     <a href="#" class="logo"><i class="fas fa-brain"></i> ADMIN PRO</a>
     
     <div class="nav-section">
-      <div class="nav-title">PANEL DE CONTROL</div>
+      <div class="nav-title">PANEL PRINCIPAL</div>
       <a href="panel-admin.html" class="nav-item active"><i class="fas fa-chart-pie"></i> Resumen</a>
-      <a href="monitoreo.html" class="nav-item"><i class="fas fa-desktop"></i> Monitoreo</a>
+      <a href="monitoreo.html" class="nav-item"><i class="fas fa-desktop"></i> Monitoreo en vivo</a>
     </div>
 
     <div class="nav-section">
-      <div class="nav-title">GESTIÓN</div>
+      <div class="nav-title">GESTIÓN CLÍNICA</div>
       <a href="verificacion.html" class="nav-item">
-        <i class="fas fa-user-check"></i> Verificación
-        <span id="badgePending" style="...">0</span>
+        <i class="fas fa-user-check"></i> Verificación C.Ps.P.
+        <span id="badgePending" class="badge-alert">0</span>
+      </a>
+      <a href="postulaciones.html" class="nav-item">
+        <i class="fas fa-file-contract"></i> Postulaciones (CVs)
+        <span id="badgeCVs" class="badge-info">0</span>
       </a>
       <a href="gestion-usuarios.html" class="nav-item"><i class="fas fa-users"></i> Usuarios</a>
-      
-      <a href="gestion-talleres.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Talleres</a>
-      
-      <a href="recursos.html" class="nav-item"><i class="fas fa-folder-open"></i> Recursos</a>
     </div>
 
     <div class="nav-section">
-      <div class="nav-title">CONFIGURACIÓN</div>
-      <a href="ajustes.html" class="nav-item"><i class="fas fa-sliders-h"></i> Ajustes Web</a>
+      <div class="nav-title">GESTIÓN DE CONTENIDO</div>
+      <a href="gestion-talleres.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Agenda Talleres</a>
+      <a href="recursos.html" class="nav-item"><i class="fas fa-folder-open"></i> Recursos</a>
+      
+      <div class="nav-item" style="cursor:default; color:#CBD5E1; background:rgba(255,255,255,0.03); margin-top:10px;">
+        <i class="fas fa-paint-brush"></i> Editores Web (CMS)
+      </div>
+      <div class="submenu">
+        <a href="editores/global.html"><i class="fas fa-globe"></i> Globales & SEO</a>
+        <a href="editores/index.html"><i class="fas fa-home"></i> Página Inicio</a>
+        <a href="editores/programas.html"><i class="fas fa-layer-group"></i> Programas</a>
+        <a href="editores/empresas.html"><i class="fas fa-building"></i> Empresas</a>
+        <a href="editores/especialistas.html"><i class="fas fa-user-md"></i> Especialistas</a>
+      </div>
     </div>
 
-    <div style="margin-top:auto;">
+    <div style="margin-top:auto; padding-top:20px;">
       <a href="../app/dashboard.html" class="nav-item"><i class="fas fa-arrow-left"></i> Volver a App</a>
       <a href="#" onclick="logout()" class="nav-item" style="color:#FCA5A5"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
     </div>
@@ -134,97 +137,80 @@
     <div class="header">
       <div>
         <h1 id="adminName">Bienvenido, Admin</h1>
-        <p style="color:#64748B;">Aquí tienes el panorama general de Bitácora Mental.</p>
+        <p style="color:#64748B;">Panorama operativo y clínico de Bitácora Mental.</p>
       </div>
       <div class="date-badge">
         <i class="far fa-calendar-alt"></i> <span id="currentDate">Cargando fecha...</span>
       </div>
     </div>
 
-    <div id="alertVerification" class="alert-box">
-      <div style="background:#FEE2E2; padding:10px; border-radius:50%; color:#991B1B;">
-        <i class="fas fa-bell fa-lg"></i>
+    <div class="alerts-container">
+      <div id="alertVerification" class="alert-box danger">
+        <div style="background:#FEE2E2; padding:10px; border-radius:50%; color:#991B1B;"><i class="fas fa-id-card fa-lg"></i></div>
+        <div class="alert-content" style="flex:1;">
+          <strong>Validación de Colegiatura Requerida</strong>
+          Hay <span id="countPendingAlert">0</span> psicólogos esperando verificación de su C.Ps.P. para atender.
+        </div>
+        <a href="verificacion.html" class="alert-btn">Verificar ahora <i class="fas fa-arrow-right"></i></a>
       </div>
-      <div class="alert-content" style="flex:1;">
-        <strong>Validación Requerida</strong>
-        Hay <span id="countPendingAlert">0</span> psicólogos esperando que revises sus documentos.
+
+      <div id="alertCVs" class="alert-box info">
+        <div style="background:#DBEAFE; padding:10px; border-radius:50%; color:#1E40AF;"><i class="fas fa-file-pdf fa-lg"></i></div>
+        <div class="alert-content" style="flex:1;">
+          <strong>Nuevas Postulaciones</strong>
+          Tienes <span id="countCVsAlert">0</span> nuevos CVs de especialistas esperando revisión.
+        </div>
+        <a href="postulaciones.html" class="alert-btn">Revisar CVs <i class="fas fa-arrow-right"></i></a>
       </div>
-      <a href="verificacion.html" class="alert-btn">Ir a Revisar <i class="fas fa-arrow-right"></i></a>
     </div>
 
     <div class="metrics-grid">
       <div class="metric-card">
-        <div class="metric-top">
-          <div class="icon-box icon-users"><i class="fas fa-users"></i></div>
-          <i class="fas fa-ellipsis-h" style="color:#CBD5E1; cursor:pointer;"></i>
-        </div>
+        <div class="metric-top"><div class="icon-box icon-users"><i class="fas fa-users"></i></div></div>
         <h2 class="metric-value" id="statPacientes">-</h2>
         <p class="metric-label">Pacientes Registrados</p>
       </div>
-
       <div class="metric-card">
-        <div class="metric-top">
-          <div class="icon-box icon-pro"><i class="fas fa-user-md"></i></div>
-        </div>
+        <div class="metric-top"><div class="icon-box icon-pro"><i class="fas fa-user-md"></i></div></div>
         <h2 class="metric-value" id="statPsico">-</h2>
         <p class="metric-label">Psicólogos Activos</p>
       </div>
-
       <div class="metric-card">
-        <div class="metric-top">
-          <div class="icon-box icon-citas"><i class="fas fa-calendar-check"></i></div>
-        </div>
+        <div class="metric-top"><div class="icon-box icon-cv"><i class="fas fa-file-contract"></i></div></div>
+        <h2 class="metric-value" id="statPostulaciones">-</h2>
+        <p class="metric-label">Postulaciones Totales</p>
+      </div>
+      <div class="metric-card">
+        <div class="metric-top"><div class="icon-box icon-citas"><i class="fas fa-calendar-check"></i></div></div>
         <h2 class="metric-value" id="statCitas">-</h2>
         <p class="metric-label">Citas Realizadas</p>
-      </div>
-
-      <div class="metric-card">
-        <div class="metric-top">
-          <div class="icon-box icon-money"><i class="fas fa-wallet"></i></div>
-        </div>
-        <h2 class="metric-value">S/ <span id="statMoney">0</span></h2>
-        <p class="metric-label">Ingresos Estimados</p>
       </div>
     </div>
 
     <div class="dashboard-split">
-      
       <div class="content-card">
-        <div class="card-title">
-          Crecimiento de Usuarios
-          <select style="border:none; bg:none; font-size:0.8rem; color:#64748B; cursor:pointer;"><option>Este Año</option></select>
-        </div>
-        <div style="height:300px; position:relative;">
-          <canvas id="registrationChart"></canvas>
-        </div>
+        <div class="card-title">Crecimiento de Pacientes <select style="border:none; background:none; color:#64748B; cursor:pointer;"><option>Este Año</option></select></div>
+        <div style="height:300px; position:relative;"><canvas id="registrationChart"></canvas></div>
       </div>
 
       <div class="content-card">
-        <div class="card-title">
-          Registros Recientes
-          <a href="gestion-usuarios.html" style="font-size:0.85rem; color:var(--primary); text-decoration:none;">Ver todos</a>
-        </div>
-        <div id="recentUsersList" class="activity-list">
+        <div class="card-title">Últimos Registros <a href="gestion-usuarios.html" style="font-size:0.85rem; color:var(--primary); text-decoration:none;">Ver todos</a></div>
+        <div id="recentUsersList" style="display:flex; flex-direction:column; gap:0;">
           <div style="text-align:center; padding:20px; color:#94A3B8;">Cargando...</div>
         </div>
       </div>
-
     </div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script>
-    // 1. SEGURIDAD: Auth Guard Estricto
     async function checkAdmin() {
       if (!window.sb) return setTimeout(checkAdmin, 100);
-      
       const { data: { session } } = await window.sb.auth.getSession();
       if (!session) return window.location.href = '../login.html';
 
-      // Verificar ROL en DB
       const { data: profile } = await window.sb.from('users_profile').select('rol, nombre').eq('id', session.user.id).single();
-      
       if (profile.rol !== 'admin') {
         alert("⛔ Acceso denegado: Área restringida.");
         window.location.href = '../app/dashboard.html';
@@ -235,39 +221,47 @@
     }
     checkAdmin();
 
-    // 2. Cargar Datos del Dashboard
     async function initDashboard() {
-      // Fecha Actual
       document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
 
-      // Consultas en Paralelo (Más rápido)
-      const [pacientes, psicos, citas, pendientes, latestUsers] = await Promise.all([
+      // Carga paralela de todas las operaciones de la clínica
+      const [pacientes, psicos, citas, pendientes, postulaciones, postulacionesNuevas, latestUsers] = await Promise.all([
         window.sb.from('users_profile').select('*', { count: 'exact', head: true }).eq('rol', 'paciente'),
         window.sb.from('users_profile').select('*', { count: 'exact', head: true }).eq('rol', 'psicologo'),
         window.sb.from('citas').select('*', { count: 'exact', head: true }),
         window.sb.from('users_profile').select('*', { count: 'exact', head: true }).eq('rol', 'psicologo').eq('estado_validacion', 'pendiente'),
+        window.sb.from('postulaciones').select('*', { count: 'exact', head: true }),
+        window.sb.from('postulaciones').select('*', { count: 'exact', head: true }).eq('estado', 'nueva'),
         window.sb.from('users_profile').select('*').order('created_at', { ascending: false }).limit(5)
       ]);
 
-      // Renderizar Métricas
+      // Métricas Principales
       document.getElementById('statPacientes').textContent = pacientes.count || 0;
       document.getElementById('statPsico').textContent = psicos.count || 0;
+      document.getElementById('statPostulaciones').textContent = postulaciones.count || 0;
       document.getElementById('statCitas').textContent = citas.count || 0;
-      document.getElementById('statMoney').textContent = ((citas.count || 0) * 50).toFixed(2); // Ejemplo S/50 por cita
 
-      // Alertas
-      const pendingCount = pendientes.count || 0;
-      if (pendingCount > 0) {
+      // Alertas Clínicas (Verificación de Colegiatura)
+      const pCount = pendientes.count || 0;
+      if (pCount > 0) {
         document.getElementById('alertVerification').style.display = 'flex';
-        document.getElementById('countPendingAlert').textContent = pendingCount;
+        document.getElementById('countPendingAlert').textContent = pCount;
         document.getElementById('badgePending').style.display = 'inline-block';
-        document.getElementById('badgePending').textContent = pendingCount;
+        document.getElementById('badgePending').textContent = pCount;
       }
 
-      // Lista de Recientes
-      const listContainer = document.getElementById('recentUsersList');
+      // Alertas de RRHH (Nuevos CVs)
+      const cvCount = postulacionesNuevas.count || 0;
+      if (cvCount > 0) {
+        document.getElementById('alertCVs').style.display = 'flex';
+        document.getElementById('countCVsAlert').textContent = cvCount;
+        document.getElementById('badgeCVs').style.display = 'inline-block';
+        document.getElementById('badgeCVs').textContent = cvCount;
+      }
+
+      // Lista Recientes
       if (latestUsers.data) {
-        listContainer.innerHTML = latestUsers.data.map(u => `
+        document.getElementById('recentUsersList').innerHTML = latestUsers.data.map(u => `
           <div class="activity-item">
             <div class="user-avatar">${(u.nombre || 'U').charAt(0)}</div>
             <div style="flex:1;">
@@ -279,14 +273,11 @@
         `).join('');
       }
 
-      // Inicializar Gráfico
       renderChart();
     }
 
     async function renderChart() {
-        // Datos reales de usuarios por mes
-        const { data: users } = await window.sb.from('users_profile').select('created_at');
-        
+        const { data: users } = await window.sb.from('users_profile').select('created_at').eq('rol', 'paciente');
         const months = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
         const counts = new Array(12).fill(0);
         
@@ -300,24 +291,8 @@
         const ctx = document.getElementById('registrationChart').getContext('2d');
         new Chart(ctx, {
             type: 'line',
-            data: {
-                labels: months,
-                datasets: [{
-                    label: 'Nuevos Usuarios 2026',
-                    data: counts,
-                    borderColor: '#4F6F52',
-                    backgroundColor: 'rgba(79, 111, 82, 0.1)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, grid: { color: '#F1F5F9' } }, x: { grid: { display: false } } }
-            }
+            data: { labels: months, datasets: [{ label: 'Pacientes 2026', data: counts, borderColor: '#4F6F52', backgroundColor: 'rgba(79, 111, 82, 0.1)', borderWidth: 2, fill: true, tension: 0.4 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#F1F5F9' } }, x: { grid: { display: false } } } }
         });
     }
 
