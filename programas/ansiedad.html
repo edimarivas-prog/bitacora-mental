@@ -457,112 +457,133 @@
       document.body.style.overflow = '';
     }
 
-    // CMS CONFIGURATION APPLY
-    function aplicarConfiguracion(c) {
-      if(c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
-      if(c.color_accent) { 
-        document.documentElement.style.setProperty('--clay', c.color_accent); 
-        document.documentElement.style.setProperty('--clay-l', c.color_accent + '33'); 
-      }
+   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase-config.js"></script>
 
-      let footer = document.querySelector('.footer');
-      if(footer) {
-        if(c.foot_desc) { let tg = footer.querySelector('.f-tg'); if(tg) tg.textContent = c.foot_desc; }
-        
-        let contacts = footer.querySelectorAll('.f-co a');
-        if(c.foot_tel && contacts[0]) { contacts[0].innerHTML = `<i class="fas fa-phone"></i> ${c.foot_tel}`; contacts[0].href = `tel:${c.foot_tel.replace(/ /g,'')}`; }
-        if(c.foot_mail && contacts[1]) { contacts[1].innerHTML = `<i class="fas fa-envelope"></i> ${c.foot_mail}`; contacts[1].href = `mailto:${c.foot_mail}`; }
-        if(c.foot_wa && contacts[2]) contacts[2].href = c.foot_wa;
-        if(c.foot_loc) { let span = footer.querySelector('.f-co span'); if(span) span.innerHTML = `<i class="fas fa-map-marker-alt" style="color:var(--g600);width:16px"></i> ${c.foot_loc}`; }
-        
-        let soc = footer.querySelectorAll('.f-soc a');
-        if(c.soc_ig && soc[0]) soc[0].href = c.soc_ig;
-        if(c.soc_tk && soc[1]) soc[1].href = c.soc_tk;
-        if(c.soc_in && soc[2]) soc[2].href = c.soc_in;
-        if(c.soc_fb && soc[3]) soc[3].href = c.soc_fb;
+<script>
+// 1. MAPEO EXACTO DE LA ESTRUCTURA DEL PROGRAMA
+const MAPPING = {
+  // Hero
+  'hero_tag': { sel: '.h-tag', type: 'keep_icon_left' },
+  'hero_h1': { sel: '.hero h1', type: 'html' },
+  'hero_desc': { sel: '.hero-desc', type: 'text' },
+  'meta1_txt': { sel: '.hero-meta .h-m:nth-child(1)', type: 'keep_icon_left' },
+  'meta2_txt': { sel: '.hero-meta .h-m:nth-child(2)', type: 'keep_icon_left' },
+  'meta3_txt': { sel: '.hero-meta .h-m:nth-child(3)', type: 'keep_icon_left' },
+  'meta4_txt': { sel: '.hero-meta .h-m:nth-child(4)', type: 'keep_icon_left' },
+  'hero_btn1_txt': { sel: '.h-cta .btn-hero', type: 'text' },
+  'hero_btn1_url': { sel: '.h-cta .btn-hero', type: 'href' },
+  'hero_btn2_txt': { sel: '.h-cta .btn-hero2', type: 'text' },
+  'hero_btn2_url': { sel: '.h-cta .btn-hero2', type: 'href' },
+  
+  // Hero Card (Caja de Precio)
+  'hcard_tit': { sel: '.hero-price .val', type: 'text' },
+  'hcard_sub': { sel: '.hero-price .lbl', type: 'text' },
+  'hcard_inc1': { sel: '.hero-includes .h-inc:nth-child(1)', type: 'keep_icon_left' },
+  'hcard_inc2': { sel: '.hero-includes .h-inc:nth-child(2)', type: 'keep_icon_left' },
+  'hcard_inc3': { sel: '.hero-includes .h-inc:nth-child(3)', type: 'keep_icon_left' },
+  'hcard_inc4': { sel: '.hero-includes .h-inc:nth-child(4)', type: 'keep_icon_left' },
 
-        if(c.foot_copy) { let p = footer.querySelector('.f-bot p'); if(p) p.textContent = c.foot_copy; }
-      }
+  // Contenido Principal
+  'cont_h2': { sel: '.main .content h2.sec-t:nth-of-type(1)', type: 'html' },
+  'cont_p': { sel: '.main .content p.desc-text', type: 'html' },
+  
+  // Lo que aprenderás
+  'learn_1': { sel: '.learn-grid .learn-item:nth-child(1) span', type: 'text' },
+  'learn_2': { sel: '.learn-grid .learn-item:nth-child(2) span', type: 'text' },
+  'learn_3': { sel: '.learn-grid .learn-item:nth-child(3) span', type: 'text' },
+  'learn_4': { sel: '.learn-grid .learn-item:nth-child(4) span', type: 'text' },
+  'learn_5': { sel: '.learn-grid .learn-item:nth-child(5) span', type: 'text' },
+  'learn_6': { sel: '.learn-grid .learn-item:nth-child(6) span', type: 'text' },
+  'learn_7': { sel: '.learn-grid .learn-item:nth-child(7) span', type: 'text' },
+  'learn_8': { sel: '.learn-grid .learn-item:nth-child(8) span', type: 'text' },
+
+  // Sesiones
+  'ses_h2': { sel: '.main .content h2.sec-t:nth-of-type(2)', type: 'html' },
+  'ses_p': { sel: '.main .content h2.sec-t:nth-of-type(2) + p', type: 'text' },
+  'ses1_tit': { sel: '.sesion-item:nth-child(1) h4', type: 'text' },
+  'ses1_desc':{ sel: '.sesion-item:nth-child(1) p', type: 'text' },
+  'ses2_tit': { sel: '.sesion-item:nth-child(2) h4', type: 'text' },
+  'ses2_desc':{ sel: '.sesion-item:nth-child(2) p', type: 'text' },
+  'ses3_tit': { sel: '.sesion-item:nth-child(3) h4', type: 'text' },
+  'ses3_desc':{ sel: '.sesion-item:nth-child(3) p', type: 'text' },
+  'ses4_tit': { sel: '.sesion-item:nth-child(4) h4', type: 'text' },
+  'ses4_desc':{ sel: '.sesion-item:nth-child(4) p', type: 'text' },
+
+  // Para Quién
+  'pq_1': { sel: '.pq-item:nth-child(1) span', type: 'text' },
+  'pq_2': { sel: '.pq-item:nth-child(2) span', type: 'text' },
+  'pq_3': { sel: '.pq-item:nth-child(3) span', type: 'text' },
+  'pq_4': { sel: '.pq-item:nth-child(4) span', type: 'text' },
+  'pq_5': { sel: '.pq-item:nth-child(5) span', type: 'text' },
+  'pq_6': { sel: '.pq-item:nth-child(6) span', type: 'text' },
+
+  // Sidebar
+  'side_tit': { sel: '.side-head .val', type: 'text' },
+  'side_1': { sel: '.side-item:nth-child(1)', type: 'keep_icon_left' },
+  'side_2': { sel: '.side-item:nth-child(2)', type: 'keep_icon_left' },
+  'side_3': { sel: '.side-item:nth-child(3)', type: 'keep_icon_left' },
+  'side_4': { sel: '.side-item:nth-child(4)', type: 'keep_icon_left' },
+  'side_5': { sel: '.side-item:nth-child(5)', type: 'keep_icon_left' },
+  'side_6': { sel: '.side-item:nth-child(6)', type: 'keep_icon_left' },
+  'side_7': { sel: '.side-item:nth-child(7)', type: 'keep_icon_left' },
+  'side_btn_txt': { sel: '.btn-buy', type: 'keep_icon_right' },
+  'side_btn_url': { sel: '.btn-buy', type: 'onclick' },
+  'side_note': { sel: '.side-note', type: 'text' },
+  'side_guar': { sel: '.side-guarantee', type: 'keep_icon_left' }
+};
+
+// 2. EXTRAER NOMBRE DE PÁGINA (Ej: 'ansiedad')
+const path = window.location.pathname;
+let pageName = path.split('/').pop().replace('.html', '');
+if(pageName === '' || pageName === 'index') pageName = 'ansiedad'; // Fallback por seguridad
+
+// 3. INYECTOR INTELIGENTE
+function inyectar(key, val) {
+  const m = MAPPING[key];
+  if (!m || !val || val.trim() === '') return;
+  document.querySelectorAll(m.sel).forEach(el => {
+    if (m.type === 'text') el.textContent = val;
+    else if (m.type === 'html') el.innerHTML = val;
+    else if (m.type === 'href') el.href = val;
+    else if (m.type === 'onclick') el.setAttribute('onclick', `window.location='${val}'`);
+    else if (m.type === 'keep_icon_left') {
+      const ic = el.querySelector('i');
+      el.innerHTML = (ic ? ic.outerHTML + ' ' : '') + val;
     }
-
-    async function cargarConfiguracionCMS() {
-      if (!window.sb) return;
-      try {
-        const { data, error } = await window.sb.from('config_web').select('*');
-        if (error) throw error;
-        if (!data) return;
-
-        const config = {};
-        data.forEach(item => config[item.clave] = item.valor);
-        aplicarConfiguracion(config);
-      } catch (err) {
-        console.error("Error conectando con el CMS:", err);
-      }
+    else if (m.type === 'keep_icon_right') {
+      const ic = el.querySelector('i');
+      el.innerHTML = val + (ic ? ' ' + ic.outerHTML : '');
     }
+  });
+}
 
-    document.addEventListener('DOMContentLoaded', cargarConfiguracionCMS);
-  </script>
-
-  <script>
-async function cargarConfiguracionCMS() {
-  if (!window.sb) return setTimeout(cargarConfiguracionCMS, 500);
-
-  // 1. Detectamos automáticamente en qué página estamos
-  const path = window.location.pathname;
-  let pageName = 'index'; 
-  if (path.includes('contacto')) pageName = 'contacto';
-  else if (path.includes('terapia-psicologica')) pageName = 'terapia';
-  else if (path.includes('coaching-emocional')) pageName = 'coaching';
-  else if (path.includes('terapia-de-pareja')) pageName = 'pareja';
-  else if (path.includes('psicologia-familiar')) pageName = 'familia';
-  else if (path.includes('ansiedad')) pageName = 'ansiedad';
-  else if (path.includes('autoestima')) pageName = 'autoestima';
-  else if (path.includes('duelo')) pageName = 'duelo';
-  else if (path.includes('estres-laboral')) pageName = 'estres';
-  else if (path.includes('redes-sociales')) pageName = 'redes';
-  else if (path.includes('empresas')) pageName = 'empresas';
-  else if (path.includes('especialistas-publico')) pageName = 'directorio';
-  else if (path.includes('talleres')) pageName = 'talleres';
-
-  try {
-    // 2. Pedimos a Supabase los datos de la página actual Y los globales
-    const { data, error } = await window.sb
-      .from('config_web')
-      .select('*')
-      .or(`pagina.eq.${pageName},pagina.eq.global`);
-
-    if (error) throw error;
-    
-    const c = {};
-    data.forEach(item => c[item.clave] = item.valor);
-
-    // ============ APLICAR CONFIGURACIÓN GLOBAL ============
-    if (c.color_primary) document.documentElement.style.setProperty('--g700', c.color_primary);
-    if (c.color_accent) document.documentElement.style.setProperty('--clay', c.color_accent);
-    
-    const logoTxt = document.querySelector('.logo');
-    if (logoTxt && c.navbar_logo_text) {
-        const span = logoTxt.querySelector('span') || logoTxt.childNodes[logoTxt.childNodes.length - 1];
-        if (span) span.textContent = c.navbar_logo_text;
-    }
-
-    // ============ APLICAR CONFIGURACIÓN ESPECÍFICA ============
-    // Ejemplo: Títulos H1 dinámicos
-    const mainH1 = document.querySelector('h1');
-    if (mainH1 && c[`${pageName}_h1`]) mainH1.innerHTML = c[`${pageName}_h1`];
-
-    // Ejemplo: Descripciones/Subtítulos
-    const subText = document.querySelector('.hero-desc, .pg-sub');
-    if (subText && c[`${pageName}_sub`]) subText.textContent = c[`${pageName}_sub`];
-
-    console.log(`✅ CMS: Datos de "${pageName}" aplicados correctamente.`);
-
-  } catch (err) {
-    console.error('❌ Error cargando configuración del CMS:', err);
+// 4. CARGA DE BASE DE DATOS
+async function cargarCMS() {
+  if (!window.sb) return setTimeout(cargarCMS, 500);
+  const { data } = await window.sb.from('config_web').select('*').eq('pagina', pageName);
+  
+  if (data) {
+    data.forEach(d => {
+      // El editor guardará la key sin el prefijo de la página para reusar el mapeo
+      inyectar(d.clave, d.valor);
+    });
   }
 }
 
-document.addEventListener('DOMContentLoaded', cargarConfiguracionCMS);
+// 5. LISTENER PARA PREVIEW EN VIVO
+window.addEventListener('message', e => {
+  if (e.data.tipo === 'LIVE_PREVIEW') {
+    Object.entries(e.data.config).forEach(([k, v]) => inyectar(k, v));
+  }
+});
+
+document.addEventListener('DOMContentLoaded', cargarCMS);
+
+// UI Básica
+window.addEventListener('scroll', () => { document.getElementById('nav').classList.toggle('sc', window.scrollY > 30); });
+function openM() { document.getElementById('mm').style.display = 'flex'; document.getElementById('ov').classList.add('show'); setTimeout(() => document.getElementById('mm').classList.add('open'), 10); document.body.style.overflow = 'hidden'; }
+function closeM() { document.getElementById('mm').classList.remove('open'); document.getElementById('ov').classList.remove('show'); setTimeout(() => document.getElementById('mm').style.display = 'none', 300); document.body.style.overflow = ''; }
 </script>
 </body>
 </html>
